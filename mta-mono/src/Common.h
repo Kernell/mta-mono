@@ -33,6 +33,7 @@ extern "C"
 #include <vector>
 #include <string.h>
 #include <sys/stat.h>
+#include <assert.h>
 
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>

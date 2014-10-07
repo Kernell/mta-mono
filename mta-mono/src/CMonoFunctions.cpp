@@ -11,6 +11,7 @@
 *********************************************************/
 
 #include "CMonoFunctions.h"
+#include "CMonoObject.h"
 
 #include "CResource.h"
 #include "CResourceManager.h"
@@ -22,11 +23,12 @@ extern CResourceManager	*g_pResourceManager;
 
 void CMonoFunctions::AddInternals( void )
 {
-		mono_add_internal_call( "MultiTheftAuto.Debug::Log",				CMonoFunctions::Debug::Log );
-		mono_add_internal_call( "MultiTheftAuto.Debug::Info",				CMonoFunctions::Debug::Info );
-		mono_add_internal_call( "MultiTheftAuto.Debug::Error",				CMonoFunctions::Debug::Error );
-		mono_add_internal_call( "MultiTheftAuto.Native.Config::Get",		CMonoFunctions::Config::Get );
-		mono_add_internal_call( "MultiTheftAuto.Native.Config::Set",		CMonoFunctions::Config::Set );
+	mono_add_internal_call( "MultiTheftAuto.Debug::Log",				CMonoFunctions::Debug::Log );
+	mono_add_internal_call( "MultiTheftAuto.Debug::Info",				CMonoFunctions::Debug::Info );
+	mono_add_internal_call( "MultiTheftAuto.Debug::Error",				CMonoFunctions::Debug::Error );
+	mono_add_internal_call( "MultiTheftAuto.Native.Config::Get",		CMonoFunctions::Config::Get );
+	mono_add_internal_call( "MultiTheftAuto.Native.Config::Set",		CMonoFunctions::Config::Set );
+	mono_add_internal_call( "MultiTheftAuto.Native.Vehicle::Create",	CMonoFunctions::Vehicle::Create );
 }
 
 void CMonoFunctions::Debug::Log( MonoString *string )
@@ -79,4 +81,31 @@ bool CMonoFunctions::Config::Set( MonoString *msKey, MonoString *msValue )
 	}
 
 	return false;
+}
+
+MonoObject* CMonoFunctions::Vehicle::Create( int model, MonoObject* position, MonoObject* rotation, string &numberplate, bool direction, int variant1, int variant2 )
+{
+	if( RESOURCE )
+	{
+		CMonoObject pPosition( position );
+		
+		float fX = pPosition.GetPropertyValue<float>( "X" );
+		float fY = pPosition.GetPropertyValue<float>( "Y" );
+		float fZ = pPosition.GetPropertyValue<float>( "Z" );
+		
+		CMonoObject pRotation( rotation );
+
+		float fRX = pRotation.GetPropertyValue<float>( "X" );
+		float fRY = pRotation.GetPropertyValue<float>( "Y" );
+		float fRZ = pRotation.GetPropertyValue<float>( "Z" );
+
+		void* pVehicle = CLuaFunctionDefinitions::CreateVehicle( RESOURCE->GetLua(), model, fX, fY, fZ, fRX, fRY, fRZ, numberplate, direction, variant1, variant2 );
+
+		if( pVehicle )
+		{
+
+		}
+	}
+	
+	return NULL;
 }

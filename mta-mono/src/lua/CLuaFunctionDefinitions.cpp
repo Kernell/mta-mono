@@ -161,3 +161,29 @@ bool CLuaFunctionDefinitions::SetRuleValue( lua_State *pLuaVM, const string &sKe
 
 	return false;
 }
+
+void* CLuaFunctionDefinitions::CreateVehicle( lua_State* pLuaVM, int model, float fX, float fY, float fZ, float fRX, float fRY, float fRZ, string &numberplate, bool direction, int variant1, int variant2 )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( model );
+	pLuaArguments.PushNumber( fX );
+	pLuaArguments.PushNumber( fY );
+	pLuaArguments.PushNumber( fZ );
+	pLuaArguments.PushNumber( fRX );
+	pLuaArguments.PushNumber( fRY );
+	pLuaArguments.PushNumber( fRZ );
+	pLuaArguments.PushString( numberplate.c_str() );
+	pLuaArguments.PushBoolean( direction );
+	pLuaArguments.PushNumber( variant1 );
+	pLuaArguments.PushNumber( variant2 );
+
+	if( pLuaArguments.Call( pLuaVM, "createVehicle", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}

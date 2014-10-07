@@ -37,7 +37,7 @@ public:
 
 		mono_debug_init( MONO_DEBUG_FORMAT_MONO );
 
-		this->m_pMonoDomain			= mono_jit_init( "rootDomain" );
+		this->m_pMonoDomain			= mono_jit_init_version( "Mono Root", "v4.0.30319" );
 
 		CMonoFunctions::AddInternals();
 	}

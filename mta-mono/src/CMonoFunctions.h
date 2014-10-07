@@ -34,8 +34,14 @@ public:
 	class Config
 	{
 	public:
-		static MonoString	*Get								( MonoString *msKey );
+		static MonoString*	Get									( MonoString *msKey );
 		static bool			Set									( MonoString *msKey, MonoString *msValue );
+	};
+
+	class Vehicle
+	{
+	public:
+		static MonoObject*	Create	( int model, MonoObject* position, MonoObject* rotation, string &numberplate, bool direction = false, int variant1 = 255, int variant2 = 255 );
 	};
 };
 

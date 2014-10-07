@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CMonoFunctions.cpp" />
+    <ClCompile Include="src\CMonoObject.cpp" />
     <ClCompile Include="src\CResource.cpp" />
     <ClCompile Include="src\mta-mono.cpp" />
     <ClCompile Include="src\CFunctions.cpp" />
@@ -23,6 +24,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\CMonoFunctions.h" />
+    <ClInclude Include="src\CMonoObject.h" />
     <ClInclude Include="src\CResource.h" />
     <ClInclude Include="src\CResourceManager.h" />
     <ClInclude Include="src\mta-mono.h" />
@@ -35,6 +37,10 @@
     <ClInclude Include="src\include\ILuaModuleManager.h" />
     <ClInclude Include="src\lua\CLuaFunctionDefinitions.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Library Include="lib\lua51.lib" />
+    <Library Include="lib\mono-2.0.lib" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5E5C7A85-A869-4D86-88FF-05DCEFC07AC3}</ProjectGuid>
     <RootNamespace>mta-mono</RootNamespace>
@@ -44,13 +50,13 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -133,6 +139,8 @@
       <SDLCheck>false</SDLCheck>
       <Optimization>Full</Optimization>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -140,7 +148,7 @@
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>lib/lua51.lib;lib/mono.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <ModuleDefinitionFile />
       <GenerateDebugInformation>true</GenerateDebugInformation>
