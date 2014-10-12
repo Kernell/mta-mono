@@ -31,7 +31,9 @@ public:
 	static bool     SetMapName                          ( lua_State* pLuaVM, const string &sName );
 	static bool     SetRuleValue                        ( lua_State* pLuaVM, const string &sKey, const string &sValue );
 
-	static void*	CreateVehicle						( lua_State* luaVM, int model, float fX, float fY, float fZ, float fRX, float fRY, float fRZ, string &numberplate, bool direction = false, int variant1 = 255, int variant2 = 255 );
+	static bool		GetPosition							( lua_State* pLuaVM, void* pUserData, float &fX, float &fY, float &fZ );
+
+	static void*	CreateVehicle						( lua_State* luaVM, int model, float fX, float fY, float fZ, float fRX, float fRY, float fRZ, string numberplate, bool direction = false, int variant1 = 255, int variant2 = 255 );
 	/*
     static int      CallRemote                          ( lua_State* luaVM );
     static int      FetchRemote                         ( lua_State* luaVM );

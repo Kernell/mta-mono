@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\CMonoClass.cpp" />
     <ClCompile Include="src\CMonoFunctions.cpp" />
     <ClCompile Include="src\CMonoObject.cpp" />
     <ClCompile Include="src\CResource.cpp" />
@@ -23,6 +24,7 @@
     <ClCompile Include="src\lua\CLuaFunctionDefinitions.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\CMonoClass.h" />
     <ClInclude Include="src\CMonoFunctions.h" />
     <ClInclude Include="src\CMonoObject.h" />
     <ClInclude Include="src\CResource.h" />
@@ -38,6 +40,7 @@
     <ClInclude Include="src\lua\CLuaFunctionDefinitions.h" />
   </ItemGroup>
   <ItemGroup>
+    <Library Include="lib\eglib.lib" />
     <Library Include="lib\lua51.lib" />
     <Library Include="lib\mono-2.0.lib" />
   </ItemGroup>
@@ -92,7 +95,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.\src\include;.\vendor;.\vendor\lua51\src;.\vendor\mono;.\vendor\mysql</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\src\include;.\vendor;.\vendor\lua51\src;.\vendor\mono;.\vendor\mysql;.\vendor\eglib</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USRDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -109,7 +112,7 @@
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>lib/lua51.lib;lib/mono.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <IgnoreSpecificDefaultLibraries>MSVCRT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <ModuleDefinitionFile />
@@ -129,7 +132,7 @@
       <MkTypLibCompatible>false</MkTypLibCompatible>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>.\src\include;.\vendor;.\vendor\lua51\src;.\vendor\mono;.\vendor\mysql</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\src\include;.\vendor;.\vendor\lua51\src;.\vendor\mono;.\vendor\mysql;.\vendor\eglib</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USRDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>

@@ -16,6 +16,7 @@ class CResource;
 #define __CRESOURCE_H
 
 #include "Common.h"
+#include "CMonoClass.h"
 
 class CResource
 {
@@ -23,7 +24,9 @@ private:
 	string				m_sName;
 
 	MonoAssembly		*m_pMonoAssembly;
+	MonoAssembly		*m_pMonoAssemblyLib;
 	MonoImage			*m_pMonoImage;
+	MonoImage			*m_pMonoImageLib;
 	MonoClass			*m_pMonoClass;
 	uint32_t			m_pMonoGCHandle;
 
@@ -39,10 +42,10 @@ public:
 	void	DoPulse				( void );
 	bool	RegisterFunction	( const char *szFunctionName, lua_CFunction Func );
 
-	string		GetName				( void );
-	lua_State	*GetLua				( void );
+	CMonoClass* GetClassFromName( const char* szNamespace, const char* szName );
 
-	const void Test( void );
+	string		GetName				( void )		{ return this->m_sName; }
+	lua_State	*GetLua				( void )		{ return this->m_pLuaVM; }
 };
 
 #endif

@@ -38,10 +38,16 @@ public:
 		static bool			Set									( MonoString *msKey, MonoString *msValue );
 	};
 
+	class Element
+	{
+	public:
+		static MonoObject*	GetPosition							( unsigned int element );
+	};
+
 	class Vehicle
 	{
 	public:
-		static MonoObject*	Create	( int model, MonoObject* position, MonoObject* rotation, string &numberplate, bool direction = false, int variant1 = 255, int variant2 = 255 );
+		static unsigned int	Create	( int model, MonoObject* position, MonoObject* rotation, MonoString* numberplate, bool direction = false, int variant1 = 255, int variant2 = 255 );
 	};
 };
 

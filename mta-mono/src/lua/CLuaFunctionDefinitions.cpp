@@ -162,7 +162,25 @@ bool CLuaFunctionDefinitions::SetRuleValue( lua_State *pLuaVM, const string &sKe
 	return false;
 }
 
-void* CLuaFunctionDefinitions::CreateVehicle( lua_State* pLuaVM, int model, float fX, float fY, float fZ, float fRX, float fRY, float fRZ, string &numberplate, bool direction, int variant1, int variant2 )
+bool CLuaFunctionDefinitions::GetPosition( lua_State* pLuaVM, void* pUserData, float &fX, float &fY, float &fZ )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	
+	if( pLuaArguments.Call( pLuaVM, "getElementPosition", 3 ) )
+	{
+		fX = static_cast< float >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
+		fY = static_cast< float >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		fZ = static_cast< float >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		
+		return true;
+	}
+
+	return false;
+}
+
+void* CLuaFunctionDefinitions::CreateVehicle( lua_State* pLuaVM, int model, float fX, float fY, float fZ, float fRX, float fRY, float fRZ, string numberplate, bool direction, int variant1, int variant2 )
 {
 	CLuaArguments pLuaArguments;
 
@@ -173,10 +191,14 @@ void* CLuaFunctionDefinitions::CreateVehicle( lua_State* pLuaVM, int model, floa
 	pLuaArguments.PushNumber( fRX );
 	pLuaArguments.PushNumber( fRY );
 	pLuaArguments.PushNumber( fRZ );
-	pLuaArguments.PushString( numberplate.c_str() );
-	pLuaArguments.PushBoolean( direction );
-	pLuaArguments.PushNumber( variant1 );
-	pLuaArguments.PushNumber( variant2 );
+
+	if( numberplate.length() > 0 )
+	{
+		pLuaArguments.PushString( numberplate.c_str() );
+		pLuaArguments.PushBoolean( direction );
+		pLuaArguments.PushNumber( variant1 );
+		pLuaArguments.PushNumber( variant2 );
+	}
 
 	if( pLuaArguments.Call( pLuaVM, "createVehicle", 1 ) )
 	{

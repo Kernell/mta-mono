@@ -35,6 +35,8 @@ extern "C"
 #include <sys/stat.h>
 #include <assert.h>
 
+#include <glib.h>
+
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
 #include <mono/metadata/mono-debug.h>

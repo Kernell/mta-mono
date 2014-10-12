@@ -1,18 +1,34 @@
 ﻿using System;
+using System.Collections.Generic;
 using MultiTheftAuto;
 using MultiTheftAuto.Native;
 
 namespace Test
 {
-    public class Resource
-    {
-        public Resource()
-        {
-			Debug.Error( "{0}", new Color( 255, 128, 0 ).ToARGB().ToString( "X" ) );
-			
-			Vehicle vehicle = Vehicle.Create( 562, new Vector3( 192.0f, 168.0f, 0.0f ), new Vector3( 0.0f, 0.0f, 0.0f ) );
+	public class Resource
+	{
+		public Resource()
+		{
+			var vehicles = new List<UInt32>( 10 );
 
-			//Debug.Log( "{0}", Element.GetPosition( vehicle ) );
-        }
-    }
+			for( int i = 0; i < vehicles.Capacity; i++ )
+			{
+				UInt32 vehicle = Vehicle.Create( 562, new Vector3( 192.0f, 168.0f, 10.0f ) * i, new Vector3( 0.0f, 0.0f, 0.0f ) );
+
+				if( vehicle != 0 )
+				{
+					vehicles.Add( vehicle );
+				}
+				else
+				{
+					Debug.Error( "Failed to create vehicle" );
+				}
+			}
+
+			foreach( UInt32 vehicle in vehicles )
+			{
+				Debug.Log( "{0} {1}", vehicle, Element.GetPosition( vehicle ) );
+			}
+		}
+	}
 }

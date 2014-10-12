@@ -24,9 +24,11 @@ CResource::CResource( lua_State *pLuaVM, string sName )
 	this->m_sName				= sName;
 
 	this->m_pMonoAssembly		= NULL;
+	this->m_pMonoAssemblyLib	= NULL;
 	this->m_pMonoGCHandle		= NULL;
 	this->m_pMonoDomain			= NULL;
 	this->m_pMonoImage			= NULL;
+	this->m_pMonoImageLib		= NULL;
 	this->m_pMonoClass			= NULL;
 }
 
@@ -49,7 +51,8 @@ bool CResource::Init( void )
 {
 	if( this->m_pLuaVM )
 	{
-		string sPath		( "mods/deathmatch/mono/resources/" + this->m_sName + ".dll" );
+		string sDirectory	( "mods/deathmatch/mono/resources/" );
+		string sPath		( sDirectory + this->m_sName + ".dll" );
 		string sNamespace	( this->m_sName );
 		string sClass		( "Resource" );
 
@@ -63,6 +66,13 @@ bool CResource::Init( void )
 		}
 
 		mono_domain_set( this->m_pMonoDomain, false );
+
+		this->m_pMonoAssemblyLib	= mono_domain_assembly_open( this->m_pMonoDomain, ( sDirectory + "MultiTheftAuto.dll" ).c_str() );
+
+		if( this->m_pMonoAssemblyLib )
+		{
+			this->m_pMonoImageLib	= mono_assembly_get_image( this->m_pMonoAssemblyLib );
+		}
 
 		this->m_pMonoAssembly		= mono_domain_assembly_open( this->m_pMonoDomain, sPath.c_str() );
 		
@@ -88,16 +98,6 @@ bool CResource::Init( void )
 	return false;
 }
 
-string CResource::GetName( void )
-{
-	return this->m_sName;
-}
-
-lua_State *CResource::GetLua( void )
-{
-	return this->m_pLuaVM;
-}
-
 void CResource::OnStopping( void )
 {
 }
@@ -116,4 +116,21 @@ bool CResource::RegisterFunction( const char *szFunctionName, lua_CFunction Func
 	}
 
 	return true;
+}
+
+CMonoClass* CResource::GetClassFromName( const char* szNamespace, const char* szName )
+{
+	MonoClass* pMonoClass = mono_class_from_name( this->m_pMonoImage, szNamespace, szName );
+
+	if( !pMonoClass )
+	{
+		pMonoClass = mono_class_from_name( this->m_pMonoImageLib, szNamespace, szName );
+	}
+
+	if( pMonoClass )
+	{
+		return new CMonoClass( pMonoClass );
+	}
+
+	return NULL;
 }

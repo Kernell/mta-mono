@@ -23,12 +23,13 @@ extern CResourceManager	*g_pResourceManager;
 
 void CMonoFunctions::AddInternals( void )
 {
-	mono_add_internal_call( "MultiTheftAuto.Debug::Log",				CMonoFunctions::Debug::Log );
-	mono_add_internal_call( "MultiTheftAuto.Debug::Info",				CMonoFunctions::Debug::Info );
-	mono_add_internal_call( "MultiTheftAuto.Debug::Error",				CMonoFunctions::Debug::Error );
-	mono_add_internal_call( "MultiTheftAuto.Native.Config::Get",		CMonoFunctions::Config::Get );
-	mono_add_internal_call( "MultiTheftAuto.Native.Config::Set",		CMonoFunctions::Config::Set );
-	mono_add_internal_call( "MultiTheftAuto.Native.Vehicle::Create",	CMonoFunctions::Vehicle::Create );
+	mono_add_internal_call( "MultiTheftAuto.Debug::Log",					CMonoFunctions::Debug::Log );
+	mono_add_internal_call( "MultiTheftAuto.Debug::Info",					CMonoFunctions::Debug::Info );
+	mono_add_internal_call( "MultiTheftAuto.Debug::Error",					CMonoFunctions::Debug::Error );
+	mono_add_internal_call( "MultiTheftAuto.Native.Config::Get",			CMonoFunctions::Config::Get );
+	mono_add_internal_call( "MultiTheftAuto.Native.Config::Set",			CMonoFunctions::Config::Set );
+	mono_add_internal_call( "MultiTheftAuto.Native.Element::GetPosition",	CMonoFunctions::Element::GetPosition );
+	mono_add_internal_call( "MultiTheftAuto.Native.Vehicle::Create",		CMonoFunctions::Vehicle::Create );
 }
 
 void CMonoFunctions::Debug::Log( MonoString *string )
@@ -83,7 +84,45 @@ bool CMonoFunctions::Config::Set( MonoString *msKey, MonoString *msValue )
 	return false;
 }
 
-MonoObject* CMonoFunctions::Vehicle::Create( int model, MonoObject* position, MonoObject* rotation, string &numberplate, bool direction, int variant1, int variant2 )
+MonoObject* CMonoFunctions::Element::GetPosition( unsigned int element )
+{
+	if( RESOURCE )
+	{
+		float
+			fX = 0.0f,
+			fY = 0.0f,
+			fZ = 0.0f;
+		
+		if( CLuaFunctionDefinitions::GetPosition( RESOURCE->GetLua(), (void*)element, fX, fY, fZ ) )
+		{
+			CMonoClass* pClass = RESOURCE->GetClassFromName( "MultiTheftAuto", "Vector3" );
+			
+			if( pClass )
+			{
+				void *args[] = { &fX, &fY, &fZ };
+
+				CMonoObject* pObject = pClass->New( mono_domain_get(), args, 3 );
+
+				if( pObject )
+				{
+					return pObject->GetObject();
+				}
+				else
+				{
+					g_pModuleManager->ErrorPrintf( "%s:%d: failed to create instance of 'MultiTheftAuto::Vector3'\n", __FILE__, __LINE__ );
+				}
+			}
+			else
+			{
+				g_pModuleManager->ErrorPrintf( "%s:%d: class 'MultiTheftAuto::Vector3' not found\n", __FILE__, __LINE__ );
+			}
+		}
+	}
+
+	return NULL;
+}
+
+unsigned int CMonoFunctions::Vehicle::Create( int model, MonoObject* position, MonoObject* rotation, MonoString* numberplate, bool direction, int variant1, int variant2 )
 {
 	if( RESOURCE )
 	{
@@ -99,11 +138,19 @@ MonoObject* CMonoFunctions::Vehicle::Create( int model, MonoObject* position, Mo
 		float fRY = pRotation.GetPropertyValue<float>( "Y" );
 		float fRZ = pRotation.GetPropertyValue<float>( "Z" );
 
-		void* pVehicle = CLuaFunctionDefinitions::CreateVehicle( RESOURCE->GetLua(), model, fX, fY, fZ, fRX, fRY, fRZ, numberplate, direction, variant1, variant2 );
+		string sNumberplate = "";
+
+		if( numberplate && mono_string_length( numberplate ) > 0 )
+		{
+			sNumberplate = mono_string_to_utf8( numberplate );
+		}
+
+		void* pVehicle = CLuaFunctionDefinitions::CreateVehicle( RESOURCE->GetLua(), model, fX, fY, fZ, fRX, fRY, fRZ, sNumberplate, direction, variant1, variant2 );
 
 		if( pVehicle )
 		{
-
+			return (unsigned int)pVehicle;
+			//return 0x1337;
 		}
 	}
 	
