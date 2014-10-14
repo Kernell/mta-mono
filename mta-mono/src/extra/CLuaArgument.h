@@ -32,6 +32,7 @@ public:
                             CLuaArgument        ( double dNumber );
                             CLuaArgument        ( const char* szString );
                             CLuaArgument        ( void* pUserData );
+                            CLuaArgument        ( lua_CFunction Function );
                             CLuaArgument        ( const CLuaArgument& Argument );
                             CLuaArgument        ( lua_State* luaVM, unsigned int uiArgument );
                             ~CLuaArgument       ( void );
@@ -56,6 +57,7 @@ private:
     lua_Number              m_Number;
     char*                   m_szString;
     void*                   m_pLightUserData;
+	lua_CFunction			m_Function;
 };
 
 #endif

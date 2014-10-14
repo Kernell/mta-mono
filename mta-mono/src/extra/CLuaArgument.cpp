@@ -62,6 +62,13 @@ CLuaArgument::CLuaArgument ( void* pUserData )
     m_pLightUserData = pUserData;
 }
 
+CLuaArgument::CLuaArgument( lua_CFunction Function )
+{
+    m_szString = NULL;
+    m_iType = LUA_TFUNCTION;
+    m_Function = Function;
+}
+
 
 CLuaArgument::CLuaArgument ( const CLuaArgument& Argument )
 {
@@ -131,6 +138,13 @@ const CLuaArgument& CLuaArgument::operator = ( const CLuaArgument& Argument )
             break;
         }
 
+		case LUA_TFUNCTION:
+		{
+			m_Function = Argument.m_Function;
+
+			break;
+		}
+
         default: break;
     }
 
@@ -177,6 +191,11 @@ bool CLuaArgument::operator == ( const CLuaArgument& Argument )
                 return Argument.m_szString == NULL;
             }
         }
+
+		case LUA_TFUNCTION:
+		{
+			return m_Function == Argument.m_Function;
+		}
     }
 
     return true;
@@ -238,6 +257,13 @@ void CLuaArgument::Read ( lua_State* luaVM, unsigned int uiArgument )
                 break;
             }
 
+			case LUA_TFUNCTION:
+			{
+				m_Function = lua_tocfunction( luaVM, uiArgument );
+
+				break;
+			}
+
             default:
             {
                 m_iType = LUA_TNONE;
@@ -294,6 +320,13 @@ void CLuaArgument::Push ( lua_State* luaVM ) const
 
                 break;
             }
+
+			case LUA_TFUNCTION:
+			{
+				lua_pushcfunction( luaVM, m_Function );
+
+				break;
+			}
         }
     }
 }

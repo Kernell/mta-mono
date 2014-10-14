@@ -26,9 +26,12 @@ void CMonoFunctions::AddInternals( void )
 	mono_add_internal_call( "MultiTheftAuto.Debug::Log",					CMonoFunctions::Debug::Log );
 	mono_add_internal_call( "MultiTheftAuto.Debug::Info",					CMonoFunctions::Debug::Info );
 	mono_add_internal_call( "MultiTheftAuto.Debug::Error",					CMonoFunctions::Debug::Error );
+
 	mono_add_internal_call( "MultiTheftAuto.Native.Config::Get",			CMonoFunctions::Config::Get );
 	mono_add_internal_call( "MultiTheftAuto.Native.Config::Set",			CMonoFunctions::Config::Set );
+
 	mono_add_internal_call( "MultiTheftAuto.Native.Element::GetPosition",	CMonoFunctions::Element::GetPosition );
+
 	mono_add_internal_call( "MultiTheftAuto.Native.Vehicle::Create",		CMonoFunctions::Vehicle::Create );
 }
 
@@ -93,7 +96,7 @@ MonoObject* CMonoFunctions::Element::GetPosition( unsigned int element )
 			fY = 0.0f,
 			fZ = 0.0f;
 		
-		if( CLuaFunctionDefinitions::GetPosition( RESOURCE->GetLua(), (void*)element, fX, fY, fZ ) )
+		if( CLuaFunctionDefinitions::GetElementPosition( RESOURCE->GetLua(), (void*)element, fX, fY, fZ ) )
 		{
 			CMonoClass* pClass = RESOURCE->GetClassFromName( "MultiTheftAuto", "Vector3" );
 			

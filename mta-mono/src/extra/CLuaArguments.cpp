@@ -151,6 +151,14 @@ CLuaArgument* CLuaArguments::PushUserData ( void* pUserData )
 }
 
 
+CLuaArgument* CLuaArguments::PushArgument ( const CLuaArgument & argument )
+{
+    CLuaArgument* pArgument = new CLuaArgument (argument); // create a copy
+    m_Arguments.push_back ( pArgument );
+    return pArgument;
+}
+
+
 void CLuaArguments::DeleteArguments ( void )
 {
     // Delete each item

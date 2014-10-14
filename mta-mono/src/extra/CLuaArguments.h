@@ -48,6 +48,7 @@ public:
     CLuaArgument*                                       PushNumber          ( double dNumber );
     CLuaArgument*                                       PushString          ( const char* szString );
     CLuaArgument*                                       PushUserData        ( void* pUserData );
+	CLuaArgument*                                       PushArgument        ( const CLuaArgument& argument );
 
     void                                                DeleteArguments     ( void );
 
