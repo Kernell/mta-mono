@@ -4811,3 +4811,180 @@ bool CLuaFunctionDefinitions::SetRadarAreaFlashing( lua_State* pLuaVM, void* pUs
 
 	return false;
 }
+
+// Pickup create/destroy funcs
+void* CLuaFunctionDefinitions::CreatePickup( lua_State* pLuaVM, float fX, float fY, float fZ, unsigned char ucType, double dFive, unsigned long ulRespawnInterval, double dSix )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( fX );
+	pLuaArguments.PushNumber( fY );
+	pLuaArguments.PushNumber( fZ );
+
+	pLuaArguments.PushNumber( ucType );
+	pLuaArguments.PushNumber( dFive );
+
+	pLuaArguments.PushNumber( ulRespawnInterval );
+	pLuaArguments.PushNumber( dSix );
+
+	if( pLuaArguments.Call( pLuaVM, "createPickup", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
+// Pickup get funcs
+unsigned char CLuaFunctionDefinitions::GetPickupType( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getPickupType", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return static_cast< unsigned char >( pLuaArgument.GetNumber() );
+	}
+
+	return 0;
+}
+
+unsigned char CLuaFunctionDefinitions::GetPickupWeapon( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getPickupWeapon", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return static_cast< unsigned char >( pLuaArgument.GetNumber() );
+	}
+
+	return 0;
+}
+
+float CLuaFunctionDefinitions::GetPickupAmount( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getPickupAmount", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return static_cast< float >( pLuaArgument.GetNumber() );
+	}
+
+	return 0.0f;
+}
+
+unsigned short CLuaFunctionDefinitions::GetPickupAmmo( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getPickupAmmo", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return static_cast< unsigned short >( pLuaArgument.GetNumber() );
+	}
+
+	return 0;
+}
+
+unsigned long CLuaFunctionDefinitions::GetPickupRespawnInterval( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getPickupRespawnInterval", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return static_cast< unsigned short >( pLuaArgument.GetNumber() );
+	}
+
+	return 0;
+}
+
+bool CLuaFunctionDefinitions::IsPickupSpawned( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "isPickupSpawned", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+// Pickup set funcs
+bool CLuaFunctionDefinitions::SetPickupType( lua_State* pLuaVM, void* pUserData, unsigned char ucType, double dThree, double dFour )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( ucType );
+	pLuaArguments.PushNumber( dThree );
+	pLuaArguments.PushNumber( dFour );
+
+	if( pLuaArguments.Call( pLuaVM, "setPickupType", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetPickupRespawnInterval( lua_State* pLuaVM, void* pUserData, unsigned long ulInterval )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( ulInterval );
+
+	if( pLuaArguments.Call( pLuaVM, "setPickupRespawnInterval", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::UsePickup( lua_State* pLuaVM, void* pUserData, void* pPlayer )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushUserData( pPlayer );
+
+	if( pLuaArguments.Call( pLuaVM, "usePickup", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+

@@ -369,6 +369,22 @@ public:
     static bool						SetRadarAreaSize				( lua_State* pLuaVM, void* pUserData, float fSizeX, float fSizeY );
     static bool						SetRadarAreaColor				( lua_State* pLuaVM, void* pUserData, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue, unsigned char ucAlpha );
     static bool						SetRadarAreaFlashing			( lua_State* pLuaVM, void* pUserData, bool bFlashing );
+	
+    // Pickup create/destroy funcs
+    static void*					CreatePickup					( lua_State* pLuaVM, float fX, float fY, float fZ, unsigned char ucType, double dFive, unsigned long ulRespawnInterval = 30000, double dSix = 50 );
+
+    // Pickup get funcs
+    static unsigned char			GetPickupType					( lua_State* pLuaVM, void* pUserData );
+    static unsigned char			GetPickupWeapon					( lua_State* pLuaVM, void* pUserData );
+    static float					GetPickupAmount					( lua_State* pLuaVM, void* pUserData );
+    static unsigned short			GetPickupAmmo					( lua_State* pLuaVM, void* pUserData );
+    static unsigned long			GetPickupRespawnInterval		( lua_State* pLuaVM, void* pUserData );
+    static bool						IsPickupSpawned					( lua_State* pLuaVM, void* pUserData );
+
+    // Pickup set funcs
+    static bool						SetPickupType					( lua_State* pLuaVM, void* pUserData, unsigned char ucType, double dThree, double dFour );
+    static bool						SetPickupRespawnInterval		( lua_State* pLuaVM, void* pUserData, unsigned long ulInterval );
+    static bool						UsePickup						( lua_State* pLuaVM, void* pUserData, void* pPlayer );
 
     // Explosion funcs
  //   static int      CreateExplosion                     ( lua_State* luaVM );
