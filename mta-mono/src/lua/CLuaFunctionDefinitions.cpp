@@ -2583,3 +2583,1523 @@ void* CLuaFunctionDefinitions::CreateVehicle( lua_State* pLuaVM, int model, floa
 
 	return NULL;
 }
+
+// Vehicle get functions
+string CLuaFunctionDefinitions::GetVehicleType( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehicleType", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return string( pLuaArgument.GetString() );
+	}
+
+	return string();
+}
+
+bool CLuaFunctionDefinitions::GetVehicleVariant( lua_State* pLuaVM, void* pUserData, unsigned char& ucVariant, unsigned char& ucVariant2 )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehicleVariant", 2 ) )
+	{
+		ucVariant	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		ucVariant2	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetVehicleColor( lua_State* pLuaVM, void* pUserData, unsigned char& ucR1, unsigned char& ucG1, unsigned char& ucB1, unsigned char& ucR2, unsigned char& ucG2, unsigned char& ucB2, unsigned char& ucR3, unsigned char& ucG3, unsigned char& ucB3, unsigned char& ucR4, unsigned char& ucG4, unsigned char& ucB4 )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushBoolean( true );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehicleColor", 12 ) )
+	{
+		ucR1	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -12 ) )->GetNumber() );
+		ucG1	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -11 ) )->GetNumber() );
+		ucB1	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -10 ) )->GetNumber() );
+
+		ucR2	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -9 ) )->GetNumber() );
+		ucG2	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -8 ) )->GetNumber() );
+		ucB2	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -7 ) )->GetNumber() );
+
+		ucR3	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -6 ) )->GetNumber() );
+		ucG3	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -5 ) )->GetNumber() );
+		ucB3	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -4 ) )->GetNumber() );
+
+		ucR4	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
+		ucG4	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		ucB4	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+
+		return true;
+	}
+
+	return false;
+}
+
+unsigned short CLuaFunctionDefinitions::GetVehicleModelFromName( lua_State* pLuaVM, const char* szName )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushString( szName );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehicleModelFromName", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return static_cast< unsigned short >( pLuaArgument.GetNumber() );
+	}
+
+	return 0;
+}
+
+bool CLuaFunctionDefinitions::GetVehicleLandingGearDown( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehicleLandingGearDown", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+int CLuaFunctionDefinitions::GetVehicleMaxPassengers( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehicleMaxPassengers", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return static_cast< int >( pLuaArgument.GetNumber() );
+	}
+
+	return 0;
+}
+
+string CLuaFunctionDefinitions::GetVehicleName( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehicleName", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return string( pLuaArgument.GetString() );
+	}
+
+	return string();
+}
+
+string CLuaFunctionDefinitions::GetVehicleNameFromModel( lua_State* pLuaVM, void* pUserData, unsigned short usModel )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( usModel );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehicleNameFromModel", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return string( pLuaArgument.GetString() );
+	}
+
+	return string();
+}
+
+void* CLuaFunctionDefinitions::GetVehicleOccupant( lua_State* pLuaVM, void* pUserData, unsigned int uiSeat )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( uiSeat );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehicleOccupant", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
+CLuaArguments* CLuaFunctionDefinitions::GetVehicleOccupants( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehicleOccupants", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		//return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
+void* CLuaFunctionDefinitions::GetVehicleController( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehicleController", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
+bool CLuaFunctionDefinitions::GetVehicleSirensOn( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehicleSirensOn", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetVehicleTurnVelocity( lua_State* pLuaVM, void* pUserData, float &fX, float& fY, float& fZ )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehicleTurnVelocity", 3 ) )
+	{
+		fX = static_cast< float >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
+		fY = static_cast< float >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		fZ = static_cast< float >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetVehicleTurretPosition( lua_State* pLuaVM, void* pUserData, float &fX, float& fY )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehicleTurretPosition", 2 ) )
+	{
+		fX = static_cast< float >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		fY = static_cast< float >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::IsVehicleLocked( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "isVehicleLocked", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+CLuaArguments* CLuaFunctionDefinitions::GetVehiclesOfType( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehiclesOfType", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		//return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+unsigned short CLuaFunctionDefinitions::GetVehicleUpgradeOnSlot( lua_State* pLuaVM, void* pUserData, unsigned char ucSlot )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( ucSlot );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehicleUpgradeOnSlot", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return static_cast< unsigned short >( pLuaArgument.GetNumber() );
+	}
+
+	return 0;
+}
+
+CLuaArguments* CLuaFunctionDefinitions::GetVehicleUpgrades( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehicleUpgrades", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		//return pLuaArgument.GetNumber();
+	}
+
+	return NULL;
+}
+
+string CLuaFunctionDefinitions::GetVehicleUpgradeSlotName( lua_State* pLuaVM, unsigned char ucSlot )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( ucSlot );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehicleUpgradeSlotName", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return string( pLuaArgument.GetString() );
+	}
+
+	return string();
+}
+
+string CLuaFunctionDefinitions::GetVehicleUpgradeSlotName( lua_State* pLuaVM, unsigned short usUpgrade )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( usUpgrade );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehicleUpgradeSlotName", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return string( pLuaArgument.GetString() );
+	}
+
+	return string();
+}
+
+CLuaArguments* CLuaFunctionDefinitions::GetVehicleCompatibleUpgrades( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehicleCompatibleUpgrades", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		//return pLuaArgument.GetString();
+	}
+
+	return NULL;
+}
+
+unsigned char CLuaFunctionDefinitions::GetVehicleDoorState( lua_State* pLuaVM, void* pUserData, unsigned char ucDoor )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( ucDoor );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehicleDoorState", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return static_cast< unsigned char >( pLuaArgument.GetNumber() );
+	}
+
+	return 0;
+}
+
+bool CLuaFunctionDefinitions::GetVehicleWheelStates( lua_State* pLuaVM, void* pUserData, unsigned char& ucFrontLeft, unsigned char& ucRearLeft, unsigned char& ucFrontRight, unsigned char& ucRearRight )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehicleWheelStates", 4 ) )
+	{
+		ucFrontLeft		= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -4 ) )->GetNumber() );
+		ucRearLeft		= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
+		ucFrontRight	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		ucRearRight		= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+
+		return true;
+	}
+
+	return false;
+}
+
+unsigned char CLuaFunctionDefinitions::GetVehicleLightState( lua_State* pLuaVM, void* pUserData, unsigned char ucLight )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( ucLight );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehicleLightState", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return static_cast< unsigned char >( pLuaArgument.GetNumber() );
+	}
+
+	return 0;
+}
+
+unsigned char CLuaFunctionDefinitions::GetVehiclePanelState( lua_State* pLuaVM, void* pUserData, unsigned char ucPanel )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( ucPanel );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehiclePanelState", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return static_cast< unsigned char >( pLuaArgument.GetNumber() );
+	}
+
+	return 0;
+}
+
+unsigned char CLuaFunctionDefinitions::GetVehicleOverrideLights( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehicleOverrideLights", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return static_cast< unsigned char >( pLuaArgument.GetNumber() );
+	}
+
+	return 0;
+}
+
+void* CLuaFunctionDefinitions::GetVehicleTowedByVehicle( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehicleTowedByVehicle", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
+void* CLuaFunctionDefinitions::GetVehicleTowingVehicle( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehicleTowingVehicle", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
+unsigned char CLuaFunctionDefinitions::GetVehiclePaintjob( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehiclePaintjob", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return static_cast< unsigned char >( pLuaArgument.GetNumber() );
+	}
+
+	return 0;
+}
+
+const char* CLuaFunctionDefinitions::GetVehiclePlateText( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehiclePlateText", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetString();
+	}
+
+	return NULL;
+}
+
+bool CLuaFunctionDefinitions::IsVehicleDamageProof( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "isVehicleDamageProof", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::IsVehicleFuelTankExplodable( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "isVehicleFuelTankExplodable", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::IsVehicleFrozen( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "isVehicleFrozen", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::IsVehicleOnGround( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "isVehicleOnGround", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetVehicleEngineState( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehicleEngineState", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::IsTrainDerailed( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "isTrainDerailed", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::IsTrainDerailable( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "isTrainDerailable", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetTrainDirection( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getTrainDirection", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+float CLuaFunctionDefinitions::GetTrainSpeed( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getTrainSpeed", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return static_cast< float >( pLuaArgument.GetNumber() );
+	}
+
+	return 0.0f;
+}
+
+bool CLuaFunctionDefinitions::IsVehicleBlown( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "isVehicleBlown", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetVehicleHeadLightColor( lua_State* pLuaVM, void* pUserData, unsigned char& ucRed, unsigned char& ucGreen, unsigned char& ucBlue )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehicleHeadLightColor", 1 ) )
+	{
+		ucRed	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
+		ucGreen	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		ucBlue	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+
+		return true;
+	}
+
+	return false;
+}
+
+float CLuaFunctionDefinitions::GetVehicleDoorOpenRatio( lua_State* pLuaVM, void* pUserData, unsigned char ucDoor )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( ucDoor );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehicleDoorOpenRatio", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return static_cast< float >( pLuaArgument.GetBoolean() );
+	}
+
+	return 0.0f;
+}
+
+bool CLuaFunctionDefinitions::IsVehicleTaxiLightOn( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "isVehicleTaxiLightOn", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+// Vehicle set functions
+bool CLuaFunctionDefinitions::FixVehicle( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "fixVehicle", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::BlowVehicle( lua_State* pLuaVM, void* pUserData, bool bExplode )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushBoolean( bExplode );
+
+	if( pLuaArguments.Call( pLuaVM, "blowVehicle", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetVehicleTurnVelocity( lua_State* pLuaVM, void* pUserData, float fX, float fY, float fZ )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( fX );
+	pLuaArguments.PushNumber( fY );
+	pLuaArguments.PushNumber( fZ );
+
+	if( pLuaArguments.Call( pLuaVM, "setVehicleTurnVelocity", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetVehicleColor( lua_State* pLuaVM, void* pUserData, unsigned char& ucRed, unsigned char& ucGreen, unsigned char& ucBlue, unsigned char& ucRed2, unsigned char& ucGreen2, unsigned char& ucBlue2, unsigned char& ucRed3, unsigned char& ucGreen3, unsigned char& ucBlue3, unsigned char& ucRed4, unsigned char& ucGreen4, unsigned char& ucBlue4 )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	pLuaArguments.PushNumber( ucRed );
+	pLuaArguments.PushNumber( ucGreen );
+	pLuaArguments.PushNumber( ucBlue );
+
+	pLuaArguments.PushNumber( ucRed2 );
+	pLuaArguments.PushNumber( ucGreen2 );
+	pLuaArguments.PushNumber( ucBlue2 );
+
+	pLuaArguments.PushNumber( ucRed3 );
+	pLuaArguments.PushNumber( ucGreen3 );
+	pLuaArguments.PushNumber( ucBlue3 );
+
+	pLuaArguments.PushNumber( ucRed4 );
+	pLuaArguments.PushNumber( ucGreen4 );
+	pLuaArguments.PushNumber( ucBlue4 );
+
+	if( pLuaArguments.Call( pLuaVM, "setVehicleColor", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetVehicleLandingGearDown( lua_State* pLuaVM, void* pUserData, bool bLandingGearDown )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushBoolean( bLandingGearDown );
+
+	if( pLuaArguments.Call( pLuaVM, "setVehicleLandingGearDown", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetVehicleLocked( lua_State* pLuaVM, void* pUserData, bool bLocked )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushBoolean( bLocked );
+
+	if( pLuaArguments.Call( pLuaVM, "setVehicleLocked", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetVehicleDoorsUndamageable( lua_State* pLuaVM, void* pUserData, bool bDoorsUndamageable )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushBoolean( bDoorsUndamageable );
+
+	if( pLuaArguments.Call( pLuaVM, "setVehicleDoorsUndamageable", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetVehicleSirensOn( lua_State* pLuaVM, void* pUserData, bool bSirensOn )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushBoolean( bSirensOn );
+
+	if( pLuaArguments.Call( pLuaVM, "setVehicleSirensOn", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetVehicleTaxiLightOn( lua_State* pLuaVM, void* pUserData, bool bTaxiLightState )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushBoolean( bTaxiLightState );
+
+	if( pLuaArguments.Call( pLuaVM, "setVehicleTaxiLightOn", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::AddVehicleUpgrade( lua_State* pLuaVM, void* pUserData, unsigned short usUpgrade )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( usUpgrade );
+
+	if( pLuaArguments.Call( pLuaVM, "addVehicleUpgrade", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::RemoveVehicleUpgrade( lua_State* pLuaVM, void* pUserData, unsigned short usUpgrade )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( usUpgrade );
+
+	if( pLuaArguments.Call( pLuaVM, "removeVehicleUpgrade", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetVehicleDoorState( lua_State* pLuaVM, void* pUserData, unsigned char ucDoor, unsigned char ucState )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( ucDoor );
+	pLuaArguments.PushNumber( ucState );
+
+	if( pLuaArguments.Call( pLuaVM, "setVehicleDoorState", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetVehicleWheelStates( lua_State* pLuaVM, void* pUserData, int iFrontLeft, int iRearLeft, int iFrontRight, int iRearRight )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( iFrontLeft );
+	pLuaArguments.PushNumber( iRearLeft );
+	pLuaArguments.PushNumber( iFrontRight );
+	pLuaArguments.PushNumber( iRearRight );
+
+	if( pLuaArguments.Call( pLuaVM, "setVehicleWheelStates", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetVehicleLightState( lua_State* pLuaVM, void* pUserData, unsigned char ucLight, unsigned char ucState )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( ucLight );
+	pLuaArguments.PushNumber( ucState );
+
+	if( pLuaArguments.Call( pLuaVM, "setVehicleLightState", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetVehiclePanelState( lua_State* pLuaVM, void* pUserData, unsigned char ucPanel, unsigned char ucState )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( ucPanel );
+	pLuaArguments.PushNumber( ucState );
+
+	if( pLuaArguments.Call( pLuaVM, "setVehiclePanelState", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetVehicleIdleRespawnDelay( lua_State* pLuaVM, void* pUserData, unsigned long ulTime )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( ulTime );
+
+	if( pLuaArguments.Call( pLuaVM, "setVehicleIdleRespawnDelay", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetVehicleRespawnDelay( lua_State* pLuaVM, void* pUserData, unsigned long ulTime )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( ulTime );
+
+	if( pLuaArguments.Call( pLuaVM, "setVehicleRespawnDelay", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetVehicleRespawnPosition( lua_State* pLuaVM, void* pUserData, float fX, float fY, float fZ, float fRX, float fRY, float fRZ )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( fX );
+	pLuaArguments.PushNumber( fY );
+	pLuaArguments.PushNumber( fZ );
+	pLuaArguments.PushNumber( fRX );
+	pLuaArguments.PushNumber( fRY );
+	pLuaArguments.PushNumber( fRZ );
+
+	if( pLuaArguments.Call( pLuaVM, "setVehicleRespawnPosition", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::ToggleVehicleRespawn( lua_State* pLuaVM, void* pUserData, bool bRespawn )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( bRespawn );
+
+	if( pLuaArguments.Call( pLuaVM, "toggleVehicleRespawn", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::ResetVehicleExplosionTime( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "resetVehicleExplosionTime", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::ResetVehicleIdleTime( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "resetVehicleIdleTime", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SpawnVehicle( lua_State* pLuaVM, void* pUserData, float fX, float fY, float fZ, float fRX, float fRY, float fRZ )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( fX );
+	pLuaArguments.PushNumber( fY );
+	pLuaArguments.PushNumber( fZ );
+	pLuaArguments.PushNumber( fRX );
+	pLuaArguments.PushNumber( fRY );
+	pLuaArguments.PushNumber( fRZ );
+
+	if( pLuaArguments.Call( pLuaVM, "spawnVehicle", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::RespawnVehicle( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "respawnVehicle", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetVehicleOverrideLights( lua_State* pLuaVM, void* pUserData, unsigned char ucLights )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( ucLights );
+
+	if( pLuaArguments.Call( pLuaVM, "setVehicleOverrideLights", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::AttachTrailerToVehicle( lua_State* pLuaVM, void* pUserData, void* pTrailer )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushUserData( pTrailer );
+
+	if( pLuaArguments.Call( pLuaVM, "attachTrailerToVehicle", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::DetachTrailerFromVehicle( lua_State* pLuaVM, void* pUserData, void* pTrailer )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pTrailer )
+	{
+		pLuaArguments.PushUserData( pTrailer );
+	}
+
+	if( pLuaArguments.Call( pLuaVM, "detachTrailerFromVehicle", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetVehicleEngineState( lua_State* pLuaVM, void* pUserData, bool bState )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushBoolean( bState );
+
+	if( pLuaArguments.Call( pLuaVM, "setVehicleEngineState", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetVehicleDirtLevel( lua_State* pLuaVM, void* pUserData, float fDirtLevel )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( fDirtLevel );
+
+	if( pLuaArguments.Call( pLuaVM, "setVehicleDirtLevel", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetVehicleDamageProof( lua_State* pLuaVM, void* pUserData, bool bDamageProof )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushBoolean( bDamageProof );
+
+	if( pLuaArguments.Call( pLuaVM, "setVehicleDamageProof", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetVehiclePaintjob( lua_State* pLuaVM, void* pUserData, unsigned char ucPaintjob )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( ucPaintjob );
+
+	if( pLuaArguments.Call( pLuaVM, "setVehiclePaintjob", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetVehicleFuelTankExplodable( lua_State* pLuaVM, void* pUserData, bool bExplodable )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushBoolean( bExplodable );
+
+	if( pLuaArguments.Call( pLuaVM, "setVehicleFuelTankExplodable", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetVehicleFrozen( lua_State* pLuaVM, void* pUserData, bool bFrozen )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushBoolean( bFrozen );
+
+	if( pLuaArguments.Call( pLuaVM, "setVehicleFrozen", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetTrainDerailed( lua_State* pLuaVM, void* pUserData, bool bDerailed )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushBoolean( bDerailed );
+
+	if( pLuaArguments.Call( pLuaVM, "setTrainDerailed", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetTrainDerailable( lua_State* pLuaVM, void* pUserData, bool bDerailable )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushBoolean( bDerailable );
+
+	if( pLuaArguments.Call( pLuaVM, "setTrainDerailable", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetTrainDirection( lua_State* pLuaVM, void* pUserData, bool bDireciton )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushBoolean( bDireciton );
+
+	if( pLuaArguments.Call( pLuaVM, "setTrainDirection", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetTrainSpeed( lua_State* pLuaVM, void* pUserData, float fSpeed )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( fSpeed );
+
+	if( pLuaArguments.Call( pLuaVM, "setTrainDirection", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetVehicleHeadLightColor( lua_State* pLuaVM, void* pUserData, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( ucRed );
+	pLuaArguments.PushNumber( ucGreen );
+	pLuaArguments.PushNumber( ucBlue );
+
+	if( pLuaArguments.Call( pLuaVM, "setVehicleHeadLightColor", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetVehicleTurretPosition( lua_State* pLuaVM, void* pUserData, float fHorizontal, float fVertical )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( fHorizontal );
+	pLuaArguments.PushNumber( fVertical );
+
+	if( pLuaArguments.Call( pLuaVM, "setVehicleTurretPosition", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetVehicleDoorOpenRatio( lua_State* pLuaVM, void* pUserData, unsigned char ucDoor, float fRatio, unsigned long ulTime )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( ucDoor );
+	pLuaArguments.PushNumber( fRatio );
+	pLuaArguments.PushNumber( ulTime );
+
+	if( pLuaArguments.Call( pLuaVM, "setVehicleDoorOpenRatio", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetVehicleVariant( lua_State* pLuaVM, void* pUserData, unsigned char ucVariant, unsigned char ucVariant2 )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( ucVariant );
+	pLuaArguments.PushNumber( ucVariant2 );
+
+	if( pLuaArguments.Call( pLuaVM, "setVehicleVariant", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GiveVehicleSirens( lua_State* pLuaVM, void* pUserData, unsigned char ucSirenType, unsigned char ucSirenCount, bool bFlag360, bool bCheckLosFlag, bool bUseRandomiserFlag, bool bSilentFlag )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( ucSirenType );
+	pLuaArguments.PushNumber( ucSirenCount );
+	pLuaArguments.PushBoolean( bFlag360 );
+	pLuaArguments.PushBoolean( bCheckLosFlag );
+	pLuaArguments.PushBoolean( bUseRandomiserFlag );
+	pLuaArguments.PushBoolean( bSilentFlag );
+
+	if( pLuaArguments.Call( pLuaVM, "addVehicleSirens", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::RemoveVehicleSirens( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "removeVehicleSirens", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetVehicleSirens( lua_State* pLuaVM, void* pUserData, unsigned char ucSirenID, float fX, float fY, float fZ, float fRed, float fGreen, float fBlue, float fAlpha, float fMinAlpha )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( ucSirenID );
+	pLuaArguments.PushNumber( fX );
+	pLuaArguments.PushNumber( fY );
+	pLuaArguments.PushNumber( fZ );
+	pLuaArguments.PushNumber( fRed );
+	pLuaArguments.PushNumber( fGreen );
+	pLuaArguments.PushNumber( fBlue );
+	pLuaArguments.PushNumber( fAlpha );
+	pLuaArguments.PushNumber( fMinAlpha );
+
+	if( pLuaArguments.Call( pLuaVM, "setVehicleSirens", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetVehiclePlateText( lua_State* pLuaVM, void* pUserData, const char* szName )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushString( szName );
+
+	if( pLuaArguments.Call( pLuaVM, "setVehiclePlateText", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
