@@ -310,22 +310,22 @@ public:
     static bool						SetVehiclePlateText             ( lua_State* pLuaVM, void* pUserData, const char* szName );
 
     // Marker create/destroy functions
- //   static int      CreateMarker                        ( lua_State* luaVM );
+    static void*					CreateMarker					( lua_State* pLuaVM, float fX, float fY, float fZ, const char* szType, float fSize, unsigned char iRed, unsigned char iGreen, unsigned char iBlue, void* pVisibleTo );
 
     // Marker get functions
- //   static int      GetMarkerCount                      ( lua_State* luaVM );
- //   static int      GetMarkerType                       ( lua_State* luaVM );
- //   static int      GetMarkerSize                       ( lua_State* luaVM );
- //   static int      GetMarkerColor                      ( lua_State* luaVM );
- //   static int      GetMarkerTarget                     ( lua_State* luaVM );
- //   static int      GetMarkerIcon                       ( lua_State* luaVM );
+    static unsigned int				GetMarkerCount					( lua_State* pLuaVM, void* pUserData );
+    static const char*				GetMarkerType					( lua_State* pLuaVM, void* pUserData );
+    static float					GetMarkerSize					( lua_State* pLuaVM, void* pUserData );
+    static bool						GetMarkerColor					( lua_State* pLuaVM, void* pUserData, unsigned char& ucRed, unsigned char& ucGreen, unsigned char& ucBlue );
+    static int						GetMarkerTarget					( lua_State* pLuaVM, void* pUserData, float& fX, float& fY, float& fZ );
+    static const char*				GetMarkerIcon					( lua_State* pLuaVM, void* pUserData );
 
     // Marker set functions
- //   static int      SetMarkerType                       ( lua_State* luaVM );
- //   static int      SetMarkerSize                       ( lua_State* luaVM );
- //   static int      SetMarkerColor                      ( lua_State* luaVM );
- //   static int      SetMarkerTarget                     ( lua_State* luaVM );
- //   static int      SetMarkerIcon                       ( lua_State* luaVM );
+    static bool						SetMarkerType					( lua_State* pLuaVM, void* pUserData, const char* szType );
+    static bool						SetMarkerSize					( lua_State* pLuaVM, void* pUserData, float fSize );
+    static bool						SetMarkerColor					( lua_State* pLuaVM, void* pUserData, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue );
+    static bool						SetMarkerTarget					( lua_State* pLuaVM, void* pUserData, void* pTarget );
+    static bool						SetMarkerIcon					( lua_State* pLuaVM, void* pUserData, const char* szIcon );
 
     // Blip create/destroy functions
  //   static int      CreateBlip                          ( lua_State* luaVM );

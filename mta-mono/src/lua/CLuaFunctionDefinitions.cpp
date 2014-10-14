@@ -4103,3 +4103,217 @@ bool CLuaFunctionDefinitions::SetVehiclePlateText( lua_State* pLuaVM, void* pUse
 
 	return false;
 }
+
+// Marker create/destroy functions
+void* CLuaFunctionDefinitions::CreateMarker( lua_State* pLuaVM, float fX, float fY, float fZ, const char* szType, float fSize, unsigned char iRed, unsigned char iGreen, unsigned char iBlue, void* pVisibleTo )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( fX );
+	pLuaArguments.PushNumber( fY );
+	pLuaArguments.PushNumber( fZ );
+	pLuaArguments.PushString( szType );
+	pLuaArguments.PushNumber( fSize );
+	pLuaArguments.PushNumber( iRed );
+	pLuaArguments.PushNumber( iGreen );
+	pLuaArguments.PushNumber( iBlue );
+	pLuaArguments.PushUserData( pVisibleTo );
+
+	if( pLuaArguments.Call( pLuaVM, "createMarker", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
+// Marker get functions
+unsigned int CLuaFunctionDefinitions::GetMarkerCount( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getMarkerCount", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return static_cast< unsigned int >( pLuaArgument.GetNumber() );
+	}
+
+	return 0;
+}
+
+const char* CLuaFunctionDefinitions::GetMarkerType( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getMarkerType", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetString();
+	}
+
+	return NULL;
+}
+
+float CLuaFunctionDefinitions::GetMarkerSize( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getMarkerSize", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return static_cast< float >( pLuaArgument.GetNumber() );
+	}
+
+	return 0.0f;
+}
+
+bool CLuaFunctionDefinitions::GetMarkerColor( lua_State* pLuaVM, void* pUserData, unsigned char& ucRed, unsigned char& ucGreen, unsigned char& ucBlue )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getMarkerColor", 1 ) )
+	{
+		ucRed	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
+		ucGreen	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		ucBlue	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+
+		return true;
+	}
+
+	return false;
+}
+
+int CLuaFunctionDefinitions::GetMarkerTarget( lua_State* pLuaVM, void* pUserData, float& fX, float& fY, float& fZ )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getMarkerTarget", 1 ) )
+	{
+		fX	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
+		fY	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		fZ	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+
+		return true;
+	}
+
+	return false;
+}
+
+const char* CLuaFunctionDefinitions::GetMarkerIcon( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getMarkerIcon", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetString();
+	}
+
+	return 0;
+}
+
+// Marker set functions
+bool CLuaFunctionDefinitions::SetMarkerType( lua_State* pLuaVM, void* pUserData, const char* szType )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushString( szType );
+
+	if( pLuaArguments.Call( pLuaVM, "setMarkerType", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetMarkerSize( lua_State* pLuaVM, void* pUserData, float fSize )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( fSize );
+
+	if( pLuaArguments.Call( pLuaVM, "setMarkerSize", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetMarkerColor( lua_State* pLuaVM, void* pUserData, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( ucRed );
+	pLuaArguments.PushNumber( ucGreen );
+	pLuaArguments.PushNumber( ucBlue );
+
+	if( pLuaArguments.Call( pLuaVM, "setMarkerColor", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetMarkerTarget( lua_State* pLuaVM, void* pUserData, void* pTarget )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushUserData( pTarget );
+
+	if( pLuaArguments.Call( pLuaVM, "setMarkerTarget", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetMarkerIcon( lua_State* pLuaVM, void* pUserData, const char* szIcon )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushString( szIcon );
+
+	if( pLuaArguments.Call( pLuaVM, "setMarkerIcon", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
