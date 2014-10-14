@@ -328,37 +328,33 @@ public:
     static bool						SetMarkerIcon					( lua_State* pLuaVM, void* pUserData, const char* szIcon );
 
     // Blip create/destroy functions
- //   static int      CreateBlip                          ( lua_State* luaVM );
- //   static int      CreateBlipAttachedTo                ( lua_State* luaVM );
+    static void*					CreateBlip						( lua_State* pLuaVM, void* pUserData, float fX, float fY, float fZ, unsigned char ucIcon, unsigned char ucSize, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue, unsigned char ucAlpha, short sOrdering, unsigned short usVisibleDistance, void* pVisibleTo = NULL );
+    static void*					CreateBlipAttachedTo			( lua_State* pLuaVM, void* pUserData, void* pTarget, unsigned char ucIcon, unsigned char ucSize, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue, unsigned char ucAlpha, short sOrdering, unsigned short usVisibleDistance, void* pVisibleTo = NULL );
 
     // Blip get functions
- //   static int      GetBlipIcon                         ( lua_State* luaVM );
- //   static int      GetBlipSize                         ( lua_State* luaVM );
- //   static int      GetBlipColor                        ( lua_State* luaVM );
- //   static int      GetBlipOrdering                     ( lua_State* luaVM );
- //   static int      GetBlipVisibleDistance              ( lua_State* luaVM );
+    static unsigned char			GetBlipIcon						( lua_State* pLuaVM, void* pUserData );
+    static unsigned char			GetBlipSize						( lua_State* pLuaVM, void* pUserData );
+    static bool						GetBlipColor					( lua_State* pLuaVM, void* pUserData, unsigned char& ucRed, unsigned char& ucGreen, unsigned char& ucBlue, unsigned char& ucAlpha );
+    static short					GetBlipOrdering					( lua_State* pLuaVM, void* pUserData );
+    static unsigned short			GetBlipVisibleDistance			( lua_State* pLuaVM, void* pUserData );
 
     // Blip set functions
- //   static int      SetBlipIcon                         ( lua_State* luaVM );
- //   static int      SetBlipSize                         ( lua_State* luaVM );
- //   static int      SetBlipColor                        ( lua_State* luaVM );
- //   static int      SetBlipOrdering                     ( lua_State* luaVM );
- //   static int      SetBlipVisibleDistance              ( lua_State* luaVM );
+    static bool						SetBlipIcon						( lua_State* pLuaVM, void* pUserData, unsigned char ucIcon );
+    static bool						SetBlipSize						( lua_State* pLuaVM, void* pUserData, unsigned char ucSize );
+    static bool						SetBlipColor					( lua_State* pLuaVM, void* pUserData, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue, unsigned char ucAlpha );
+    static bool						SetBlipOrdering					( lua_State* pLuaVM, void* pUserData, short sOrdering );
+    static bool						SetBlipVisibleDistance			( lua_State* pLuaVM, void* pUserData, unsigned short usVisibleDistance );
 
     // Object create/destroy functions
- //   static int      CreateObject                        ( lua_State* luaVM );
+    static void*					CreateObject					( lua_State* pLuaVM, unsigned short usModelID, float fX, float fY, float fZ, float fRX = 0.0f, float fRY = 0.0f, float fRZ = 0.0f, bool bIsLowLod = false );
 
- //   // Object get functions
- //   static int      GetObjectName                       ( lua_State* luaVM );
- //   static int      GetObjectRotation                   ( lua_State* luaVM );
- //   static int      GetObjectScale                      ( lua_State* luaVM );
+    // Object get functions
+    static float					GetObjectScale					( lua_State* pLuaVM, void* pUserData );
 
     // Object set functions
- //   static int      SetObjectName                       ( lua_State* luaVM );
- //   static int      SetObjectRotation                   ( lua_State* luaVM );
- //   static int      SetObjectScale                      ( lua_State* luaVM );
- //   static int      MoveObject                          ( lua_State* luaVM );
- //   static int      StopObject                          ( lua_State* luaVM );
+    static bool						SetObjectScale					( lua_State* pLuaVM, void* pUserData, float fScale );
+    static bool						MoveObject						( lua_State* pLuaVM, void* pUserData, unsigned long ulTime, float fX, float fY, float fZ, float fRX = 0.0f, float fRY = 0.0f, float fRZ = 0.0f, const char* strEasingType = "Linear", float fEasingPeriod = 0.3f, float fEasingAmplitude = 1.0f, float fEasingOvershoot = 1.701f );
+    static bool						StopObject						( lua_State* pLuaVM, void* pUserData );
 
     // Radar area create/destroy funcs
  //   static int      CreateRadarArea                     ( lua_State* luaVM );

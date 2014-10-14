@@ -4317,3 +4317,341 @@ bool CLuaFunctionDefinitions::SetMarkerIcon( lua_State* pLuaVM, void* pUserData,
 
 	return false;
 }
+
+// Blip create/destroy functions
+void* CLuaFunctionDefinitions::CreateBlip( lua_State* pLuaVM, void* pUserData, float fX, float fY, float fZ, unsigned char ucIcon, unsigned char ucSize, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue, unsigned char ucAlpha, short sOrdering, unsigned short usVisibleDistance, void* pVisibleTo )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( fX );
+	pLuaArguments.PushNumber( fY );
+	pLuaArguments.PushNumber( fZ );
+	pLuaArguments.PushNumber( ucIcon );
+	pLuaArguments.PushNumber( ucSize );
+	pLuaArguments.PushNumber( ucRed );
+	pLuaArguments.PushNumber( ucGreen );
+	pLuaArguments.PushNumber( ucBlue );
+	pLuaArguments.PushNumber( ucAlpha );
+	pLuaArguments.PushNumber( sOrdering );
+	pLuaArguments.PushNumber( usVisibleDistance );
+
+	if( pVisibleTo )
+	{
+		pLuaArguments.PushUserData( pVisibleTo );
+	}
+
+	if( pLuaArguments.Call( pLuaVM, "createBlip", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
+void* CLuaFunctionDefinitions::CreateBlipAttachedTo( lua_State* pLuaVM, void* pUserData, void* pTarget, unsigned char ucIcon, unsigned char ucSize, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue, unsigned char ucAlpha, short sOrdering, unsigned short usVisibleDistance, void* pVisibleTo )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( ucIcon );
+	pLuaArguments.PushNumber( ucSize );
+	pLuaArguments.PushNumber( ucRed );
+	pLuaArguments.PushNumber( ucGreen );
+	pLuaArguments.PushNumber( ucBlue );
+	pLuaArguments.PushNumber( ucAlpha );
+	pLuaArguments.PushNumber( sOrdering );
+	pLuaArguments.PushNumber( usVisibleDistance );
+
+	if( pVisibleTo )
+	{
+		pLuaArguments.PushUserData( pVisibleTo );
+	}
+
+	if( pLuaArguments.Call( pLuaVM, "createBlip", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
+// Blip get functions
+unsigned char CLuaFunctionDefinitions::GetBlipIcon( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getBlipIcon", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return static_cast< unsigned char >( pLuaArgument.GetNumber() );
+	}
+
+	return 0;
+}
+
+unsigned char CLuaFunctionDefinitions::GetBlipSize( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getBlipSize", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return static_cast< unsigned char >( pLuaArgument.GetNumber() );
+	}
+
+	return 0;
+}
+
+bool CLuaFunctionDefinitions::GetBlipColor( lua_State* pLuaVM, void* pUserData, unsigned char& ucRed, unsigned char& ucGreen, unsigned char& ucBlue, unsigned char& ucAlpha )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getBlipColor", 1 ) )
+	{
+		ucRed	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -4 ) )->GetNumber() );
+		ucGreen	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
+		ucBlue	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		ucAlpha	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+
+		return true;
+	}
+
+	return false;
+}
+
+short CLuaFunctionDefinitions::GetBlipOrdering( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getBlipOrdering", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return static_cast< short >( pLuaArgument.GetNumber() );
+	}
+
+	return 0;
+}
+
+unsigned short CLuaFunctionDefinitions::GetBlipVisibleDistance( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getBlipVisibleDistance", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return static_cast< unsigned short >( pLuaArgument.GetNumber() );
+	}
+
+	return 0;
+}
+
+// Blip set functions
+bool CLuaFunctionDefinitions::SetBlipIcon( lua_State* pLuaVM, void* pUserData, unsigned char ucIcon )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( ucIcon );
+
+	if( pLuaArguments.Call( pLuaVM, "setBlipIcon", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetBlipSize( lua_State* pLuaVM, void* pUserData, unsigned char ucSize )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( ucSize );
+
+	if( pLuaArguments.Call( pLuaVM, "setBlipSize", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetBlipColor( lua_State* pLuaVM, void* pUserData, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue, unsigned char ucAlpha )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( ucRed );
+	pLuaArguments.PushNumber( ucGreen );
+	pLuaArguments.PushNumber( ucBlue );
+	pLuaArguments.PushNumber( ucAlpha );
+
+	if( pLuaArguments.Call( pLuaVM, "setBlipColor", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetBlipOrdering( lua_State* pLuaVM, void* pUserData, short sOrdering )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( sOrdering );
+
+	if( pLuaArguments.Call( pLuaVM, "setBlipOrdering", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetBlipVisibleDistance( lua_State* pLuaVM, void* pUserData, unsigned short usVisibleDistance )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( usVisibleDistance );
+
+	if( pLuaArguments.Call( pLuaVM, "setBlipVisibleDistance", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+// Object create/destroy functions
+void* CLuaFunctionDefinitions::CreateObject( lua_State* pLuaVM, unsigned short usModelID, float fX, float fY, float fZ, float fRX, float fRY, float fRZ, bool bIsLowLod )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( fX );
+	pLuaArguments.PushNumber( fY );
+	pLuaArguments.PushNumber( fZ );
+
+	pLuaArguments.PushNumber( fRX );
+	pLuaArguments.PushNumber( fRY );
+	pLuaArguments.PushNumber( fRZ );
+
+	pLuaArguments.PushBoolean( bIsLowLod );
+
+	if( pLuaArguments.Call( pLuaVM, "createObject", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
+// Object get functions
+float CLuaFunctionDefinitions::GetObjectScale( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getObjectScale", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return static_cast< float >( pLuaArgument.GetNumber() );
+	}
+
+	return 0.0f;
+}
+
+// Object set functions
+bool CLuaFunctionDefinitions::SetObjectScale( lua_State* pLuaVM, void* pUserData, float fScale )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( fScale );
+
+	if( pLuaArguments.Call( pLuaVM, "setObjectScale", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::MoveObject( lua_State* pLuaVM, void* pUserData, unsigned long ulTime, float fX, float fY, float fZ, float fRX, float fRY, float fRZ, const char* strEasingType, float fEasingPeriod, float fEasingAmplitude, float fEasingOvershoot )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( ulTime );
+	pLuaArguments.PushNumber( fX );
+	pLuaArguments.PushNumber( fY );
+	pLuaArguments.PushNumber( fZ );
+	pLuaArguments.PushNumber( fRX );
+	pLuaArguments.PushNumber( fRY );
+	pLuaArguments.PushNumber( fRZ );
+	pLuaArguments.PushString( strEasingType );
+	pLuaArguments.PushNumber( fEasingPeriod );
+	pLuaArguments.PushNumber( fEasingAmplitude );
+	pLuaArguments.PushNumber( fEasingOvershoot );
+
+	if( pLuaArguments.Call( pLuaVM, "moveObject", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::StopObject( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "stopObject", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
