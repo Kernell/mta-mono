@@ -3259,7 +3259,7 @@ bool CLuaFunctionDefinitions::GetVehicleHeadLightColor( lua_State* pLuaVM, void*
 
 	pLuaArguments.PushUserData( pUserData );
 
-	if( pLuaArguments.Call( pLuaVM, "getVehicleHeadLightColor", 1 ) )
+	if( pLuaArguments.Call( pLuaVM, "getVehicleHeadLightColor", 3 ) )
 	{
 		ucRed	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
 		ucGreen	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
@@ -3357,7 +3357,7 @@ bool CLuaFunctionDefinitions::SetVehicleTurnVelocity( lua_State* pLuaVM, void* p
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetVehicleColor( lua_State* pLuaVM, void* pUserData, unsigned char& ucRed, unsigned char& ucGreen, unsigned char& ucBlue, unsigned char& ucRed2, unsigned char& ucGreen2, unsigned char& ucBlue2, unsigned char& ucRed3, unsigned char& ucGreen3, unsigned char& ucBlue3, unsigned char& ucRed4, unsigned char& ucGreen4, unsigned char& ucBlue4 )
+bool CLuaFunctionDefinitions::SetVehicleColor( lua_State* pLuaVM, void* pUserData, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue, unsigned char ucRed2, unsigned char ucGreen2, unsigned char ucBlue2, unsigned char ucRed3, unsigned char ucGreen3, unsigned char ucBlue3, unsigned char ucRed4, unsigned char ucGreen4, unsigned char ucBlue4 )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4184,7 +4184,7 @@ bool CLuaFunctionDefinitions::GetMarkerColor( lua_State* pLuaVM, void* pUserData
 
 	pLuaArguments.PushUserData( pUserData );
 
-	if( pLuaArguments.Call( pLuaVM, "getMarkerColor", 1 ) )
+	if( pLuaArguments.Call( pLuaVM, "getMarkerColor", 3 ) )
 	{
 		ucRed	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
 		ucGreen	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
@@ -4202,7 +4202,7 @@ int CLuaFunctionDefinitions::GetMarkerTarget( lua_State* pLuaVM, void* pUserData
 
 	pLuaArguments.PushUserData( pUserData );
 
-	if( pLuaArguments.Call( pLuaVM, "getMarkerTarget", 1 ) )
+	if( pLuaArguments.Call( pLuaVM, "getMarkerTarget", 3 ) )
 	{
 		fX	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
 		fY	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
@@ -4418,7 +4418,7 @@ bool CLuaFunctionDefinitions::GetBlipColor( lua_State* pLuaVM, void* pUserData, 
 
 	pLuaArguments.PushUserData( pUserData );
 
-	if( pLuaArguments.Call( pLuaVM, "getBlipColor", 1 ) )
+	if( pLuaArguments.Call( pLuaVM, "getBlipColor", 4 ) )
 	{
 		ucRed	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -4 ) )->GetNumber() );
 		ucGreen	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
@@ -4655,3 +4655,159 @@ bool CLuaFunctionDefinitions::StopObject( lua_State* pLuaVM, void* pUserData )
 	return false;
 }
 
+// Radar area create/destroy funcs
+void* CLuaFunctionDefinitions::CreateRadarArea( lua_State* pLuaVM, float fX, float fY, float fZ, float fSizeX, float fSizeY, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue, unsigned char ucAlpha, void* pVisibleTo )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( fX );
+	pLuaArguments.PushNumber( fY );
+	pLuaArguments.PushNumber( fZ );
+
+	pLuaArguments.PushNumber( fSizeX );
+	pLuaArguments.PushNumber( fSizeY );
+
+	pLuaArguments.PushNumber( ucRed );
+	pLuaArguments.PushNumber( ucGreen );
+	pLuaArguments.PushNumber( ucBlue );
+	pLuaArguments.PushNumber( ucAlpha );
+
+	if( pVisibleTo )
+	{
+		pLuaArguments.PushUserData( pVisibleTo );
+	}
+
+	if( pLuaArguments.Call( pLuaVM, "createRadarArea", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
+// Radar area get funcs
+bool CLuaFunctionDefinitions::GetRadarAreaSize( lua_State* pLuaVM, void* pUserData, float& fSizeX, float& fSizeY )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getRadarAreaSize", 2 ) )
+	{
+		fSizeX = static_cast< float >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		fSizeY = static_cast< float >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetRadarAreaColor( lua_State* pLuaVM, void* pUserData, unsigned char& ucRed, unsigned char& ucGreen, unsigned char& ucBlue, unsigned char& ucAlpha )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getRadarAreaColor", 4 ) )
+	{
+		ucRed	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -4 ) )->GetNumber() );
+		ucGreen = static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
+		ucBlue	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		ucAlpha	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::IsRadarAreaFlashing( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "isRadarAreaFlashing", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::IsInsideRadarArea( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "isInsideRadarArea", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+// Radar area set funcs
+bool CLuaFunctionDefinitions::SetRadarAreaSize( lua_State* pLuaVM, void* pUserData, float fSizeX, float fSizeY )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( fSizeX );
+	pLuaArguments.PushNumber( fSizeY );
+
+	if( pLuaArguments.Call( pLuaVM, "setRadarAreaSize", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetRadarAreaColor( lua_State* pLuaVM, void* pUserData, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue, unsigned char ucAlpha )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( ucRed );
+	pLuaArguments.PushNumber( ucGreen );
+	pLuaArguments.PushNumber( ucBlue );
+	pLuaArguments.PushNumber( ucAlpha );
+
+	if( pLuaArguments.Call( pLuaVM, "setRadarAreaColor", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetRadarAreaFlashing( lua_State* pLuaVM, void* pUserData, bool bFlashing )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushBoolean( bFlashing );
+
+	if( pLuaArguments.Call( pLuaVM, "setRadarAreaFlashing", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}

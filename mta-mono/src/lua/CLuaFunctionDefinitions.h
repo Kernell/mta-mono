@@ -265,7 +265,7 @@ public:
     static bool						FixVehicle						( lua_State* pLuaVM, void* pUserData );
     static bool						BlowVehicle						( lua_State* pLuaVM, void* pUserData, bool bExplode );
     static bool						SetVehicleTurnVelocity			( lua_State* pLuaVM, void* pUserData, float fX, float fY, float fZ );
-    static bool						SetVehicleColor					( lua_State* pLuaVM, void* pUserData, unsigned char& ucRed, unsigned char& ucGreen, unsigned char& ucBlue, unsigned char& ucRed2, unsigned char& ucGreen2, unsigned char& ucBlue2, unsigned char& ucRed3, unsigned char& ucGreen3, unsigned char& ucBlue3, unsigned char& ucRed4, unsigned char& ucGreen4, unsigned char& ucBlue4 );
+    static bool						SetVehicleColor					( lua_State* pLuaVM, void* pUserData, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue, unsigned char ucRed2, unsigned char ucGreen2, unsigned char ucBlue2, unsigned char ucRed3, unsigned char ucGreen3, unsigned char ucBlue3, unsigned char ucRed4, unsigned char ucGreen4, unsigned char ucBlue4 );
     static bool						SetVehicleLandingGearDown       ( lua_State* pLuaVM, void* pUserData, bool bLandingGearDown );
     static bool						SetVehicleLocked                ( lua_State* pLuaVM, void* pUserData, bool bLocked );
     static bool						SetVehicleDoorsUndamageable     ( lua_State* pLuaVM, void* pUserData, bool bDoorsUndamageable );
@@ -357,18 +357,18 @@ public:
     static bool						StopObject						( lua_State* pLuaVM, void* pUserData );
 
     // Radar area create/destroy funcs
- //   static int      CreateRadarArea                     ( lua_State* luaVM );
+    static void*					CreateRadarArea					( lua_State* pLuaVM, float fX, float fY, float fZ, float fSizeX = 0.0f, float fSizeY = 0.0f, unsigned char ucRed = 255, unsigned char ucGreen = 0, unsigned char ucBlue = 0, unsigned char ucAlpha = 255, void* pVisibleTo = NULL );
 
     // Radar area get funcs
- //   static int      GetRadarAreaSize                    ( lua_State* luaVM );
- //   static int      GetRadarAreaColor                   ( lua_State* luaVM );
- //   static int      IsRadarAreaFlashing                 ( lua_State* luaVM );
- //   static int      IsInsideRadarArea                   ( lua_State* luaVM );
+    static bool						GetRadarAreaSize				( lua_State* pLuaVM, void* pUserData, float& fSizeX, float& fSizeY );
+    static bool						GetRadarAreaColor				( lua_State* pLuaVM, void* pUserData, unsigned char& ucRed, unsigned char& ucGreen, unsigned char& ucBlue, unsigned char& ucAlpha );
+    static bool						IsRadarAreaFlashing				( lua_State* pLuaVM, void* pUserData );
+    static bool						IsInsideRadarArea				( lua_State* pLuaVM, void* pUserData );
 
     // Radar area set funcs
- //   static int      SetRadarAreaSize                    ( lua_State* luaVM );
- //   static int      SetRadarAreaColor                   ( lua_State* luaVM );
- //   static int      SetRadarAreaFlashing                ( lua_State* luaVM );
+    static bool						SetRadarAreaSize				( lua_State* pLuaVM, void* pUserData, float fSizeX, float fSizeY );
+    static bool						SetRadarAreaColor				( lua_State* pLuaVM, void* pUserData, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue, unsigned char ucAlpha );
+    static bool						SetRadarAreaFlashing			( lua_State* pLuaVM, void* pUserData, bool bFlashing );
 
     // Explosion funcs
  //   static int      CreateExplosion                     ( lua_State* luaVM );
