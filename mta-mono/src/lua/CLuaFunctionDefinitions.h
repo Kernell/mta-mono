@@ -112,58 +112,50 @@ public:
 	static bool                 SetElementFrozen                    ( lua_State* pLuaVM, void* pUserData, bool bFrozen );
 	static bool                 SetLowLodElement                    ( lua_State* pLuaVM, void* pUserData, bool bEnabled );
 
-	//// Player get functions
- //   static int      GetPlayerCount                      ( lua_State* luaVM );
- //   static int      GetPedAmmoInClip                    ( lua_State* luaVM );
- //   static int      GetPedTotalAmmo                     ( lua_State* luaVM );
- //   static int      SetPlayerAmmo                       ( lua_State* luaVM );
- //   static int      GetPlayerFromName                   ( lua_State* luaVM );
- //   static int      GetPlayerMoney                      ( lua_State* luaVM );
- //   static int      GetPlayerPing                       ( lua_State* luaVM );
- //   static int      GetRandomPlayer                     ( lua_State* luaVM );
- //   static int      IsPlayerMuted                       ( lua_State* luaVM );
- //   static int      GetPlayerTeam                       ( lua_State* luaVM );
- //   static int      CanPlayerUseFunction                ( lua_State* luaVM );
- //   static int      GetPlayerWantedLevel                ( lua_State* luaVM );
- //   static int      GetAlivePlayers                     ( lua_State* luaVM );
- //   static int      GetDeadPlayers                      ( lua_State* luaVM );
- //   static int      GetPlayerIdleTime                   ( lua_State* luaVM );
- //   static int      IsPlayerScoreboardForced            ( lua_State* luaVM );
- //   static int      IsPlayerMapForced                   ( lua_State* luaVM );
- //   static int      GetPlayerNametagText                ( lua_State* luaVM );
- //   static int      GetPlayerNametagColor               ( lua_State* luaVM );
- //   static int      IsPlayerNametagShowing              ( lua_State* luaVM );
- //   static int      GetPlayerSerial                     ( lua_State* luaVM );
- //   static int      GetPlayerCommunityID                ( lua_State* luaVM );
- //   static int      IsPlayerDev                         ( lua_State* luaVM );
- //   static int      IsPlayerQA                          ( lua_State* luaVM );
- //   static int      GetPlayerUserName                   ( lua_State* luaVM );
- //   static int      GetPlayerBlurLevel                  ( lua_State* luaVM );
- //   static int      GetPlayerName                       ( lua_State* luaVM );
- //   static int      GetPlayerIP                         ( lua_State* luaVM );
- //   static int      GetPlayerAccount                    ( lua_State* luaVM );
- //   static int      GetPlayerVersion                    ( lua_State* luaVM );
- //   static int      GetPlayerACInfo                     ( lua_State* luaVM );
+	// Player get functions
+    static int                  GetPlayerCount                      ( lua_State* pLuaVM );
+    static void*                GetPlayerFromName                   ( lua_State* pLuaVM, string sName );
+    static int                  GetPlayerMoney                      ( lua_State* pLuaVM, void* pUserData );
+    static int                  GetPlayerPing                       ( lua_State* pLuaVM, void* pUserData );
+    static void*                GetRandomPlayer                     ( lua_State* pLuaVM );
+    static bool                 IsPlayerMuted                       ( lua_State* pLuaVM, void* pUserData );
+    static void*                GetPlayerTeam                       ( lua_State* pLuaVM, void* pUserData );
+    static int                  GetPlayerWantedLevel                ( lua_State* pLuaVM, void* pUserData );
+    static int                  GetAlivePlayers                     ( lua_State* pLuaVM );
+    static int                  GetDeadPlayers                      ( lua_State* pLuaVM );
+    static int                  GetPlayerIdleTime                   ( lua_State* pLuaVM, void* pUserData );
+    static bool                 IsPlayerMapForced                   ( lua_State* pLuaVM, void* pUserData );
+    static string               GetPlayerNametagText                ( lua_State* pLuaVM, void* pUserData );
+    static bool                 GetPlayerNametagColor               ( lua_State* pLuaVM, void* pUserData, int &iRed, int &iGreen, int &iBlue );
+    static bool                 IsPlayerNametagShowing              ( lua_State* pLuaVM, void* pUserData );
+    static string               GetPlayerSerial                     ( lua_State* pLuaVM, void* pUserData );
+    static string               GetPlayerUserName                   ( lua_State* pLuaVM, void* pUserData );
+    static int                  GetPlayerBlurLevel                  ( lua_State* pLuaVM, void* pUserData );
+    static string               GetPlayerName                       ( lua_State* pLuaVM, void* pUserData );
+    static string               GetPlayerIP                         ( lua_State* pLuaVM, void* pUserData );
+    static void*                GetPlayerAccount                    ( lua_State* pLuaVM, void* pUserData );
+    static string               GetPlayerVersion                    ( lua_State* pLuaVM, void* pUserData );
+    static int                  GetPlayerACInfo                     ( lua_State* pLuaVM, void* pUserData );
 
- //   // Player set functions
- //   static int      SetPlayerMoney                      ( lua_State* luaVM );
- //   static int      GivePlayerMoney                     ( lua_State* luaVM );
- //   static int      TakePlayerMoney                     ( lua_State* luaVM );
- //   static int      SpawnPlayer                         ( lua_State* luaVM );
- //   static int      ShowPlayerHudComponent              ( lua_State* luaVM );
- //   static int      SetPlayerWantedLevel                ( lua_State* luaVM );
- //   static int      ForcePlayerMap                      ( lua_State* luaVM );
- //   static int      SetPlayerNametagText                ( lua_State* luaVM );
- //   static int      SetPlayerNametagColor               ( lua_State* luaVM );
- //   static int      SetPlayerNametagShowing             ( lua_State* luaVM );
- //   static int      SetPlayerMuted                      ( lua_State* luaVM );
- //   static int      SetPlayerBlurLevel                  ( lua_State* luaVM );
- //   static int      RedirectPlayer                      ( lua_State* luaVM );
- //   static int      SetPlayerName                       ( lua_State* luaVM );
- //   static int      DetonateSatchels                    ( lua_State* luaVM );
- //   static int      TakePlayerScreenShot                ( lua_State* luaVM );
+    // Player set functions
+    static bool					SetPlayerMoney                      ( lua_State* pLuaVM, void* pUserData, int iAmount, bool bInstant = false );
+    static bool					GivePlayerMoney                     ( lua_State* pLuaVM, void* pUserData, int iAmount );
+    static bool					TakePlayerMoney                     ( lua_State* pLuaVM, void* pUserData, int iAmount );
+    static bool					SpawnPlayer                         ( lua_State* pLuaVM, void* pUserData, float fX, float fY, float fZ, int iRotation = 0, int iSkinID = 0, int iInterior = 0, int iDimension = 0, void* theTeam = NULL );
+    static bool					ShowPlayerHudComponent              ( lua_State* pLuaVM, void* pUserData, string sComponent, bool bShow );
+    static bool					SetPlayerWantedLevel                ( lua_State* pLuaVM, void* pUserData, int iLevel );
+    static bool					ForcePlayerMap                      ( lua_State* pLuaVM, void* pUserData, bool bForceOn );
+    static bool					SetPlayerNametagText                ( lua_State* pLuaVM, void* pUserData, string sText );
+    static bool					SetPlayerNametagColor               ( lua_State* pLuaVM, void* pUserData, int iRed = 0, int iGreen = 0, int iBlue = 0 );
+    static bool					SetPlayerNametagShowing             ( lua_State* pLuaVM, void* pUserData, bool bShowing );
+    static bool					SetPlayerMuted                      ( lua_State* pLuaVM, void* pUserData, bool bMuted );
+    static bool					SetPlayerBlurLevel                  ( lua_State* pLuaVM, void* pUserData, int iLevel );
+    static bool					RedirectPlayer                      ( lua_State* pLuaVM, void* pUserData, string sServerIP, int iServerPort, string sServerPassword );
+    static bool					SetPlayerName                       ( lua_State* pLuaVM, void* pUserData, string sName );
+    static bool					DetonateSatchels                    ( lua_State* pLuaVM, void* pUserData );
+    static bool					TakePlayerScreenShot                ( lua_State* pLuaVM, void* pUserData, int iWidth, int iHeight, string sTag = "", int iQuality = 30, int iMaxBandwith = 5000 );
 
-	//// Ped get functions
+	// Ped get functions
  //   static int      CreatePed                           ( lua_State* luaVM );
  //   static int      GetPedArmor                         ( lua_State* luaVM );    
  //   static int      GetPedRotation                      ( lua_State* luaVM );    
@@ -191,7 +183,7 @@ public:
  //   static int      GetWeaponProperty                   ( lua_State* luaVM );
  //   static int      GetOriginalWeaponProperty           ( lua_State* luaVM );
 
- //   // Player set functions
+    // Player set functions
  //   static int      SetPedArmor                         ( lua_State* luaVM );    
  //   static int      KillPed                             ( lua_State* luaVM );
  //   static int      SetPedRotation                      ( lua_State* luaVM );
@@ -216,17 +208,17 @@ public:
  //   static int      reloadPedWeapon                     ( lua_State* luaVM );
  //   static int      SetWeaponProperty                   ( lua_State* luaVM );
 
- //   // Weapon give/take functions
+    // Weapon give/take functions
  //   static int      GiveWeapon                          ( lua_State* luaVM );
  //   static int      TakeWeapon                          ( lua_State* luaVM );
  //   static int      TakeAllWeapons                      ( lua_State* luaVM );
  //   static int      SetWeaponAmmo                       ( lua_State* luaVM );
  //   static int      GetSlotFromWeapon                   ( lua_State* luaVM );
 
- //   // Vehicle create/destroy functions
+    // Vehicle create/destroy functions
 	static void*	CreateVehicle						( lua_State* luaVM, int model, float fX, float fY, float fZ, float fRX, float fRY, float fRZ, string numberplate, bool direction = false, int variant1 = 255, int variant2 = 255 );
 
- //   // Vehicle get functions
+    // Vehicle get functions
  //   static int      GetVehicleType                      ( lua_State* luaVM );
  //   static int      GetVehicleVariant                   ( lua_State* luaVM );
  //   static int      GetVehicleColor                     ( lua_State* luaVM );
@@ -270,7 +262,7 @@ public:
  //   static int      GetVehicleHeadLightColor            ( lua_State* luaVM );
  //   static int      GetVehicleDoorOpenRatio             ( lua_State* luaVM );
 
- //   // Vehicle set functions
+    // Vehicle set functions
  //   static int      FixVehicle                          ( lua_State* luaVM );
  //   static int      BlowVehicle                         ( lua_State* luaVM );
  //   static int      SetVehicleRotation                  ( lua_State* luaVM );
@@ -321,10 +313,10 @@ public:
  //   static int      GetVehicleSirenParams               ( lua_State* luaVM );
  //   static int      SetVehiclePlateText                 ( lua_State* luaVM );
 
- //   // Marker create/destroy functions
+    // Marker create/destroy functions
  //   static int      CreateMarker                        ( lua_State* luaVM );
 
- //   // Marker get functions
+    // Marker get functions
  //   static int      GetMarkerCount                      ( lua_State* luaVM );
  //   static int      GetMarkerType                       ( lua_State* luaVM );
  //   static int      GetMarkerSize                       ( lua_State* luaVM );
@@ -332,32 +324,32 @@ public:
  //   static int      GetMarkerTarget                     ( lua_State* luaVM );
  //   static int      GetMarkerIcon                       ( lua_State* luaVM );
 
- //   // Marker set functions
+    // Marker set functions
  //   static int      SetMarkerType                       ( lua_State* luaVM );
  //   static int      SetMarkerSize                       ( lua_State* luaVM );
  //   static int      SetMarkerColor                      ( lua_State* luaVM );
  //   static int      SetMarkerTarget                     ( lua_State* luaVM );
  //   static int      SetMarkerIcon                       ( lua_State* luaVM );
 
- //   // Blip create/destroy functions
+    // Blip create/destroy functions
  //   static int      CreateBlip                          ( lua_State* luaVM );
  //   static int      CreateBlipAttachedTo                ( lua_State* luaVM );
 
- //   // Blip get functions
+    // Blip get functions
  //   static int      GetBlipIcon                         ( lua_State* luaVM );
  //   static int      GetBlipSize                         ( lua_State* luaVM );
  //   static int      GetBlipColor                        ( lua_State* luaVM );
  //   static int      GetBlipOrdering                     ( lua_State* luaVM );
  //   static int      GetBlipVisibleDistance              ( lua_State* luaVM );
 
- //   // Blip set functions
+    // Blip set functions
  //   static int      SetBlipIcon                         ( lua_State* luaVM );
  //   static int      SetBlipSize                         ( lua_State* luaVM );
  //   static int      SetBlipColor                        ( lua_State* luaVM );
  //   static int      SetBlipOrdering                     ( lua_State* luaVM );
  //   static int      SetBlipVisibleDistance              ( lua_State* luaVM );
 
- //   // Object create/destroy functions
+    // Object create/destroy functions
  //   static int      CreateObject                        ( lua_State* luaVM );
 
  //   // Object get functions
@@ -365,45 +357,45 @@ public:
  //   static int      GetObjectRotation                   ( lua_State* luaVM );
  //   static int      GetObjectScale                      ( lua_State* luaVM );
 
- //   // Object set functions
+    // Object set functions
  //   static int      SetObjectName                       ( lua_State* luaVM );
  //   static int      SetObjectRotation                   ( lua_State* luaVM );
  //   static int      SetObjectScale                      ( lua_State* luaVM );
  //   static int      MoveObject                          ( lua_State* luaVM );
  //   static int      StopObject                          ( lua_State* luaVM );
 
- //   // Radar area create/destroy funcs
+    // Radar area create/destroy funcs
  //   static int      CreateRadarArea                     ( lua_State* luaVM );
 
- //   // Radar area get funcs
+    // Radar area get funcs
  //   static int      GetRadarAreaSize                    ( lua_State* luaVM );
  //   static int      GetRadarAreaColor                   ( lua_State* luaVM );
  //   static int      IsRadarAreaFlashing                 ( lua_State* luaVM );
  //   static int      IsInsideRadarArea                   ( lua_State* luaVM );
 
- //   // Radar area set funcs
+    // Radar area set funcs
  //   static int      SetRadarAreaSize                    ( lua_State* luaVM );
  //   static int      SetRadarAreaColor                   ( lua_State* luaVM );
  //   static int      SetRadarAreaFlashing                ( lua_State* luaVM );
 
- //   // Explosion funcs
+    // Explosion funcs
  //   static int      CreateExplosion                     ( lua_State* luaVM );
 
- //   // Fire funcs
+    // Fire funcs
  //   static int      CreateFire                          ( lua_State* luaVM );
 
- //   // Audio funcs
+    // Audio funcs
  //   static int      PlaySoundFrontEnd                   ( lua_State* luaVM );
  //   static int      PlayMissionAudio                    ( lua_State* luaVM );
  //   static int      PreloadMissionAudio                 ( lua_State* luaVM );
 
- //   // Ped body funcs?
+    // Ped body funcs?
  //   static int      GetBodyPartName                     ( lua_State* luaVM );
  //   static int      GetClothesByTypeIndex               ( lua_State* luaVM );
  //   static int      GetTypeIndexFromClothes             ( lua_State* luaVM );
  //   static int      GetClothesTypeName                  ( lua_State* luaVM );
 
- //   // Key bind funcs
+    // Key bind funcs
  //   static int      BindKey                             ( lua_State* luaVM );
  //   static int      UnbindKey                           ( lua_State* luaVM );
  //   static int      IsKeyBound                          ( lua_State* luaVM );
@@ -416,7 +408,7 @@ public:
  //   static int      ToggleControl                       ( lua_State* luaVM );
  //   static int      ToggleAllControls                   ( lua_State* luaVM ); 
 
- //   // Shape create funcs
+    // Shape create funcs
  //   static int      CreateColCircle                     ( lua_State* luaVM );
  //   static int      CreateColCuboid                     ( lua_State* luaVM );
  //   static int      CreateColSphere                     ( lua_State* luaVM );
@@ -424,7 +416,7 @@ public:
  //   static int      CreateColPolygon                    ( lua_State* luaVM );
  //   static int      CreateColTube                       ( lua_State* luaVM );
 
- //   // Team get funcs
+    // Team get funcs
  //   static int      CreateTeam                          ( lua_State* luaVM );    
  //   static int      GetTeamFromName                     ( lua_State* luaVM );
  //   static int      GetTeamName                         ( lua_State* luaVM );
@@ -433,13 +425,13 @@ public:
  //   static int      GetPlayersInTeam                    ( lua_State* luaVM );
  //   static int      CountPlayersInTeam                  ( lua_State* luaVM );
 
- //   // Team set funcs
+    // Team set funcs
  //   static int      SetPlayerTeam                       ( lua_State* luaVM );
  //   static int      SetTeamName                         ( lua_State* luaVM );
  //   static int      SetTeamColor                        ( lua_State* luaVM );       
  //   static int      SetTeamFriendlyFire                 ( lua_State* luaVM );
 
- //   // Water funcs
+    // Water funcs
  //   static int      CreateWater                         ( lua_State* luaVM );
  //   static int      SetWaterLevel                       ( lua_State* luaVM );
  //   static int      ResetWaterLevel                     ( lua_State* luaVM );
@@ -449,7 +441,7 @@ public:
  //   static int      SetWaterColor                       ( lua_State* luaVM );
  //   static int      ResetWaterColor                     ( lua_State* luaVM );
 
- //   // Weapon funcs
+    // Weapon funcs
  //   static int      CreateWeapon                        ( lua_State* luaVM );
  //   static int      GetWeaponNameFromID                 ( lua_State* luaVM );
  //   static int      GetWeaponIDFromName                 ( lua_State* luaVM );

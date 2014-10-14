@@ -1148,6 +1148,662 @@ bool CLuaFunctionDefinitions::SetLowLodElement( lua_State* pLuaVM, void* pUserDa
 	return false;
 }
 
+// Player get functions
+int CLuaFunctionDefinitions::GetPlayerCount( lua_State* pLuaVM )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getPlayerCount", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return static_cast< int >( pLuaArgument.GetNumber() );
+	}
+
+	return 0;
+}
+
+void* CLuaFunctionDefinitions::GetPlayerFromName( lua_State* pLuaVM, string sName )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushString( sName.c_str() );
+
+	if( pLuaArguments.Call( pLuaVM, "getPlayerFromName", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
+int CLuaFunctionDefinitions::GetPlayerMoney( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getPlayerMoney", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return static_cast< int >( pLuaArgument.GetNumber() );
+	}
+
+	return 0;
+}
+
+int CLuaFunctionDefinitions::GetPlayerPing( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getPlayerPing", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return static_cast< int >( pLuaArgument.GetNumber() );
+	}
+
+	return 0;
+}
+
+void* CLuaFunctionDefinitions::GetRandomPlayer( lua_State* pLuaVM )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getRandomPlayer", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return 0;
+}
+
+bool CLuaFunctionDefinitions::IsPlayerMuted( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "isPlayerMuted", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return 0;
+}
+
+void* CLuaFunctionDefinitions::GetPlayerTeam( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getPlayerTeam", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
+int CLuaFunctionDefinitions::GetPlayerWantedLevel( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getPlayerWantedLevel", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return static_cast< int >( pLuaArgument.GetNumber() );
+	}
+
+	return 0;
+}
+
+int CLuaFunctionDefinitions::GetAlivePlayers( lua_State* pLuaVM )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getAlivePlayers", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return static_cast< int >( pLuaArgument.GetNumber() );
+	}
+
+	return 0;
+}
+
+int CLuaFunctionDefinitions::GetDeadPlayers( lua_State* pLuaVM )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getDeadPlayers", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return static_cast< int >( pLuaArgument.GetNumber() );
+	}
+
+	return 0;
+}
+
+int CLuaFunctionDefinitions::GetPlayerIdleTime( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getPlayerIdleTime", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return static_cast< int >( pLuaArgument.GetNumber() );
+	}
+
+	return 0;
+}
+
+bool CLuaFunctionDefinitions::IsPlayerMapForced( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "isPlayerMapForced", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+string CLuaFunctionDefinitions::GetPlayerNametagText( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getPlayerNametagText", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return string( pLuaArgument.GetString() );
+	}
+
+	return string();
+}
+
+bool CLuaFunctionDefinitions::GetPlayerNametagColor( lua_State* pLuaVM, void* pUserData, int &iRed, int &iGreen, int &iBlue )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getPlayerNametagColor", 3 ) )
+	{
+		iRed	= static_cast< int >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
+		iGreen	= static_cast< int >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		iBlue	= static_cast< int >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::IsPlayerNametagShowing( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "isPlayerNametagShowing", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+string CLuaFunctionDefinitions::GetPlayerSerial( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getPlayerSerial", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return string( pLuaArgument.GetString() );
+	}
+
+	return string();
+}
+
+string CLuaFunctionDefinitions::GetPlayerUserName( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getPlayerUserName", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return string( pLuaArgument.GetString() );
+	}
+
+	return string();
+}
+
+int CLuaFunctionDefinitions::GetPlayerBlurLevel( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getPlayerBlurLevel", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return static_cast< int >( pLuaArgument.GetNumber() );
+	}
+
+	return 0;
+}
+
+string CLuaFunctionDefinitions::GetPlayerName( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getPlayerName", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return string( pLuaArgument.GetString() );
+	}
+
+	return string();
+}
+
+string CLuaFunctionDefinitions::GetPlayerIP( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getPlayerIP", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return string( pLuaArgument.GetString() );
+	}
+
+	return string();
+}
+
+void* CLuaFunctionDefinitions::GetPlayerAccount( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getPlayerAccount", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
+string CLuaFunctionDefinitions::GetPlayerVersion( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getPlayerVersion", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return string( pLuaArgument.GetString() );
+	}
+
+	return string();
+}
+
+int CLuaFunctionDefinitions::GetPlayerACInfo( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+	
+	pLuaArguments.PushUserData( pUserData );
+	
+	if( pLuaArguments.Call( pLuaVM, "getPlayerACInfo", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+		
+		// TODO
+	}
+	
+	return 0;
+}
+
+// Player set functions
+bool CLuaFunctionDefinitions::SetPlayerMoney( lua_State* pLuaVM, void* pUserData, int iAmount, bool bInstant )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( iAmount );
+	pLuaArguments.PushBoolean( bInstant );
+
+	if( pLuaArguments.Call( pLuaVM, "setPlayerMoney", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GivePlayerMoney( lua_State* pLuaVM, void* pUserData, int iAmount )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( iAmount );
+
+	if( pLuaArguments.Call( pLuaVM, "givePlayerMoney", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::TakePlayerMoney( lua_State* pLuaVM, void* pUserData, int iAmount )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( iAmount );
+
+	if( pLuaArguments.Call( pLuaVM, "takePlayerMoney", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SpawnPlayer( lua_State* pLuaVM, void* pUserData, float fX, float fY, float fZ, int iRotation, int iSkinID, int iInterior, int iDimension, void* pTeam )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( fX );
+	pLuaArguments.PushNumber( fY );
+	pLuaArguments.PushNumber( fZ );
+	pLuaArguments.PushNumber( iRotation );
+	pLuaArguments.PushNumber( iSkinID );
+	pLuaArguments.PushNumber( iInterior );
+	pLuaArguments.PushNumber( iDimension );
+
+	if( pTeam )
+	{
+		pLuaArguments.PushUserData( pTeam );
+	}
+
+	if( pLuaArguments.Call( pLuaVM, "spawnPlayer", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::ShowPlayerHudComponent( lua_State* pLuaVM, void* pUserData, string sComponent, bool bShow )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushString( sComponent.c_str() );
+	pLuaArguments.PushBoolean( bShow );
+
+	if( pLuaArguments.Call( pLuaVM, "showPlayerHudComponent", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetPlayerWantedLevel( lua_State* pLuaVM, void* pUserData, int iLevel )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( iLevel );
+
+	if( pLuaArguments.Call( pLuaVM, "setPlayerWantedLevel", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::ForcePlayerMap( lua_State* pLuaVM, void* pUserData, bool bForceOn )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushBoolean( bForceOn );
+
+	if( pLuaArguments.Call( pLuaVM, "forcePlayerMap", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetPlayerNametagText( lua_State* pLuaVM, void* pUserData, string sText )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushString( sText.c_str() );
+
+	if( pLuaArguments.Call( pLuaVM, "setPlayerNametagText", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetPlayerNametagColor( lua_State* pLuaVM, void* pUserData, int iRed, int iGreen, int iBlue )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( iRed );
+	pLuaArguments.PushNumber( iGreen );
+	pLuaArguments.PushNumber( iBlue );
+
+	if( pLuaArguments.Call( pLuaVM, "setPlayerNametagColor", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetPlayerNametagShowing( lua_State* pLuaVM, void* pUserData, bool bShowing )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushBoolean( bShowing );
+
+	if( pLuaArguments.Call( pLuaVM, "setPlayerNametagShowing", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetPlayerMuted( lua_State* pLuaVM, void* pUserData, bool bMuted )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushBoolean( bMuted );
+
+	if( pLuaArguments.Call( pLuaVM, "setPlayerMuted", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetPlayerBlurLevel( lua_State* pLuaVM, void* pUserData, int iLevel )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( iLevel );
+
+	if( pLuaArguments.Call( pLuaVM, "setPlayerBlurLevel", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::RedirectPlayer( lua_State* pLuaVM, void* pUserData, string sServerIP, int iServerPort, string sServerPassword )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushString( sServerIP.c_str() );
+	pLuaArguments.PushNumber( iServerPort );
+	pLuaArguments.PushString( sServerPassword.c_str() );
+
+	if( pLuaArguments.Call( pLuaVM, "redirectPlayer", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetPlayerName( lua_State* pLuaVM, void* pUserData, string sName )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushString( sName.c_str() );
+
+	if( pLuaArguments.Call( pLuaVM, "setPlayerName", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::DetonateSatchels( lua_State* pLuaVM, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "detonateSatchels", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::TakePlayerScreenShot( lua_State* pLuaVM, void* pUserData, int iWidth, int iHeight, string sTag, int iQuality, int iMaxBandwith )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushNumber( iWidth );
+	pLuaArguments.PushNumber( iHeight );
+	pLuaArguments.PushString( sTag.c_str() );
+	pLuaArguments.PushNumber( iQuality );
+	pLuaArguments.PushNumber( iMaxBandwith );
+
+	if( pLuaArguments.Call( pLuaVM, "takePlayerScreenShot", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
 void* CLuaFunctionDefinitions::CreateVehicle( lua_State* pLuaVM, int model, float fX, float fY, float fZ, float fRX, float fRY, float fRZ, string numberplate, bool direction, int variant1, int variant2 )
 {
 	CLuaArguments pLuaArguments;
