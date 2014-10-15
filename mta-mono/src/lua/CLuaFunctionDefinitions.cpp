@@ -4988,3 +4988,129 @@ bool CLuaFunctionDefinitions::UsePickup( lua_State* pLuaVM, void* pUserData, voi
 	return false;
 }
 
+// Shape create funcs
+void* CLuaFunctionDefinitions::CreateColCircle( lua_State* pLuaVM, const Vector2& vecPosition, float fRadius )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( vecPosition.fX );
+	pLuaArguments.PushNumber( vecPosition.fY );
+	pLuaArguments.PushNumber( fRadius );
+
+	if( pLuaArguments.Call( pLuaVM, "createColCircle", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
+void* CLuaFunctionDefinitions::CreateColCuboid( lua_State* pLuaVM, const Vector3& vecPosition, const Vector3& vecSize )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( vecPosition.fX );
+	pLuaArguments.PushNumber( vecPosition.fY );
+	pLuaArguments.PushNumber( vecPosition.fZ );
+
+	pLuaArguments.PushNumber( vecSize.fX );
+	pLuaArguments.PushNumber( vecSize.fY );
+	pLuaArguments.PushNumber( vecSize.fZ );
+
+	if( pLuaArguments.Call( pLuaVM, "createColCuboid", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
+void* CLuaFunctionDefinitions::CreateColSphere( lua_State* pLuaVM, const Vector3& vecPosition, float fRadius )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( vecPosition.fX );
+	pLuaArguments.PushNumber( vecPosition.fY );
+	pLuaArguments.PushNumber( vecPosition.fZ );
+
+	pLuaArguments.PushNumber( fRadius );
+
+	if( pLuaArguments.Call( pLuaVM, "createColSphere", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
+void* CLuaFunctionDefinitions::CreateColRectangle( lua_State* pLuaVM, const Vector2& vecPosition, const Vector2& vecSize )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( vecPosition.fX );
+	pLuaArguments.PushNumber( vecPosition.fY );
+
+	pLuaArguments.PushNumber( vecSize.fX );
+	pLuaArguments.PushNumber( vecSize.fY );
+
+	if( pLuaArguments.Call( pLuaVM, "createColRectangle", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
+void* CLuaFunctionDefinitions::CreateColPolygon( lua_State* pLuaVM, const vector< Vector2 >& vecPointList )
+{
+	if( vecPointList.size() < 4 )
+	{
+		return NULL;
+	}
+
+	CLuaArguments pLuaArguments;
+
+	for( unsigned int i = 0; i < vecPointList.size(); i++ )
+    {
+        pLuaArguments.PushNumber( vecPointList[ i ].fX );
+        pLuaArguments.PushNumber( vecPointList[ i ].fY );
+    }
+
+	if( pLuaArguments.Call( pLuaVM, "createColRectangle", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
+void* CLuaFunctionDefinitions::CreateColTube( lua_State* pLuaVM, const Vector3& vecPosition, float fRadius, float fHeight )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( vecPosition.fX );
+	pLuaArguments.PushNumber( vecPosition.fY );
+	pLuaArguments.PushNumber( vecPosition.fZ );
+
+	pLuaArguments.PushNumber( fRadius );
+	pLuaArguments.PushNumber( fHeight );
+
+	if( pLuaArguments.Call( pLuaVM, "createColTube", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}

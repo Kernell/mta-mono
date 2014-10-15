@@ -18,6 +18,9 @@ class CLuaFunctionDefinitions;
 #include "../Common.h"
 #include "../extra/CLuaArguments.h"
 
+#include "../extra/Vector2.h"
+#include "../extra/Vector3.h"
+
 class CLuaFunctionDefinitions
 {
 public:
@@ -386,6 +389,14 @@ public:
     static bool						SetPickupRespawnInterval		( lua_State* pLuaVM, void* pUserData, unsigned long ulInterval );
     static bool						UsePickup						( lua_State* pLuaVM, void* pUserData, void* pPlayer );
 
+	// Shape create funcs
+    static void*					CreateColCircle                 ( lua_State* pLuaVM, const Vector2& vecPosition, float fRadius );
+    static void*					CreateColCuboid                 ( lua_State* pLuaVM, const Vector3& vecPosition, const Vector3& vecSize );
+    static void*					CreateColSphere                 ( lua_State* pLuaVM, const Vector3& vecPosition, float fRadius );
+    static void*					CreateColRectangle              ( lua_State* pLuaVM, const Vector2& vecPosition, const Vector2& vecSize );
+    static void*					CreateColPolygon                ( lua_State* pLuaVM, const vector< Vector2 >& vecPointList );
+    static void*					CreateColTube                   ( lua_State* pLuaVM, const Vector3& vecPosition, float fRadius, float fHeight );
+
     // Explosion funcs
  //   static int      CreateExplosion                     ( lua_State* luaVM );
 
@@ -415,14 +426,6 @@ public:
  //   static int      SetControlState                     ( lua_State* luaVM );
  //   static int      ToggleControl                       ( lua_State* luaVM );
  //   static int      ToggleAllControls                   ( lua_State* luaVM ); 
-
-    // Shape create funcs
- //   static int      CreateColCircle                     ( lua_State* luaVM );
- //   static int      CreateColCuboid                     ( lua_State* luaVM );
- //   static int      CreateColSphere                     ( lua_State* luaVM );
- //   static int      CreateColRectangle                  ( lua_State* luaVM );
- //   static int      CreateColPolygon                    ( lua_State* luaVM );
- //   static int      CreateColTube                       ( lua_State* luaVM );
 
     // Team get funcs
  //   static int      CreateTeam                          ( lua_State* luaVM );    
