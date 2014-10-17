@@ -24,16 +24,20 @@ class CLuaFunctionDefinitions;
 class CLuaFunctionDefinitions
 {
 public:
-	static string   Get                                 ( lua_State* pLuaVM, const string &sKey );
-	static bool     Set                                 ( lua_State* pLuaVM, const string &sKey, const string &sValue );
-	static string   GetGameType                         ( lua_State* pLuaVM );
-	static string   GetMapName                          ( lua_State* pLuaVM );
-	static string   GetRuleValue                        ( lua_State* pLuaVM, const string &sKey );
-	static bool     RemoveRuleValue                     ( lua_State* pLuaVM, const string &sKey );
-	static bool     SetGameType                         ( lua_State* pLuaVM, const string &sType );
-	static bool     SetMapName                          ( lua_State* pLuaVM, const string &sName );
-	static bool     SetRuleValue                        ( lua_State* pLuaVM, const string &sKey, const string &sValue );
-	
+	// All-Seeing Eye related Functions
+    static bool						SetGameType                     ( lua_State* pLuaVM, const char* szGameType );
+    static bool						SetMapName                      ( lua_State* pLuaVM, const char* szMapName );
+    static string					GetRuleValue                    ( lua_State* pLuaVM, const char* szKey );
+    static bool						SetRuleValue                    ( lua_State* pLuaVM, const char* szKey, const char* szValue );
+    static bool						RemoveRuleValue                 ( lua_State* pLuaVM, const char* szKey );
+    static string					GetPlayerAnnounceValue          ( lua_State* pLuaVM, void* pElement, const string& strKey );
+    static string					SetPlayerAnnounceValue          ( lua_State* pLuaVM, void* pElement, const string& strKey );
+
+	static string					Get								( lua_State* pLuaVM, const char* szKey );
+	static bool						Set								( lua_State* pLuaVM, const char* szKey, const char* szValue );
+	static string					GetGameType                     ( lua_State* pLuaVM );
+	static string					GetMapName						( lua_State* pLuaVM );
+
  //   static int      CallRemote                          ( lua_State* luaVM );
  //   static int      FetchRemote                         ( lua_State* luaVM );
 
@@ -53,14 +57,14 @@ public:
  //   static int      CancelLatentEvent                   ( lua_State* luaVM );
 
 	// Element create/destroy
-	static void*				CreateElement						( lua_State* pLuaVM, string sType, string sID );
+	static void*				CreateElement						( lua_State* pLuaVM, const char* szTypeName, const char* szID );
 	static bool					DestroyElement						( lua_State* pLuaVM, void* pUserData );
-	static void*				CloneElement						( lua_State* pLuaVM, void* pUserData, float fX = 0.0f, float fY = 0.0f, float fZ = 0.0f, bool bCloneChildren = false );
+	static void*				CloneElement						( lua_State* pLuaVM, void* pUserData, const Vector3& vecPosition, bool bCloneElement );
 
     // Element get funcs
 	static bool					IsElement							( lua_State* pLuaVM, void* pUserData );
 	static string				GetElementType						( lua_State* pLuaVM, void* pUserData );
-	static void*				GetElementByID						( lua_State* pLuaVM, string sID );
+	static void*				GetElementByID						( lua_State* pLuaVM, const char* szID, unsigned int uiIndex );
 	static void*				GetElementByIndex					( lua_State* pLuaVM, int iIndex );
 	static void*				GetElementChild						( lua_State* pLuaVM, void* pUserData, int iIndex );
 	static int					GetElementChildrenCount				( lua_State* pLuaVM, void* pUserData );
@@ -68,9 +72,9 @@ public:
 	static CLuaArgument*		GetElementData						( lua_State* pLuaVM, void* pUserData, string sKey, bool bInherit = true );
 	static CLuaArguments*		GetAllElementData					( lua_State* pLuaVM, void* pUserData );
     static void*				GetElementParent					( lua_State* pLuaVM, void* pUserData );
-	static bool					GetElementPosition					( lua_State* pLuaVM, void* pUserData, float &fX, float &fY, float &fZ );
-	static bool					GetElementRotation					( lua_State* pLuaVM, void* pUserData, float &fX, float &fY, float &fZ );
-	static bool					GetElementVelocity					( lua_State* pLuaVM, void* pUserData, float &fX, float &fY, float &fZ );
+	static bool					GetElementPosition					( lua_State* pLuaVM, void* pUserData, Vector3& vecPosition );
+	static bool					GetElementRotation					( lua_State* pLuaVM, void* pUserData, Vector3& vecRotation );
+	static bool					GetElementVelocity					( lua_State* pLuaVM, void* pUserData, Vector3& vecVelocity );
 	static int					GetElementInterior					( lua_State* pLuaVM, void* pUserData );
 	static bool					IsElementWithinColShape				( lua_State* pLuaVM, void* pUserData );
 	static bool					IsElementWithinMarker				( lua_State* pLuaVM, void* pUserData );
@@ -84,7 +88,7 @@ public:
 	static float				GetElementHealth					( lua_State* pLuaVM, void* pUserData );
 	static int					GetElementModel						( lua_State* pLuaVM, void* pUserData );
 	static bool					IsElementInWater					( lua_State* pLuaVM, void* pUserData );
-	static bool					GetElementAttachedOffsets			( lua_State* pLuaVM, void* pUserData, float &fX, float &fY, float &fZ, float &fRX, float &fRY, float &fRZ );
+	static bool					GetElementAttachedOffsets			( lua_State* pLuaVM, void* pUserData, Vector3& vecPosition, Vector3& vecRotation );
 	static void*				GetElementSyncer					( lua_State* pLuaVM, void* pUserData );
 	static bool					GetElementCollisionsEnabled			( lua_State* pLuaVM, void* pUserData );
 	static bool					IsElementFrozen						( lua_State* pLuaVM, void* pUserData );
@@ -97,19 +101,19 @@ public:
 	static bool                 SetElementData                      ( lua_State* pLuaVM, void* pUserData, string sKey, const CLuaArgument& Variable );
 	static bool                 RemoveElementData                   ( lua_State* pLuaVM, void* pUserData, string sKey );
 	static bool                 SetElementParent                    ( lua_State* pLuaVM, void* pUserData, void* pTarget );
-	static bool                 SetElementPosition                  ( lua_State* pLuaVM, void* pUserData, float fX, float fY, float fZ );
-	static bool                 SetElementRotation                  ( lua_State* pLuaVM, void* pUserData, float fX, float fY, float fZ );
-	static bool                 SetElementVelocity                  ( lua_State* pLuaVM, void* pUserData, float fX, float fY, float fZ );
+	static bool                 SetElementPosition                  ( lua_State* pLuaVM, void* pUserData, const Vector3& vecPosition, bool bWarp = true );
+	static bool                 SetElementRotation                  ( lua_State* pLuaVM, void* pUserData, const Vector3& vecRotation, const char* szRotationOrder = "default", bool bNewWay = false );
+	static bool                 SetElementVelocity                  ( lua_State* pLuaVM, void* pUserData, const Vector3& vecVelocity );
 	static bool                 SetElementVisibleTo                 ( lua_State* pLuaVM, void* pUserData, void* pTarget, bool bVisible );
 	static bool                 SetElementInterior                  ( lua_State* pLuaVM, void* pUserData, int iInterior );
 	static bool                 SetElementDimension                 ( lua_State* pLuaVM, void* pUserData, int iDimension );
-	static bool                 AttachElements                      ( lua_State* pLuaVM, void* pUserData, void* pTarget, float fX = 0.0f, float fY = 0.0f, float fZ = 0.0f, float fRX = 0.0f, float fRY = 0.0f, float fRZ = 0.0f );
+	static bool                 AttachElements                      ( lua_State* pLuaVM, void* pUserData, void* pTarget, Vector3& vecPosition, Vector3& vecRotation );
 	static bool                 DetachElements                      ( lua_State* pLuaVM, void* pUserData, void* pTarget = NULL );
 	static bool                 SetElementAlpha                     ( lua_State* pLuaVM, void* pUserData, int iAlpha );
 	static bool                 SetElementDoubleSided               ( lua_State* pLuaVM, void* pUserData, bool bDoubleSided );
 	static bool                 SetElementHealth                    ( lua_State* pLuaVM, void* pUserData, float fHealth );
 	static bool                 SetElementModel                     ( lua_State* pLuaVM, void* pUserData, int iModel );
-	static bool                 SetElementAttachedOffsets           ( lua_State* pLuaVM, void* pUserData, float fX, float fY, float fZ, float fRX, float fRY, float fRZ );
+	static bool                 SetElementAttachedOffsets           ( lua_State* pLuaVM, void* pUserData, Vector3& vecPosition, Vector3& vecRotation );
 	static bool                 SetElementSyncer                    ( lua_State* pLuaVM, void* pUserData, void* pPlayer );
 	static bool                 SetElementCollisionsEnabled         ( lua_State* pLuaVM, void* pUserData, bool bEnabled );
 	static bool                 SetElementFrozen                    ( lua_State* pLuaVM, void* pUserData, bool bFrozen );
@@ -144,7 +148,7 @@ public:
     static bool					SetPlayerMoney                      ( lua_State* pLuaVM, void* pUserData, int iAmount, bool bInstant = false );
     static bool					GivePlayerMoney                     ( lua_State* pLuaVM, void* pUserData, int iAmount );
     static bool					TakePlayerMoney                     ( lua_State* pLuaVM, void* pUserData, int iAmount );
-    static bool					SpawnPlayer                         ( lua_State* pLuaVM, void* pUserData, float fX, float fY, float fZ, int iRotation = 0, int iSkinID = 0, int iInterior = 0, int iDimension = 0, void* theTeam = NULL );
+    static bool					SpawnPlayer                         ( lua_State* pLuaVM, void* pUserData, Vector3& vecPosition, int iRotation = 0, int iSkinID = 0, int iInterior = 0, int iDimension = 0, void* theTeam = NULL );
     static bool					ShowPlayerHudComponent              ( lua_State* pLuaVM, void* pUserData, string sComponent, bool bShow );
     static bool					SetPlayerWantedLevel                ( lua_State* pLuaVM, void* pUserData, int iLevel );
     static bool					ForcePlayerMap                      ( lua_State* pLuaVM, void* pUserData, bool bForceOn );
@@ -159,7 +163,7 @@ public:
     static bool					TakePlayerScreenShot                ( lua_State* pLuaVM, void* pUserData, int iWidth, int iHeight, string sTag = "", int iQuality = 30, int iMaxBandwith = 5000 );
 
 	// Ped get functions
-	static void*				CreatePed                           ( lua_State* pLuaVM, int iModelid, float fX, float fY, float fZ, float fRot = 0.0, bool bSynced = true );
+	static void*				CreatePed                           ( lua_State* pLuaVM, int iModelid, const Vector3& vecPosition, float fRot = 0.0, bool bSynced = true );
 	static float				GetPedArmor                         ( lua_State* pLuaVM, void* pUserData );    
 	static bool					IsPedChoking                        ( lua_State* pLuaVM, void* pUserData );
 	static bool					IsPedDead                           ( lua_State* pLuaVM, void* pUserData );
@@ -313,76 +317,76 @@ public:
     static bool						SetVehiclePlateText             ( lua_State* pLuaVM, void* pUserData, const char* szName );
 
     // Marker create/destroy functions
-    static void*					CreateMarker					( lua_State* pLuaVM, float fX, float fY, float fZ, const char* szType, float fSize, unsigned char iRed, unsigned char iGreen, unsigned char iBlue, void* pVisibleTo );
+    static void*					CreateMarker					( lua_State* pLuaVM, const Vector3& vecPosition, const char* szType, float fSize, const SColor color, void* pVisibleTo );
 
     // Marker get functions
-    static unsigned int				GetMarkerCount					( lua_State* pLuaVM, void* pUserData );
-    static const char*				GetMarkerType					( lua_State* pLuaVM, void* pUserData );
-    static float					GetMarkerSize					( lua_State* pLuaVM, void* pUserData );
-    static bool						GetMarkerColor					( lua_State* pLuaVM, void* pUserData, unsigned char& ucRed, unsigned char& ucGreen, unsigned char& ucBlue );
-    static int						GetMarkerTarget					( lua_State* pLuaVM, void* pUserData, float& fX, float& fY, float& fZ );
-    static const char*				GetMarkerIcon					( lua_State* pLuaVM, void* pUserData );
+	static bool						GetMarkerCount					( lua_State* pLuaVM, unsigned int& uiCount );
+	static bool						GetMarkerType					( lua_State* pLuaVM, void* pUserData, char* szType );
+	static bool						GetMarkerSize					( lua_State* pLuaVM, void* pUserData, float& fSize );
+	static bool						GetMarkerColor					( lua_State* pLuaVM, void* pUserData, SColor& outColor );
+	static bool						GetMarkerTarget					( lua_State* pLuaVM, void* pUserData, Vector3& vecTarget );
+	static bool						GetMarkerIcon					( lua_State* pLuaVM, void* pUserData, char* szIcon );
 
     // Marker set functions
     static bool						SetMarkerType					( lua_State* pLuaVM, void* pUserData, const char* szType );
     static bool						SetMarkerSize					( lua_State* pLuaVM, void* pUserData, float fSize );
-    static bool						SetMarkerColor					( lua_State* pLuaVM, void* pUserData, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue );
-    static bool						SetMarkerTarget					( lua_State* pLuaVM, void* pUserData, void* pTarget );
+    static bool						SetMarkerColor					( lua_State* pLuaVM, void* pUserData, const SColor color );
+    static bool						SetMarkerTarget					( lua_State* pLuaVM, void* pUserData, const Vector3* pTarget );
     static bool						SetMarkerIcon					( lua_State* pLuaVM, void* pUserData, const char* szIcon );
 
     // Blip create/destroy functions
-    static void*					CreateBlip						( lua_State* pLuaVM, void* pUserData, float fX, float fY, float fZ, unsigned char ucIcon, unsigned char ucSize, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue, unsigned char ucAlpha, short sOrdering, unsigned short usVisibleDistance, void* pVisibleTo = NULL );
-    static void*					CreateBlipAttachedTo			( lua_State* pLuaVM, void* pUserData, void* pTarget, unsigned char ucIcon, unsigned char ucSize, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue, unsigned char ucAlpha, short sOrdering, unsigned short usVisibleDistance, void* pVisibleTo = NULL );
-
+	static void*					CreateBlip						( lua_State* pLuaVM, const Vector3& vecPosition, unsigned char ucIcon, unsigned char ucSize, const SColor color, short sOrdering, unsigned short usVisibleDistance, void* pVisibleTo = NULL );
+    static void*					CreateBlipAttachedTo			( lua_State* pLuaVM, void* pTarget, unsigned char ucIcon, unsigned char ucSize, const SColor color, short sOrdering, unsigned short usVisibleDistance, void* pVisibleTo = NULL );
+    
     // Blip get functions
-    static unsigned char			GetBlipIcon						( lua_State* pLuaVM, void* pUserData );
-    static unsigned char			GetBlipSize						( lua_State* pLuaVM, void* pUserData );
-    static bool						GetBlipColor					( lua_State* pLuaVM, void* pUserData, unsigned char& ucRed, unsigned char& ucGreen, unsigned char& ucBlue, unsigned char& ucAlpha );
-    static short					GetBlipOrdering					( lua_State* pLuaVM, void* pUserData );
-    static unsigned short			GetBlipVisibleDistance			( lua_State* pLuaVM, void* pUserData );
+	static bool						GetBlipIcon						( lua_State* pLuaVM, void* pUserData, unsigned char& ucIcon );
+	static bool						GetBlipSize						( lua_State* pLuaVM, void* pUserData, unsigned char& ucSize );
+	static bool						GetBlipColor					( lua_State* pLuaVM, void* pUserData, SColor& outColor );
+	static bool						GetBlipOrdering					( lua_State* pLuaVM, void* pUserData, short& sOrdering );
+	static bool						GetBlipVisibleDistance			( lua_State* pLuaVM, void* pUserData, unsigned short& usVisibleDistance );
 
     // Blip set functions
     static bool						SetBlipIcon						( lua_State* pLuaVM, void* pUserData, unsigned char ucIcon );
     static bool						SetBlipSize						( lua_State* pLuaVM, void* pUserData, unsigned char ucSize );
-    static bool						SetBlipColor					( lua_State* pLuaVM, void* pUserData, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue, unsigned char ucAlpha );
+    static bool						SetBlipColor					( lua_State* pLuaVM, void* pUserData, const SColor color );
     static bool						SetBlipOrdering					( lua_State* pLuaVM, void* pUserData, short sOrdering );
     static bool						SetBlipVisibleDistance			( lua_State* pLuaVM, void* pUserData, unsigned short usVisibleDistance );
 
     // Object create/destroy functions
-    static void*					CreateObject					( lua_State* pLuaVM, unsigned short usModelID, float fX, float fY, float fZ, float fRX = 0.0f, float fRY = 0.0f, float fRZ = 0.0f, bool bIsLowLod = false );
+    static void*					CreateObject					( lua_State* pLuaVM, unsigned short usModelID, const Vector3& vecPosition, const Vector3& vecRotation, bool bIsLowLod );
 
     // Object get functions
-    static float					GetObjectScale					( lua_State* pLuaVM, void* pUserData );
+    static bool						GetObjectScale					( lua_State* pLuaVM, void* pUserData, Vector3& vecScale );
 
     // Object set functions
-    static bool						SetObjectScale					( lua_State* pLuaVM, void* pUserData, float fScale );
-    static bool						MoveObject						( lua_State* pLuaVM, void* pUserData, unsigned long ulTime, float fX, float fY, float fZ, float fRX = 0.0f, float fRY = 0.0f, float fRZ = 0.0f, const char* strEasingType = "Linear", float fEasingPeriod = 0.3f, float fEasingAmplitude = 1.0f, float fEasingOvershoot = 1.701f );
+    static bool						SetObjectScale					( lua_State* pLuaVM, void* pUserData, const Vector3& vecScale );
+    static bool						MoveObject						( lua_State* pLuaVM, void* pUserData, unsigned long ulTime, const Vector3& vecPosition, const Vector3& vecRotation, const char* szEasingType, float fEasingPeriod, float fEasingAmplitude, float fEasingOvershoot );
     static bool						StopObject						( lua_State* pLuaVM, void* pUserData );
 
     // Radar area create/destroy funcs
-    static void*					CreateRadarArea					( lua_State* pLuaVM, float fX, float fY, float fZ, float fSizeX = 0.0f, float fSizeY = 0.0f, unsigned char ucRed = 255, unsigned char ucGreen = 0, unsigned char ucBlue = 0, unsigned char ucAlpha = 255, void* pVisibleTo = NULL );
+    static void*					CreateRadarArea					( lua_State* pLuaVM, const Vector2& vecPosition, const Vector2& vecSize, const SColor color, void* pVisibleTo = NULL );
 
     // Radar area get funcs
-    static bool						GetRadarAreaSize				( lua_State* pLuaVM, void* pUserData, float& fSizeX, float& fSizeY );
-    static bool						GetRadarAreaColor				( lua_State* pLuaVM, void* pUserData, unsigned char& ucRed, unsigned char& ucGreen, unsigned char& ucBlue, unsigned char& ucAlpha );
+    static bool						GetRadarAreaSize				( lua_State* pLuaVM, void* pUserData, Vector2& vecSize );
+    static bool						GetRadarAreaColor				( lua_State* pLuaVM, void* pUserData, SColor& outColor );
     static bool						IsRadarAreaFlashing				( lua_State* pLuaVM, void* pUserData );
-    static bool						IsInsideRadarArea				( lua_State* pLuaVM, void* pUserData );
+    static bool						IsInsideRadarArea				( lua_State* pLuaVM, void* pUserData, const Vector2& vecPosition, bool& bInside );
 
     // Radar area set funcs
-    static bool						SetRadarAreaSize				( lua_State* pLuaVM, void* pUserData, float fSizeX, float fSizeY );
-    static bool						SetRadarAreaColor				( lua_State* pLuaVM, void* pUserData, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue, unsigned char ucAlpha );
+    static bool						SetRadarAreaSize				( lua_State* pLuaVM, void* pUserData, const Vector2& vecSize );
+    static bool						SetRadarAreaColor				( lua_State* pLuaVM, void* pUserData, const SColor color );
     static bool						SetRadarAreaFlashing			( lua_State* pLuaVM, void* pUserData, bool bFlashing );
 	
     // Pickup create/destroy funcs
-    static void*					CreatePickup					( lua_State* pLuaVM, float fX, float fY, float fZ, unsigned char ucType, double dFive, unsigned long ulRespawnInterval = 30000, double dSix = 50 );
+    static void*					CreatePickup					( lua_State* pLuaVM, const Vector3& vecPosition, unsigned char ucType, double dFive, unsigned long ulRespawnInterval = 30000, double dSix = 50 );
 
     // Pickup get funcs
-    static unsigned char			GetPickupType					( lua_State* pLuaVM, void* pUserData );
-    static unsigned char			GetPickupWeapon					( lua_State* pLuaVM, void* pUserData );
-    static float					GetPickupAmount					( lua_State* pLuaVM, void* pUserData );
-    static unsigned short			GetPickupAmmo					( lua_State* pLuaVM, void* pUserData );
-    static unsigned long			GetPickupRespawnInterval		( lua_State* pLuaVM, void* pUserData );
-    static bool						IsPickupSpawned					( lua_State* pLuaVM, void* pUserData );
+	static bool						GetPickupType					( lua_State* pLuaVM, void* pUserData, unsigned char& ucType );
+    static bool						GetPickupWeapon					( lua_State* pLuaVM, void* pUserData, unsigned char& ucWeapon );
+    static bool						GetPickupAmount					( lua_State* pLuaVM, void* pUserData, float& fAmount );
+    static bool						GetPickupAmmo					( lua_State* pLuaVM, void* pUserData, unsigned short& ucAmmo );
+    static bool						GetPickupRespawnInterval		( lua_State* pLuaVM, void* pUserData, unsigned long& ulInterval );
+    static bool						IsPickupSpawned					( lua_State* pLuaVM, void* pUserData, bool& bSpawned );
 
     // Pickup set funcs
     static bool						SetPickupType					( lua_State* pLuaVM, void* pUserData, unsigned char ucType, double dThree, double dFour );
@@ -397,80 +401,237 @@ public:
     static void*					CreateColPolygon                ( lua_State* pLuaVM, const vector< Vector2 >& vecPointList );
     static void*					CreateColTube                   ( lua_State* pLuaVM, const Vector3& vecPosition, float fRadius, float fHeight );
 
-    // Explosion funcs
- //   static int      CreateExplosion                     ( lua_State* luaVM );
+     // Explosion funcs
+    static bool						CreateExplosion					( lua_State* pLuaVM, const Vector3& vecPosition, unsigned char ucType, void* pCreator = NULL );
 
     // Fire funcs
- //   static int      CreateFire                          ( lua_State* luaVM );
+//	static int						CreateFire						( lua_State* pLuaVM );
 
     // Audio funcs
- //   static int      PlaySoundFrontEnd                   ( lua_State* luaVM );
- //   static int      PlayMissionAudio                    ( lua_State* luaVM );
- //   static int      PreloadMissionAudio                 ( lua_State* luaVM );
+    static bool						PlaySoundFrontEnd				( lua_State* pLuaVM, void* pElement, unsigned char ucSound );
+    static bool						PlayMissionAudio				( lua_State* pLuaVM, void* pElement, Vector3& vecPosition, unsigned short usSlot );
 
-    // Ped body funcs?
- //   static int      GetBodyPartName                     ( lua_State* luaVM );
- //   static int      GetClothesByTypeIndex               ( lua_State* luaVM );
- //   static int      GetTypeIndexFromClothes             ( lua_State* luaVM );
- //   static int      GetClothesTypeName                  ( lua_State* luaVM );
+    // Ped body?
+	static bool						GetBodyPartName					( lua_State* pLuaVM, unsigned char ucID, char* szName );
+	static bool						GetClothesByTypeIndex			( lua_State* pLuaVM, unsigned char ucType, unsigned char ucIndex, char* szTextureReturn, char* szModelReturn );
+	static bool						GetTypeIndexFromClothes			( lua_State* pLuaVM, const char* szTexture, const char* szModel, unsigned char& ucTypeReturn, unsigned char& ucIndexReturn );
+	static bool						GetClothesTypeName				( lua_State* pLuaVM, unsigned char ucType, char* szNameReturn );
 
-    // Key bind funcs
- //   static int      BindKey                             ( lua_State* luaVM );
- //   static int      UnbindKey                           ( lua_State* luaVM );
- //   static int      IsKeyBound                          ( lua_State* luaVM );
- //   static int      GetFunctionsBoundToKey              ( lua_State* luaVM );
- //   static int      GetKeyBoundToFunction               ( lua_State* luaVM );
- //   static int      GetControlState                     ( lua_State* luaVM );
- //   static int      IsControlEnabled                    ( lua_State* luaVM );
- //  
- //   static int      SetControlState                     ( lua_State* luaVM );
- //   static int      ToggleControl                       ( lua_State* luaVM );
- //   static int      ToggleAllControls                   ( lua_State* luaVM ); 
+    // Input funcs
+//	static bool						BindKey							( lua_State* pLuaVM, void* pPlayer, const char* szKey, const char* szHitState, const CLuaFunctionRef& iLuaFunction, CLuaArguments& Arguments );
+	static bool						BindKey							( lua_State* pLuaVM, void* pPlayer, const char* szKey, const char* szHitState, const char* szCommandName, const char* szArguments );
+//	static bool						UnbindKey						( lua_State* pLuaVM, void* pPlayer, const char* szKey, const char* szHitState = NULL, const CLuaFunctionRef& iLuaFunction = CLuaFunctionRef() );
+	static bool						UnbindKey						( lua_State* pLuaVM, void* pPlayer, const char* szKey, const char* szHitState, const char* szCommandName );
+//	static bool						IsKeyBound						( lua_State* pLuaVM, void* pPlayer, const char* szKey, const char* szHitState, const CLuaFunctionRef& iLuaFunction, bool& bBound );
+	static bool						GetControlState					( lua_State* pLuaVM, void* pPlayer, const char* szControl, bool& bState );
+	static bool						IsControlEnabled				( lua_State* pLuaVM, void* pPlayer, const char* szControl, bool& bEnabled );
 
-    // Team get funcs
- //   static int      CreateTeam                          ( lua_State* luaVM );    
- //   static int      GetTeamFromName                     ( lua_State* luaVM );
- //   static int      GetTeamName                         ( lua_State* luaVM );
- //   static int      GetTeamColor                        ( lua_State* luaVM );
- //   static int      GetTeamFriendlyFire                 ( lua_State* luaVM );
- //   static int      GetPlayersInTeam                    ( lua_State* luaVM );
- //   static int      CountPlayersInTeam                  ( lua_State* luaVM );
+	static bool						SetControlState					( lua_State* pLuaVM, void* pPlayer, const char* szControl, bool bState );
+	static bool						ToggleControl					( lua_State* pLuaVM, void* pPlayer, const char* szControl, bool bEnabled );
+	static bool						ToggleAllControls				( lua_State* pLuaVM, void* pPlayer, bool bGTAControls, bool bMTAControls, bool bEnabled );
 
-    // Team set funcs
- //   static int      SetPlayerTeam                       ( lua_State* luaVM );
- //   static int      SetTeamName                         ( lua_State* luaVM );
- //   static int      SetTeamColor                        ( lua_State* luaVM );       
- //   static int      SetTeamFriendlyFire                 ( lua_State* luaVM );
+	// Team get funcs
+    static void*					CreateTeam						( lua_State* pLuaVM, const char* szTeamName, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue );
+    static void*					GetTeamFromName					( lua_State* pLuaVM, const char* szTeamName );
+    static bool						GetTeamName						( lua_State* pLuaVM, void* pTeam, string& strOutName );
+    static bool						GetTeamColor					( lua_State* pLuaVM, void* pTeam, unsigned char& ucRed, unsigned char& ucGreen, unsigned char& ucBlue );
+    static bool						CountPlayersInTeam				( lua_State* pLuaVM, void* pTeam, unsigned int& uiCount );
+    static bool						GetTeamFriendlyFire				( lua_State* pLuaVM, void* pTeam, bool& bFriendlyFire );
 
-    // Water funcs
- //   static int      CreateWater                         ( lua_State* luaVM );
- //   static int      SetWaterLevel                       ( lua_State* luaVM );
- //   static int      ResetWaterLevel                     ( lua_State* luaVM );
- //   static int      GetWaterVertexPosition              ( lua_State* luaVM );
- //   static int      SetWaterVertexPosition              ( lua_State* luaVM );
- //   static int      GetWaterColor                       ( lua_State* luaVM );
- //   static int      SetWaterColor                       ( lua_State* luaVM );
- //   static int      ResetWaterColor                     ( lua_State* luaVM );
+	// Team set funcs
+	static bool						SetTeamName						( lua_State* pLuaVM, void* pTeam, const char* szTeamName );
+	static bool						SetTeamColor					( lua_State* pLuaVM, void* pTeam, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue );
+	static bool						SetPlayerTeam					( lua_State* pLuaVM, void* pPlayer, void* pTeam );
+	static bool						SetTeamFriendlyFire				( lua_State* pLuaVM, void* pTeam, bool bFriendlyFire );
 
-    // Weapon funcs
- //   static int      CreateWeapon                        ( lua_State* luaVM );
- //   static int      GetWeaponNameFromID                 ( lua_State* luaVM );
- //   static int      GetWeaponIDFromName                 ( lua_State* luaVM );
- //   static int      FireWeapon                          ( lua_State* luaVM );
- //   static int      SetWeaponState                      ( lua_State* luaVM );
- //   static int      GetWeaponState                      ( lua_State* luaVM );
- //   static int      SetWeaponTarget                     ( lua_State* luaVM );
- //   static int      GetWeaponTarget                     ( lua_State* luaVM );
- //   static int      SetWeaponOwner                      ( lua_State* luaVM );
- //   static int      GetWeaponOwner                      ( lua_State* luaVM );
- //   static int      SetWeaponFlags                      ( lua_State* luaVM );
- //   static int      GetWeaponFlags                      ( lua_State* luaVM );
- //   static int      SetWeaponFiringRate                 ( lua_State* luaVM );
- //   static int      GetWeaponFiringRate                 ( lua_State* luaVM );
- //   static int      ResetWeaponFiringRate               ( lua_State* luaVM );
- //   static int      GetWeaponAmmo                       ( lua_State* luaVM );
- //   static int      GetWeaponClipAmmo                   ( lua_State* luaVM );
- //   static int      SetWeaponClipAmmo                   ( lua_State* luaVM );
+	// Water funcs
+	static void*					CreateWater						( lua_State* pLuaVM, Vector3* pV1, Vector3* pV2, Vector3* pV3, Vector3* pV4 );
+	static bool						SetElementWaterLevel			( lua_State* pLuaVM, void* pWater, float fLevel );
+	static bool						SetAllElementWaterLevel			( lua_State* pLuaVM, float fLevel );
+	static bool						SetWorldWaterLevel				( lua_State* pLuaVM, float fLevel, bool bIncludeWorldNonSeaLevel );
+	static bool						ResetWorldWaterLevel			( lua_State* pLuaVM );
+	static bool						GetWaterVertexPosition			( lua_State* pLuaVM, void* pWater, int iVertexIndex, Vector3& vecPosition );
+	static bool						SetWaterVertexPosition			( lua_State* pLuaVM, void* pWater, int iVertexIndex, Vector3& vecPosition );
+	static bool						GetWaterColor					( lua_State* pLuaVM, unsigned char& ucRed, unsigned char& ucGreen, unsigned char& ucBlue, unsigned char& ucAlpha );
+	static bool						SetWaterColor					( lua_State* pLuaVM, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue, unsigned char ucAlpha );
+	static bool						ResetWaterColor					( lua_State* pLuaVM );
+
+	// Standard server functions
+    static unsigned int				GetMaxPlayers                   ( lua_State* pLuaVM );
+    static bool						SetMaxPlayers                   ( lua_State* pLuaVM, unsigned int uiMax );
+    static bool						OutputChatBox                   ( lua_State* pLuaVM, const char* szText, void* pElement, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue, bool bColorCoded );
+    static bool						OutputConsole                   ( lua_State* pLuaVM, const char* szText, void* pElement );
+    static bool						SetServerPassword               ( lua_State* pLuaVM, const string& strPassword, bool bSave );
+
+	// General world get funcs
+    static bool						GetTime                         ( lua_State* pLuaVM, unsigned char& ucHour, unsigned char& ucMinute );
+    static bool						GetWeather                      ( lua_State* pLuaVM, unsigned char& ucWeather, unsigned char& ucWeatherBlendingTo );
+    static bool						GetZoneName                     ( lua_State* pLuaVM, Vector3& vecPosition, string& strOutName, bool bCitiesOnly = false );
+    static bool						GetGravity                      ( lua_State* pLuaVM, float& fGravity );
+    static bool						GetGameSpeed                    ( lua_State* pLuaVM, float& fSpeed );
+    static bool						GetWaveHeight                   ( lua_State* pLuaVM, float& fHeight );
+    static bool						GetFPSLimit                     ( lua_State* pLuaVM, unsigned short& usLimit );
+    static bool						GetMinuteDuration               ( lua_State* pLuaVM, unsigned long& ulDuration );
+    static bool						IsGarageOpen                    ( lua_State* pLuaVM, unsigned char ucGarageID, bool& bIsOpen );
+    static bool						GetTrafficLightState            ( lua_State* pLuaVM, unsigned char& ucState );
+    static bool						GetTrafficLightsLocked          ( lua_State* pLuaVM, bool& bLocked );
+    static bool						GetJetpackMaxHeight             ( lua_State* pLuaVM, float& fMaxHeight );
+    static bool						GetAircraftMaxVelocity          ( lua_State* pLuaVM, float& fVelocity );
+    static bool						GetInteriorSoundsEnabled        ( lua_State* pLuaVM, bool& bEnabled );
+    static bool						GetRainLevel                    ( lua_State* pLuaVM, float& fRainLevel );
+    static bool						GetSunSize                      ( lua_State* pLuaVM, float& fSunSize );
+    static bool						GetSunColor                     ( lua_State* pLuaVM, unsigned char& ucCoreR, unsigned char& ucCoreG, unsigned char& ucCoreB, unsigned char& ucCoronaR, unsigned char& ucCoronaG, unsigned char& ucCoronaB );
+    static bool						GetWindVelocity                 ( lua_State* pLuaVM, float& fVelX, float& fVelY, float& fVelZ );
+    static bool						GetFarClipDistance              ( lua_State* pLuaVM, float& fFarClip );
+    static bool						GetFogDistance                  ( lua_State* pLuaVM, float& fFogDist );
+    static bool						GetAircraftMaxHeight            ( lua_State* pLuaVM, float& fMaxHeight );
+    static bool						GetOcclusionsEnabled            ( lua_State* pLuaVM, bool& bEnabled );
+    static bool						GetMoonSize                     ( lua_State* pLuaVM, int& iSize );
+
+    // General world set funcs
+    static bool						SetTime                         ( lua_State* pLuaVM, unsigned char ucHour, unsigned char ucMinute );
+    static bool						SetWeather                      ( lua_State* pLuaVM, unsigned char ucWeather );
+    static bool						SetWeatherBlended               ( lua_State* pLuaVM, unsigned char ucWeather );
+    static bool						SetGravity                      ( lua_State* pLuaVM, float fGravity );
+    static bool						SetGameSpeed				    ( lua_State* pLuaVM, float fSpeed );
+    static bool						SetWaveHeight                   ( lua_State* pLuaVM, float fHeight );
+    static bool						GetSkyGradient                  ( lua_State* pLuaVM, unsigned char& ucTopRed, unsigned char& ucTopGreen, unsigned char& ucTopBlue, unsigned char& ucBottomRed, unsigned char& ucBottomGreen, unsigned char& ucBottomBlue );
+    static bool						SetSkyGradient                  ( lua_State* pLuaVM, unsigned char ucTopRed, unsigned char ucTopGreen, unsigned char ucTopBlue, unsigned char ucBottomRed, unsigned char ucBottomGreen, unsigned char ucBottomBlue );
+    static bool						ResetSkyGradient                ( lua_State* pLuaVM );
+    static bool						GetHeatHaze                     ( lua_State* pLuaVM, SHeatHazeSettings& heatHazeSettings );
+    static bool						SetHeatHaze                     ( lua_State* pLuaVM, const SHeatHazeSettings& heatHazeSettings );
+    static bool						ResetHeatHaze                   ( lua_State* pLuaVM );
+    static bool						SetFPSLimit                     ( lua_State* pLuaVM, unsigned short usLimit, bool bSave );
+    static bool						SetMinuteDuration               ( lua_State* pLuaVM, unsigned long ulDuration );
+    static bool						SetGarageOpen                   ( lua_State* pLuaVM, unsigned char ucGarageID, bool bIsOpen );
+    static bool						SetGlitchEnabled                ( lua_State* pLuaVM, const string& strGlitchName, bool bEnabled );
+    static bool						IsGlitchEnabled                 ( lua_State* pLuaVM, const string& strGlitchName );
+    static bool						GetJetpackWeaponEnabled         ( lua_State* pLuaVM, eWeaponType weaponType );
+    static bool						SetJetpackWeaponEnabled         ( lua_State* pLuaVM, eWeaponType weaponType, bool bEnabled );
+    static bool						SetCloudsEnabled                ( lua_State* pLuaVM, bool bEnabled );
+    static bool						GetCloudsEnabled                ( lua_State* pLuaVM );
+    static bool						SetTrafficLightState            ( lua_State* pLuaVM, unsigned char ucState, bool bForced = false );
+    static bool						SetTrafficLightsLocked          ( lua_State* pLuaVM, bool bLocked );
+    static bool						SetJetpackMaxHeight             ( lua_State* pLuaVM, float fMaxHeight );
+    static bool						SetInteriorSoundsEnabled        ( lua_State* pLuaVM, bool bEnable );
+    static bool						SetRainLevel                    ( lua_State* pLuaVM, float fRainLevel );
+    static bool						SetSunSize                      ( lua_State* pLuaVM, float fSunSize );
+    static bool						SetSunColor                     ( lua_State* pLuaVM, unsigned char ucCoreR, unsigned char ucCoreG, unsigned char ucCoreB, unsigned char ucCoronaR, unsigned char ucCoronaG, unsigned char ucCoronaB );
+    static bool						SetWindVelocity                 ( lua_State* pLuaVM, float fVelX, float fVelY, float fVelZ );
+    static bool						SetFarClipDistance              ( lua_State* pLuaVM, float fFarClip );
+    static bool						SetFogDistance                  ( lua_State* pLuaVM, float fFogDist );
+    static bool						SetAircraftMaxHeight            ( lua_State* pLuaVM, float fMaxHeight );
+    static bool						SetAircraftMaxVelocity          ( lua_State* pLuaVM, float fVelocity );
+    static bool						SetOcclusionsEnabled            ( lua_State* pLuaVM, bool bEnabled );
+    static bool						ResetRainLevel                  ( lua_State* pLuaVM );
+    static bool						ResetSunSize                    ( lua_State* pLuaVM );
+    static bool						ResetSunColor                   ( lua_State* pLuaVM );
+    static bool						ResetWindVelocity               ( lua_State* pLuaVM );
+    static bool						ResetFarClipDistance            ( lua_State* pLuaVM );
+    static bool						ResetFogDistance                ( lua_State* pLuaVM );
+    static bool						RemoveWorldModel                ( lua_State* pLuaVM, unsigned short usModel, float fRadius, const Vector3& vecPosition, char cInterior );
+    static bool						RestoreWorldModel               ( lua_State* pLuaVM, unsigned short usModel, float fRadius, const Vector3& vecPosition, char cInterior );
+    static bool						RestoreAllWorldModels           ( lua_State* pLuaVM );
+    static bool						SendSyncIntervals               ( lua_State* pLuaVM, void* pPlayer = NULL );
+    static bool						SetPedTargetingMarkerEnabled    ( lua_State* pLuaVM, bool bEnabled );
+    static bool						IsPedTargetingMarkerEnabled     ( lua_State* pLuaVM );
+    static bool						SetMoonSize                     ( lua_State* pLuaVM, int iMoonSize );
+    static bool						ResetMoonSize                   ( lua_State* pLuaVM );
+
+	// Loaded Map Functions
+	static void*					GetRootElement					( lua_State* pLuaVM );
+//	static void*					LoadMapData                     ( lua_State* pLuaVM, void* pParent, CXMLNode* pNode );
+//	static void*					SaveMapData                     ( lua_State* pLuaVM, void* pElement, CXMLNode* pNode, bool bChildren );
+	
+    // Account get funcs
+    static void*					GetAccount						( lua_State* pLuaVM, const char* szName, const char* szPassword );
+    static bool						GetAccounts						( lua_State* pLuaVM );
+    static void*					GetAccountPlayer				( lua_State* pLuaVM, void* pAccount );
+    static bool						IsGuestAccount					( lua_State* pLuaVM, void* pAccount, bool& bGuest );
+    static CLuaArgument*			GetAccountData					( lua_State* pLuaVM, void* pAccount, const char* szKey );
+    static bool						GetAllAccountData				( lua_State* pLuaVM, void* pAccount );
+    static bool						GetAccountSerial				( lua_State* pLuaVM, void* pAccount, string& strSerial );
+    static bool						GetAccountsBySerial				( lua_State* pLuaVM, const string& strSerial, std::vector<void*>& outAccounts );
+
+    // Account set funcs
+    static void*					AddAccount						( lua_State* pLuaVM, const char* szName, const char* szPassword );
+    static bool						RemoveAccount					( lua_State* pLuaVM, void* pAccount );
+    static bool						SetAccountPassword				( lua_State* pLuaVM, void* pAccount, const char* szPassword );
+    static bool						SetAccountData					( lua_State* pLuaVM, void* pAccount, const char* szKey, CLuaArgument* pArgument );
+    static bool						CopyAccountData					( lua_State* pLuaVM, void* pAccount, void* pFromAccount );
+
+    // Log in/out funcs
+    static bool						LogIn							( lua_State* pLuaVM, void* pPlayer, void* pAccount, const char* szPassword );
+    static bool						LogOut							( lua_State* pLuaVM, void* pPlayer );
+
+    // Admin funcs
+    static bool						KickPlayer						( lua_State* pLuaVM, void* pPlayer, string strResponsible = "Console", string strReason = "" );
+    static void*					BanPlayer						( lua_State* pLuaVM, void* pPlayer, bool bIP, bool bUsername, bool bSerial, void* pResponsible = NULL, string strResponsible = "Console", string strReason = "", time_t tUnban = 0 );
+
+    static void*					AddBan							( lua_State* pLuaVM, string strIP, string strUsername, string strSerial, void* pResponsible = NULL, string strResponsible = "Console", string strReason = "", time_t tUnban = 0 );
+    static bool						RemoveBan						( lua_State* pLuaVM, void* pBan, void* pResponsible = NULL );
+
+    static bool						GetBans							( lua_State* pLuaVM );
+    static bool						ReloadBanList					( lua_State* pLuaVM );
+
+    static bool						GetBanIP						( lua_State* pLuaVM, void* pBan, string& strOutIP );
+    static bool						GetBanSerial					( lua_State* pLuaVM, void* pBan, string& strOutSerial );
+    static bool						GetBanUsername					( lua_State* pLuaVM, void* pBan, string& strOutUsername );
+    static bool						GetBanNick						( lua_State* pLuaVM, void* pBan, string& strOutNick );
+    static bool						GetBanReason					( lua_State* pLuaVM, void* pBan, string& strOutReason );
+    static bool						GetBanAdmin						( lua_State* pLuaVM, void* pBan, string& strOutAdmin );
+
+    static bool						GetBanTime						( lua_State* pLuaVM, void* pBan, time_t& time );
+    static bool						GetUnbanTime					( lua_State* pLuaVM, void* pBan, time_t& time );
+
+    static bool						SetUnbanTime					( lua_State* pLuaVM, void* pBan, time_t time);
+    static bool						SetBanReason					( lua_State* pLuaVM, void* pBan, const string& strReason );
+    static bool						SetBanAdmin						( lua_State* pLuaVM, void* pBan, const string& strAdminName );
+
+    // Cursor get funcs
+    static bool						IsCursorShowing					( lua_State* pLuaVM, void* pPlayer, bool& bShowing );
+
+    // Cursor set funcs
+    static bool						ShowCursor						( lua_State* pLuaVM, void* pElement, bool bShow, bool bToggleControls );
+
+    // Chat funcs
+    static bool						ShowChat						( lua_State* pLuaVM, void* pElement, bool bShow );
+
+    // Misc funcs
+    static bool						ResetMapInfo					( lua_State* pLuaVM, void* pElement );
+
+    // Resource funcs
+	static void*					GetResourceMapRootElement		( lua_State* pLuaVM, const char* szMap );
+//	static CXMLNode*				AddResourceMap					( lua_State* pLuaVM, const string& strFilePath, const std::string& strMapName, int iDimension );
+//	static CXMLNode*				AddResourceConfig				( lua_State* pLuaVM, const string& strFilePath, const std::string& strConfigName, int iType );
+	static bool						RemoveResourceFile				( lua_State* pLuaVM, const char* szFilename );
+
+    // Version funcs
+//	static unsigned long			GetVersion						( lua_State* pLuaVM );
+//	static const char*				GetVersionString				( lua_State* pLuaVM );
+//	static const char*				GetVersionName					( lua_State* pLuaVM );
+//	static string					GetVersionBuildType				( lua_State* pLuaVM );
+//	static unsigned long			GetNetcodeVersion				( lua_State* pLuaVM );
+//	static const char*				GetOperatingSystemName			( lua_State* pLuaVM );
+//	static const char*				GetVersionBuildTag				( lua_State* pLuaVM );
+//	static string					GetVersionSortable				( lua_State* pLuaVM );
+
+	// Camera get functions
+	static bool						GetCameraMatrix					( lua_State* pLuaVM, void* pPlayer, Vector3& vecPosition, Vector3& vecLookAt, float& fRoll, float& fFOV );
+	static void*					GetCameraTarget					( lua_State* pLuaVM, void* pPlayer );
+	static bool						GetCameraInterior				( lua_State* pLuaVM, void* pPlayer, unsigned char & ucInterior );
+
+    // Camera set functions
+    static bool						SetCameraMatrix					( lua_State* pLuaVM, void* pElement, const Vector3& vecPosition, Vector3* pvecLookAt, float fRoll, float fFOV );
+    static bool						SetCameraTarget					( lua_State* pLuaVM, void* pElement, void* pTarget );
+    static bool						SetCameraInterior				( lua_State* pLuaVM, void* pElement, unsigned char ucInterior );
+    static bool						FadeCamera						( lua_State* pLuaVM, void* pElement, bool bFadeIn, float fFadeTime, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue );
+
+    // Weapon give/take functions
+    static bool						GiveWeapon						( lua_State* pLuaVM, void* pElement, unsigned char ucWeaponID, unsigned short usAmmo, bool bSetAsCurrent = false );
+    static bool						TakeWeapon						( lua_State* pLuaVM, void* pElement, unsigned char ucWeaponID, unsigned short usAmmo = 9999 );
+    static bool						TakeAllWeapons					( lua_State* pLuaVM, void* pElement );
+    static bool						SetWeaponAmmo					( lua_State* pLuaVM, void* pElement, unsigned char ucWeaponID, unsigned short usAmmo, unsigned short usAmmoInClip );
 };
 
 #endif

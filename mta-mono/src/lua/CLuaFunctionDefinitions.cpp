@@ -12,11 +12,13 @@
 
 #include "CLuaFunctionDefinitions.h"
 
-string CLuaFunctionDefinitions::Get( lua_State *pLuaVM, const string &sKey )
+// All-Seeing Eye related Functions
+
+string CLuaFunctionDefinitions::Get( lua_State *pLuaVM, const char* szKey )
 {
 	CLuaArguments pLuaArguments; 
 	
-	pLuaArguments.PushString( sKey.c_str() );
+	pLuaArguments.PushString( szKey );
 	
 	if( pLuaArguments.Call( pLuaVM, "get", 1 ) )
 	{
@@ -31,12 +33,12 @@ string CLuaFunctionDefinitions::Get( lua_State *pLuaVM, const string &sKey )
 	return string();
 }
 
-bool CLuaFunctionDefinitions::Set( lua_State *pLuaVM, const string &sKey, const string &sValue )
+bool CLuaFunctionDefinitions::Set( lua_State *pLuaVM, const char* szKey, const char* szValue )
 {
 	CLuaArguments pLuaArguments;
 
-	pLuaArguments.PushString( sKey.c_str() );
-	pLuaArguments.PushString( sValue.c_str() );
+	pLuaArguments.PushString( szKey );
+	pLuaArguments.PushString( szValue );
 	
 	if( pLuaArguments.Call( pLuaVM, "set", 1 ) )
 	{
@@ -80,11 +82,11 @@ string CLuaFunctionDefinitions::GetMapName( lua_State *pLuaVM )
 	return string();
 }
 
-string CLuaFunctionDefinitions::GetRuleValue( lua_State *pLuaVM, const string &sKey )
+string CLuaFunctionDefinitions::GetRuleValue( lua_State *pLuaVM, const char* szKey )
 {
 	CLuaArguments pLuaArguments; 
 	
-	pLuaArguments.PushString( sKey.c_str() );
+	pLuaArguments.PushString( szKey );
 	
 	if( pLuaArguments.Call( pLuaVM, "getRuleValue", 1 ) )
 	{
@@ -97,11 +99,11 @@ string CLuaFunctionDefinitions::GetRuleValue( lua_State *pLuaVM, const string &s
 	return string();
 }
 
-bool CLuaFunctionDefinitions::RemoveRuleValue( lua_State *pLuaVM, const string &sKey )
+bool CLuaFunctionDefinitions::RemoveRuleValue( lua_State *pLuaVM, const char* szKey )
 {
 	CLuaArguments pLuaArguments; 
 
-	pLuaArguments.PushString( sKey.c_str() );
+	pLuaArguments.PushString( szKey );
 
 	if( pLuaArguments.Call( pLuaVM, "removeRuleValue", 1 ) )
 	{
@@ -113,11 +115,11 @@ bool CLuaFunctionDefinitions::RemoveRuleValue( lua_State *pLuaVM, const string &
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetGameType( lua_State *pLuaVM, const string &sType )
+bool CLuaFunctionDefinitions::SetGameType( lua_State *pLuaVM, const char* szGameType )
 {
 	CLuaArguments pLuaArguments; 
 
-	pLuaArguments.PushString( sType.c_str() );
+	pLuaArguments.PushString( szGameType );
 
 	if( pLuaArguments.Call( pLuaVM, "setGameType", 1 ) )
 	{
@@ -129,11 +131,11 @@ bool CLuaFunctionDefinitions::SetGameType( lua_State *pLuaVM, const string &sTyp
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetMapName( lua_State *pLuaVM, const string &sName )
+bool CLuaFunctionDefinitions::SetMapName( lua_State *pLuaVM, const char* szMapName )
 {
 	CLuaArguments pLuaArguments; 
 
-	pLuaArguments.PushString( sName.c_str() );
+	pLuaArguments.PushString( szMapName );
 
 	if( pLuaArguments.Call( pLuaVM, "setMapName", 1 ) )
 	{
@@ -145,12 +147,12 @@ bool CLuaFunctionDefinitions::SetMapName( lua_State *pLuaVM, const string &sName
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetRuleValue( lua_State *pLuaVM, const string &sKey, const string &sValue )
+bool CLuaFunctionDefinitions::SetRuleValue( lua_State *pLuaVM, const char* szKey, const char* szValue )
 {
 	CLuaArguments pLuaArguments; 
 
-	pLuaArguments.PushString( sKey.c_str() );
-	pLuaArguments.PushString( sValue.c_str() );
+	pLuaArguments.PushString( szKey );
+	pLuaArguments.PushString( szValue );
 
 	if( pLuaArguments.Call( pLuaVM, "setRuleValue", 1 ) )
 	{
@@ -164,15 +166,15 @@ bool CLuaFunctionDefinitions::SetRuleValue( lua_State *pLuaVM, const string &sKe
 
 // Element create/destroy
 
-void* CLuaFunctionDefinitions::CreateElement( lua_State* pLuaVM, string sType, string sID )
+void* CLuaFunctionDefinitions::CreateElement( lua_State* pLuaVM, const char* szTypeName, const char* szID )
 {
 	CLuaArguments pLuaArguments;
 
-	pLuaArguments.PushString( sType.c_str() );
+	pLuaArguments.PushString( szTypeName );
 
-	if( !sID.empty() )
+	if( szID && strlen( szID ) > 0 )
 	{
-		pLuaArguments.PushString( sID.c_str() );
+		pLuaArguments.PushString( szID );
 	}
 
 	if( pLuaArguments.Call( pLuaVM, "createElement", 1 ) )
@@ -201,15 +203,15 @@ bool CLuaFunctionDefinitions::DestroyElement( lua_State* pLuaVM, void* pUserData
 	return false;
 }
 
-void* CLuaFunctionDefinitions::CloneElement( lua_State* pLuaVM, void* pUserData, float fX, float fY, float fZ, bool bCloneChildren )
+void* CLuaFunctionDefinitions::CloneElement( lua_State* pLuaVM, void* pUserData, const Vector3& vecPosition, bool bCloneElement )
 {
 	CLuaArguments pLuaArguments;
 
 	pLuaArguments.PushUserData( pUserData );
-	pLuaArguments.PushNumber( fX );
-	pLuaArguments.PushNumber( fY );
-	pLuaArguments.PushNumber( fZ );
-	pLuaArguments.PushBoolean( bCloneChildren );
+	pLuaArguments.PushNumber( vecPosition.fX );
+	pLuaArguments.PushNumber( vecPosition.fY );
+	pLuaArguments.PushNumber( vecPosition.fZ );
+	pLuaArguments.PushBoolean( bCloneElement );
 
 	if( pLuaArguments.Call( pLuaVM, "cloneElement", 1 ) )
 	{
@@ -255,11 +257,16 @@ string CLuaFunctionDefinitions::GetElementType( lua_State* pLuaVM, void* pUserDa
 	return string();
 }
 
-void* CLuaFunctionDefinitions::GetElementByID( lua_State* pLuaVM, string sID )
+void* CLuaFunctionDefinitions::GetElementByID( lua_State* pLuaVM, const char* szID, unsigned int uiIndex )
 {
 	CLuaArguments pLuaArguments;
 
-	pLuaArguments.PushString( sID.c_str() );
+	pLuaArguments.PushString( szID );
+
+	if( uiIndex )
+	{
+		pLuaArguments.PushNumber( uiIndex );
+	}
 
 	if( pLuaArguments.Call( pLuaVM, "getElementByID", 1 ) )
 	{
@@ -386,7 +393,7 @@ void* CLuaFunctionDefinitions::GetElementParent( lua_State* pLuaVM, void* pUserD
 	return NULL;
 }
 
-bool CLuaFunctionDefinitions::GetElementPosition( lua_State* pLuaVM, void* pUserData, float &fX, float &fY, float &fZ )
+bool CLuaFunctionDefinitions::GetElementPosition( lua_State* pLuaVM, void* pUserData, Vector3& vecPosition )
 {
 	CLuaArguments pLuaArguments;
 
@@ -394,9 +401,9 @@ bool CLuaFunctionDefinitions::GetElementPosition( lua_State* pLuaVM, void* pUser
 	
 	if( pLuaArguments.Call( pLuaVM, "getElementPosition", 3 ) )
 	{
-		fX = static_cast< float >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
-		fY = static_cast< float >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
-		fZ = static_cast< float >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		vecPosition.fX = static_cast< float >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
+		vecPosition.fY = static_cast< float >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		vecPosition.fZ = static_cast< float >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
 		
 		return true;
 	}
@@ -404,7 +411,7 @@ bool CLuaFunctionDefinitions::GetElementPosition( lua_State* pLuaVM, void* pUser
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetElementRotation( lua_State* pLuaVM, void* pUserData, float &fX, float &fY, float &fZ )
+bool CLuaFunctionDefinitions::GetElementRotation( lua_State* pLuaVM, void* pUserData, Vector3& vecRotation )
 {
 	CLuaArguments pLuaArguments;
 
@@ -412,9 +419,9 @@ bool CLuaFunctionDefinitions::GetElementRotation( lua_State* pLuaVM, void* pUser
 	
 	if( pLuaArguments.Call( pLuaVM, "getElementRotation", 3 ) )
 	{
-		fX = static_cast< float >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
-		fY = static_cast< float >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
-		fZ = static_cast< float >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		vecRotation.fX = static_cast< float >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
+		vecRotation.fY = static_cast< float >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		vecRotation.fZ = static_cast< float >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
 		
 		return true;
 	}
@@ -423,7 +430,7 @@ bool CLuaFunctionDefinitions::GetElementRotation( lua_State* pLuaVM, void* pUser
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetElementVelocity( lua_State* pLuaVM, void* pUserData, float &fX, float &fY, float &fZ )
+bool CLuaFunctionDefinitions::GetElementVelocity( lua_State* pLuaVM, void* pUserData, Vector3& vecVelocity )
 {
 	CLuaArguments pLuaArguments;
 
@@ -431,9 +438,9 @@ bool CLuaFunctionDefinitions::GetElementVelocity( lua_State* pLuaVM, void* pUser
 	
 	if( pLuaArguments.Call( pLuaVM, "getElementVelocity", 3 ) )
 	{
-		fX = static_cast< float >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
-		fY = static_cast< float >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
-		fZ = static_cast< float >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		vecVelocity.fX = static_cast< float >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
+		vecVelocity.fY = static_cast< float >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		vecVelocity.fZ = static_cast< float >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
 		
 		return true;
 	}
@@ -650,7 +657,7 @@ bool CLuaFunctionDefinitions::IsElementInWater( lua_State* pLuaVM, void* pUserDa
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetElementAttachedOffsets( lua_State* pLuaVM, void* pUserData, float &fX, float &fY, float &fZ, float &fRX, float &fRY, float &fRZ )
+bool CLuaFunctionDefinitions::GetElementAttachedOffsets( lua_State* pLuaVM, void* pUserData, Vector3& vecPosition, Vector3& vecRotation )
 {
 	CLuaArguments pLuaArguments;
 
@@ -658,12 +665,12 @@ bool CLuaFunctionDefinitions::GetElementAttachedOffsets( lua_State* pLuaVM, void
 
 	if( pLuaArguments.Call( pLuaVM, "getElementAttachedOffsets", 6 ) )
 	{
-		fX	= static_cast< float >( ( new CLuaArgument( pLuaVM, -6 ) )->GetNumber() );
-		fY	= static_cast< float >( ( new CLuaArgument( pLuaVM, -5 ) )->GetNumber() );
-		fZ	= static_cast< float >( ( new CLuaArgument( pLuaVM, -4 ) )->GetNumber() );
-		fRX	= static_cast< float >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
-		fRY	= static_cast< float >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
-		fRZ	= static_cast< float >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		vecPosition.fX	= static_cast< float >( ( new CLuaArgument( pLuaVM, -6 ) )->GetNumber() );
+		vecPosition.fY	= static_cast< float >( ( new CLuaArgument( pLuaVM, -5 ) )->GetNumber() );
+		vecPosition.fZ	= static_cast< float >( ( new CLuaArgument( pLuaVM, -4 ) )->GetNumber() );
+		vecRotation.fX	= static_cast< float >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
+		vecRotation.fY	= static_cast< float >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		vecRotation.fZ	= static_cast< float >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
 
 		return true;
 	}
@@ -838,14 +845,15 @@ bool CLuaFunctionDefinitions::SetElementParent( lua_State* pLuaVM, void* pUserDa
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetElementPosition( lua_State* pLuaVM, void* pUserData, float fX, float fY, float fZ )
+bool CLuaFunctionDefinitions::SetElementPosition( lua_State* pLuaVM, void* pUserData, const Vector3& vecPosition, bool bWarp )
 {
 	CLuaArguments pLuaArguments;
 
 	pLuaArguments.PushUserData( pUserData );
-	pLuaArguments.PushNumber( fX );
-	pLuaArguments.PushNumber( fY );
-	pLuaArguments.PushNumber( fZ );
+	pLuaArguments.PushNumber( vecPosition.fX );
+	pLuaArguments.PushNumber( vecPosition.fY );
+	pLuaArguments.PushNumber( vecPosition.fZ );
+	pLuaArguments.PushBoolean( bWarp );
 
 	if( pLuaArguments.Call( pLuaVM, "setElementPosition", 1 ) )
 	{
@@ -857,14 +865,16 @@ bool CLuaFunctionDefinitions::SetElementPosition( lua_State* pLuaVM, void* pUser
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetElementRotation( lua_State* pLuaVM, void* pUserData, float fX, float fY, float fZ )
+bool CLuaFunctionDefinitions::SetElementRotation( lua_State* pLuaVM, void* pUserData, const Vector3& vecRotation, const char* szRotationOrder, bool bNewWay )
 {
 	CLuaArguments pLuaArguments;
 
 	pLuaArguments.PushUserData( pUserData );
-	pLuaArguments.PushNumber( fX );
-	pLuaArguments.PushNumber( fY );
-	pLuaArguments.PushNumber( fZ );
+	pLuaArguments.PushNumber( vecRotation.fX );
+	pLuaArguments.PushNumber( vecRotation.fY );
+	pLuaArguments.PushNumber( vecRotation.fZ );
+	pLuaArguments.PushString( szRotationOrder );
+	pLuaArguments.PushBoolean( bNewWay );
 
 	if( pLuaArguments.Call( pLuaVM, "setElementRotation", 1 ) )
 	{
@@ -876,14 +886,14 @@ bool CLuaFunctionDefinitions::SetElementRotation( lua_State* pLuaVM, void* pUser
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetElementVelocity( lua_State* pLuaVM, void* pUserData, float fX, float fY, float fZ )
+bool CLuaFunctionDefinitions::SetElementVelocity( lua_State* pLuaVM, void* pUserData, const Vector3& vecVelocity )
 {
 	CLuaArguments pLuaArguments;
 
 	pLuaArguments.PushUserData( pUserData );
-	pLuaArguments.PushNumber( fX );
-	pLuaArguments.PushNumber( fY );
-	pLuaArguments.PushNumber( fZ );
+	pLuaArguments.PushNumber( vecVelocity.fX );
+	pLuaArguments.PushNumber( vecVelocity.fY );
+	pLuaArguments.PushNumber( vecVelocity.fZ );
 
 	if( pLuaArguments.Call( pLuaVM, "setElementVelocity", 1 ) )
 	{
@@ -947,17 +957,19 @@ bool CLuaFunctionDefinitions::SetElementDimension( lua_State* pLuaVM, void* pUse
 	return false;
 }
 
-bool CLuaFunctionDefinitions::AttachElements( lua_State* pLuaVM, void* pUserData, void* pTarget, float fX, float fY, float fZ, float fRX, float fRY, float fRZ )
+bool CLuaFunctionDefinitions::AttachElements( lua_State* pLuaVM, void* pUserData, void* pTarget, Vector3& vecPosition, Vector3& vecRotation )
 {
 	CLuaArguments pLuaArguments;
 
 	pLuaArguments.PushUserData( pUserData );
-	pLuaArguments.PushNumber( fX );
-	pLuaArguments.PushNumber( fY );
-	pLuaArguments.PushNumber( fZ );
-	pLuaArguments.PushNumber( fRX );
-	pLuaArguments.PushNumber( fRY );
-	pLuaArguments.PushNumber( fRZ );
+
+	pLuaArguments.PushNumber( vecPosition.fX );
+	pLuaArguments.PushNumber( vecPosition.fY );
+	pLuaArguments.PushNumber( vecPosition.fZ );
+
+	pLuaArguments.PushNumber( vecRotation.fX );
+	pLuaArguments.PushNumber( vecRotation.fY );
+	pLuaArguments.PushNumber( vecRotation.fZ );
 
 	if( pLuaArguments.Call( pLuaVM, "attachElements", 1 ) )
 	{
@@ -1058,17 +1070,19 @@ bool CLuaFunctionDefinitions::SetElementModel( lua_State* pLuaVM, void* pUserDat
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetElementAttachedOffsets( lua_State* pLuaVM, void* pUserData, float fX, float fY, float fZ, float fRX, float fRY, float fRZ )
+bool CLuaFunctionDefinitions::SetElementAttachedOffsets( lua_State* pLuaVM, void* pUserData, Vector3& vecPosition, Vector3& vecRotation )
 {
 	CLuaArguments pLuaArguments;
 
 	pLuaArguments.PushUserData( pUserData );
-	pLuaArguments.PushNumber( fX );
-	pLuaArguments.PushNumber( fY );
-	pLuaArguments.PushNumber( fZ );
-	pLuaArguments.PushNumber( fRX );
-	pLuaArguments.PushNumber( fRY );
-	pLuaArguments.PushNumber( fRZ );
+
+	pLuaArguments.PushNumber( vecPosition.fX );
+	pLuaArguments.PushNumber( vecPosition.fY );
+	pLuaArguments.PushNumber( vecPosition.fZ );
+
+	pLuaArguments.PushNumber( vecRotation.fX );
+	pLuaArguments.PushNumber( vecRotation.fY );
+	pLuaArguments.PushNumber( vecRotation.fZ );
 
 	if( pLuaArguments.Call( pLuaVM, "setElementAttachedOffsets", 1 ) )
 	{
@@ -1149,6 +1163,7 @@ bool CLuaFunctionDefinitions::SetLowLodElement( lua_State* pLuaVM, void* pUserDa
 }
 
 // Player get functions
+
 int CLuaFunctionDefinitions::GetPlayerCount( lua_State* pLuaVM )
 {
 	CLuaArguments pLuaArguments;
@@ -1512,6 +1527,7 @@ int CLuaFunctionDefinitions::GetPlayerACInfo( lua_State* pLuaVM, void* pUserData
 }
 
 // Player set functions
+
 bool CLuaFunctionDefinitions::SetPlayerMoney( lua_State* pLuaVM, void* pUserData, int iAmount, bool bInstant )
 {
 	CLuaArguments pLuaArguments;
@@ -1564,14 +1580,14 @@ bool CLuaFunctionDefinitions::TakePlayerMoney( lua_State* pLuaVM, void* pUserDat
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SpawnPlayer( lua_State* pLuaVM, void* pUserData, float fX, float fY, float fZ, int iRotation, int iSkinID, int iInterior, int iDimension, void* pTeam )
+bool CLuaFunctionDefinitions::SpawnPlayer( lua_State* pLuaVM, void* pUserData, Vector3& vecPosition, int iRotation, int iSkinID, int iInterior, int iDimension, void* pTeam )
 {
 	CLuaArguments pLuaArguments;
 
 	pLuaArguments.PushUserData( pUserData );
-	pLuaArguments.PushNumber( fX );
-	pLuaArguments.PushNumber( fY );
-	pLuaArguments.PushNumber( fZ );
+	pLuaArguments.PushNumber( vecPosition.fX );
+	pLuaArguments.PushNumber( vecPosition.fY );
+	pLuaArguments.PushNumber( vecPosition.fZ );
 	pLuaArguments.PushNumber( iRotation );
 	pLuaArguments.PushNumber( iSkinID );
 	pLuaArguments.PushNumber( iInterior );
@@ -1805,14 +1821,15 @@ bool CLuaFunctionDefinitions::TakePlayerScreenShot( lua_State* pLuaVM, void* pUs
 }
 
 // Ped get functions
-void* CLuaFunctionDefinitions::CreatePed( lua_State* pLuaVM, int iModelid, float fX, float fY, float fZ, float fRot, bool bSynced )
+
+void* CLuaFunctionDefinitions::CreatePed( lua_State* pLuaVM, int iModelid, const Vector3& vecPosition, float fRot, bool bSynced )
 {
 	CLuaArguments pLuaArguments;
 
 	pLuaArguments.PushNumber( iModelid );
-	pLuaArguments.PushNumber( fX );
-	pLuaArguments.PushNumber( fY );
-	pLuaArguments.PushNumber( fZ );
+	pLuaArguments.PushNumber( vecPosition.fX );
+	pLuaArguments.PushNumber( vecPosition.fY );
+	pLuaArguments.PushNumber( vecPosition.fZ );
 	pLuaArguments.PushNumber( fRot );
 	pLuaArguments.PushBoolean( bSynced );
 
@@ -2184,6 +2201,7 @@ bool CLuaFunctionDefinitions::IsPedInVehicle( lua_State* pLuaVM, void* pUserData
 }
 
 // Ped set functions
+
 bool CLuaFunctionDefinitions::SetPedArmor( lua_State* pLuaVM, void* pUserData, float fArmor )
 {
 	CLuaArguments pLuaArguments;
@@ -2554,6 +2572,7 @@ bool CLuaFunctionDefinitions::ReloadPedWeapon( lua_State* pLuaVM, void* pUserDat
 }
 
 // Vehicle create/destroy functions
+
 void* CLuaFunctionDefinitions::CreateVehicle( lua_State* pLuaVM, int model, float fX, float fY, float fZ, float fRX, float fRY, float fRZ, string numberplate, bool direction, int variant1, int variant2 )
 {
 	CLuaArguments pLuaArguments;
@@ -2585,6 +2604,7 @@ void* CLuaFunctionDefinitions::CreateVehicle( lua_State* pLuaVM, int model, floa
 }
 
 // Vehicle get functions
+
 string CLuaFunctionDefinitions::GetVehicleType( lua_State* pLuaVM, void* pUserData )
 {
 	CLuaArguments pLuaArguments;
@@ -3305,6 +3325,7 @@ bool CLuaFunctionDefinitions::IsVehicleTaxiLightOn( lua_State* pLuaVM, void* pUs
 }
 
 // Vehicle set functions
+
 bool CLuaFunctionDefinitions::FixVehicle( lua_State* pLuaVM, void* pUserData )
 {
 	CLuaArguments pLuaArguments;
@@ -4105,18 +4126,20 @@ bool CLuaFunctionDefinitions::SetVehiclePlateText( lua_State* pLuaVM, void* pUse
 }
 
 // Marker create/destroy functions
-void* CLuaFunctionDefinitions::CreateMarker( lua_State* pLuaVM, float fX, float fY, float fZ, const char* szType, float fSize, unsigned char iRed, unsigned char iGreen, unsigned char iBlue, void* pVisibleTo )
+
+void* CLuaFunctionDefinitions::CreateMarker( lua_State* pLuaVM, const Vector3& vecPosition, const char* szType, float fSize, const SColor color, void* pVisibleTo )
 {
 	CLuaArguments pLuaArguments;
 
-	pLuaArguments.PushNumber( fX );
-	pLuaArguments.PushNumber( fY );
-	pLuaArguments.PushNumber( fZ );
+	pLuaArguments.PushNumber( vecPosition.fX );
+	pLuaArguments.PushNumber( vecPosition.fY );
+	pLuaArguments.PushNumber( vecPosition.fZ );
 	pLuaArguments.PushString( szType );
 	pLuaArguments.PushNumber( fSize );
-	pLuaArguments.PushNumber( iRed );
-	pLuaArguments.PushNumber( iGreen );
-	pLuaArguments.PushNumber( iBlue );
+	pLuaArguments.PushNumber( color.R );
+	pLuaArguments.PushNumber( color.G );
+	pLuaArguments.PushNumber( color.B );
+	pLuaArguments.PushNumber( color.A );
 	pLuaArguments.PushUserData( pVisibleTo );
 
 	if( pLuaArguments.Call( pLuaVM, "createMarker", 1 ) )
@@ -4130,23 +4153,24 @@ void* CLuaFunctionDefinitions::CreateMarker( lua_State* pLuaVM, float fX, float 
 }
 
 // Marker get functions
-unsigned int CLuaFunctionDefinitions::GetMarkerCount( lua_State* pLuaVM, void* pUserData )
+
+bool CLuaFunctionDefinitions::GetMarkerCount( lua_State* pLuaVM, unsigned int& uiCount )
 {
 	CLuaArguments pLuaArguments;
-
-	pLuaArguments.PushUserData( pUserData );
 
 	if( pLuaArguments.Call( pLuaVM, "getMarkerCount", 1 ) )
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		return static_cast< unsigned int >( pLuaArgument.GetNumber() );
+		uiCount = static_cast< unsigned int >( pLuaArgument.GetNumber() );
+
+		return true;
 	}
 
-	return 0;
+	return false;
 }
 
-const char* CLuaFunctionDefinitions::GetMarkerType( lua_State* pLuaVM, void* pUserData )
+bool CLuaFunctionDefinitions::GetMarkerType( lua_State* pLuaVM, void* pUserData, char* szType )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4156,13 +4180,15 @@ const char* CLuaFunctionDefinitions::GetMarkerType( lua_State* pLuaVM, void* pUs
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		return pLuaArgument.GetString();
+		strncpy( szType, pLuaArgument.GetString(), strlen( szType ) );
+
+		return true;
 	}
 
-	return NULL;
+	return false;
 }
 
-float CLuaFunctionDefinitions::GetMarkerSize( lua_State* pLuaVM, void* pUserData )
+bool CLuaFunctionDefinitions::GetMarkerSize( lua_State* pLuaVM, void* pUserData, float& fSize )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4172,23 +4198,7 @@ float CLuaFunctionDefinitions::GetMarkerSize( lua_State* pLuaVM, void* pUserData
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		return static_cast< float >( pLuaArgument.GetNumber() );
-	}
-
-	return 0.0f;
-}
-
-bool CLuaFunctionDefinitions::GetMarkerColor( lua_State* pLuaVM, void* pUserData, unsigned char& ucRed, unsigned char& ucGreen, unsigned char& ucBlue )
-{
-	CLuaArguments pLuaArguments;
-
-	pLuaArguments.PushUserData( pUserData );
-
-	if( pLuaArguments.Call( pLuaVM, "getMarkerColor", 3 ) )
-	{
-		ucRed	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
-		ucGreen	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
-		ucBlue	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		fSize = static_cast< float >( pLuaArgument.GetNumber() );
 
 		return true;
 	}
@@ -4196,7 +4206,26 @@ bool CLuaFunctionDefinitions::GetMarkerColor( lua_State* pLuaVM, void* pUserData
 	return false;
 }
 
-int CLuaFunctionDefinitions::GetMarkerTarget( lua_State* pLuaVM, void* pUserData, float& fX, float& fY, float& fZ )
+bool CLuaFunctionDefinitions::GetMarkerColor( lua_State* pLuaVM, void* pUserData, SColor& outColor )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getMarkerColor", 4 ) )
+	{
+		outColor.R	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -4 ) )->GetNumber() );
+		outColor.G	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
+		outColor.B	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		outColor.A	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetMarkerTarget( lua_State* pLuaVM, void* pUserData, Vector3& vecTarget )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4204,9 +4233,9 @@ int CLuaFunctionDefinitions::GetMarkerTarget( lua_State* pLuaVM, void* pUserData
 
 	if( pLuaArguments.Call( pLuaVM, "getMarkerTarget", 3 ) )
 	{
-		fX	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
-		fY	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
-		fZ	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		vecTarget.fX	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
+		vecTarget.fY	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		vecTarget.fZ	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
 
 		return true;
 	}
@@ -4214,7 +4243,7 @@ int CLuaFunctionDefinitions::GetMarkerTarget( lua_State* pLuaVM, void* pUserData
 	return false;
 }
 
-const char* CLuaFunctionDefinitions::GetMarkerIcon( lua_State* pLuaVM, void* pUserData )
+bool CLuaFunctionDefinitions::GetMarkerIcon( lua_State* pLuaVM, void* pUserData, char* szIcon )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4224,13 +4253,16 @@ const char* CLuaFunctionDefinitions::GetMarkerIcon( lua_State* pLuaVM, void* pUs
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		return pLuaArgument.GetString();
+		strncpy( szIcon, pLuaArgument.GetString(), strlen( szIcon ) );
+
+		return true;
 	}
 
-	return 0;
+	return false;
 }
 
 // Marker set functions
+
 bool CLuaFunctionDefinitions::SetMarkerType( lua_State* pLuaVM, void* pUserData, const char* szType )
 {
 	CLuaArguments pLuaArguments;
@@ -4265,14 +4297,15 @@ bool CLuaFunctionDefinitions::SetMarkerSize( lua_State* pLuaVM, void* pUserData,
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetMarkerColor( lua_State* pLuaVM, void* pUserData, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue )
+bool CLuaFunctionDefinitions::SetMarkerColor( lua_State* pLuaVM, void* pUserData, const SColor color )
 {
 	CLuaArguments pLuaArguments;
 
 	pLuaArguments.PushUserData( pUserData );
-	pLuaArguments.PushNumber( ucRed );
-	pLuaArguments.PushNumber( ucGreen );
-	pLuaArguments.PushNumber( ucBlue );
+	pLuaArguments.PushNumber( color.R );
+	pLuaArguments.PushNumber( color.G );
+	pLuaArguments.PushNumber( color.B );
+	pLuaArguments.PushNumber( color.A );
 
 	if( pLuaArguments.Call( pLuaVM, "setMarkerColor", 1 ) )
 	{
@@ -4284,12 +4317,14 @@ bool CLuaFunctionDefinitions::SetMarkerColor( lua_State* pLuaVM, void* pUserData
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetMarkerTarget( lua_State* pLuaVM, void* pUserData, void* pTarget )
+bool CLuaFunctionDefinitions::SetMarkerTarget( lua_State* pLuaVM, void* pUserData, const Vector3* pTarget )
 {
 	CLuaArguments pLuaArguments;
 
 	pLuaArguments.PushUserData( pUserData );
-	pLuaArguments.PushUserData( pTarget );
+	pLuaArguments.PushNumber( pTarget->fX );
+	pLuaArguments.PushNumber( pTarget->fY );
+	pLuaArguments.PushNumber( pTarget->fZ );
 
 	if( pLuaArguments.Call( pLuaVM, "setMarkerTarget", 1 ) )
 	{
@@ -4319,19 +4354,20 @@ bool CLuaFunctionDefinitions::SetMarkerIcon( lua_State* pLuaVM, void* pUserData,
 }
 
 // Blip create/destroy functions
-void* CLuaFunctionDefinitions::CreateBlip( lua_State* pLuaVM, void* pUserData, float fX, float fY, float fZ, unsigned char ucIcon, unsigned char ucSize, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue, unsigned char ucAlpha, short sOrdering, unsigned short usVisibleDistance, void* pVisibleTo )
+
+void* CLuaFunctionDefinitions::CreateBlip( lua_State* pLuaVM, const Vector3& vecPosition, unsigned char ucIcon, unsigned char ucSize, const SColor color, short sOrdering, unsigned short usVisibleDistance, void* pVisibleTo )
 {
 	CLuaArguments pLuaArguments;
 
-	pLuaArguments.PushNumber( fX );
-	pLuaArguments.PushNumber( fY );
-	pLuaArguments.PushNumber( fZ );
+	pLuaArguments.PushNumber( vecPosition.fX );
+	pLuaArguments.PushNumber( vecPosition.fY );
+	pLuaArguments.PushNumber( vecPosition.fZ );
 	pLuaArguments.PushNumber( ucIcon );
 	pLuaArguments.PushNumber( ucSize );
-	pLuaArguments.PushNumber( ucRed );
-	pLuaArguments.PushNumber( ucGreen );
-	pLuaArguments.PushNumber( ucBlue );
-	pLuaArguments.PushNumber( ucAlpha );
+	pLuaArguments.PushNumber( color.R );
+	pLuaArguments.PushNumber( color.G );
+	pLuaArguments.PushNumber( color.B );
+	pLuaArguments.PushNumber( color.A );
 	pLuaArguments.PushNumber( sOrdering );
 	pLuaArguments.PushNumber( usVisibleDistance );
 
@@ -4350,17 +4386,17 @@ void* CLuaFunctionDefinitions::CreateBlip( lua_State* pLuaVM, void* pUserData, f
 	return NULL;
 }
 
-void* CLuaFunctionDefinitions::CreateBlipAttachedTo( lua_State* pLuaVM, void* pUserData, void* pTarget, unsigned char ucIcon, unsigned char ucSize, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue, unsigned char ucAlpha, short sOrdering, unsigned short usVisibleDistance, void* pVisibleTo )
+void* CLuaFunctionDefinitions::CreateBlipAttachedTo( lua_State* pLuaVM, void* pTarget, unsigned char ucIcon, unsigned char ucSize, const SColor color, short sOrdering, unsigned short usVisibleDistance, void* pVisibleTo )
 {
 	CLuaArguments pLuaArguments;
 
-	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushUserData( pTarget );
 	pLuaArguments.PushNumber( ucIcon );
 	pLuaArguments.PushNumber( ucSize );
-	pLuaArguments.PushNumber( ucRed );
-	pLuaArguments.PushNumber( ucGreen );
-	pLuaArguments.PushNumber( ucBlue );
-	pLuaArguments.PushNumber( ucAlpha );
+	pLuaArguments.PushNumber( color.R );
+	pLuaArguments.PushNumber( color.G );
+	pLuaArguments.PushNumber( color.B );
+	pLuaArguments.PushNumber( color.A );
 	pLuaArguments.PushNumber( sOrdering );
 	pLuaArguments.PushNumber( usVisibleDistance );
 
@@ -4380,7 +4416,8 @@ void* CLuaFunctionDefinitions::CreateBlipAttachedTo( lua_State* pLuaVM, void* pU
 }
 
 // Blip get functions
-unsigned char CLuaFunctionDefinitions::GetBlipIcon( lua_State* pLuaVM, void* pUserData )
+
+bool CLuaFunctionDefinitions::GetBlipIcon( lua_State* pLuaVM, void* pUserData, unsigned char& ucIcon )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4390,13 +4427,15 @@ unsigned char CLuaFunctionDefinitions::GetBlipIcon( lua_State* pLuaVM, void* pUs
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		return static_cast< unsigned char >( pLuaArgument.GetNumber() );
+		ucIcon = static_cast< unsigned char >( pLuaArgument.GetNumber() );
+
+		return true;
 	}
 
-	return 0;
+	return false;
 }
 
-unsigned char CLuaFunctionDefinitions::GetBlipSize( lua_State* pLuaVM, void* pUserData )
+bool CLuaFunctionDefinitions::GetBlipSize( lua_State* pLuaVM, void* pUserData, unsigned char& ucSize )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4406,24 +4445,7 @@ unsigned char CLuaFunctionDefinitions::GetBlipSize( lua_State* pLuaVM, void* pUs
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		return static_cast< unsigned char >( pLuaArgument.GetNumber() );
-	}
-
-	return 0;
-}
-
-bool CLuaFunctionDefinitions::GetBlipColor( lua_State* pLuaVM, void* pUserData, unsigned char& ucRed, unsigned char& ucGreen, unsigned char& ucBlue, unsigned char& ucAlpha )
-{
-	CLuaArguments pLuaArguments;
-
-	pLuaArguments.PushUserData( pUserData );
-
-	if( pLuaArguments.Call( pLuaVM, "getBlipColor", 4 ) )
-	{
-		ucRed	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -4 ) )->GetNumber() );
-		ucGreen	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
-		ucBlue	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
-		ucAlpha	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		ucSize = static_cast< unsigned char >( pLuaArgument.GetNumber() );
 
 		return true;
 	}
@@ -4431,7 +4453,26 @@ bool CLuaFunctionDefinitions::GetBlipColor( lua_State* pLuaVM, void* pUserData, 
 	return false;
 }
 
-short CLuaFunctionDefinitions::GetBlipOrdering( lua_State* pLuaVM, void* pUserData )
+bool CLuaFunctionDefinitions::GetBlipColor( lua_State* pLuaVM, void* pUserData, SColor& outColor )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pUserData );
+
+	if( pLuaArguments.Call( pLuaVM, "getBlipColor", 4 ) )
+	{
+		outColor.R	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -4 ) )->GetNumber() );
+		outColor.G	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
+		outColor.B	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		outColor.A	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetBlipOrdering( lua_State* pLuaVM, void* pUserData, short& sOrdering )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4441,13 +4482,15 @@ short CLuaFunctionDefinitions::GetBlipOrdering( lua_State* pLuaVM, void* pUserDa
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		return static_cast< short >( pLuaArgument.GetNumber() );
+		sOrdering = static_cast< short >( pLuaArgument.GetNumber() );
+
+		return true;
 	}
 
-	return 0;
+	return false;
 }
 
-unsigned short CLuaFunctionDefinitions::GetBlipVisibleDistance( lua_State* pLuaVM, void* pUserData )
+bool CLuaFunctionDefinitions::GetBlipVisibleDistance( lua_State* pLuaVM, void* pUserData, unsigned short& usVisibleDistance )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4457,13 +4500,16 @@ unsigned short CLuaFunctionDefinitions::GetBlipVisibleDistance( lua_State* pLuaV
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		return static_cast< unsigned short >( pLuaArgument.GetNumber() );
+		usVisibleDistance = static_cast< unsigned short >( pLuaArgument.GetNumber() );
+
+		return true;
 	}
 
-	return 0;
+	return false;
 }
 
 // Blip set functions
+
 bool CLuaFunctionDefinitions::SetBlipIcon( lua_State* pLuaVM, void* pUserData, unsigned char ucIcon )
 {
 	CLuaArguments pLuaArguments;
@@ -4498,15 +4544,15 @@ bool CLuaFunctionDefinitions::SetBlipSize( lua_State* pLuaVM, void* pUserData, u
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetBlipColor( lua_State* pLuaVM, void* pUserData, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue, unsigned char ucAlpha )
+bool CLuaFunctionDefinitions::SetBlipColor( lua_State* pLuaVM, void* pUserData, const SColor color )
 {
 	CLuaArguments pLuaArguments;
 
 	pLuaArguments.PushUserData( pUserData );
-	pLuaArguments.PushNumber( ucRed );
-	pLuaArguments.PushNumber( ucGreen );
-	pLuaArguments.PushNumber( ucBlue );
-	pLuaArguments.PushNumber( ucAlpha );
+	pLuaArguments.PushNumber( color.R );
+	pLuaArguments.PushNumber( color.G );
+	pLuaArguments.PushNumber( color.B );
+	pLuaArguments.PushNumber( color.A );
 
 	if( pLuaArguments.Call( pLuaVM, "setBlipColor", 1 ) )
 	{
@@ -4553,17 +4599,18 @@ bool CLuaFunctionDefinitions::SetBlipVisibleDistance( lua_State* pLuaVM, void* p
 }
 
 // Object create/destroy functions
-void* CLuaFunctionDefinitions::CreateObject( lua_State* pLuaVM, unsigned short usModelID, float fX, float fY, float fZ, float fRX, float fRY, float fRZ, bool bIsLowLod )
+
+void* CLuaFunctionDefinitions::CreateObject( lua_State* pLuaVM, unsigned short usModelID, const Vector3& vecPosition, const Vector3& vecRotation, bool bIsLowLod )
 {
 	CLuaArguments pLuaArguments;
 
-	pLuaArguments.PushNumber( fX );
-	pLuaArguments.PushNumber( fY );
-	pLuaArguments.PushNumber( fZ );
+	pLuaArguments.PushNumber( vecPosition.fX );
+	pLuaArguments.PushNumber( vecPosition.fY );
+	pLuaArguments.PushNumber( vecPosition.fZ );
 
-	pLuaArguments.PushNumber( fRX );
-	pLuaArguments.PushNumber( fRY );
-	pLuaArguments.PushNumber( fRZ );
+	pLuaArguments.PushNumber( vecRotation.fX );
+	pLuaArguments.PushNumber( vecRotation.fY );
+	pLuaArguments.PushNumber( vecRotation.fZ );
 
 	pLuaArguments.PushBoolean( bIsLowLod );
 
@@ -4578,29 +4625,36 @@ void* CLuaFunctionDefinitions::CreateObject( lua_State* pLuaVM, unsigned short u
 }
 
 // Object get functions
-float CLuaFunctionDefinitions::GetObjectScale( lua_State* pLuaVM, void* pUserData )
+
+bool CLuaFunctionDefinitions::GetObjectScale( lua_State* pLuaVM, void* pUserData, Vector3& vecScale )
 {
 	CLuaArguments pLuaArguments;
 
 	pLuaArguments.PushUserData( pUserData );
 
-	if( pLuaArguments.Call( pLuaVM, "getObjectScale", 1 ) )
+	if( pLuaArguments.Call( pLuaVM, "getObjectScale", 3 ) )
 	{
-		CLuaArgument pLuaArgument( pLuaVM, -1 );
+		vecScale.fX = static_cast< float >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
+		vecScale.fY = static_cast< float >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		vecScale.fZ = static_cast< float >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
 
-		return static_cast< float >( pLuaArgument.GetNumber() );
+		return true;
 	}
 
-	return 0.0f;
+	return false;
 }
 
 // Object set functions
-bool CLuaFunctionDefinitions::SetObjectScale( lua_State* pLuaVM, void* pUserData, float fScale )
+
+bool CLuaFunctionDefinitions::SetObjectScale( lua_State* pLuaVM, void* pUserData, const Vector3& vecScale )
 {
 	CLuaArguments pLuaArguments;
 
 	pLuaArguments.PushUserData( pUserData );
-	pLuaArguments.PushNumber( fScale );
+
+	pLuaArguments.PushNumber( vecScale.fX );
+	pLuaArguments.PushNumber( vecScale.fY );
+	pLuaArguments.PushNumber( vecScale.fZ );
 
 	if( pLuaArguments.Call( pLuaVM, "setObjectScale", 1 ) )
 	{
@@ -4612,19 +4666,19 @@ bool CLuaFunctionDefinitions::SetObjectScale( lua_State* pLuaVM, void* pUserData
 	return false;
 }
 
-bool CLuaFunctionDefinitions::MoveObject( lua_State* pLuaVM, void* pUserData, unsigned long ulTime, float fX, float fY, float fZ, float fRX, float fRY, float fRZ, const char* strEasingType, float fEasingPeriod, float fEasingAmplitude, float fEasingOvershoot )
+bool CLuaFunctionDefinitions::MoveObject( lua_State* pLuaVM, void* pUserData, unsigned long ulTime, const Vector3& vecPosition, const Vector3& vecRotation, const char* szEasingType, float fEasingPeriod, float fEasingAmplitude, float fEasingOvershoot )
 {
 	CLuaArguments pLuaArguments;
 
 	pLuaArguments.PushUserData( pUserData );
 	pLuaArguments.PushNumber( ulTime );
-	pLuaArguments.PushNumber( fX );
-	pLuaArguments.PushNumber( fY );
-	pLuaArguments.PushNumber( fZ );
-	pLuaArguments.PushNumber( fRX );
-	pLuaArguments.PushNumber( fRY );
-	pLuaArguments.PushNumber( fRZ );
-	pLuaArguments.PushString( strEasingType );
+	pLuaArguments.PushNumber( vecPosition.fX );
+	pLuaArguments.PushNumber( vecPosition.fY );
+	pLuaArguments.PushNumber( vecPosition.fZ );
+	pLuaArguments.PushNumber( vecRotation.fX );
+	pLuaArguments.PushNumber( vecRotation.fY );
+	pLuaArguments.PushNumber( vecRotation.fZ );
+	pLuaArguments.PushString( szEasingType );
 	pLuaArguments.PushNumber( fEasingPeriod );
 	pLuaArguments.PushNumber( fEasingAmplitude );
 	pLuaArguments.PushNumber( fEasingOvershoot );
@@ -4656,21 +4710,21 @@ bool CLuaFunctionDefinitions::StopObject( lua_State* pLuaVM, void* pUserData )
 }
 
 // Radar area create/destroy funcs
-void* CLuaFunctionDefinitions::CreateRadarArea( lua_State* pLuaVM, float fX, float fY, float fZ, float fSizeX, float fSizeY, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue, unsigned char ucAlpha, void* pVisibleTo )
+
+void* CLuaFunctionDefinitions::CreateRadarArea( lua_State* pLuaVM, const Vector2& vecPosition, const Vector2& vecSize, const SColor color, void* pVisibleTo )
 {
 	CLuaArguments pLuaArguments;
 
-	pLuaArguments.PushNumber( fX );
-	pLuaArguments.PushNumber( fY );
-	pLuaArguments.PushNumber( fZ );
+	pLuaArguments.PushNumber( vecPosition.fX );
+	pLuaArguments.PushNumber( vecPosition.fY );
 
-	pLuaArguments.PushNumber( fSizeX );
-	pLuaArguments.PushNumber( fSizeY );
+	pLuaArguments.PushNumber( vecSize.fX );
+	pLuaArguments.PushNumber( vecSize.fY );
 
-	pLuaArguments.PushNumber( ucRed );
-	pLuaArguments.PushNumber( ucGreen );
-	pLuaArguments.PushNumber( ucBlue );
-	pLuaArguments.PushNumber( ucAlpha );
+	pLuaArguments.PushNumber( color.R );
+	pLuaArguments.PushNumber( color.G );
+	pLuaArguments.PushNumber( color.B );
+	pLuaArguments.PushNumber( color.A );
 
 	if( pVisibleTo )
 	{
@@ -4688,7 +4742,8 @@ void* CLuaFunctionDefinitions::CreateRadarArea( lua_State* pLuaVM, float fX, flo
 }
 
 // Radar area get funcs
-bool CLuaFunctionDefinitions::GetRadarAreaSize( lua_State* pLuaVM, void* pUserData, float& fSizeX, float& fSizeY )
+
+bool CLuaFunctionDefinitions::GetRadarAreaSize( lua_State* pLuaVM, void* pUserData, Vector2& vecSize )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4696,8 +4751,8 @@ bool CLuaFunctionDefinitions::GetRadarAreaSize( lua_State* pLuaVM, void* pUserDa
 
 	if( pLuaArguments.Call( pLuaVM, "getRadarAreaSize", 2 ) )
 	{
-		fSizeX = static_cast< float >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
-		fSizeY = static_cast< float >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		vecSize.fX = static_cast< float >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		vecSize.fY = static_cast< float >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
 
 		return true;
 	}
@@ -4705,7 +4760,7 @@ bool CLuaFunctionDefinitions::GetRadarAreaSize( lua_State* pLuaVM, void* pUserDa
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetRadarAreaColor( lua_State* pLuaVM, void* pUserData, unsigned char& ucRed, unsigned char& ucGreen, unsigned char& ucBlue, unsigned char& ucAlpha )
+bool CLuaFunctionDefinitions::GetRadarAreaColor( lua_State* pLuaVM, void* pUserData, SColor& outColor )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4713,10 +4768,10 @@ bool CLuaFunctionDefinitions::GetRadarAreaColor( lua_State* pLuaVM, void* pUserD
 
 	if( pLuaArguments.Call( pLuaVM, "getRadarAreaColor", 4 ) )
 	{
-		ucRed	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -4 ) )->GetNumber() );
-		ucGreen = static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
-		ucBlue	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
-		ucAlpha	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		outColor.R	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -4 ) )->GetNumber() );
+		outColor.G	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
+		outColor.B	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		outColor.A	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
 
 		return true;
 	}
@@ -4740,7 +4795,7 @@ bool CLuaFunctionDefinitions::IsRadarAreaFlashing( lua_State* pLuaVM, void* pUse
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsInsideRadarArea( lua_State* pLuaVM, void* pUserData )
+bool CLuaFunctionDefinitions::IsInsideRadarArea( lua_State* pLuaVM, void* pUserData, const Vector2& vecPosition, bool& bInside )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4757,13 +4812,14 @@ bool CLuaFunctionDefinitions::IsInsideRadarArea( lua_State* pLuaVM, void* pUserD
 }
 
 // Radar area set funcs
-bool CLuaFunctionDefinitions::SetRadarAreaSize( lua_State* pLuaVM, void* pUserData, float fSizeX, float fSizeY )
+
+bool CLuaFunctionDefinitions::SetRadarAreaSize( lua_State* pLuaVM, void* pUserData, const Vector2& vecSize )
 {
 	CLuaArguments pLuaArguments;
 
 	pLuaArguments.PushUserData( pUserData );
-	pLuaArguments.PushNumber( fSizeX );
-	pLuaArguments.PushNumber( fSizeY );
+	pLuaArguments.PushNumber( vecSize.fX );
+	pLuaArguments.PushNumber( vecSize.fY );
 
 	if( pLuaArguments.Call( pLuaVM, "setRadarAreaSize", 1 ) )
 	{
@@ -4775,15 +4831,15 @@ bool CLuaFunctionDefinitions::SetRadarAreaSize( lua_State* pLuaVM, void* pUserDa
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetRadarAreaColor( lua_State* pLuaVM, void* pUserData, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue, unsigned char ucAlpha )
+bool CLuaFunctionDefinitions::SetRadarAreaColor( lua_State* pLuaVM, void* pUserData, const SColor color )
 {
 	CLuaArguments pLuaArguments;
 
 	pLuaArguments.PushUserData( pUserData );
-	pLuaArguments.PushNumber( ucRed );
-	pLuaArguments.PushNumber( ucGreen );
-	pLuaArguments.PushNumber( ucBlue );
-	pLuaArguments.PushNumber( ucAlpha );
+	pLuaArguments.PushNumber( color.R );
+	pLuaArguments.PushNumber( color.G );
+	pLuaArguments.PushNumber( color.B );
+	pLuaArguments.PushNumber( color.A );
 
 	if( pLuaArguments.Call( pLuaVM, "setRadarAreaColor", 1 ) )
 	{
@@ -4813,13 +4869,14 @@ bool CLuaFunctionDefinitions::SetRadarAreaFlashing( lua_State* pLuaVM, void* pUs
 }
 
 // Pickup create/destroy funcs
-void* CLuaFunctionDefinitions::CreatePickup( lua_State* pLuaVM, float fX, float fY, float fZ, unsigned char ucType, double dFive, unsigned long ulRespawnInterval, double dSix )
+
+void* CLuaFunctionDefinitions::CreatePickup( lua_State* pLuaVM, const Vector3& vecPosition, unsigned char ucType, double dFive, unsigned long ulRespawnInterval, double dSix )
 {
 	CLuaArguments pLuaArguments;
 
-	pLuaArguments.PushNumber( fX );
-	pLuaArguments.PushNumber( fY );
-	pLuaArguments.PushNumber( fZ );
+	pLuaArguments.PushNumber( vecPosition.fX );
+	pLuaArguments.PushNumber( vecPosition.fY );
+	pLuaArguments.PushNumber( vecPosition.fZ );
 
 	pLuaArguments.PushNumber( ucType );
 	pLuaArguments.PushNumber( dFive );
@@ -4838,7 +4895,8 @@ void* CLuaFunctionDefinitions::CreatePickup( lua_State* pLuaVM, float fX, float 
 }
 
 // Pickup get funcs
-unsigned char CLuaFunctionDefinitions::GetPickupType( lua_State* pLuaVM, void* pUserData )
+
+bool CLuaFunctionDefinitions::GetPickupType( lua_State* pLuaVM, void* pUserData, unsigned char& ucType )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4848,13 +4906,15 @@ unsigned char CLuaFunctionDefinitions::GetPickupType( lua_State* pLuaVM, void* p
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		return static_cast< unsigned char >( pLuaArgument.GetNumber() );
+		ucType = static_cast< unsigned char >( pLuaArgument.GetNumber() );
+
+		return true;
 	}
 
-	return 0;
+	return false;
 }
 
-unsigned char CLuaFunctionDefinitions::GetPickupWeapon( lua_State* pLuaVM, void* pUserData )
+bool CLuaFunctionDefinitions::GetPickupWeapon( lua_State* pLuaVM, void* pUserData, unsigned char& ucWeapon )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4864,13 +4924,15 @@ unsigned char CLuaFunctionDefinitions::GetPickupWeapon( lua_State* pLuaVM, void*
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		return static_cast< unsigned char >( pLuaArgument.GetNumber() );
+		ucWeapon = static_cast< unsigned char >( pLuaArgument.GetNumber() );
+
+		return true;
 	}
 
-	return 0;
+	return false;
 }
 
-float CLuaFunctionDefinitions::GetPickupAmount( lua_State* pLuaVM, void* pUserData )
+bool CLuaFunctionDefinitions::GetPickupAmount( lua_State* pLuaVM, void* pUserData, float& fAmount )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4880,13 +4942,15 @@ float CLuaFunctionDefinitions::GetPickupAmount( lua_State* pLuaVM, void* pUserDa
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		return static_cast< float >( pLuaArgument.GetNumber() );
+		fAmount = static_cast< float >( pLuaArgument.GetNumber() );
+
+		return true;
 	}
 
-	return 0.0f;
+	return false;
 }
 
-unsigned short CLuaFunctionDefinitions::GetPickupAmmo( lua_State* pLuaVM, void* pUserData )
+bool CLuaFunctionDefinitions::GetPickupAmmo( lua_State* pLuaVM, void* pUserData, unsigned short& ucAmmo )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4896,13 +4960,15 @@ unsigned short CLuaFunctionDefinitions::GetPickupAmmo( lua_State* pLuaVM, void* 
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		return static_cast< unsigned short >( pLuaArgument.GetNumber() );
+		ucAmmo = static_cast< unsigned short >( pLuaArgument.GetNumber() );
+
+		return true;
 	}
 
-	return 0;
+	return false;
 }
 
-unsigned long CLuaFunctionDefinitions::GetPickupRespawnInterval( lua_State* pLuaVM, void* pUserData )
+bool CLuaFunctionDefinitions::GetPickupRespawnInterval( lua_State* pLuaVM, void* pUserData, unsigned long& ulInterval )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4912,13 +4978,15 @@ unsigned long CLuaFunctionDefinitions::GetPickupRespawnInterval( lua_State* pLua
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		return static_cast< unsigned short >( pLuaArgument.GetNumber() );
+		ulInterval = static_cast< unsigned long >( pLuaArgument.GetNumber() );
+
+		return true;
 	}
 
-	return 0;
+	return false;
 }
 
-bool CLuaFunctionDefinitions::IsPickupSpawned( lua_State* pLuaVM, void* pUserData )
+bool CLuaFunctionDefinitions::IsPickupSpawned( lua_State* pLuaVM, void* pUserData, bool& bSpawned )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4928,13 +4996,16 @@ bool CLuaFunctionDefinitions::IsPickupSpawned( lua_State* pLuaVM, void* pUserDat
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		return pLuaArgument.GetBoolean();
+		bSpawned = pLuaArgument.GetBoolean();
+
+		return true;
 	}
 
 	return false;
 }
 
 // Pickup set funcs
+
 bool CLuaFunctionDefinitions::SetPickupType( lua_State* pLuaVM, void* pUserData, unsigned char ucType, double dThree, double dFour )
 {
 	CLuaArguments pLuaArguments;
@@ -4989,6 +5060,7 @@ bool CLuaFunctionDefinitions::UsePickup( lua_State* pLuaVM, void* pUserData, voi
 }
 
 // Shape create funcs
+
 void* CLuaFunctionDefinitions::CreateColCircle( lua_State* pLuaVM, const Vector2& vecPosition, float fRadius )
 {
 	CLuaArguments pLuaArguments;
@@ -5113,4 +5185,2799 @@ void* CLuaFunctionDefinitions::CreateColTube( lua_State* pLuaVM, const Vector3& 
 	}
 
 	return NULL;
+}
+
+// Explosion funcs
+
+bool CLuaFunctionDefinitions::CreateExplosion( lua_State* pLuaVM, const Vector3& vecPosition, unsigned char ucType, void* pCreator )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( vecPosition.fX );
+	pLuaArguments.PushNumber( vecPosition.fY );
+	pLuaArguments.PushNumber( vecPosition.fZ );
+
+	pLuaArguments.PushNumber( ucType );
+
+	if( pCreator )
+	{
+		pLuaArguments.PushUserData( pCreator );
+	}
+
+	if( pLuaArguments.Call( pLuaVM, "createExplosion", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+// Audio funcs
+
+bool CLuaFunctionDefinitions::PlaySoundFrontEnd( lua_State* pLuaVM, void* pElement, unsigned char ucSound )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pElement );
+	pLuaArguments.PushNumber( ucSound );
+
+	if( pLuaArguments.Call( pLuaVM, "playSoundFrontEnd", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::PlayMissionAudio( lua_State* pLuaVM, void* pElement, Vector3& vecPosition, unsigned short usSlot )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pElement );
+
+	pLuaArguments.PushNumber( usSlot );
+
+	pLuaArguments.PushNumber( vecPosition.fX );
+	pLuaArguments.PushNumber( vecPosition.fY );
+	pLuaArguments.PushNumber( vecPosition.fZ );
+
+	if( pLuaArguments.Call( pLuaVM, "playMissionAudio", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+// Ped body?
+
+bool CLuaFunctionDefinitions::GetBodyPartName( lua_State* pLuaVM, unsigned char ucID, char* szName )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( ucID );
+
+	if( pLuaArguments.Call( pLuaVM, "getBodyPartName", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		strncpy( szName, pLuaArgument.GetString(), strlen( pLuaArgument.GetString() ) );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetClothesByTypeIndex( lua_State* pLuaVM, unsigned char ucType, unsigned char ucIndex, char* szTextureReturn, char* szModelReturn )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( ucType );
+	pLuaArguments.PushNumber( ucIndex );
+
+	if( pLuaArguments.Call( pLuaVM, "getClothesByTypeIndex", 2 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -2 );
+
+		strncpy( szTextureReturn, pLuaArgument.GetString(), strlen( pLuaArgument.GetString() ) );
+
+		CLuaArgument pLuaArgument2( pLuaVM, -1 );
+
+		strncpy( szModelReturn, pLuaArgument2.GetString(), strlen( pLuaArgument2.GetString() ) );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetTypeIndexFromClothes( lua_State* pLuaVM, const char* szTexture, const char* szModel, unsigned char& ucTypeReturn, unsigned char& ucIndexReturn )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushString( szTexture );
+	pLuaArguments.PushString( szModel );
+
+	if( pLuaArguments.Call( pLuaVM, "getTypeIndexFromClothes", 2 ) )
+	{
+		ucTypeReturn	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		ucIndexReturn	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetClothesTypeName( lua_State* pLuaVM, unsigned char ucType, char* szNameReturn )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( ucType );
+
+	if( pLuaArguments.Call( pLuaVM, "getClothesTypeName", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		strncpy( szNameReturn, pLuaArgument.GetString(), strlen( pLuaArgument.GetString() ) );
+
+		return true;
+	}
+
+	return false;
+}
+
+// Input funcs
+
+bool CLuaFunctionDefinitions::BindKey( lua_State* pLuaVM, void* pPlayer, const char* szKey, const char* szHitState, const char* szCommandName, const char* szArguments )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pPlayer );
+	pLuaArguments.PushString( szKey );
+	pLuaArguments.PushString( szHitState );
+	pLuaArguments.PushString( szCommandName );
+
+	if( szArguments )
+	{
+		pLuaArguments.PushString( szArguments );
+	}
+
+	if( pLuaArguments.Call( pLuaVM, "bindKey", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::UnbindKey( lua_State* pLuaVM, void* pPlayer, const char* szKey, const char* szHitState, const char* szCommandName )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pPlayer );
+	pLuaArguments.PushString( szKey );
+	pLuaArguments.PushString( szHitState );
+	pLuaArguments.PushString( szCommandName );
+
+	if( pLuaArguments.Call( pLuaVM, "unbindKey", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetControlState( lua_State* pLuaVM, void* pPlayer, const char* szControl, bool& bState )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pPlayer );
+	pLuaArguments.PushString( szControl );
+
+	if( pLuaArguments.Call( pLuaVM, "getControlState", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		bState = pLuaArgument.GetBoolean();
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::IsControlEnabled( lua_State* pLuaVM, void* pPlayer, const char* szControl, bool& bEnabled )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pPlayer );
+	pLuaArguments.PushString( szControl );
+
+	if( pLuaArguments.Call( pLuaVM, "isControlEnabled", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		bEnabled = pLuaArgument.GetBoolean();
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetControlState( lua_State* pLuaVM, void* pPlayer, const char* szControl, bool bState )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pPlayer );
+	pLuaArguments.PushString( szControl );
+	pLuaArguments.PushBoolean( bState );
+
+	if( pLuaArguments.Call( pLuaVM, "setControlState", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::ToggleControl( lua_State* pLuaVM, void* pPlayer, const char* szControl, bool bEnabled )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pPlayer );
+	pLuaArguments.PushString( szControl );
+	pLuaArguments.PushBoolean( bEnabled );
+
+	if( pLuaArguments.Call( pLuaVM, "toggleControl", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::ToggleAllControls( lua_State* pLuaVM, void* pPlayer, bool bGTAControls, bool bMTAControls, bool bEnabled )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pPlayer );
+	pLuaArguments.PushBoolean( bGTAControls );
+	pLuaArguments.PushBoolean( bMTAControls );
+	pLuaArguments.PushBoolean( bEnabled );
+
+	if( pLuaArguments.Call( pLuaVM, "toggleAllControls", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+// Team get funcs
+
+void* CLuaFunctionDefinitions::CreateTeam( lua_State* pLuaVM, const char* szTeamName, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushString( szTeamName );
+	pLuaArguments.PushNumber( ucRed );
+	pLuaArguments.PushNumber( ucGreen );
+	pLuaArguments.PushNumber( ucBlue );
+
+	if( pLuaArguments.Call( pLuaVM, "createTeam", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
+void* CLuaFunctionDefinitions::GetTeamFromName( lua_State* pLuaVM, const char* szTeamName )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushString( szTeamName );
+
+	if( pLuaArguments.Call( pLuaVM, "getTeamFromName", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
+bool CLuaFunctionDefinitions::GetTeamName( lua_State* pLuaVM, void* pTeam, string& strOutName )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pTeam );
+
+	if( pLuaArguments.Call( pLuaVM, "getTeamName", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		strOutName = pLuaArgument.GetString();
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetTeamColor( lua_State* pLuaVM, void* pTeam, unsigned char& ucRed, unsigned char& ucGreen, unsigned char& ucBlue )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pTeam );
+
+	if( pLuaArguments.Call( pLuaVM, "getTeamColor", 3 ) )
+	{
+		ucRed	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
+		ucGreen	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		ucBlue	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::CountPlayersInTeam( lua_State* pLuaVM, void* pTeam, unsigned int& uiCount )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pTeam );
+
+	if( pLuaArguments.Call( pLuaVM, "countPlayersInTeam", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		uiCount = static_cast< unsigned int >( pLuaArgument.GetNumber() );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetTeamFriendlyFire( lua_State* pLuaVM, void* pTeam, bool& bFriendlyFire )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pTeam );
+
+	if( pLuaArguments.Call( pLuaVM, "getTeamFriendlyFire", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		bFriendlyFire = pLuaArgument.GetBoolean();
+
+		return true;
+	}
+
+	return false;
+}
+
+// Team set funcs
+
+bool CLuaFunctionDefinitions::SetTeamName( lua_State* pLuaVM, void* pTeam, const char* szTeamName )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pTeam );
+	pLuaArguments.PushString( szTeamName );
+
+	if( pLuaArguments.Call( pLuaVM, "setTeamName", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetTeamColor( lua_State* pLuaVM, void* pTeam, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pTeam );
+	pLuaArguments.PushNumber( ucRed );
+	pLuaArguments.PushNumber( ucGreen );
+	pLuaArguments.PushNumber( ucBlue );
+
+	if( pLuaArguments.Call( pLuaVM, "setTeamColor", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetPlayerTeam( lua_State* pLuaVM, void* pPlayer, void* pTeam )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pPlayer );
+	pLuaArguments.PushUserData( pTeam );
+
+	if( pLuaArguments.Call( pLuaVM, "setPlayerTeam", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetTeamFriendlyFire( lua_State* pLuaVM, void* pTeam, bool bFriendlyFire )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pTeam );
+	pLuaArguments.PushBoolean( bFriendlyFire );
+
+	if( pLuaArguments.Call( pLuaVM, "setTeamFriendlyFire", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+// Water funcs
+
+void* CLuaFunctionDefinitions::CreateWater( lua_State* pLuaVM, Vector3* pV1, Vector3* pV2, Vector3* pV3, Vector3* pV4 )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( pV1->fX );
+	pLuaArguments.PushNumber( pV1->fY );
+	pLuaArguments.PushNumber( pV1->fZ );
+
+	pLuaArguments.PushNumber( pV2->fX );
+	pLuaArguments.PushNumber( pV2->fY );
+	pLuaArguments.PushNumber( pV2->fZ );
+
+	pLuaArguments.PushNumber( pV3->fX );
+	pLuaArguments.PushNumber( pV3->fY );
+	pLuaArguments.PushNumber( pV3->fZ );
+
+	if( pV4 )
+	{
+		pLuaArguments.PushNumber( pV4->fX );
+		pLuaArguments.PushNumber( pV4->fY );
+		pLuaArguments.PushNumber( pV4->fZ );
+	}
+
+	if( pLuaArguments.Call( pLuaVM, "createWater", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetElementWaterLevel( lua_State* pLuaVM, void* pWater, float fLevel )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pWater );
+	pLuaArguments.PushNumber( fLevel );
+
+	if( pLuaArguments.Call( pLuaVM, "setElementWaterLevel", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetAllElementWaterLevel( lua_State* pLuaVM, float fLevel )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( fLevel );
+
+	if( pLuaArguments.Call( pLuaVM, "setAllElementWaterLevel", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetWorldWaterLevel( lua_State* pLuaVM, float fLevel, bool bIncludeWorldNonSeaLevel )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( fLevel );
+	pLuaArguments.PushBoolean( bIncludeWorldNonSeaLevel );
+
+	if( pLuaArguments.Call( pLuaVM, "setWorldWaterLevel", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::ResetWorldWaterLevel( lua_State* pLuaVM )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "resetWorldWaterLevel", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetWaterVertexPosition( lua_State* pLuaVM, void* pWater, int iVertexIndex, Vector3& vecPosition )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pWater );
+	pLuaArguments.PushNumber( iVertexIndex );
+
+	if( pLuaArguments.Call( pLuaVM, "getWaterVertexPosition", 3 ) )
+	{
+		vecPosition.fX = static_cast< float >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
+		vecPosition.fY = static_cast< float >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		vecPosition.fZ = static_cast< float >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetWaterVertexPosition( lua_State* pLuaVM, void* pWater, int iVertexIndex, Vector3& vecPosition )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pWater );
+	pLuaArguments.PushNumber( iVertexIndex );
+	pLuaArguments.PushNumber( vecPosition.fX );
+	pLuaArguments.PushNumber( vecPosition.fY );
+	pLuaArguments.PushNumber( vecPosition.fZ );
+
+	if( pLuaArguments.Call( pLuaVM, "setWaterVertexPosition", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetWaterColor( lua_State* pLuaVM, unsigned char& ucRed, unsigned char& ucGreen, unsigned char& ucBlue, unsigned char& ucAlpha )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getWaterColor", 4 ) )
+	{
+		ucRed	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -4 ) )->GetNumber() );
+		ucGreen	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
+		ucBlue	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		ucAlpha	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetWaterColor( lua_State* pLuaVM, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue, unsigned char ucAlpha )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( ucRed );
+	pLuaArguments.PushNumber( ucGreen );
+	pLuaArguments.PushNumber( ucBlue );
+	pLuaArguments.PushNumber( ucAlpha );
+
+	if( pLuaArguments.Call( pLuaVM, "setWaterColor", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::ResetWaterColor( lua_State* pLuaVM )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "resetWaterColor", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+// Standard server functions
+unsigned int CLuaFunctionDefinitions::GetMaxPlayers( lua_State* pLuaVM )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getMaxPlayers", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetMaxPlayers( lua_State* pLuaVM, unsigned int uiMax )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( uiMax );
+
+	if( pLuaArguments.Call( pLuaVM, "setMaxPlayers", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::OutputChatBox( lua_State* pLuaVM, const char* szText, void* pElement, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue, bool bColorCoded )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushString( szText );
+
+	if( pElement )
+		pLuaArguments.PushUserData( pElement );
+	else
+		pLuaArguments.PushUserData( NULL );
+	
+	if( ucRed )
+	{
+		pLuaArguments.PushNumber( ucRed );
+		pLuaArguments.PushNumber( ucGreen );
+		pLuaArguments.PushNumber( ucBlue );
+
+		pLuaArguments.PushNumber( bColorCoded );
+	}
+
+	if( pLuaArguments.Call( pLuaVM, "outputChatBox", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::OutputConsole( lua_State* pLuaVM, const char* szText, void* pElement )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushString( szText );
+	pLuaArguments.PushUserData( pElement );
+
+	if( pLuaArguments.Call( pLuaVM, "outputConsole", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetServerPassword( lua_State* pLuaVM, const string& strPassword, bool bSave )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushString( strPassword.c_str() );
+	pLuaArguments.PushBoolean( bSave );
+
+	if( pLuaArguments.Call( pLuaVM, "setServerPassword", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+// General world get funcs
+
+bool CLuaFunctionDefinitions::GetTime( lua_State* pLuaVM, unsigned char& ucHour, unsigned char& ucMinute )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getTime", 2 ) )
+	{
+		ucHour		= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		ucMinute	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetWeather( lua_State* pLuaVM, unsigned char& ucWeather, unsigned char& ucWeatherBlendingTo )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getWeather", 2 ) )
+	{
+		ucWeather			= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		ucWeatherBlendingTo	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetZoneName( lua_State* pLuaVM, Vector3& vecPosition, string& strOutName, bool bCitiesOnly )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( vecPosition.fX );
+	pLuaArguments.PushNumber( vecPosition.fY );
+	pLuaArguments.PushNumber( vecPosition.fZ );
+
+	pLuaArguments.PushBoolean( bCitiesOnly );
+
+	if( pLuaArguments.Call( pLuaVM, "getZoneName", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		strOutName = pLuaArgument.GetString();
+		
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetGravity( lua_State* pLuaVM, float& fGravity )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getGravity", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		fGravity = static_cast< float >( pLuaArgument.GetNumber() );
+		
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetGameSpeed( lua_State* pLuaVM, float& fSpeed )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getGameSpeed", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		fSpeed = static_cast< float >( pLuaArgument.GetNumber() );
+		
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetWaveHeight( lua_State* pLuaVM, float& fHeight )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getWaveHeight", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		fHeight = static_cast< float >( pLuaArgument.GetNumber() );
+		
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetFPSLimit( lua_State* pLuaVM, unsigned short& usLimit )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getFPSLimit", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		usLimit = static_cast< unsigned short >( pLuaArgument.GetNumber() );
+		
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetMinuteDuration( lua_State* pLuaVM, unsigned long& ulDuration )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getMinuteDuration", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		ulDuration = static_cast< unsigned long >( pLuaArgument.GetNumber() );
+		
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::IsGarageOpen( lua_State* pLuaVM, unsigned char ucGarageID, bool& bIsOpen )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "isGarageOpen", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		bIsOpen = pLuaArgument.GetBoolean();
+		
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetTrafficLightState( lua_State* pLuaVM, unsigned char& ucState )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getTrafficLightState", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		ucState = static_cast< unsigned char >( pLuaArgument.GetNumber() );
+		
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetTrafficLightsLocked( lua_State* pLuaVM, bool& bLocked )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getTrafficLightsLocked", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		bLocked = pLuaArgument.GetBoolean();
+		
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetJetpackMaxHeight( lua_State* pLuaVM, float& fMaxHeight )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getJetpackMaxHeight", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		fMaxHeight = static_cast< float >( pLuaArgument.GetNumber() );
+		
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetAircraftMaxVelocity( lua_State* pLuaVM, float& fVelocity )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getAircraftMaxVelocity", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		fVelocity = static_cast< float >( pLuaArgument.GetNumber() );
+		
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetInteriorSoundsEnabled( lua_State* pLuaVM, bool& bEnabled )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getInteriorSoundsEnabled", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		bEnabled = pLuaArgument.GetBoolean();
+		
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetRainLevel( lua_State* pLuaVM, float& fRainLevel )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getRainLevel", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		fRainLevel = static_cast< float >( pLuaArgument.GetNumber() );
+		
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetSunSize( lua_State* pLuaVM, float& fSunSize )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getSunSize", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		fSunSize = static_cast< float >( pLuaArgument.GetNumber() );
+		
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetSunColor( lua_State* pLuaVM, unsigned char& ucCoreR, unsigned char& ucCoreG, unsigned char& ucCoreB, unsigned char& ucCoronaR, unsigned char& ucCoronaG, unsigned char& ucCoronaB )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getSunColor", 6 ) )
+	{
+		ucCoreR		= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -6 ) )->GetNumber() );
+		ucCoreG		= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -5 ) )->GetNumber() );
+		ucCoreB		= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -4 ) )->GetNumber() );
+
+		ucCoronaR	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
+		ucCoronaG	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		ucCoronaB	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetWindVelocity( lua_State* pLuaVM, float& fVelX, float& fVelY, float& fVelZ )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getWindVelocity", 3 ) )
+	{
+		fVelX	= static_cast< float >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
+		fVelY	= static_cast< float >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		fVelZ	= static_cast< float >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetFarClipDistance( lua_State* pLuaVM, float& fFarClip )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getFarClipDistance", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		fFarClip = static_cast< float >( pLuaArgument.GetNumber() );
+		
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetFogDistance( lua_State* pLuaVM, float& fFogDist )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getFogDistance", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		fFogDist = static_cast< float >( pLuaArgument.GetNumber() );
+		
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetAircraftMaxHeight( lua_State* pLuaVM, float& fMaxHeight )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getAircraftMaxHeight", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		fMaxHeight = static_cast< float >( pLuaArgument.GetNumber() );
+		
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetOcclusionsEnabled( lua_State* pLuaVM, bool& bEnabled )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getOcclusionsEnabled", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		bEnabled = pLuaArgument.GetBoolean();
+		
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetMoonSize( lua_State* pLuaVM, int& iSize )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getMoonSize", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		iSize = static_cast< int >( pLuaArgument.GetNumber() );
+		
+		return true;
+	}
+
+	return false;
+}
+
+// General world set funcs
+
+bool CLuaFunctionDefinitions::SetTime( lua_State* pLuaVM, unsigned char ucHour, unsigned char ucMinute )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( ucHour );
+	pLuaArguments.PushNumber( ucMinute );
+
+	if( pLuaArguments.Call( pLuaVM, "setTime", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetWeather( lua_State* pLuaVM, unsigned char ucWeather )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( ucWeather );
+
+	if( pLuaArguments.Call( pLuaVM, "setWeather", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetWeatherBlended( lua_State* pLuaVM, unsigned char ucWeather )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( ucWeather );
+
+	if( pLuaArguments.Call( pLuaVM, "setWeatherBlended", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetGravity( lua_State* pLuaVM, float fGravity )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( fGravity );
+
+	if( pLuaArguments.Call( pLuaVM, "setGravity", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetGameSpeed( lua_State* pLuaVM, float fSpeed )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( fSpeed );
+
+	if( pLuaArguments.Call( pLuaVM, "setGameSpeed", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetWaveHeight( lua_State* pLuaVM, float fHeight )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( fHeight );
+
+	if( pLuaArguments.Call( pLuaVM, "setWaveHeight", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetSkyGradient( lua_State* pLuaVM, unsigned char& ucTopRed, unsigned char& ucTopGreen, unsigned char& ucTopBlue, unsigned char& ucBottomRed, unsigned char& ucBottomGreen, unsigned char& ucBottomBlue )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getSkyGradient", 6 ) )
+	{
+		ucTopRed		= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -6 ) )->GetBoolean() );
+		ucTopGreen		= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -5 ) )->GetBoolean() );
+		ucTopBlue		= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -4 ) )->GetBoolean() );
+
+		ucBottomRed		= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetBoolean() );
+		ucBottomGreen	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetBoolean() );
+		ucBottomBlue	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetBoolean() );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetSkyGradient( lua_State* pLuaVM, unsigned char ucTopRed, unsigned char ucTopGreen, unsigned char ucTopBlue, unsigned char ucBottomRed, unsigned char ucBottomGreen, unsigned char ucBottomBlue )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( ucTopRed );
+	pLuaArguments.PushNumber( ucTopGreen );
+	pLuaArguments.PushNumber( ucTopBlue );
+
+	pLuaArguments.PushNumber( ucBottomRed );
+	pLuaArguments.PushNumber( ucBottomGreen );
+	pLuaArguments.PushNumber( ucBottomBlue );
+
+	if( pLuaArguments.Call( pLuaVM, "setSkyGradient", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::ResetSkyGradient( lua_State* pLuaVM )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "resetSkyGradient", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetHeatHaze( lua_State* pLuaVM, SHeatHazeSettings& heatHazeSettings )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getHeatHaze", 9 ) )
+	{
+		heatHazeSettings.ucIntensity		= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -9 ) )->GetNumber() );
+		heatHazeSettings.ucRandomShift		= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -8 ) )->GetNumber() );
+		heatHazeSettings.usSpeedMin			= static_cast< unsigned short >( ( new CLuaArgument( pLuaVM, -7 ) )->GetNumber() );
+		heatHazeSettings.usSpeedMax			= static_cast< unsigned short >( ( new CLuaArgument( pLuaVM, -6 ) )->GetNumber() );
+		heatHazeSettings.sScanSizeX			= static_cast< short >( ( new CLuaArgument( pLuaVM, -5 ) )->GetNumber() );
+		heatHazeSettings.sScanSizeY			= static_cast< short >( ( new CLuaArgument( pLuaVM, -4 ) )->GetNumber() );
+		heatHazeSettings.usRenderSizeX		= static_cast< unsigned short >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
+		heatHazeSettings.usRenderSizeY		= static_cast< unsigned short >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
+		heatHazeSettings.bInsideBuilding	= ( new CLuaArgument( pLuaVM, -1 ) )->GetBoolean();
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetHeatHaze( lua_State* pLuaVM, const SHeatHazeSettings& heatHazeSettings )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( heatHazeSettings.ucIntensity );
+	pLuaArguments.PushNumber( heatHazeSettings.ucRandomShift );
+	pLuaArguments.PushNumber( heatHazeSettings.usSpeedMin );
+	pLuaArguments.PushNumber( heatHazeSettings.usSpeedMax );
+	pLuaArguments.PushNumber( heatHazeSettings.sScanSizeX );
+	pLuaArguments.PushNumber( heatHazeSettings.sScanSizeY );
+	pLuaArguments.PushNumber( heatHazeSettings.usRenderSizeX );
+	pLuaArguments.PushNumber( heatHazeSettings.usRenderSizeY );
+	pLuaArguments.PushBoolean( heatHazeSettings.bInsideBuilding );
+
+	if( pLuaArguments.Call( pLuaVM, "setHeatHaze", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::ResetHeatHaze( lua_State* pLuaVM )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "resetHeatHaze", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetFPSLimit( lua_State* pLuaVM, unsigned short usLimit, bool bSave )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( usLimit );
+	pLuaArguments.PushBoolean( bSave );
+
+	if( pLuaArguments.Call( pLuaVM, "setFPSLimit", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetMinuteDuration( lua_State* pLuaVM, unsigned long ulDuration )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( ulDuration );
+
+	if( pLuaArguments.Call( pLuaVM, "setMinuteDuration", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetGarageOpen( lua_State* pLuaVM, unsigned char ucGarageID, bool bIsOpen )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( ucGarageID );
+	pLuaArguments.PushBoolean( bIsOpen );
+
+	if( pLuaArguments.Call( pLuaVM, "setGarageOpen", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetGlitchEnabled( lua_State* pLuaVM, const string& strGlitchName, bool bEnabled )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushString( strGlitchName.c_str() );
+	pLuaArguments.PushBoolean( bEnabled );
+
+	if( pLuaArguments.Call( pLuaVM, "setGlitchEnabled", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::IsGlitchEnabled( lua_State* pLuaVM, const string& strGlitchName )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushString( strGlitchName.c_str() );
+
+	if( pLuaArguments.Call( pLuaVM, "isGlitchEnabled", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetJetpackWeaponEnabled( lua_State* pLuaVM, eWeaponType weaponType )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( weaponType );
+
+	if( pLuaArguments.Call( pLuaVM, "getJetpackWeaponEnabled", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetJetpackWeaponEnabled( lua_State* pLuaVM, eWeaponType weaponType, bool bEnabled )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( weaponType );
+	pLuaArguments.PushBoolean( bEnabled );
+
+	if( pLuaArguments.Call( pLuaVM, "setJetpackWeaponEnabled", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetCloudsEnabled( lua_State* pLuaVM, bool bEnabled )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushBoolean( bEnabled );
+
+	if( pLuaArguments.Call( pLuaVM, "setCloudsEnabled", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetCloudsEnabled( lua_State* pLuaVM )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getCloudsEnabled", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetTrafficLightState( lua_State* pLuaVM, unsigned char ucState, bool bForced )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( ucState );
+	pLuaArguments.PushBoolean( bForced );
+
+	if( pLuaArguments.Call( pLuaVM, "setTrafficLightState", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetTrafficLightsLocked( lua_State* pLuaVM, bool bLocked )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushBoolean( bLocked );
+
+	if( pLuaArguments.Call( pLuaVM, "setTrafficLightsLocked", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetJetpackMaxHeight( lua_State* pLuaVM, float fMaxHeight )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( fMaxHeight );
+
+	if( pLuaArguments.Call( pLuaVM, "setJetpackMaxHeight", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetInteriorSoundsEnabled( lua_State* pLuaVM, bool bEnable )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushBoolean( bEnable );
+
+	if( pLuaArguments.Call( pLuaVM, "setInteriorSoundsEnabled", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetRainLevel( lua_State* pLuaVM, float fRainLevel )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( fRainLevel );
+
+	if( pLuaArguments.Call( pLuaVM, "setRainLevel", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetSunSize( lua_State* pLuaVM, float fSunSize )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( fSunSize );
+
+	if( pLuaArguments.Call( pLuaVM, "setSunSize", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetSunColor( lua_State* pLuaVM, unsigned char ucCoreR, unsigned char ucCoreG, unsigned char ucCoreB, unsigned char ucCoronaR, unsigned char ucCoronaG, unsigned char ucCoronaB )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( ucCoreR );
+	pLuaArguments.PushNumber( ucCoreG );
+	pLuaArguments.PushNumber( ucCoreB );
+
+	pLuaArguments.PushNumber( ucCoronaR );
+	pLuaArguments.PushNumber( ucCoronaG );
+	pLuaArguments.PushNumber( ucCoronaB );
+
+	if( pLuaArguments.Call( pLuaVM, "setSunColor", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetWindVelocity( lua_State* pLuaVM, float fVelX, float fVelY, float fVelZ )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( fVelX );
+	pLuaArguments.PushNumber( fVelY );
+	pLuaArguments.PushNumber( fVelZ );
+
+	if( pLuaArguments.Call( pLuaVM, "setWindVelocity", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetFarClipDistance( lua_State* pLuaVM, float fFarClip )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( fFarClip );
+
+	if( pLuaArguments.Call( pLuaVM, "setFarClipDistance", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetFogDistance( lua_State* pLuaVM, float fFogDist )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( fFogDist );
+
+	if( pLuaArguments.Call( pLuaVM, "setFogDistance", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetAircraftMaxHeight( lua_State* pLuaVM, float fMaxHeight )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( fMaxHeight );
+
+	if( pLuaArguments.Call( pLuaVM, "setAircraftMaxHeight", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetAircraftMaxVelocity( lua_State* pLuaVM, float fVelocity )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( fVelocity );
+
+	if( pLuaArguments.Call( pLuaVM, "setAircraftMaxVelocity", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetOcclusionsEnabled( lua_State* pLuaVM, bool bEnabled )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushBoolean( bEnabled );
+
+	if( pLuaArguments.Call( pLuaVM, "setOcclusionsEnabled", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::ResetRainLevel( lua_State* pLuaVM )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "resetRainLevel", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::ResetSunSize( lua_State* pLuaVM )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "resetSunSize", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::ResetSunColor( lua_State* pLuaVM )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "resetSunColor", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::ResetWindVelocity( lua_State* pLuaVM )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "resetWindVelocity", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::ResetFarClipDistance( lua_State* pLuaVM )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "resetFarClipDistance", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::ResetFogDistance( lua_State* pLuaVM )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "resetFogDistance", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::RemoveWorldModel( lua_State* pLuaVM, unsigned short usModel, float fRadius, const Vector3& vecPosition, char cInterior )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( usModel );
+	pLuaArguments.PushNumber( fRadius );
+	pLuaArguments.PushNumber( vecPosition.fX );
+	pLuaArguments.PushNumber( vecPosition.fY );
+	pLuaArguments.PushNumber( vecPosition.fZ );
+	pLuaArguments.PushNumber( cInterior );
+
+	if( pLuaArguments.Call( pLuaVM, "removeWorldModel", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::RestoreWorldModel( lua_State* pLuaVM, unsigned short usModel, float fRadius, const Vector3& vecPosition, char cInterior )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( usModel );
+	pLuaArguments.PushNumber( fRadius );
+	pLuaArguments.PushNumber( vecPosition.fX );
+	pLuaArguments.PushNumber( vecPosition.fY );
+	pLuaArguments.PushNumber( vecPosition.fZ );
+	pLuaArguments.PushNumber( cInterior );
+
+	if( pLuaArguments.Call( pLuaVM, "restoreWorldModel", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::RestoreAllWorldModels( lua_State* pLuaVM )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "restoreAllWorldModels", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SendSyncIntervals( lua_State* pLuaVM, void* pPlayer )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pPlayer )
+	{
+		pLuaArguments.PushUserData( pPlayer );
+	}
+
+	if( pLuaArguments.Call( pLuaVM, "sendSyncIntervals", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetPedTargetingMarkerEnabled( lua_State* pLuaVM, bool bEnabled )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushBoolean( bEnabled );
+
+	if( pLuaArguments.Call( pLuaVM, "setPedTargetingMarkerEnabled", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::IsPedTargetingMarkerEnabled( lua_State* pLuaVM )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "isPedTargetingMarkerEnabled", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetMoonSize( lua_State* pLuaVM, int iMoonSize )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( iMoonSize );
+
+	if( pLuaArguments.Call( pLuaVM, "setMoonSize", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::ResetMoonSize( lua_State* pLuaVM )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "resetMoonSize", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+// Loaded Map Functions
+
+void* CLuaFunctionDefinitions::GetRootElement( lua_State* pLuaVM )
+{
+	if( ( new CLuaArguments() )->Call( pLuaVM, "getRootElement", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
+//void* CLuaFunctionDefinitions::LoadMapData( lua_State* pLuaVM, void* pParent, CXMLNode* pNode )
+//void* CLuaFunctionDefinitions::SaveMapData( lua_State* pLuaVM, void* pElement, CXMLNode* pNode, bool bChildren )
+	
+// Account get funcs
+
+void* CLuaFunctionDefinitions::GetAccount( lua_State* pLuaVM, const char* szName, const char* szPassword )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushString( szName );
+	pLuaArguments.PushString( szPassword );
+
+	if( pLuaArguments.Call( pLuaVM, "getAccount", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
+bool CLuaFunctionDefinitions::GetAccounts( lua_State* pLuaVM ) // TODO
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getAccounts", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return true;
+	}
+
+	return false;
+}
+
+void* CLuaFunctionDefinitions::GetAccountPlayer( lua_State* pLuaVM, void* pAccount )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pAccount );
+
+	if( pLuaArguments.Call( pLuaVM, "getAccountPlayer", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
+bool CLuaFunctionDefinitions::IsGuestAccount( lua_State* pLuaVM, void* pAccount, bool& bGuest )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pAccount );
+
+	if( pLuaArguments.Call( pLuaVM, "isGuestAccount", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		bGuest = pLuaArgument.GetBoolean();
+
+		return true;
+	}
+
+	return false;
+}
+
+CLuaArgument* CLuaFunctionDefinitions::GetAccountData( lua_State* pLuaVM, void* pAccount, const char* szKey )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pAccount );
+	pLuaArguments.PushString( szKey );
+
+	if( pLuaArguments.Call( pLuaVM, "getAccountData", 1 ) )
+	{
+		return new CLuaArgument( pLuaVM, -1 );
+	}
+
+	return NULL;
+}
+
+bool CLuaFunctionDefinitions::GetAllAccountData( lua_State* pLuaVM, void* pAccount )
+{
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetAccountSerial( lua_State* pLuaVM, void* pAccount, string& strSerial )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pAccount );
+
+	if( pLuaArguments.Call( pLuaVM, "getAccountSerial", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		strSerial = string( pLuaArgument.GetString() );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetAccountsBySerial( lua_State* pLuaVM, const string& strSerial, std::vector<void*>& outAccounts )
+{
+	return false;
+}
+
+// Account set funcs
+
+void* CLuaFunctionDefinitions::AddAccount( lua_State* pLuaVM, const char* szName, const char* szPassword )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushString( szName );
+	pLuaArguments.PushString( szPassword );
+
+	if( pLuaArguments.Call( pLuaVM, "addAccount", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
+bool CLuaFunctionDefinitions::RemoveAccount( lua_State* pLuaVM, void* pAccount )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pAccount );
+
+	if( pLuaArguments.Call( pLuaVM, "removeAccount", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetAccountPassword( lua_State* pLuaVM, void* pAccount, const char* szPassword )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pAccount );
+	pLuaArguments.PushString( szPassword );
+
+	if( pLuaArguments.Call( pLuaVM, "setAccountPassword", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetAccountData( lua_State* pLuaVM, void* pAccount, const char* szKey, CLuaArgument* pArgument )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pAccount );
+	pLuaArguments.PushString( szKey );
+	pLuaArguments.PushArgument( pArgument );
+
+	if( pLuaArguments.Call( pLuaVM, "setAccountData", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::CopyAccountData( lua_State* pLuaVM, void* pAccount, void* pFromAccount )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pAccount );
+	pLuaArguments.PushUserData( pFromAccount );
+
+	if( pLuaArguments.Call( pLuaVM, "copyAccountData", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+// Log in/out funcs
+
+bool CLuaFunctionDefinitions::LogIn( lua_State* pLuaVM, void* pPlayer, void* pAccount, const char* szPassword )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pPlayer );
+	pLuaArguments.PushUserData( pAccount );
+	pLuaArguments.PushString( szPassword );
+
+	if( pLuaArguments.Call( pLuaVM, "logIn", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::LogOut( lua_State* pLuaVM, void* pPlayer )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pPlayer );
+
+	if( pLuaArguments.Call( pLuaVM, "logOut", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+// Admin funcs
+
+bool CLuaFunctionDefinitions::KickPlayer( lua_State* pLuaVM, void* pPlayer, string strResponsible, string strReason )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pPlayer );
+	pLuaArguments.PushString( strResponsible.c_str() );
+	pLuaArguments.PushString( strReason.c_str() );
+
+	if( pLuaArguments.Call( pLuaVM, "kickPlayer", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+void* CLuaFunctionDefinitions::BanPlayer( lua_State* pLuaVM, void* pPlayer, bool bIP, bool bUsername, bool bSerial, void* pResponsible, string strResponsible, string strReason, time_t tUnban )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pPlayer );
+	pLuaArguments.PushBoolean( bIP );
+	pLuaArguments.PushBoolean( bUsername );
+	pLuaArguments.PushBoolean( bSerial );
+
+	if( pResponsible )
+	{
+		pLuaArguments.PushUserData( pResponsible );
+		pLuaArguments.PushString( strResponsible.c_str() );
+		pLuaArguments.PushString( strReason.c_str() );
+		pLuaArguments.PushNumber( static_cast< double >( tUnban ) );
+	}
+
+	if( pLuaArguments.Call( pLuaVM, "banPlayer", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
+void* CLuaFunctionDefinitions::AddBan( lua_State* pLuaVM, string strIP, string strUsername, string strSerial, void* pResponsible, string strResponsible, string strReason, time_t tUnban )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushString( strIP.c_str() );
+	pLuaArguments.PushString( strUsername.c_str() );
+	pLuaArguments.PushString( strSerial.c_str() );
+
+	if( pResponsible )
+	{
+		pLuaArguments.PushUserData( pResponsible );
+		pLuaArguments.PushString( strResponsible.c_str() );
+		pLuaArguments.PushString( strReason.c_str() );
+		pLuaArguments.PushNumber( static_cast< double >( tUnban ) );
+	}
+
+	if( pLuaArguments.Call( pLuaVM, "addBan", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
+bool CLuaFunctionDefinitions::RemoveBan( lua_State* pLuaVM, void* pBan, void* pResponsible )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pBan );
+
+	if( pResponsible )
+	{
+		pLuaArguments.PushUserData( pResponsible );
+	}
+
+	if( pLuaArguments.Call( pLuaVM, "removeBan", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetBans( lua_State* pLuaVM ) // TODO
+{
+	return false;
+}
+
+bool CLuaFunctionDefinitions::ReloadBanList( lua_State* pLuaVM )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "reloadBanList", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetBanIP( lua_State* pLuaVM, void* pBan, string& strOutIP )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pBan );
+
+	if( pLuaArguments.Call( pLuaVM, "getBanIP", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		strOutIP = string( pLuaArgument.GetString() );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetBanSerial( lua_State* pLuaVM, void* pBan, string& strOutSerial )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pBan );
+
+	if( pLuaArguments.Call( pLuaVM, "getBanSerial", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		strOutSerial = string( pLuaArgument.GetString() );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetBanUsername( lua_State* pLuaVM, void* pBan, string& strOutUsername )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pBan );
+
+	if( pLuaArguments.Call( pLuaVM, "getBanUsername", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		strOutUsername = string( pLuaArgument.GetString() );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetBanNick( lua_State* pLuaVM, void* pBan, string& strOutNick )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pBan );
+
+	if( pLuaArguments.Call( pLuaVM, "getBanNick", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		strOutNick = string( pLuaArgument.GetString() );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetBanReason( lua_State* pLuaVM, void* pBan, string& strOutReason )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pBan );
+
+	if( pLuaArguments.Call( pLuaVM, "getBanReason", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		strOutReason = string( pLuaArgument.GetString() );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetBanAdmin( lua_State* pLuaVM, void* pBan, string& strOutAdmin )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pBan );
+
+	if( pLuaArguments.Call( pLuaVM, "getBanAdmin", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		strOutAdmin = string( pLuaArgument.GetString() );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetBanTime( lua_State* pLuaVM, void* pBan, time_t& time )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pBan );
+
+	if( pLuaArguments.Call( pLuaVM, "getBanTime", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		time = static_cast< time_t >( pLuaArgument.GetNumber() );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetUnbanTime( lua_State* pLuaVM, void* pBan, time_t& time )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pBan );
+
+	if( pLuaArguments.Call( pLuaVM, "getUnbanTime", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		time = static_cast< time_t >( pLuaArgument.GetNumber() );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetUnbanTime( lua_State* pLuaVM, void* pBan, time_t time )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pBan );
+	pLuaArguments.PushNumber( static_cast< double >( time ) );
+
+	if( pLuaArguments.Call( pLuaVM, "setUnbanTime", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetBanReason( lua_State* pLuaVM, void* pBan, const string& strReason )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pBan );
+	pLuaArguments.PushString( strReason.c_str() );
+
+	if( pLuaArguments.Call( pLuaVM, "setBanReason", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetBanAdmin( lua_State* pLuaVM, void* pBan, const string& strAdminName )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pBan );
+	pLuaArguments.PushString( strAdminName.c_str() );
+
+	if( pLuaArguments.Call( pLuaVM, "setBanAdmin", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+// Cursor get funcs
+
+bool CLuaFunctionDefinitions::IsCursorShowing( lua_State* pLuaVM, void* pPlayer, bool& bShowing )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pPlayer );
+
+	if( pLuaArguments.Call( pLuaVM, "isCursorShowing", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return bShowing = pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+// Cursor set funcs
+
+bool CLuaFunctionDefinitions::ShowCursor( lua_State* pLuaVM, void* pElement, bool bShow, bool bToggleControls )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pElement );
+	pLuaArguments.PushBoolean( bShow );
+	pLuaArguments.PushBoolean( bToggleControls );
+
+	if( pLuaArguments.Call( pLuaVM, "showCursor", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+// Chat funcs
+
+bool CLuaFunctionDefinitions::ShowChat( lua_State* pLuaVM, void* pElement, bool bShow )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pElement );
+	pLuaArguments.PushBoolean( bShow );
+
+	if( pLuaArguments.Call( pLuaVM, "showChat", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+// Misc funcs
+
+bool CLuaFunctionDefinitions::ResetMapInfo( lua_State* pLuaVM, void* pElement )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pElement );
+
+	if( pLuaArguments.Call( pLuaVM, "resetMapInfo", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+// Resource funcs
+
+void* CLuaFunctionDefinitions::GetResourceMapRootElement( lua_State* pLuaVM, const char* szMap )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushString( szMap );
+
+	if( pLuaArguments.Call( pLuaVM, "getResourceMapRootElement", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return false;
+}
+
+//CXMLNode* CLuaFunctionDefinitions::AddResourceMap( lua_State* pLuaVM, const string& strFilePath, const std::string& strMapName, int iDimension )
+//CXMLNode* CLuaFunctionDefinitions::AddResourceConfig( lua_State* pLuaVM, const string& strFilePath, const std::string& strConfigName, int iType )
+bool CLuaFunctionDefinitions::RemoveResourceFile( lua_State* pLuaVM, const char* szFilename )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushString( szFilename );
+
+	if( pLuaArguments.Call( pLuaVM, "removeResourceFile", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+// Version funcs
+
+// Camera get functions
+bool CLuaFunctionDefinitions::GetCameraMatrix( lua_State* pLuaVM, void* pPlayer, Vector3& vecPosition, Vector3& vecLookAt, float& fRoll, float& fFOV )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pPlayer );
+	
+	int i = 8;
+
+	if( pLuaArguments.Call( pLuaVM, "getCameraMatrix", i ) )
+	{
+		vecPosition.fX	= static_cast< float >( ( new CLuaArgument( pLuaVM, -( i-- ) ) )->GetNumber() );
+		vecPosition.fY	= static_cast< float >( ( new CLuaArgument( pLuaVM, -( i-- ) ) )->GetNumber() );
+		vecPosition.fZ	= static_cast< float >( ( new CLuaArgument( pLuaVM, -( i-- ) ) )->GetNumber() );
+
+		vecLookAt.fX	= static_cast< float >( ( new CLuaArgument( pLuaVM, -( i-- ) ) )->GetNumber() );
+		vecLookAt.fY	= static_cast< float >( ( new CLuaArgument( pLuaVM, -( i-- ) ) )->GetNumber() );
+		vecLookAt.fZ	= static_cast< float >( ( new CLuaArgument( pLuaVM, -( i-- ) ) )->GetNumber() );
+
+		fRoll			= static_cast< float >( ( new CLuaArgument( pLuaVM, -( i-- ) ) )->GetNumber() );
+		fFOV			= static_cast< float >( ( new CLuaArgument( pLuaVM, -( i-- ) ) )->GetNumber() );
+
+		return true;
+	}
+
+	return false;
+}
+
+void* CLuaFunctionDefinitions::GetCameraTarget( lua_State* pLuaVM, void* pPlayer )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pPlayer );
+	
+	if( pLuaArguments.Call( pLuaVM, "getCameraTarget", 1 ) )
+	{
+		return ( new CLuaArgument( pLuaVM, -1 ) )->GetLightUserData();
+	}
+
+	return NULL;
+}
+
+bool CLuaFunctionDefinitions::GetCameraInterior( lua_State* pLuaVM, void* pPlayer, unsigned char& ucInterior )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pPlayer );
+	
+	if( pLuaArguments.Call( pLuaVM, "getCameraInterior", 1 ) )
+	{
+		ucInterior = static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+
+		return true;
+	}
+
+	return false;
+}
+
+// Camera set functions
+
+bool CLuaFunctionDefinitions::SetCameraMatrix( lua_State* pLuaVM, void* pElement, const Vector3& vecPosition, Vector3* pvecLookAt, float fRoll, float fFOV )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pElement );
+
+	pLuaArguments.PushNumber( vecPosition.fX );
+	pLuaArguments.PushNumber( vecPosition.fY );
+	pLuaArguments.PushNumber( vecPosition.fZ );
+
+	pLuaArguments.PushNumber( pvecLookAt->fX );
+	pLuaArguments.PushNumber( pvecLookAt->fY );
+	pLuaArguments.PushNumber( pvecLookAt->fZ );
+
+	pLuaArguments.PushNumber( fRoll );
+	pLuaArguments.PushNumber( fFOV );
+	
+	if( pLuaArguments.Call( pLuaVM, "setCameraMatrix", 1 ) )
+	{
+		return ( new CLuaArgument( pLuaVM, -1 ) )->GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetCameraTarget( lua_State* pLuaVM, void* pElement, void* pTarget )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pElement );
+	pLuaArguments.PushUserData( pTarget );
+
+	if( pLuaArguments.Call( pLuaVM, "setCameraTarget", 1 ) )
+	{
+		return ( new CLuaArgument( pLuaVM, -1 ) )->GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetCameraInterior( lua_State* pLuaVM, void* pElement, unsigned char ucInterior )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pElement );
+	pLuaArguments.PushNumber( ucInterior );
+
+	if( pLuaArguments.Call( pLuaVM, "setCameraInterior", 1 ) )
+	{
+		return ( new CLuaArgument( pLuaVM, -1 ) )->GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::FadeCamera( lua_State* pLuaVM, void* pElement, bool bFadeIn, float fFadeTime, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pElement );
+	pLuaArguments.PushBoolean( bFadeIn );
+	pLuaArguments.PushNumber( fFadeTime );
+	pLuaArguments.PushNumber( ucRed );
+	pLuaArguments.PushNumber( ucGreen );
+	pLuaArguments.PushNumber( ucBlue );
+
+	if( pLuaArguments.Call( pLuaVM, "fFadeCamera", 1 ) )
+	{
+		return ( new CLuaArgument( pLuaVM, -1 ) )->GetBoolean();
+	}
+
+	return false;
+}
+
+// Weapon give/take functions
+
+bool CLuaFunctionDefinitions::GiveWeapon( lua_State* pLuaVM, void* pElement, unsigned char ucWeaponID, unsigned short usAmmo, bool bSetAsCurrent )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pElement );
+	pLuaArguments.PushNumber( ucWeaponID );
+	pLuaArguments.PushNumber( usAmmo );
+	pLuaArguments.PushBoolean( bSetAsCurrent );
+
+	if( pLuaArguments.Call( pLuaVM, "giveWeapon", 1 ) )
+	{
+		return ( new CLuaArgument( pLuaVM, -1 ) )->GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::TakeWeapon( lua_State* pLuaVM, void* pElement, unsigned char ucWeaponID, unsigned short usAmmo )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pElement );
+	pLuaArguments.PushNumber( ucWeaponID );
+	pLuaArguments.PushNumber( usAmmo );
+
+	if( pLuaArguments.Call( pLuaVM, "takeWeapon", 1 ) )
+	{
+		return ( new CLuaArgument( pLuaVM, -1 ) )->GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::TakeAllWeapons( lua_State* pLuaVM, void* pElement )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pElement );
+
+	if( pLuaArguments.Call( pLuaVM, "takeAllWeapons", 1 ) )
+	{
+		return ( new CLuaArgument( pLuaVM, -1 ) )->GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetWeaponAmmo( lua_State* pLuaVM, void* pElement, unsigned char ucWeaponID, unsigned short usAmmo, unsigned short usAmmoInClip )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pElement );
+	pLuaArguments.PushNumber( ucWeaponID );
+	pLuaArguments.PushNumber( usAmmo );
+	pLuaArguments.PushNumber( usAmmoInClip );
+
+	if( pLuaArguments.Call( pLuaVM, "setWeaponAmmo", 1 ) )
+	{
+		return ( new CLuaArgument( pLuaVM, -1 ) )->GetBoolean();
+	}
+
+	return false;
 }

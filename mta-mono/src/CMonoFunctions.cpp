@@ -77,11 +77,10 @@ bool CMonoFunctions::Config::Set( MonoString *msKey, MonoString *msValue )
 {
 	if( RESOURCE )
 	{
-		string
-			sKey	= mono_string_to_utf8( msKey ),
-			sValue	= mono_string_to_utf8( msValue );
+		const char* szKey	= mono_string_to_utf8( msKey );
+		const char* szValue	= mono_string_to_utf8( msValue );
 
-		return CLuaFunctionDefinitions::Set( RESOURCE->GetLua(), sKey, sValue );
+		return CLuaFunctionDefinitions::Set( RESOURCE->GetLua(), szKey, szValue );
 	}
 
 	return false;
@@ -91,18 +90,15 @@ MonoObject* CMonoFunctions::Element::GetPosition( unsigned int element )
 {
 	if( RESOURCE )
 	{
-		float
-			fX = 0.0f,
-			fY = 0.0f,
-			fZ = 0.0f;
+		Vector3 vecPosition;
 		
-		if( CLuaFunctionDefinitions::GetElementPosition( RESOURCE->GetLua(), (void*)element, fX, fY, fZ ) )
+		if( CLuaFunctionDefinitions::GetElementPosition( RESOURCE->GetLua(), (void*)element, vecPosition ) )
 		{
 			CMonoClass* pClass = RESOURCE->GetClassFromName( "MultiTheftAuto", "Vector3" );
 			
 			if( pClass )
 			{
-				void *args[] = { &fX, &fY, &fZ };
+				void *args[] = { &vecPosition.fX, &vecPosition.fY, &vecPosition.fZ };
 
 				CMonoObject* pObject = pClass->New( mono_domain_get(), args, 3 );
 
