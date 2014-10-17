@@ -41,7 +41,25 @@ public:
 	class Element
 	{
 	public:
-		static MonoObject*	GetPosition							( unsigned int element );
+		// Element create/destroy
+		static unsigned int	Create								( MonoString* msTypeName, MonoString* msID );
+		static bool			Destroy								( unsigned int pUserData );
+		static unsigned int Clone								( unsigned int pUserData, MonoObject* vecPosition, bool bCloneElement );
+
+		// Element get funcs
+		static bool			IsElement							( unsigned int pUserData );
+		static MonoString*	GetType								( unsigned int pUserData );
+		static unsigned int	GetByID								( MonoString* msID, unsigned int uiIndex );
+		static unsigned int	GetByIndex							( int iIndex );
+		static unsigned int	GetChild							( unsigned int pUserData, int iIndex );
+		static int			GetChildrenCount					( unsigned int pUserData );
+		static MonoString*	GetID								( unsigned int pUserData );
+//		static MonoObject*	GetData								( unsigned int pUserData, MonoString* sKey, bool bInherit = true );
+//		static ?*			GetAllData							( unsigned int pUserData );
+		static unsigned int	GetParent							( unsigned int pUserData );
+		static MonoObject*	GetPosition							( unsigned int pUserData );
+		static MonoObject*	GetRotation							( unsigned int pUserData );
+		static MonoObject*	GetVelocity							( unsigned int pUserData );
 	};
 
 	class Vehicle

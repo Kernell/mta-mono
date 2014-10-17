@@ -51,6 +51,11 @@ public:
     inline const char*      GetString           ( void ) const      { return m_szString; };
     inline void*            GetLightUserData    ( void ) const      { return m_pLightUserData; };
 
+	template <class T> T	GetNumber()
+	{
+		return static_cast< T >( m_Number );
+	}
+
 private:
     int                     m_iType;
     bool                    m_bBoolean;

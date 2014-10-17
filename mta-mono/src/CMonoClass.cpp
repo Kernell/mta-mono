@@ -26,6 +26,13 @@ CMonoObject* CMonoClass::New( MonoDomain* pMonoDomain )
 	return new CMonoObject( pObject );
 }
 
+CMonoObject* CMonoClass::New( MonoDomain* pMonoDomain, Vector3& vecVector )
+{
+	void *args[] = { &vecVector.fX, &vecVector.fY, &vecVector.fZ };
+
+	return this->New( mono_domain_get(), args, 3 );
+}
+
 CMonoObject* CMonoClass::New( MonoDomain* pMonoDomain, void** args, int argc )
 {
 	MonoObject* pObject = mono_object_new( pMonoDomain, this->m_pMonoClass );

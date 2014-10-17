@@ -18,6 +18,7 @@ public:
 	~CMonoClass();
 
 	CMonoObject* New( MonoDomain* pMonoDomain );
+	CMonoObject* New( MonoDomain* pMonoDomain, Vector3& vecVector );
 	CMonoObject* New( MonoDomain* pMonoDomain, void** args, int argc );
 
 	const char* GetName();

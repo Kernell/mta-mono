@@ -14,6 +14,7 @@
     <ClCompile Include="src\CMonoClass.cpp" />
     <ClCompile Include="src\CMonoFunctions.cpp" />
     <ClCompile Include="src\CMonoObject.cpp" />
+    <ClCompile Include="src\Common.cpp" />
     <ClCompile Include="src\CResource.cpp" />
     <ClCompile Include="src\mta-mono.cpp" />
     <ClCompile Include="src\CFunctions.cpp" />

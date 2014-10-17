@@ -18,9 +18,6 @@ class CLuaFunctionDefinitions;
 #include "../Common.h"
 #include "../extra/CLuaArguments.h"
 
-#include "../extra/Vector2.h"
-#include "../extra/Vector3.h"
-
 class CLuaFunctionDefinitions
 {
 public:
@@ -75,25 +72,25 @@ public:
 	static bool					GetElementPosition					( lua_State* pLuaVM, void* pUserData, Vector3& vecPosition );
 	static bool					GetElementRotation					( lua_State* pLuaVM, void* pUserData, Vector3& vecRotation );
 	static bool					GetElementVelocity					( lua_State* pLuaVM, void* pUserData, Vector3& vecVelocity );
-	static int					GetElementInterior					( lua_State* pLuaVM, void* pUserData );
-	static bool					IsElementWithinColShape				( lua_State* pLuaVM, void* pUserData );
-	static bool					IsElementWithinMarker				( lua_State* pLuaVM, void* pUserData );
-	static int					GetElementDimension					( lua_State* pLuaVM, void* pUserData );
-	static string				GetElementZoneName					( lua_State* pLuaVM, void* pUserData );
+	static bool					GetElementInterior					( lua_State* pLuaVM, void* pUserData, unsigned char& ucInterior );
+	static bool					IsElementWithinColShape				( lua_State* pLuaVM, void* pUserData, bool& bWithin );
+	static bool					IsElementWithinMarker				( lua_State* pLuaVM, void* pUserData, bool& bWithin );
+	static bool					GetElementDimension					( lua_State* pLuaVM, void* pUserData, unsigned short& usDimension );
+	static bool					GetElementZoneName					( lua_State* pLuaVM, void* pUserData, string& strOutName, bool bCitiesOnly = false );
 	static bool					IsElementAttached					( lua_State* pLuaVM, void* pUserData );
 	static void*				GetElementAttachedTo				( lua_State* pLuaVM, void* pUserData );
 	static void*				GetElementColShape					( lua_State* pLuaVM, void* pUserData );
-	static int					GetElementAlpha						( lua_State* pLuaVM, void* pUserData );
-	static bool					IsElementDoubleSided				( lua_State* pLuaVM, void* pUserData );
-	static float				GetElementHealth					( lua_State* pLuaVM, void* pUserData );
-	static int					GetElementModel						( lua_State* pLuaVM, void* pUserData );
-	static bool					IsElementInWater					( lua_State* pLuaVM, void* pUserData );
+	static bool					GetElementAlpha						( lua_State* pLuaVM, void* pUserData, unsigned char& ucAlpha );
+	static bool					IsElementDoubleSided				( lua_State* pLuaVM, void* pUserData, bool& bDoubleSided );
+	static bool					GetElementHealth					( lua_State* pLuaVM, void* pUserData, float& fHealth );
+	static bool					GetElementModel						( lua_State* pLuaVM, void* pUserData, unsigned short& usModel );
+	static bool					IsElementInWater					( lua_State* pLuaVM, void* pUserData, bool& bInWater );
 	static bool					GetElementAttachedOffsets			( lua_State* pLuaVM, void* pUserData, Vector3& vecPosition, Vector3& vecRotation );
 	static void*				GetElementSyncer					( lua_State* pLuaVM, void* pUserData );
 	static bool					GetElementCollisionsEnabled			( lua_State* pLuaVM, void* pUserData );
-	static bool					IsElementFrozen						( lua_State* pLuaVM, void* pUserData );
-	static bool					GetLowLodElement					( lua_State* pLuaVM, void* pUserData );
-	static bool					IsElementLowLod						( lua_State* pLuaVM, void* pUserData );
+	static bool					IsElementFrozen						( lua_State* pLuaVM, void* pUserData, bool& bFrozen );
+	static bool					GetLowLodElement					( lua_State* pLuaVM, void* pUserData, void*& pOutLowLodElement );
+	static bool					IsElementLowLod						( lua_State* pLuaVM, void* pUserData, bool& bOutLowLod );
 
 	// Element set funcs
 	static bool                 ClearElementVisibleTo               ( lua_State* pLuaVM, void* pUserData );
@@ -120,26 +117,26 @@ public:
 	static bool                 SetLowLodElement                    ( lua_State* pLuaVM, void* pUserData, bool bEnabled );
 
 	// Player get functions
-    static int                  GetPlayerCount                      ( lua_State* pLuaVM );
-    static void*                GetPlayerFromName                   ( lua_State* pLuaVM, string sName );
-    static int                  GetPlayerMoney                      ( lua_State* pLuaVM, void* pUserData );
-    static int                  GetPlayerPing                       ( lua_State* pLuaVM, void* pUserData );
+    static unsigned int			GetPlayerCount                      ( lua_State* pLuaVM );
+    static void*                GetPlayerFromName                   ( lua_State* pLuaVM, const char* szNick );
+    static bool					GetPlayerPing                       ( lua_State* pLuaVM, void* pUserData, unsigned int& uiPing );
+    static bool					GetPlayerMoney                      ( lua_State* pLuaVM, void* pUserData, long& lMoney );
     static void*                GetRandomPlayer                     ( lua_State* pLuaVM );
-    static bool                 IsPlayerMuted                       ( lua_State* pLuaVM, void* pUserData );
+    static bool                 IsPlayerMuted                       ( lua_State* pLuaVM, void* pUserData, bool& bMuted );
     static void*                GetPlayerTeam                       ( lua_State* pLuaVM, void* pUserData );
-    static int                  GetPlayerWantedLevel                ( lua_State* pLuaVM, void* pUserData );
-    static int                  GetAlivePlayers                     ( lua_State* pLuaVM );
-    static int                  GetDeadPlayers                      ( lua_State* pLuaVM );
-    static int                  GetPlayerIdleTime                   ( lua_State* pLuaVM, void* pUserData );
-    static bool                 IsPlayerMapForced                   ( lua_State* pLuaVM, void* pUserData );
-    static string               GetPlayerNametagText                ( lua_State* pLuaVM, void* pUserData );
-    static bool                 GetPlayerNametagColor               ( lua_State* pLuaVM, void* pUserData, int &iRed, int &iGreen, int &iBlue );
-    static bool                 IsPlayerNametagShowing              ( lua_State* pLuaVM, void* pUserData );
+    static bool					GetPlayerWantedLevel                ( lua_State* pLuaVM, void* pUserData, unsigned int& uiWantedLevel );
+    static bool					GetAlivePlayers                     ( lua_State* pLuaVM );
+    static bool					GetDeadPlayers                      ( lua_State* pLuaVM );
+    static bool					GetPlayerIdleTime                   ( lua_State* pLuaVM, void* pUserData, unsigned int& uiIdleTime );
+    static bool					IsPlayerMapForced                   ( lua_State* pLuaVM, void* pUserData, bool& bForced );
+    static bool					GetPlayerNametagText                ( lua_State* pLuaVM, void* pUserData, string& strOutText );
+    static bool					GetPlayerNametagColor               ( lua_State* pLuaVM, void* pUserData, unsigned char& ucR, unsigned char& ucG, unsigned char& ucB );
+    static bool					IsPlayerNametagShowing              ( lua_State* pLuaVM, void* pUserData, bool& bShowing );
     static string               GetPlayerSerial                     ( lua_State* pLuaVM, void* pUserData );
     static string               GetPlayerUserName                   ( lua_State* pLuaVM, void* pUserData );
-    static int                  GetPlayerBlurLevel                  ( lua_State* pLuaVM, void* pUserData );
-    static string               GetPlayerName                       ( lua_State* pLuaVM, void* pUserData );
-    static string               GetPlayerIP                         ( lua_State* pLuaVM, void* pUserData );
+    static bool					GetPlayerBlurLevel                  ( lua_State* pLuaVM, void* pUserData, unsigned char& ucLevel );
+    static bool					GetPlayerName                       ( lua_State* pLuaVM, void* pUserData, string& strOutName );
+    static bool					GetPlayerIP                         ( lua_State* pLuaVM, void* pUserData, string& strOutIP );
     static void*                GetPlayerAccount                    ( lua_State* pLuaVM, void* pUserData );
     static string               GetPlayerVersion                    ( lua_State* pLuaVM, void* pUserData );
     static int                  GetPlayerACInfo                     ( lua_State* pLuaVM, void* pUserData );
@@ -164,30 +161,30 @@ public:
 
 	// Ped get functions
 	static void*				CreatePed                           ( lua_State* pLuaVM, int iModelid, const Vector3& vecPosition, float fRot = 0.0, bool bSynced = true );
-	static float				GetPedArmor                         ( lua_State* pLuaVM, void* pUserData );    
-	static bool					IsPedChoking                        ( lua_State* pLuaVM, void* pUserData );
-	static bool					IsPedDead                           ( lua_State* pLuaVM, void* pUserData );
-	static bool					IsPedDucked                         ( lua_State* pLuaVM, void* pUserData );    
-	static float				GetPedStat                          ( lua_State* pLuaVM, void* pUserData, int iStat );
+	static bool					GetPedArmor                         ( lua_State* pLuaVM, void* pUserData, float& fArmor );    
+	static bool					IsPedChoking                        ( lua_State* pLuaVM, void* pUserData, bool& bIsChoking );
+	static bool					IsPedDead                           ( lua_State* pLuaVM, void* pUserData, bool& bDead );
+	static bool					IsPedDucked                         ( lua_State* pLuaVM, void* pUserData, bool& bDucked );    
+	static bool					GetPedStat                          ( lua_State* pLuaVM, void* pUserData, unsigned short usStat, float& fValue );
 	static void*				GetPedTarget                        ( lua_State* pLuaVM, void* pUserData );    
 	static int					GetPedWeapon                        ( lua_State* pLuaVM, void* pUserData, int iWeaponSlot = -1 );
 	static bool					GetPedClothes                       ( lua_State* pLuaVM, void* pUserData, unsigned char ucType, string& strOutTexture, string& strOutModel );
-	static bool					DoesPedHaveJetPack                  ( lua_State* pLuaVM, void* pUserData );
-	static bool					IsPedOnGround                       ( lua_State* pLuaVM, void* pUserData );    
-	static int					GetPedFightingStyle                 ( lua_State* pLuaVM, void* pUserData );
-	static int					GetPedMoveAnim                      ( lua_State* pLuaVM, void* pUserData );
-	static float				GetPedGravity                       ( lua_State* pLuaVM, void* pUserData );    
+	static bool					DoesPedHaveJetPack                  ( lua_State* pLuaVM, void* pUserData, bool& bHasJetPack );
+	static bool					IsPedOnGround                       ( lua_State* pLuaVM, void* pUserData, bool& bOnGround );    
+	static bool					GetPedFightingStyle                 ( lua_State* pLuaVM, void* pUserData, unsigned char& ucStyle );
+	static bool					GetPedMoveAnim                      ( lua_State* pLuaVM, void* pUserData, unsigned int& iMoveAnim );
+	static bool					GetPedGravity                       ( lua_State* pLuaVM, void* pUserData, float& fGravity );    
 	static void*				GetPedContactElement                ( lua_State* pLuaVM, void* pUserData );
-	static int					GetPedWeaponSlot                    ( lua_State* pLuaVM, void* pUserData );
-	static bool					IsPedDoingGangDriveby               ( lua_State* pLuaVM, void* pUserData );
-	static bool					IsPedOnFire                         ( lua_State* pLuaVM, void* pUserData );
-	static bool					IsPedHeadless                       ( lua_State* pLuaVM, void* pUserData );
-	static bool					IsPedFrozen                         ( lua_State* pLuaVM, void* pUserData );
+	static bool					GetPedWeaponSlot                    ( lua_State* pLuaVM, void* pUserData, unsigned char& ucWeaponSlot );
+	static bool					IsPedDoingGangDriveby               ( lua_State* pLuaVM, void* pUserData, bool & bDoingGangDriveby );
+	static bool					IsPedOnFire                         ( lua_State* pLuaVM, void* pUserData, bool & bIsOnFire );
+	static bool					IsPedHeadless                       ( lua_State* pLuaVM, void* pUserData, bool & bIsHeadless );
+	static bool					IsPedFrozen                         ( lua_State* pLuaVM, void* pUserData, bool & bIsFrozen );
 	static void*				GetPedOccupiedVehicle               ( lua_State* pLuaVM, void* pUserData );
-	static int					GetPedOccupiedVehicleSeat           ( lua_State* pLuaVM, void* pUserData );
-	static bool					IsPedInVehicle                      ( lua_State* pLuaVM, void* pUserData, void* pPed );
-//	static int					GetWeaponProperty                   ( lua_State* pLuaVM, void* pUserData );
-//	static int					GetOriginalWeaponProperty           ( lua_State* pLuaVM, void* pUserData );
+	static bool					GetPedOccupiedVehicleSeat           ( lua_State* pLuaVM, void* pUserData, unsigned int& uiSeat );
+	static bool					IsPedInVehicle                      ( lua_State* pLuaVM, void* pUserData, bool & bIsInVehicle );
+//	static bool					GetWeaponProperty                   ( lua_State* pLuaVM, void* pUserData );
+//	static bool					GetOriginalWeaponProperty           ( lua_State* pLuaVM, void* pUserData );
 
     // Ped set functions
     static bool                 SetPedArmor                         ( lua_State* pLuaVM, void* pUserData, float fArmor );
@@ -224,49 +221,49 @@ public:
 	static void*					CreateVehicle					( lua_State* pLuaVM, int model, float fX, float fY, float fZ, float fRX, float fRY, float fRZ, string numberplate, bool direction = false, int variant1 = 255, int variant2 = 255 );
 
     // Vehicle get functions
-    static string					GetVehicleType					( lua_State* pLuaVM, void* pUserData );
+    static bool						GetVehicleType					( lua_State* pLuaVM, void* pUserData, string& strType );
     static bool						GetVehicleVariant               ( lua_State* pLuaVM, void* pUserData, unsigned char& ucVariant, unsigned char& ucVariant2 );
-    static bool						GetVehicleColor					( lua_State* pLuaVM, void* pUserData, unsigned char& ucR1, unsigned char& ucG1, unsigned char& ucB1, unsigned char& ucR2, unsigned char& ucG2, unsigned char& ucB2, unsigned char& ucR3, unsigned char& ucG3, unsigned char& ucB3, unsigned char& ucR4, unsigned char& ucG4, unsigned char& ucB4 );
-    static unsigned short			GetVehicleModelFromName			( lua_State* pLuaVM, const char* szName );
-    static bool						GetVehicleLandingGearDown		( lua_State* pLuaVM, void* pUserData );
-    static int						GetVehicleMaxPassengers			( lua_State* pLuaVM, void* pUserData );
-    static string					GetVehicleName                  ( lua_State* pLuaVM, void* pUserData );
-    static string					GetVehicleNameFromModel         ( lua_State* pLuaVM, void* pUserData, unsigned short usModel );
+    static bool						GetVehicleColor					( lua_State* pLuaVM, void* pUserData, CVehicleColor& color );
+    static bool						GetVehicleModelFromName			( lua_State* pLuaVM, const char* szName, unsigned short& usID );
+    static bool						GetVehicleLandingGearDown		( lua_State* pLuaVM, void* pUserData, bool& bGearDown );
+    static bool						GetVehicleMaxPassengers			( lua_State* pLuaVM, void* pUserData, unsigned char& ucMaxPassengers );
+    static bool						GetVehicleName                  ( lua_State* pLuaVM, void* pUserData, string& strOutName );
+    static bool						GetVehicleNameFromModel         ( lua_State* pLuaVM, void* pUserData, unsigned short usModel, string& strOutName );
     static void*					GetVehicleOccupant              ( lua_State* pLuaVM, void* pUserData, unsigned int uiSeat );
 	static CLuaArguments*			GetVehicleOccupants             ( lua_State* pLuaVM, void* pUserData );
 	static void*					GetVehicleController            ( lua_State* pLuaVM, void* pUserData );
-	static bool						GetVehicleSirensOn              ( lua_State* pLuaVM, void* pUserData );
-	static bool						GetVehicleTurnVelocity          ( lua_State* pLuaVM, void* pUserData, float &fX, float& fY, float& fZ );
-	static bool						GetVehicleTurretPosition        ( lua_State* pLuaVM, void* pUserData, float &fX, float& fY );
-	static bool						IsVehicleLocked                 ( lua_State* pLuaVM, void* pUserData );
+	static bool						GetVehicleSirensOn              ( lua_State* pLuaVM, void* pUserData, bool& bSirensOn );
+	static bool						GetVehicleTurnVelocity          ( lua_State* pLuaVM, void* pUserData, Vector3& vecTurnVelocity );
+	static bool						GetVehicleTurretPosition        ( lua_State* pLuaVM, void* pUserData, Vector2& vecPosition );
+	static bool						IsVehicleLocked                 ( lua_State* pLuaVM, void* pUserData, bool& bLocked );
 	static CLuaArguments*			GetVehiclesOfType               ( lua_State* pLuaVM, void* pUserData );       
-	static unsigned short			GetVehicleUpgradeOnSlot         ( lua_State* pLuaVM, void* pUserData, unsigned char ucSlot );
+	static bool						GetVehicleUpgradeOnSlot         ( lua_State* pLuaVM, void* pUserData, unsigned char ucSlot, unsigned short& usUpgrade );
 	static CLuaArguments*			GetVehicleUpgrades              ( lua_State* pLuaVM, void* pUserData );
-    static string				    GetVehicleUpgradeSlotName       ( lua_State* pLuaVM, unsigned char ucSlot );
-    static string					GetVehicleUpgradeSlotName       ( lua_State* pLuaVM, unsigned short usUpgrade );
+    static bool						GetVehicleUpgradeSlotName       ( lua_State* pLuaVM, unsigned char ucSlot, string& strOutName );
+    static bool						GetVehicleUpgradeSlotName       ( lua_State* pLuaVM, unsigned short usUpgrade, string& strOutName );
 	static CLuaArguments*			GetVehicleCompatibleUpgrades    ( lua_State* pLuaVM, void* pUserData );
-	static unsigned char			GetVehicleDoorState             ( lua_State* pLuaVM, void* pUserData, unsigned char ucDoor );
+	static bool						GetVehicleDoorState             ( lua_State* pLuaVM, void* pUserData, unsigned char ucDoor, unsigned char& ucState );
 	static bool						GetVehicleWheelStates           ( lua_State* pLuaVM, void* pUserData, unsigned char& ucFrontLeft, unsigned char& ucRearLeft, unsigned char& ucFrontRight, unsigned char& ucRearRight );
-	static unsigned char			GetVehicleLightState            ( lua_State* pLuaVM, void* pUserData, unsigned char ucLight );
-	static unsigned char			GetVehiclePanelState            ( lua_State* pLuaVM, void* pUserData, unsigned char ucPanel );
-	static unsigned char			GetVehicleOverrideLights        ( lua_State* pLuaVM, void* pUserData );
+	static bool						GetVehicleLightState            ( lua_State* pLuaVM, void* pUserData, unsigned char ucLight, unsigned char& ucState );
+	static bool						GetVehiclePanelState            ( lua_State* pLuaVM, void* pUserData, unsigned char ucPanel, unsigned char& ucState );
+	static bool						GetVehicleOverrideLights        ( lua_State* pLuaVM, void* pUserData, unsigned char& ucLights );
 	static void*					GetVehicleTowedByVehicle        ( lua_State* pLuaVM, void* pUserData );
 	static void*					GetVehicleTowingVehicle         ( lua_State* pLuaVM, void* pUserData );
-	static unsigned char			GetVehiclePaintjob              ( lua_State* pLuaVM, void* pUserData );
-	static const char*				GetVehiclePlateText             ( lua_State* pLuaVM, void* pUserData );
-	static bool						IsVehicleDamageProof            ( lua_State* pLuaVM, void* pUserData );
-	static bool						IsVehicleFuelTankExplodable     ( lua_State* pLuaVM, void* pUserData );
-	static bool						IsVehicleFrozen                 ( lua_State* pLuaVM, void* pUserData );
-	static bool						IsVehicleOnGround               ( lua_State* pLuaVM, void* pUserData );
-	static bool						GetVehicleEngineState           ( lua_State* pLuaVM, void* pUserData );
-	static bool						IsTrainDerailed                 ( lua_State* pLuaVM, void* pUserData );
-	static bool						IsTrainDerailable               ( lua_State* pLuaVM, void* pUserData );
-	static bool						GetTrainDirection               ( lua_State* pLuaVM, void* pUserData );
-	static float					GetTrainSpeed                   ( lua_State* pLuaVM, void* pUserData );
+	static bool						GetVehiclePaintjob              ( lua_State* pLuaVM, void* pUserData, unsigned char& ucPaintjob );
+	static bool						GetVehiclePlateText             ( lua_State* pLuaVM, void* pUserData, char* szPlateText );
+	static bool						IsVehicleDamageProof            ( lua_State* pLuaVM, void* pUserData, bool& bDamageProof );
+	static bool						IsVehicleFuelTankExplodable     ( lua_State* pLuaVM, void* pUserData, bool& bExplodable );
+	static bool						IsVehicleFrozen                 ( lua_State* pLuaVM, void* pUserData, bool& bFrozen );
+	static bool						IsVehicleOnGround               ( lua_State* pLuaVM, void* pUserData, bool& bOnGround );
+	static bool						GetVehicleEngineState           ( lua_State* pLuaVM, void* pUserData, bool& bState );
+	static bool						IsTrainDerailed                 ( lua_State* pLuaVM, void* pUserData, bool& bDerailed );
+	static bool						IsTrainDerailable               ( lua_State* pLuaVM, void* pUserData, bool& bDerailable );
+	static bool						GetTrainDirection               ( lua_State* pLuaVM, void* pUserData, bool& bDirection );
+	static bool						GetTrainSpeed                   ( lua_State* pLuaVM, void* pUserData, float& fSpeed );
 	static bool						IsVehicleBlown                  ( lua_State* pLuaVM, void* pUserData );
-	static bool						GetVehicleHeadLightColor        ( lua_State* pLuaVM, void* pUserData, unsigned char& ucRed, unsigned char& ucGreen, unsigned char& ucBlue );
-	static float					GetVehicleDoorOpenRatio         ( lua_State* pLuaVM, void* pUserData, unsigned char ucDoor );
-    static bool						IsVehicleTaxiLightOn            ( lua_State* pLuaVM, void* pUserData );
+	static bool						GetVehicleHeadLightColor        ( lua_State* pLuaVM, void* pUserData, SColor& outColor );
+	static bool						GetVehicleDoorOpenRatio         ( lua_State* pLuaVM, void* pUserData, unsigned char ucDoor, float& fRatio );
+    static bool						IsVehicleTaxiLightOn            ( lua_State* pLuaVM, void* pUserData, bool& bLightOn );
 
     // Vehicle set functions
     static bool						FixVehicle						( lua_State* pLuaVM, void* pUserData );
