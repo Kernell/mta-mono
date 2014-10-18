@@ -134,3 +134,78 @@ CMonoClass* CResource::GetClassFromName( const char* szNamespace, const char* sz
 
 	return NULL;
 }
+
+CMonoObject* CResource::NewObject( const char* szNamespace, const char* szName )
+{
+	CMonoClass* pClass = this->GetClassFromName( szNamespace, szName );
+			
+	if( pClass )
+	{
+		CMonoObject* pObject = pClass->New( mono_domain_get() );
+				
+		if( pObject )
+		{
+			return pObject;
+		}
+		else
+		{
+			g_pModuleManager->ErrorPrintf( "%s:%d: failed to create instance of '%s::%s'\n", __FILE__, __LINE__, szNamespace, szName );
+		}
+	}
+	else
+	{
+		g_pModuleManager->ErrorPrintf( "%s:%d: class '%s::%s' not found\n", __FILE__, __LINE__, szNamespace, szName );
+	}
+
+	return NULL;
+}
+
+CMonoObject* CResource::NewObject( const char* szNamespace, const char* szName, Vector3& vecVector )
+{
+	CMonoClass* pClass = this->GetClassFromName( szNamespace, szName );
+			
+	if( pClass )
+	{
+		CMonoObject* pObject = pClass->New( mono_domain_get(), vecVector );
+				
+		if( pObject )
+		{
+			return pObject;
+		}
+		else
+		{
+			g_pModuleManager->ErrorPrintf( "%s:%d: failed to create instance of '%s::%s'\n", __FILE__, __LINE__, szNamespace, szName );
+		}
+	}
+	else
+	{
+		g_pModuleManager->ErrorPrintf( "%s:%d: class '%s::%s' not found\n", __FILE__, __LINE__, szNamespace, szName );
+	}
+
+	return NULL;
+}
+
+CMonoObject* CResource::NewObject( const char* szNamespace, const char* szName, void** args, int argc )
+{
+	CMonoClass* pClass = this->GetClassFromName( szNamespace, szName );
+			
+	if( pClass )
+	{
+		CMonoObject* pObject = pClass->New( mono_domain_get(), args, argc );
+				
+		if( pObject )
+		{
+			return pObject;
+		}
+		else
+		{
+			g_pModuleManager->ErrorPrintf( "%s:%d: failed to create instance of '%s::%s'\n", __FILE__, __LINE__, szNamespace, szName );
+		}
+	}
+	else
+	{
+		g_pModuleManager->ErrorPrintf( "%s:%d: class '%s::%s' not found\n", __FILE__, __LINE__, szNamespace, szName );
+	}
+
+	return NULL;
+}

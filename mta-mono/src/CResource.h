@@ -44,6 +44,20 @@ public:
 
 	CMonoClass* GetClassFromName( const char* szNamespace, const char* szName );
 
+	CMonoObject* NewObject( const char* szNamespace, const char* szName );
+	CMonoObject* NewObject( const char* szNamespace, const char* szName, Vector3& vecVector );
+	CMonoObject* NewObject( const char* szNamespace, const char* szName, void** args, int argc );
+	
+	MonoString*	NewString( const char* szText )
+	{
+		return mono_string_new( this->m_pMonoDomain, szText );
+	}
+
+	MonoString*	NewString( string strText )
+	{
+		return mono_string_new( this->m_pMonoDomain, strText.c_str() );
+	}
+
 	string		GetName				( void )		{ return this->m_sName; }
 	lua_State	*GetLua				( void )		{ return this->m_pLuaVM; }
 };
