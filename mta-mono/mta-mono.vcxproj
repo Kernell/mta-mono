@@ -13,6 +13,24 @@
   <ItemGroup>
     <ClCompile Include="src\CMonoClass.cpp" />
     <ClCompile Include="src\CMonoFunctions.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Account.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Audio.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Ban.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Blip.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Element.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Explosion.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Marker.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Object.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Ped.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Pickup.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Player.cpp" />
+    <ClCompile Include="src\CMonoFunctions_RadarArea.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Resource.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Shape.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Team.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Vehicle.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Water.cpp" />
+    <ClCompile Include="src\CMonoFunctions_World.cpp" />
     <ClCompile Include="src\CMonoObject.cpp" />
     <ClCompile Include="src\Common.cpp" />
     <ClCompile Include="src\CResource.cpp" />

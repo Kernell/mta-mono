@@ -31,6 +31,7 @@ extern "C"
 
 #include <list>
 #include <vector>
+#include <map>
 #include <string.h>
 #include <sys/stat.h>
 #include <assert.h>

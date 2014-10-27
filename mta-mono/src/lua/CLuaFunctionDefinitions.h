@@ -18,6 +18,8 @@ class CLuaFunctionDefinitions;
 #include "../Common.h"
 #include "../extra/CLuaArguments.h"
 
+extern ILuaModuleManager10 *g_pModuleManager;
+
 class CLuaFunctionDefinitions
 {
 public:
@@ -59,6 +61,7 @@ public:
 	static void*				CloneElement						( lua_State* pLuaVM, void* pUserData, const Vector3& vecPosition, bool bCloneElement );
 
     // Element get funcs
+	static CLuaArguments*		GetElementsByType					( lua_State* pLuaVM, const char* szTypeName, void* pUserData = NULL );
 	static bool					IsElement							( lua_State* pLuaVM, void* pUserData );
 	static string				GetElementType						( lua_State* pLuaVM, void* pUserData );
 	static void*				GetElementByID						( lua_State* pLuaVM, const char* szID, unsigned int uiIndex );
@@ -125,8 +128,8 @@ public:
     static bool                 IsPlayerMuted                       ( lua_State* pLuaVM, void* pUserData, bool& bMuted );
     static void*                GetPlayerTeam                       ( lua_State* pLuaVM, void* pUserData );
     static bool					GetPlayerWantedLevel                ( lua_State* pLuaVM, void* pUserData, unsigned int& uiWantedLevel );
-    static bool					GetAlivePlayers                     ( lua_State* pLuaVM );
-    static bool					GetDeadPlayers                      ( lua_State* pLuaVM );
+    static CLuaArguments*		GetAlivePlayers                     ( lua_State* pLuaVM );
+    static CLuaArguments*		GetDeadPlayers                      ( lua_State* pLuaVM );
     static bool					GetPlayerIdleTime                   ( lua_State* pLuaVM, void* pUserData, unsigned int& uiIdleTime );
     static bool					IsPlayerMapForced                   ( lua_State* pLuaVM, void* pUserData, bool& bForced );
     static bool					GetPlayerNametagText                ( lua_State* pLuaVM, void* pUserData, string& strOutText );
@@ -139,7 +142,7 @@ public:
     static bool					GetPlayerIP                         ( lua_State* pLuaVM, void* pUserData, string& strOutIP );
     static void*                GetPlayerAccount                    ( lua_State* pLuaVM, void* pUserData );
     static string               GetPlayerVersion                    ( lua_State* pLuaVM, void* pUserData );
-    static int                  GetPlayerACInfo                     ( lua_State* pLuaVM, void* pUserData );
+    static LuaTable				GetPlayerACInfo						( lua_State* pLuaVM, void* pUserData );
 
     // Player set functions
     static bool					SetPlayerMoney                      ( lua_State* pLuaVM, void* pUserData, int iAmount, bool bInstant = false );
@@ -154,7 +157,7 @@ public:
     static bool					SetPlayerNametagShowing             ( lua_State* pLuaVM, void* pUserData, bool bShowing );
     static bool					SetPlayerMuted                      ( lua_State* pLuaVM, void* pUserData, bool bMuted );
     static bool					SetPlayerBlurLevel                  ( lua_State* pLuaVM, void* pUserData, int iLevel );
-    static bool					RedirectPlayer                      ( lua_State* pLuaVM, void* pUserData, string sServerIP, int iServerPort, string sServerPassword );
+    static bool					RedirectPlayer                      ( lua_State* pLuaVM, void* pUserData, const char* szServerIP, int iServerPort, const char* szServerPassword );
     static bool					SetPlayerName                       ( lua_State* pLuaVM, void* pUserData, string sName );
     static bool					DetonateSatchels                    ( lua_State* pLuaVM, void* pUserData );
     static bool					TakePlayerScreenShot                ( lua_State* pLuaVM, void* pUserData, int iWidth, int iHeight, string sTag = "", int iQuality = 30, int iMaxBandwith = 5000 );
@@ -183,8 +186,8 @@ public:
 	static void*				GetPedOccupiedVehicle               ( lua_State* pLuaVM, void* pUserData );
 	static bool					GetPedOccupiedVehicleSeat           ( lua_State* pLuaVM, void* pUserData, unsigned int& uiSeat );
 	static bool					IsPedInVehicle                      ( lua_State* pLuaVM, void* pUserData, bool & bIsInVehicle );
-//	static bool					GetWeaponProperty                   ( lua_State* pLuaVM, void* pUserData );
-//	static bool					GetOriginalWeaponProperty           ( lua_State* pLuaVM, void* pUserData );
+	static bool					GetWeaponProperty                   ( lua_State* pLuaVM, unsigned char ucWeaponID, const char* szWeaponSkill, const char* szProperty, short& uData );
+	static bool					GetOriginalWeaponProperty           ( lua_State* pLuaVM, unsigned char ucWeaponID, const char *szWeaponSkill, const char* szProperty, short& uData );
 
     // Ped set functions
     static bool                 SetPedArmor                         ( lua_State* pLuaVM, void* pUserData, float fArmor );
@@ -208,7 +211,7 @@ public:
     static bool                 SetPedHeadless                      ( lua_State* pLuaVM, void* pUserData, bool bIsHeadless );
     static bool                 SetPedFrozen                        ( lua_State* pLuaVM, void* pUserData, bool bIsFrozen );
     static bool                 ReloadPedWeapon                     ( lua_State* pLuaVM, void* pUserData );
-//	static bool					SetWeaponProperty                   ( lua_State* pLuaVM, void* pUserData );
+	static bool					SetWeaponProperty                   ( lua_State* pLuaVM, unsigned char ucWeaponID, const char *szWeaponSkill, const char* szProperty, short uData );
 
     // Weapon give/take functions
  //   static int      GiveWeapon                          ( lua_State* pLuaVM );
@@ -228,7 +231,7 @@ public:
     static bool						GetVehicleLandingGearDown		( lua_State* pLuaVM, void* pUserData, bool& bGearDown );
     static bool						GetVehicleMaxPassengers			( lua_State* pLuaVM, void* pUserData, unsigned char& ucMaxPassengers );
     static bool						GetVehicleName                  ( lua_State* pLuaVM, void* pUserData, string& strOutName );
-    static bool						GetVehicleNameFromModel         ( lua_State* pLuaVM, void* pUserData, unsigned short usModel, string& strOutName );
+    static bool						GetVehicleNameFromModel         ( lua_State* pLuaVM, unsigned short usModel, string& strOutName );
     static void*					GetVehicleOccupant              ( lua_State* pLuaVM, void* pUserData, unsigned int uiSeat );
 	static CLuaArguments*			GetVehicleOccupants             ( lua_State* pLuaVM, void* pUserData );
 	static void*					GetVehicleController            ( lua_State* pLuaVM, void* pUserData );
@@ -236,7 +239,7 @@ public:
 	static bool						GetVehicleTurnVelocity          ( lua_State* pLuaVM, void* pUserData, Vector3& vecTurnVelocity );
 	static bool						GetVehicleTurretPosition        ( lua_State* pLuaVM, void* pUserData, Vector2& vecPosition );
 	static bool						IsVehicleLocked                 ( lua_State* pLuaVM, void* pUserData, bool& bLocked );
-	static CLuaArguments*			GetVehiclesOfType               ( lua_State* pLuaVM, void* pUserData );       
+	static CLuaArguments*			GetVehiclesOfType               ( lua_State* pLuaVM, unsigned int uiModel );       
 	static bool						GetVehicleUpgradeOnSlot         ( lua_State* pLuaVM, void* pUserData, unsigned char ucSlot, unsigned short& usUpgrade );
 	static CLuaArguments*			GetVehicleUpgrades              ( lua_State* pLuaVM, void* pUserData );
     static bool						GetVehicleUpgradeSlotName       ( lua_State* pLuaVM, unsigned char ucSlot, string& strOutName );
@@ -398,7 +401,7 @@ public:
     static void*					CreateColPolygon                ( lua_State* pLuaVM, const vector< Vector2 >& vecPointList );
     static void*					CreateColTube                   ( lua_State* pLuaVM, const Vector3& vecPosition, float fRadius, float fHeight );
 
-     // Explosion funcs
+    // Explosion funcs
     static bool						CreateExplosion					( lua_State* pLuaVM, const Vector3& vecPosition, unsigned char ucType, void* pCreator = NULL );
 
     // Fire funcs
@@ -442,7 +445,7 @@ public:
 	static bool						SetTeamFriendlyFire				( lua_State* pLuaVM, void* pTeam, bool bFriendlyFire );
 
 	// Water funcs
-	static void*					CreateWater						( lua_State* pLuaVM, Vector3* pV1, Vector3* pV2, Vector3* pV3, Vector3* pV4 );
+	static void*					CreateWater						( lua_State* pLuaVM, Vector3* pV1, Vector3* pV2, Vector3* pV3, Vector3* pV4, bool bShallow );
 	static bool						SetElementWaterLevel			( lua_State* pLuaVM, void* pWater, float fLevel );
 	static bool						SetAllElementWaterLevel			( lua_State* pLuaVM, float fLevel );
 	static bool						SetWorldWaterLevel				( lua_State* pLuaVM, float fLevel, bool bIncludeWorldNonSeaLevel );
@@ -542,7 +545,7 @@ public:
 	
     // Account get funcs
     static void*					GetAccount						( lua_State* pLuaVM, const char* szName, const char* szPassword );
-    static bool						GetAccounts						( lua_State* pLuaVM );
+    static CLuaArguments*			GetAccounts						( lua_State* pLuaVM );
     static void*					GetAccountPlayer				( lua_State* pLuaVM, void* pAccount );
     static bool						IsGuestAccount					( lua_State* pLuaVM, void* pAccount, bool& bGuest );
     static CLuaArgument*			GetAccountData					( lua_State* pLuaVM, void* pAccount, const char* szKey );
@@ -598,20 +601,43 @@ public:
     static bool						ResetMapInfo					( lua_State* pLuaVM, void* pElement );
 
     // Resource funcs
+	static void*					CreateResource					( lua_State* pLuaVM, const char* szResourceName, const char* szOrganizationalDir );
+	static void*					CopyResource					( lua_State* pLuaVM, void* pResource, const char* szNewResourceName, const char* szOrganizationalDir );
+	static void*					GetResourceRootElement			( lua_State* pLuaVM, void* pResource = NULL );
 	static void*					GetResourceMapRootElement		( lua_State* pLuaVM, const char* szMap );
+	static void*					GetResourceDynamicElementRoot	( lua_State* pLuaVM, void* pResource );
 //	static CXMLNode*				AddResourceMap					( lua_State* pLuaVM, const string& strFilePath, const std::string& strMapName, int iDimension );
 //	static CXMLNode*				AddResourceConfig				( lua_State* pLuaVM, const string& strFilePath, const std::string& strConfigName, int iType );
 	static bool						RemoveResourceFile				( lua_State* pLuaVM, const char* szFilename );
+//	static CXMLNode					AddResourceConfig				( lua_State* pLuaVM, const char* szFilePath, const char* szFileType = "server" );
+//	static CXMLNode					AddResourceMap					( lua_State* pLuaVM, const char* szFilePath, unsigned int uiDimension = 0 );
+//	static CXMLNode					GetResourceConfig				( lua_State* pLuaVM, const char* szFilePath );
+	static CLuaArguments*			GetResourceExportedFunctions	( lua_State* pLuaVM, void* pResource );
+	static void*					GetResourceFromName				( lua_State* pLuaVM, const char* szResourceName );
+	static bool						GetResourceInfo					( lua_State* pLuaVM, void* pResource, const char* szAttribute, string& strInfo );
+	static bool						GetResourceLastStartTime		( lua_State* pLuaVM, void* pResource, unsigned int& uiTime );
+	static bool						GetResourceLoadFailureReason	( lua_State* pLuaVM, void* pResource, string& strReason );
+	static bool						GetResourceLoadTime				( lua_State* pLuaVM, void* pResource, unsigned int& uiTime );
+	static bool						GetResourceName					( lua_State* pLuaVM, void* pResource, string& strName );
+	static CLuaArguments*			GetResources					( lua_State* pLuaVM );
+	static bool						GetResourceState				( lua_State* pLuaVM, void* pResource, string& strState );
+	static void*					GetThisResource					( lua_State* pLuaVM );
+	static bool						RefreshResources				( lua_State* pLuaVM, bool refreshAll = false );
+	static bool						RemoveResourceDefaultSetting	( lua_State* pLuaVM, void* pResource, const char* szSettingName );
+	static bool						StartResource					( lua_State* pLuaVM, void* pResource, bool persistent = false, bool startIncludedResources = true, bool loadServerConfigs = true, bool loadMaps = true, bool loadServerScripts = true, bool loadHTML = true, bool loadClientConfigs = true, bool loadClientScripts = true, bool loadFiles = true );
+	static bool						RestartResource					( lua_State* pLuaVM, void* pResource );
+	static bool						StopResource					( lua_State* pLuaVM, void* pResource );
+	static bool						SetResourceDefaultSetting		( lua_State* pLuaVM, void* pResource, const char* szSettingName, const char* szSettingValue );
+	static bool						SetResourceDefaultSetting		( lua_State* pLuaVM, void* pResource, const char* szSettingName, int iSettingValue );
+	static bool						SetResourceDefaultSetting		( lua_State* pLuaVM, void* pResource, const char* szSettingName, float fSettingValue );
+	static bool						SetResourceInfo					( lua_State* pLuaVM, void* pResource, const char* szAttribute, const char* szValue );
+	static bool						RenameResource					( lua_State* pLuaVM, const char* szResourceName, const char* szNewResourceName, const char* szOrganizationalPath );
+	static bool						DeleteResource					( lua_State* pLuaVM, const char* szResourceName );
+//	static CLuaArguments*			GetResourceACLRequests			( lua_State* pLuaVM, void* pResource );
+	static bool						UpdateResourceACLRequest		( lua_State* pLuaVM, void* pResource, const char* szRightName, bool bAccess, const char* szByWho = NULL );
 
     // Version funcs
-//	static unsigned long			GetVersion						( lua_State* pLuaVM );
-//	static const char*				GetVersionString				( lua_State* pLuaVM );
-//	static const char*				GetVersionName					( lua_State* pLuaVM );
-//	static string					GetVersionBuildType				( lua_State* pLuaVM );
-//	static unsigned long			GetNetcodeVersion				( lua_State* pLuaVM );
-//	static const char*				GetOperatingSystemName			( lua_State* pLuaVM );
-//	static const char*				GetVersionBuildTag				( lua_State* pLuaVM );
-//	static string					GetVersionSortable				( lua_State* pLuaVM );
+	static LuaTable					GetVersion						( lua_State* pLuaVM );
 
 	// Camera get functions
 	static bool						GetCameraMatrix					( lua_State* pLuaVM, void* pPlayer, Vector3& vecPosition, Vector3& vecLookAt, float& fRoll, float& fFOV );
@@ -619,16 +645,16 @@ public:
 	static bool						GetCameraInterior				( lua_State* pLuaVM, void* pPlayer, unsigned char & ucInterior );
 
     // Camera set functions
-    static bool						SetCameraMatrix					( lua_State* pLuaVM, void* pElement, const Vector3& vecPosition, Vector3* pvecLookAt, float fRoll, float fFOV );
-    static bool						SetCameraTarget					( lua_State* pLuaVM, void* pElement, void* pTarget );
-    static bool						SetCameraInterior				( lua_State* pLuaVM, void* pElement, unsigned char ucInterior );
-    static bool						FadeCamera						( lua_State* pLuaVM, void* pElement, bool bFadeIn, float fFadeTime, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue );
+    static bool						SetCameraMatrix					( lua_State* pLuaVM, void* pPlayer, const Vector3& vecPosition, Vector3* pvecLookAt, float fRoll, float fFOV );
+    static bool						SetCameraTarget					( lua_State* pLuaVM, void* pPlayer, void* pTarget );
+    static bool						SetCameraInterior				( lua_State* pLuaVM, void* pPlayer, unsigned char ucInterior );
+    static bool						FadeCamera						( lua_State* pLuaVM, void* pPlayer, bool bFadeIn, float fFadeTime, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue );
 
     // Weapon give/take functions
-    static bool						GiveWeapon						( lua_State* pLuaVM, void* pElement, unsigned char ucWeaponID, unsigned short usAmmo, bool bSetAsCurrent = false );
-    static bool						TakeWeapon						( lua_State* pLuaVM, void* pElement, unsigned char ucWeaponID, unsigned short usAmmo = 9999 );
-    static bool						TakeAllWeapons					( lua_State* pLuaVM, void* pElement );
-    static bool						SetWeaponAmmo					( lua_State* pLuaVM, void* pElement, unsigned char ucWeaponID, unsigned short usAmmo, unsigned short usAmmoInClip );
+    static bool						GiveWeapon						( lua_State* pLuaVM, void* pPed, unsigned char ucWeaponID, unsigned short usAmmo, bool bSetAsCurrent = false );
+    static bool						TakeWeapon						( lua_State* pLuaVM, void* pPed, unsigned char ucWeaponID, unsigned short usAmmo = 9999 );
+    static bool						TakeAllWeapons					( lua_State* pLuaVM, void* pPed );
+    static bool						SetWeaponAmmo					( lua_State* pLuaVM, void* pPed, unsigned char ucWeaponID, unsigned short usAmmo, unsigned short usAmmoInClip );
 };
 
 #endif

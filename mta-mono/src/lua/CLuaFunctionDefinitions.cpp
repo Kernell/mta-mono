@@ -225,6 +225,27 @@ void* CLuaFunctionDefinitions::CloneElement( lua_State* pLuaVM, void* pUserData,
 
 // Element get funcs
 
+CLuaArguments* CLuaFunctionDefinitions::GetElementsByType( lua_State* pLuaVM, const char* szTypeName, void* pUserData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushString( szTypeName );
+
+	if( pUserData )
+	{
+		pLuaArguments.PushUserData( pUserData );
+	}
+
+	if( pLuaArguments.Call( pLuaVM, "getElementsByType", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetArray();
+	}
+	
+	return NULL;
+}
+
 bool CLuaFunctionDefinitions::IsElement( lua_State* pLuaVM, void* pUserData )
 {
 	CLuaArguments pLuaArguments;
@@ -251,7 +272,10 @@ string CLuaFunctionDefinitions::GetElementType( lua_State* pLuaVM, void* pUserDa
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		return string( pLuaArgument.GetString() );
+		if( pLuaArgument.GetString() )
+		{
+			return string( pLuaArgument.GetString() );
+		}
 	}
 
 	return string();
@@ -1307,28 +1331,28 @@ bool CLuaFunctionDefinitions::GetPlayerWantedLevel( lua_State* pLuaVM, void* pUs
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetAlivePlayers( lua_State* pLuaVM )
+CLuaArguments* CLuaFunctionDefinitions::GetAlivePlayers( lua_State* pLuaVM )
 {
 	CLuaArguments pLuaArguments;
 
 	if( pLuaArguments.Call( pLuaVM, "getAlivePlayers", 1 ) )
 	{
-//		CLuaArgument( pLuaVM, -1 ).GetNumber();
+		return CLuaArgument( pLuaVM, -1 ).GetArray();
 	}
 
-	return false;
+	return NULL;
 }
 
-bool CLuaFunctionDefinitions::GetDeadPlayers( lua_State* pLuaVM )
+CLuaArguments* CLuaFunctionDefinitions::GetDeadPlayers( lua_State* pLuaVM )
 {
 	CLuaArguments pLuaArguments;
 
 	if( pLuaArguments.Call( pLuaVM, "getDeadPlayers", 1 ) )
 	{
-//		CLuaArgument( pLuaVM, -1 ).GetNumber();
+		return CLuaArgument( pLuaVM, -1 ).GetArray();
 	}
 
-	return false;
+	return NULL;
 }
 
 bool CLuaFunctionDefinitions::GetPlayerIdleTime( lua_State* pLuaVM, void* pUserData, unsigned int& uiIdleTime )
@@ -1523,20 +1547,20 @@ string CLuaFunctionDefinitions::GetPlayerVersion( lua_State* pLuaVM, void* pUser
 	return string();
 }
 
-int CLuaFunctionDefinitions::GetPlayerACInfo( lua_State* pLuaVM, void* pUserData )
+LuaTable CLuaFunctionDefinitions::GetPlayerACInfo( lua_State* pLuaVM, void* pUserData )
 {
+	map<string, CLuaArgument*> pLuaTable;
+
 	CLuaArguments pLuaArguments;
 	
 	pLuaArguments.PushUserData( pUserData );
 	
 	if( pLuaArguments.Call( pLuaVM, "getPlayerACInfo", 1 ) )
 	{
-		CLuaArgument pLuaArgument( pLuaVM, -1 );
-		
-		// TODO
+		pLuaTable = CLuaArgument( pLuaVM, -1 ).GetTable();
 	}
 	
-	return 0;
+	return pLuaTable;
 }
 
 // Player set functions
@@ -1760,14 +1784,14 @@ bool CLuaFunctionDefinitions::SetPlayerBlurLevel( lua_State* pLuaVM, void* pUser
 	return false;
 }
 
-bool CLuaFunctionDefinitions::RedirectPlayer( lua_State* pLuaVM, void* pUserData, string sServerIP, int iServerPort, string sServerPassword )
+bool CLuaFunctionDefinitions::RedirectPlayer( lua_State* pLuaVM, void* pUserData, const char* szServerIP, int iServerPort, const char* szServerPassword )
 {
 	CLuaArguments pLuaArguments;
 
 	pLuaArguments.PushUserData( pUserData );
-	pLuaArguments.PushString( sServerIP.c_str() );
+	pLuaArguments.PushString( szServerIP );
 	pLuaArguments.PushNumber( iServerPort );
-	pLuaArguments.PushString( sServerPassword.c_str() );
+	pLuaArguments.PushString( szServerPassword );
 
 	if( pLuaArguments.Call( pLuaVM, "redirectPlayer", 1 ) )
 	{
@@ -2210,6 +2234,42 @@ bool CLuaFunctionDefinitions::IsPedInVehicle( lua_State* pLuaVM, void* pUserData
 	return false;
 }
 
+bool CLuaFunctionDefinitions::GetWeaponProperty( lua_State* pLuaVM, unsigned char ucWeaponID, const char* szWeaponSkill, const char* szProperty, short& uData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( ucWeaponID );
+	pLuaArguments.PushString( szWeaponSkill );
+	pLuaArguments.PushString( szProperty );
+
+	if( pLuaArguments.Call( pLuaVM, "getWeaponProperty", 1 ) )
+	{
+		uData = CLuaArgument( pLuaVM, -1 ).GetNumber< short >();
+
+		return true;
+	}
+	
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetOriginalWeaponProperty( lua_State* pLuaVM, unsigned char ucWeaponID, const char* szWeaponSkill, const char* szProperty, short& uData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( ucWeaponID );
+	pLuaArguments.PushString( szWeaponSkill );
+	pLuaArguments.PushString( szProperty );
+
+	if( pLuaArguments.Call( pLuaVM, "getOriginalWeaponProperty", 1 ) )
+	{
+		uData = CLuaArgument( pLuaVM, -1 ).GetNumber< short >();
+
+		return true;
+	}
+	
+	return false;
+}
+
 // Ped set functions
 
 bool CLuaFunctionDefinitions::SetPedArmor( lua_State* pLuaVM, void* pUserData, float fArmor )
@@ -2581,6 +2641,23 @@ bool CLuaFunctionDefinitions::ReloadPedWeapon( lua_State* pLuaVM, void* pUserDat
 	return false;
 }
 
+bool CLuaFunctionDefinitions::SetWeaponProperty( lua_State* pLuaVM, unsigned char ucWeaponID, const char* szWeaponSkill, const char* szProperty, short uData )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushNumber( ucWeaponID );
+	pLuaArguments.PushString( szWeaponSkill );
+	pLuaArguments.PushString( szProperty );
+	pLuaArguments.PushNumber( uData );
+
+	if( pLuaArguments.Call( pLuaVM, "setWeaponProperty", 1 ) )
+	{
+		return CLuaArgument( pLuaVM, -1 ).GetBoolean();
+	}
+	
+	return false;
+}
+
 // Vehicle create/destroy functions
 
 void* CLuaFunctionDefinitions::CreateVehicle( lua_State* pLuaVM, int model, float fX, float fY, float fZ, float fRX, float fRY, float fRZ, string numberplate, bool direction, int variant1, int variant2 )
@@ -2748,11 +2825,10 @@ bool CLuaFunctionDefinitions::GetVehicleName( lua_State* pLuaVM, void* pUserData
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetVehicleNameFromModel( lua_State* pLuaVM, void* pUserData, unsigned short usModel, string& strOutName )
+bool CLuaFunctionDefinitions::GetVehicleNameFromModel( lua_State* pLuaVM, unsigned short usModel, string& strOutName )
 {
 	CLuaArguments pLuaArguments;
 
-	pLuaArguments.PushUserData( pUserData );
 	pLuaArguments.PushNumber( usModel );
 
 	if( pLuaArguments.Call( pLuaVM, "getVehicleNameFromModel", 1 ) )
@@ -2790,9 +2866,7 @@ CLuaArguments* CLuaFunctionDefinitions::GetVehicleOccupants( lua_State* pLuaVM, 
 
 	if( pLuaArguments.Call( pLuaVM, "getVehicleOccupants", 1 ) )
 	{
-		CLuaArgument pLuaArgument( pLuaVM, -1 );
-
-		//return pLuaArgument.GetLightUserData();
+		return CLuaArgument( pLuaVM, -1 ).GetArray();
 	}
 
 	return NULL;
@@ -2881,20 +2955,18 @@ bool CLuaFunctionDefinitions::IsVehicleLocked( lua_State* pLuaVM, void* pUserDat
 	return false;
 }
 
-CLuaArguments* CLuaFunctionDefinitions::GetVehiclesOfType( lua_State* pLuaVM, void* pUserData )
+CLuaArguments* CLuaFunctionDefinitions::GetVehiclesOfType( lua_State* pLuaVM, unsigned int uiModel )
 {
-	CLuaArguments pLuaArguments;
+	CLuaArguments* pLuaArguments = new CLuaArguments();
 
-	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments->PushNumber( uiModel );
 
-	if( pLuaArguments.Call( pLuaVM, "getVehiclesOfType", 1 ) )
+	if( pLuaArguments->Call( pLuaVM, "getVehiclesOfType", 1 ) )
 	{
-		CLuaArgument pLuaArgument( pLuaVM, -1 );
-
-		//return pLuaArgument.GetBoolean();
+		return CLuaArgument( pLuaVM, -1 ).GetArray();
 	}
 
-	return false;
+	return NULL;
 }
 
 bool CLuaFunctionDefinitions::GetVehicleUpgradeOnSlot( lua_State* pLuaVM, void* pUserData, unsigned char ucSlot, unsigned short& usUpgrade )
@@ -2922,9 +2994,7 @@ CLuaArguments* CLuaFunctionDefinitions::GetVehicleUpgrades( lua_State* pLuaVM, v
 
 	if( pLuaArguments.Call( pLuaVM, "getVehicleUpgrades", 1 ) )
 	{
-		CLuaArgument pLuaArgument( pLuaVM, -1 );
-
-		//return pLuaArgument.GetNumber();
+		return CLuaArgument( pLuaVM, -1 ).GetArray();
 	}
 
 	return NULL;
@@ -2970,9 +3040,7 @@ CLuaArguments* CLuaFunctionDefinitions::GetVehicleCompatibleUpgrades( lua_State*
 
 	if( pLuaArguments.Call( pLuaVM, "getVehicleCompatibleUpgrades", 1 ) )
 	{
-		CLuaArgument pLuaArgument( pLuaVM, -1 );
-
-		//return pLuaArgument.GetString();
+		return CLuaArgument( pLuaVM, -1 ).GetArray();
 	}
 
 	return NULL;
@@ -5692,7 +5760,7 @@ bool CLuaFunctionDefinitions::SetTeamFriendlyFire( lua_State* pLuaVM, void* pTea
 
 // Water funcs
 
-void* CLuaFunctionDefinitions::CreateWater( lua_State* pLuaVM, Vector3* pV1, Vector3* pV2, Vector3* pV3, Vector3* pV4 )
+void* CLuaFunctionDefinitions::CreateWater( lua_State* pLuaVM, Vector3* pV1, Vector3* pV2, Vector3* pV3, Vector3* pV4, bool bShallow )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5714,6 +5782,8 @@ void* CLuaFunctionDefinitions::CreateWater( lua_State* pLuaVM, Vector3* pV1, Vec
 		pLuaArguments.PushNumber( pV4->fY );
 		pLuaArguments.PushNumber( pV4->fZ );
 	}
+
+	pLuaArguments.PushBoolean( bShallow );
 
 	if( pLuaArguments.Call( pLuaVM, "createWater", 1 ) )
 	{
@@ -7184,7 +7254,7 @@ void* CLuaFunctionDefinitions::GetAccount( lua_State* pLuaVM, const char* szName
 	return NULL;
 }
 
-bool CLuaFunctionDefinitions::GetAccounts( lua_State* pLuaVM ) // TODO
+CLuaArguments* CLuaFunctionDefinitions::GetAccounts( lua_State* pLuaVM )
 {
 	CLuaArguments pLuaArguments;
 
@@ -7192,7 +7262,7 @@ bool CLuaFunctionDefinitions::GetAccounts( lua_State* pLuaVM ) // TODO
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		return true;
+		return pLuaArgument.GetArray();
 	}
 
 	return false;
@@ -7270,7 +7340,7 @@ bool CLuaFunctionDefinitions::GetAccountSerial( lua_State* pLuaVM, void* pAccoun
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetAccountsBySerial( lua_State* pLuaVM, const string& strSerial, std::vector<void*>& outAccounts )
+bool CLuaFunctionDefinitions::GetAccountsBySerial( lua_State* pLuaVM, const string& strSerial, vector<void*>& outAccounts )
 {
 	return false;
 }
@@ -7783,6 +7853,60 @@ bool CLuaFunctionDefinitions::ResetMapInfo( lua_State* pLuaVM, void* pElement )
 
 // Resource funcs
 
+void* CLuaFunctionDefinitions::CreateResource( lua_State* pLuaVM, const char* szResourceName, const char* szOrganizationalDir )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushString( szResourceName );
+	pLuaArguments.PushString( szOrganizationalDir );
+
+	if( pLuaArguments.Call( pLuaVM, "createResource", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
+void* CLuaFunctionDefinitions::CopyResource( lua_State* pLuaVM, void* pResource, const char* szNewResourceName, const char* szOrganizationalDir )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pResource );
+	pLuaArguments.PushString( szNewResourceName );
+	pLuaArguments.PushString( szOrganizationalDir );
+
+	if( pLuaArguments.Call( pLuaVM, "copyResource", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
+void* CLuaFunctionDefinitions::GetResourceRootElement( lua_State* pLuaVM, void* pResource )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pResource )
+	{
+		pLuaArguments.PushUserData( pResource );
+	}
+
+	if( pLuaArguments.Call( pLuaVM, "getResourceRootElement", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
 void* CLuaFunctionDefinitions::GetResourceMapRootElement( lua_State* pLuaVM, const char* szMap )
 {
 	CLuaArguments pLuaArguments;
@@ -7799,8 +7923,22 @@ void* CLuaFunctionDefinitions::GetResourceMapRootElement( lua_State* pLuaVM, con
 	return false;
 }
 
-//CXMLNode* CLuaFunctionDefinitions::AddResourceMap( lua_State* pLuaVM, const string& strFilePath, const std::string& strMapName, int iDimension )
-//CXMLNode* CLuaFunctionDefinitions::AddResourceConfig( lua_State* pLuaVM, const string& strFilePath, const std::string& strConfigName, int iType )
+void* CLuaFunctionDefinitions::GetResourceDynamicElementRoot( lua_State* pLuaVM, void* pResource )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pResource );
+
+	if( pLuaArguments.Call( pLuaVM, "getResourceDynamicElementRoot", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
 bool CLuaFunctionDefinitions::RemoveResourceFile( lua_State* pLuaVM, const char* szFilename )
 {
 	CLuaArguments pLuaArguments;
@@ -7817,7 +7955,403 @@ bool CLuaFunctionDefinitions::RemoveResourceFile( lua_State* pLuaVM, const char*
 	return false;
 }
 
+CLuaArguments* CLuaFunctionDefinitions::GetResourceExportedFunctions( lua_State* pLuaVM, void* pResource )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pResource );
+
+	if( pLuaArguments.Call( pLuaVM, "getResourceExportedFunctions", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetArray();
+	}
+
+	return NULL;
+}
+
+void* CLuaFunctionDefinitions::GetResourceFromName( lua_State* pLuaVM, const char* szResourceName )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushString( szResourceName );
+
+	if( pLuaArguments.Call( pLuaVM, "getResourceFromName", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return NULL;
+}
+
+bool CLuaFunctionDefinitions::GetResourceInfo( lua_State* pLuaVM, void* pResource, const char* szAttribute, string& strInfo )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pResource );
+	pLuaArguments.PushString( szAttribute );
+
+	if( pLuaArguments.Call( pLuaVM, "getResourceInfo", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		strInfo = string( pLuaArgument.GetString() );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetResourceLastStartTime( lua_State* pLuaVM, void* pResource, unsigned int& uiTime )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pResource );
+
+	if( pLuaArguments.Call( pLuaVM, "getResourceLastStartTime", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		uiTime = pLuaArgument.GetNumber< unsigned int >();
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetResourceLoadFailureReason( lua_State* pLuaVM, void* pResource, string& strReason )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pResource );
+
+	if( pLuaArguments.Call( pLuaVM, "getResourceLoadFailureReason", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		strReason = string( pLuaArgument.GetString() );
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetResourceLoadTime( lua_State* pLuaVM, void* pResource, unsigned int& uiTime )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pResource );
+
+	if( pLuaArguments.Call( pLuaVM, "getResourceLoadTime", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		uiTime = pLuaArgument.GetNumber< unsigned int >();
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::GetResourceName( lua_State* pLuaVM, void* pResource, string& strName )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pResource );
+
+	if( pLuaArguments.Call( pLuaVM, "getResourceName", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		strName = string( pLuaArgument.GetString() );
+
+		return true;
+	}
+
+	return false;
+}
+
+CLuaArguments* CLuaFunctionDefinitions::GetResources( lua_State* pLuaVM )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getResources", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetArray();
+	}
+
+	return NULL;
+}
+
+bool CLuaFunctionDefinitions::GetResourceState( lua_State* pLuaVM, void* pResource, string& strState )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pResource );
+
+	if( pLuaArguments.Call( pLuaVM, "getResourceState", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		strState = string( pLuaArgument.GetString() );
+
+		return false;
+	}
+
+	return false;
+}
+
+void* CLuaFunctionDefinitions::GetThisResource( lua_State* pLuaVM )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getThisResource", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetLightUserData();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::RefreshResources( lua_State* pLuaVM, bool refreshAll )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushBoolean( refreshAll );
+
+	if( pLuaArguments.Call( pLuaVM, "refreshResources", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::RemoveResourceDefaultSetting( lua_State* pLuaVM, void* pResource, const char* szSettingName )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pResource );
+	pLuaArguments.PushString( szSettingName );
+
+	if( pLuaArguments.Call( pLuaVM, "removeResourceDefaultSetting", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::StartResource( lua_State* pLuaVM, void* pResource, bool persistent, bool startIncludedResources, bool loadServerConfigs, bool loadMaps, bool loadServerScripts, bool loadHTML, bool loadClientConfigs, bool loadClientScripts, bool loadFiles )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pResource );
+	pLuaArguments.PushBoolean( persistent );
+	pLuaArguments.PushBoolean( startIncludedResources );
+	pLuaArguments.PushBoolean( loadServerConfigs );
+	pLuaArguments.PushBoolean( loadMaps );
+	pLuaArguments.PushBoolean( loadServerScripts );
+	pLuaArguments.PushBoolean( loadHTML );
+	pLuaArguments.PushBoolean( loadClientConfigs );
+	pLuaArguments.PushBoolean( loadClientScripts );
+	pLuaArguments.PushBoolean( loadFiles );
+
+	if( pLuaArguments.Call( pLuaVM, "startResource", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::RestartResource( lua_State* pLuaVM, void* pResource )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pResource );
+
+	if( pLuaArguments.Call( pLuaVM, "restartResource", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::StopResource( lua_State* pLuaVM, void* pResource )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pResource );
+
+	if( pLuaArguments.Call( pLuaVM, "stopResource", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetResourceDefaultSetting( lua_State* pLuaVM, void* pResource, const char* szSettingName, const char* szSettingValue )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pResource );
+	pLuaArguments.PushString( szSettingName );
+	pLuaArguments.PushString( szSettingValue );
+
+	if( pLuaArguments.Call( pLuaVM, "setResourceDefaultSetting", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetResourceDefaultSetting( lua_State* pLuaVM, void* pResource, const char* szSettingName, int iSettingValue )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pResource );
+	pLuaArguments.PushString( szSettingName );
+	pLuaArguments.PushNumber( iSettingValue );
+
+	if( pLuaArguments.Call( pLuaVM, "setResourceDefaultSetting", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetResourceDefaultSetting( lua_State* pLuaVM, void* pResource, const char* szSettingName, float fSettingValue )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pResource );
+	pLuaArguments.PushString( szSettingName );
+	pLuaArguments.PushNumber( fSettingValue );
+
+	if( pLuaArguments.Call( pLuaVM, "setResourceDefaultSetting", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::SetResourceInfo( lua_State* pLuaVM, void* pResource, const char* szAttribute, const char* szValue )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pResource );
+	pLuaArguments.PushString( szAttribute );
+	pLuaArguments.PushString( szValue );
+
+	if( pLuaArguments.Call( pLuaVM, "setResourceInfo", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::RenameResource( lua_State* pLuaVM, const char* szResourceName, const char* szNewResourceName, const char* szOrganizationalPath )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushString( szResourceName );
+	pLuaArguments.PushString( szNewResourceName );
+	pLuaArguments.PushString( szOrganizationalPath );
+
+	if( pLuaArguments.Call( pLuaVM, "renameResource", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::DeleteResource( lua_State* pLuaVM, const char* szResourceName )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushString( szResourceName );
+
+	if( pLuaArguments.Call( pLuaVM, "deleteResource", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::UpdateResourceACLRequest( lua_State* pLuaVM, void* pResource, const char* szRightName, bool bAccess, const char* szByWho )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushUserData( pResource );
+	pLuaArguments.PushString( szRightName );
+	pLuaArguments.PushBoolean( bAccess );
+	pLuaArguments.PushString( szByWho );
+
+	if( pLuaArguments.Call( pLuaVM, "updateResourceACLRequest", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		return pLuaArgument.GetBoolean();
+	}
+
+	return false;
+}
+
 // Version funcs
+
+LuaTable CLuaFunctionDefinitions::GetVersion( lua_State* pLuaVM )
+{
+	LuaTable pLuaTable;
+
+	if( CLuaArguments().Call( pLuaVM, "getVersion", 1 ) )
+	{
+		pLuaTable = CLuaArgument( pLuaVM, -1 ).GetTable();
+	}
+
+	return pLuaTable;
+}
 
 // Camera get functions
 bool CLuaFunctionDefinitions::GetCameraMatrix( lua_State* pLuaVM, void* pPlayer, Vector3& vecPosition, Vector3& vecLookAt, float& fRoll, float& fFOV )

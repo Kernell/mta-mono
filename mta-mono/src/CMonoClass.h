@@ -18,6 +18,8 @@ public:
 	~CMonoClass();
 
 	CMonoObject* New( MonoDomain* pMonoDomain );
+	CMonoObject* New( MonoDomain* pMonoDomain, SColor& pColor );
+	CMonoObject* New( MonoDomain* pMonoDomain, Vector2& vecVector );
 	CMonoObject* New( MonoDomain* pMonoDomain, Vector3& vecVector );
 	CMonoObject* New( MonoDomain* pMonoDomain, void** args, int argc );
 

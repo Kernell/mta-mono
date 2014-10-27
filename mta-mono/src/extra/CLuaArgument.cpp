@@ -62,6 +62,7 @@ CLuaArgument::CLuaArgument ( void* pUserData )
     m_pLightUserData = pUserData;
 }
 
+
 CLuaArgument::CLuaArgument( lua_CFunction Function )
 {
     m_szString = NULL;
@@ -208,7 +209,7 @@ bool CLuaArgument::operator != ( const CLuaArgument& Argument )
 }
 
 
-void CLuaArgument::Read ( lua_State* luaVM, unsigned int uiArgument )
+void CLuaArgument::Read ( lua_State* luaVM, signed int uiArgument )
 {
     // Eventually delete our previous string
     if ( m_szString )
@@ -219,6 +220,7 @@ void CLuaArgument::Read ( lua_State* luaVM, unsigned int uiArgument )
 
     // Grab the argument type
     m_iType = lua_type ( luaVM, uiArgument );
+
     if ( m_iType != LUA_TNONE )
     {
         // Read out the content depending on the type
@@ -261,6 +263,34 @@ void CLuaArgument::Read ( lua_State* luaVM, unsigned int uiArgument )
 			{
 				m_Function = lua_tocfunction( luaVM, uiArgument );
 
+				break;
+			}
+
+			case LUA_TTABLE:
+			{
+				m_pTable.clear();
+
+				m_pArray = new CLuaArguments();
+
+				lua_pushnil( luaVM );
+
+				uiArgument--;
+
+				while( lua_next( luaVM, uiArgument ) != 0 )
+				{
+					CLuaArgument pKey( luaVM, -2 );
+					CLuaArgument pValue( luaVM, -1 );
+					
+					if( pKey.GetType() == LUA_TSTRING )
+					{
+						m_pTable[ string( pKey.GetString() ) ] = &pValue;
+					}
+
+					m_pArray->PushArgument( pValue );
+					
+					lua_pop( luaVM, 1 );
+				}
+				
 				break;
 			}
 

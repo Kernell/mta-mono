@@ -1,3 +1,15 @@
+/*********************************************************
+*
+*  Copyright © 2013, Innovation Roleplay Engine.
+*
+*  All Rights Reserved.
+*
+*  Redistribution and use in source and binary forms,
+*  with or without modification,
+*  is permitted only for authors.
+*
+*********************************************************/
+
 class CMonoObject;
 
 #ifndef _C_MONO_OBJECT
@@ -23,6 +35,35 @@ public:
 	bool SetPropertyValue( const char* szPropertyName, gpointer gValue );
 
 	MonoObject* GetPropertyValue( const char* szPropertyName );
+	
+	Vector2 GetVector2()
+	{
+		float fX = this->GetPropertyValue< float >( "X" );
+		float fY = this->GetPropertyValue< float >( "Y" );
+
+		return Vector2( fX, fY );
+	}
+
+	Vector3 GetVector3()
+	{
+		float fX = this->GetPropertyValue< float >( "X" );
+		float fY = this->GetPropertyValue< float >( "Y" );
+		float fZ = this->GetPropertyValue< float >( "Z" );
+
+		return Vector3( fX, fY, fZ );
+	}
+
+	SColor GetColor()
+	{
+		SColor pColor;
+
+		pColor.R = this->GetPropertyValue< unsigned char >( "R" );
+		pColor.G = this->GetPropertyValue< unsigned char >( "G" );
+		pColor.B = this->GetPropertyValue< unsigned char >( "B" );
+		pColor.A = this->GetPropertyValue< unsigned char >( "A" );
+
+		return pColor;
+	}
 	
 	template <class T> T GetPropertyValue( char* szPropertyName )
 	{

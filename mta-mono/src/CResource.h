@@ -17,6 +17,7 @@ class CResource;
 
 #include "Common.h"
 #include "CMonoClass.h"
+#include "extra/CLuaArguments.h"
 
 class CResource
 {
@@ -45,7 +46,9 @@ public:
 	CMonoClass* GetClassFromName( const char* szNamespace, const char* szName );
 
 	CMonoObject* NewObject( const char* szNamespace, const char* szName );
-	CMonoObject* NewObject( const char* szNamespace, const char* szName, Vector3& vecVector );
+	CMonoObject* NewObject( SColor& pColor );
+	CMonoObject* NewObject( Vector2& vecVector );
+	CMonoObject* NewObject( Vector3& vecVector );
 	CMonoObject* NewObject( const char* szNamespace, const char* szName, void** args, int argc );
 	
 	MonoString*	NewString( const char* szText )
@@ -56,6 +59,42 @@ public:
 	MonoString*	NewString( string strText )
 	{
 		return mono_string_new( this->m_pMonoDomain, strText.c_str() );
+	}
+
+	template <class T, int LuaType> MonoArray* NewArray( MonoClass* pMonoClass, CLuaArguments* pLuaArguments = NULL )
+	{
+		MonoArray* pArray = mono_array_new( this->m_pMonoDomain, pMonoClass, pLuaArguments ? pLuaArguments->Count() : 0 );
+
+		if( pLuaArguments )
+		{
+			vector< CLuaArgument* >::const_iterator iter = pLuaArguments->IterBegin();
+
+			for( unsigned int i = 0; iter != pLuaArguments->IterEnd(); iter++, i++ )
+			{
+				if( LuaType == LUA_TBOOLEAN )
+				{
+					mono_array_set( pArray, T, i, (T)( ( *iter )->GetBoolean() ) );
+				}
+				else if( LuaType == LUA_TLIGHTUSERDATA )
+				{
+					mono_array_set( pArray, T, i, (T)( ( *iter )->GetLightUserData() ) );
+				}
+				else if( LuaType == LUA_TNUMBER )
+				{
+					mono_array_set( pArray, T, i, ( *iter )->GetNumber< T >() );
+				}
+				else if( LuaType == LUA_TSTRING )
+				{
+					mono_array_set( pArray, T, i, (T)( ( *iter )->GetString() ) );
+				}
+				else if( LuaType == LUA_TUSERDATA )
+				{
+					mono_array_set( pArray, T, i, (T)( ( *iter )->GetLightUserData() ) );
+				}
+			}
+		}
+
+		return pArray;
 	}
 
 	string		GetName				( void )		{ return this->m_sName; }

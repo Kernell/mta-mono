@@ -11,17 +11,6 @@
 *********************************************************/
 
 #include "CMonoFunctions.h"
-#include "CMonoObject.h"
-
-#include "CResource.h"
-#include "CResourceManager.h"
-
-extern ILuaModuleManager10	*g_pModuleManager;
-extern CResourceManager	*g_pResourceManager;
-
-#define RESOURCE g_pResourceManager->GetFromList( mono_domain_get() )
-
-#define MONO_DECLARE(a,b) mono_add_internal_call("MultiTheftAuto.Native."#a"::"#b,CMonoFunctions::a::b );
 
 void CMonoFunctions::AddInternals( void )
 {
@@ -29,8 +18,15 @@ void CMonoFunctions::AddInternals( void )
 	mono_add_internal_call( "MultiTheftAuto.Debug::Info",						CMonoFunctions::Debug::Info );
 	mono_add_internal_call( "MultiTheftAuto.Debug::Error",						CMonoFunctions::Debug::Error );
 
-	mono_add_internal_call( "MultiTheftAuto.Native.Config::Get",				CMonoFunctions::Config::Get );
-	mono_add_internal_call( "MultiTheftAuto.Native.Config::Set",				CMonoFunctions::Config::Set );
+	MONO_DECLARE( Config, Get );
+	MONO_DECLARE( Config, Set );
+
+	MONO_DECLARE( Server, GetMaxPlayers );
+	MONO_DECLARE( Server, SetMaxPlayers );
+	MONO_DECLARE( Server, OutputChatBox );
+	MONO_DECLARE( Server, OutputConsole );
+	MONO_DECLARE( Server, SetPassword );
+	MONO_DECLARE( Server, GetVersion );
 
 	// Element create/destroy
 	MONO_DECLARE( Element, Create );
@@ -38,6 +34,7 @@ void CMonoFunctions::AddInternals( void )
 	MONO_DECLARE( Element, Clone );
 
 	// Element get funcs
+	MONO_DECLARE( Element, GetByType );
 	MONO_DECLARE( Element, IsElement );
 	MONO_DECLARE( Element, GetType );
 	MONO_DECLARE( Element, GetByID );
@@ -94,8 +91,508 @@ void CMonoFunctions::AddInternals( void )
 	MONO_DECLARE( Element, SetFrozen );
 	MONO_DECLARE( Element, SetLowLod );
 
+	// Player get functions
+	MONO_DECLARE( Player, GetCount );
+	MONO_DECLARE( Player, GetFromName );
+	MONO_DECLARE( Player, GetPing );
+	MONO_DECLARE( Player, GetMoney );
+	MONO_DECLARE( Player, GetRandom );
+	MONO_DECLARE( Player, IsMuted );
+	MONO_DECLARE( Player, GetTeam );
+	MONO_DECLARE( Player, GetWantedLevel );
+	MONO_DECLARE( Player, GetAlivePlayers );
+	MONO_DECLARE( Player, GetDeadPlayers );
+	MONO_DECLARE( Player, GetIdleTime );
+	MONO_DECLARE( Player, IsMapForced );
+	MONO_DECLARE( Player, GetNametagText );
+	MONO_DECLARE( Player, GetNametagColor );
+	MONO_DECLARE( Player, IsNametagShowing );
+	MONO_DECLARE( Player, GetSerial );
+	MONO_DECLARE( Player, GetUserName );
+	MONO_DECLARE( Player, GetBlurLevel );
+	MONO_DECLARE( Player, GetName );
+	MONO_DECLARE( Player, GetIP );
+	MONO_DECLARE( Player, GetAccount );
+	MONO_DECLARE( Player, GetVersion );
+	MONO_DECLARE( Player, GetACInfo );
+
+	// Player set functions
+	MONO_DECLARE( Player, SetMoney );
+	MONO_DECLARE( Player, GiveMoney );
+	MONO_DECLARE( Player, TakeMoney );
+	MONO_DECLARE( Player, Spawn );
+	MONO_DECLARE( Player, ShowHudComponent );
+	MONO_DECLARE( Player, SetWantedLevel );
+	MONO_DECLARE( Player, ForceMap );
+	MONO_DECLARE( Player, SetNametagText );
+	MONO_DECLARE( Player, SetNametagColor );
+	MONO_DECLARE( Player, SetNametagShowing );
+	MONO_DECLARE( Player, SetMuted );
+	MONO_DECLARE( Player, SetBlurLevel );
+	MONO_DECLARE( Player, Redirect );
+	MONO_DECLARE( Player, SetName );
+	MONO_DECLARE( Player, DetonateSatchels );
+	MONO_DECLARE( Player, TakeScreenShot );
+	MONO_DECLARE( Player, SetTeam );
+
+	// Input funcs
+	MONO_DECLARE( Player, BindKey );
+	MONO_DECLARE( Player, UnbindKey );
+	MONO_DECLARE( Player, GetControlState );
+	MONO_DECLARE( Player, IsControlEnabled );
+		
+	MONO_DECLARE( Player, SetControlState );
+	MONO_DECLARE( Player, ToggleControl );
+	MONO_DECLARE( Player, ToggleAllControls );
+
+	// Log in/out funcs
+	MONO_DECLARE( Player, LogIn );
+	MONO_DECLARE( Player, LogOut );
+
+	// Admin funcs
+	MONO_DECLARE( Player, Kick );
+	MONO_DECLARE( Player, Ban );
+		
+	// Cursor get funcs
+	MONO_DECLARE( Player, IsCursorShowing );
+		
+	// Cursor set funcs
+	MONO_DECLARE( Player, ShowCursor );
+		
+	// Chat funcs
+	MONO_DECLARE( Player, ShowChat );
+
+	// Camera get functions
+	MONO_DECLARE( Player, GetCameraMatrix );
+	MONO_DECLARE( Player, GetCameraTarget );
+	MONO_DECLARE( Player, GetCameraInterior );
+
+	// Camera set functions
+	MONO_DECLARE( Player, SetCameraMatrix );
+	MONO_DECLARE( Player, SetCameraTarget );
+	MONO_DECLARE( Player, SetCameraInterior );
+	MONO_DECLARE( Player, FadeCamera );
+
+	// Ped get functions
+	MONO_DECLARE( Ped, Create );
+	MONO_DECLARE( Ped, GetArmor );    
+	MONO_DECLARE( Ped, IsChoking );
+	MONO_DECLARE( Ped, IsDead );
+	MONO_DECLARE( Ped, IsDucked );    
+	MONO_DECLARE( Ped, GetStat );
+	MONO_DECLARE( Ped, GetTarget );    
+	MONO_DECLARE( Ped, GetWeapon );
+	MONO_DECLARE( Ped, GetClothesTexture );
+	MONO_DECLARE( Ped, GetClothesModel );
+	MONO_DECLARE( Ped, DoesHaveJetPack );
+	MONO_DECLARE( Ped, IsOnGround );    
+	MONO_DECLARE( Ped, GetFightingStyle );
+	MONO_DECLARE( Ped, GetMoveAnim );
+	MONO_DECLARE( Ped, GetGravity );    
+	MONO_DECLARE( Ped, GetContactElement );
+	MONO_DECLARE( Ped, GetWeaponSlot );
+	MONO_DECLARE( Ped, IsDoingGangDriveby );
+	MONO_DECLARE( Ped, IsOnFire );
+	MONO_DECLARE( Ped, IsHeadless );
+	MONO_DECLARE( Ped, IsFrozen );
+	MONO_DECLARE( Ped, GetOccupiedVehicle );
+	MONO_DECLARE( Ped, GetOccupiedVehicleSeat );
+	MONO_DECLARE( Ped, IsInVehicle );
+	MONO_DECLARE( Ped, GetWeaponProperty );
+	MONO_DECLARE( Ped, GetOriginalWeaponProperty );
+
+	// Ped set functions
+	MONO_DECLARE( Ped, SetArmor );
+	MONO_DECLARE( Ped, Kill );
+	MONO_DECLARE( Ped, SetStat );
+	MONO_DECLARE( Ped, AddClothes );
+	MONO_DECLARE( Ped, RemoveClothes );
+	MONO_DECLARE( Ped, GiveJetPack );
+	MONO_DECLARE( Ped, RemoveJetPack );
+	MONO_DECLARE( Ped, SetFightingStyle );
+	MONO_DECLARE( Ped, SetMoveAnim );
+	MONO_DECLARE( Ped, SetGravity );
+	MONO_DECLARE( Ped, SetChoking );
+	MONO_DECLARE( Ped, SetWeaponSlot );
+	MONO_DECLARE( Ped, WarpIntoVehicle );
+	MONO_DECLARE( Ped, RemoveFromVehicle );
+	MONO_DECLARE( Ped, SetDoingGangDriveby );
+	MONO_DECLARE( Ped, SetAnimation );
+	MONO_DECLARE( Ped, SetAnimationProgress );
+	MONO_DECLARE( Ped, SetOnFire );
+	MONO_DECLARE( Ped, SetHeadless );
+	MONO_DECLARE( Ped, SetFrozen );
+	MONO_DECLARE( Ped, ReloadWeapon );
+	MONO_DECLARE( Ped, SetWeaponProperty );
+
+	// Ped body?
+	MONO_DECLARE( Ped, GetBodyPartName );
+	MONO_DECLARE( Ped, GetClothesByTypeIndex );
+	MONO_DECLARE( Ped, GetTypeIndexFromClothes );
+	MONO_DECLARE( Ped, GetClothesTypeName );
+
+	// Weapon give/take functions
+	MONO_DECLARE( Ped, GiveWeapon );
+	MONO_DECLARE( Ped, TakeWeapon );
+	MONO_DECLARE( Ped, TakeAllWeapons );
+	MONO_DECLARE( Ped, SetWeaponAmmo );
+
 	// Vehicle create/destroy functions
 	MONO_DECLARE( Vehicle, Create );
+
+	// Vehicle get functions
+	MONO_DECLARE( Vehicle, GetType );
+	MONO_DECLARE( Vehicle, GetVariant );
+	MONO_DECLARE( Vehicle, GetColor );
+	MONO_DECLARE( Vehicle, GetModelFromName );
+	MONO_DECLARE( Vehicle, GetLandingGearDown );
+	MONO_DECLARE( Vehicle, GetMaxPassengers );
+	MONO_DECLARE( Vehicle, GetName );
+	MONO_DECLARE( Vehicle, GetNameFromModel );
+	MONO_DECLARE( Vehicle, GetOccupant );
+	MONO_DECLARE( Vehicle, GetOccupants );
+	MONO_DECLARE( Vehicle, GetController );
+	MONO_DECLARE( Vehicle, GetSirensOn );
+	MONO_DECLARE( Vehicle, GetTurnVelocity );
+	MONO_DECLARE( Vehicle, GetTurretPosition );
+	MONO_DECLARE( Vehicle, IsLocked );
+	MONO_DECLARE( Vehicle, GetOfType );       
+	MONO_DECLARE( Vehicle, GetUpgradeOnSlot );
+	MONO_DECLARE( Vehicle, GetUpgrades );
+//	MONO_DECLARE( Vehicle, GetUpgradeSlotName );
+	MONO_DECLARE( Vehicle, GetUpgradeSlotName );
+	MONO_DECLARE( Vehicle, GetCompatibleUpgrades );
+	MONO_DECLARE( Vehicle, GetDoorState );
+	MONO_DECLARE( Vehicle, GetWheelStates );
+	MONO_DECLARE( Vehicle, GetLightState );
+	MONO_DECLARE( Vehicle, GetPanelState );
+	MONO_DECLARE( Vehicle, GetOverrideLights );
+	MONO_DECLARE( Vehicle, GetTowedByVehicle );
+	MONO_DECLARE( Vehicle, GetTowingVehicle );
+	MONO_DECLARE( Vehicle, GetPaintjob );
+	MONO_DECLARE( Vehicle, GetPlateText );
+	MONO_DECLARE( Vehicle, IsDamageProof );
+	MONO_DECLARE( Vehicle, IsFuelTankExplodable );
+	MONO_DECLARE( Vehicle, IsFrozen );
+	MONO_DECLARE( Vehicle, IsOnGround );
+	MONO_DECLARE( Vehicle, GetEngineState );
+	MONO_DECLARE( Vehicle, IsTrainDerailed );
+	MONO_DECLARE( Vehicle, IsTrainDerailable );
+	MONO_DECLARE( Vehicle, GetTrainDirection );
+	MONO_DECLARE( Vehicle, GetTrainSpeed );
+	MONO_DECLARE( Vehicle, IsBlown );
+	MONO_DECLARE( Vehicle, GetHeadLightColor );
+	MONO_DECLARE( Vehicle, GetDoorOpenRatio );
+	MONO_DECLARE( Vehicle, IsTaxiLightOn );
+
+	// Vehicle set functions
+	MONO_DECLARE( Vehicle, Fix );
+	MONO_DECLARE( Vehicle, Blow );
+	MONO_DECLARE( Vehicle, SetTurnVelocity );
+	MONO_DECLARE( Vehicle, SetColor );
+	MONO_DECLARE( Vehicle, SetLandingGearDown );
+	MONO_DECLARE( Vehicle, SetLocked );
+	MONO_DECLARE( Vehicle, SetDoorsUndamageable );
+	MONO_DECLARE( Vehicle, SetSirensOn );
+	MONO_DECLARE( Vehicle, SetTaxiLightOn );
+	MONO_DECLARE( Vehicle, AddUpgrade );
+	MONO_DECLARE( Vehicle, RemoveUpgrade );
+	MONO_DECLARE( Vehicle, SetDoorState );
+	MONO_DECLARE( Vehicle, SetWheelStates );
+	MONO_DECLARE( Vehicle, SetLightState );
+	MONO_DECLARE( Vehicle, SetPanelState );
+	MONO_DECLARE( Vehicle, SetIdleRespawnDelay );
+	MONO_DECLARE( Vehicle, SetRespawnDelay );
+	MONO_DECLARE( Vehicle, SetRespawnPosition );
+	MONO_DECLARE( Vehicle, ToggleRespawn );
+	MONO_DECLARE( Vehicle, ResetExplosionTime );
+	MONO_DECLARE( Vehicle, ResetIdleTime );
+	MONO_DECLARE( Vehicle, Spawn );
+	MONO_DECLARE( Vehicle, Respawn );
+	MONO_DECLARE( Vehicle, SetOverrideLights );
+	MONO_DECLARE( Vehicle, AttachTrailer );
+	MONO_DECLARE( Vehicle, DetachTrailer );
+	MONO_DECLARE( Vehicle, SetEngineState );
+	MONO_DECLARE( Vehicle, SetDirtLevel );
+	MONO_DECLARE( Vehicle, SetDamageProof );
+	MONO_DECLARE( Vehicle, SetPaintjob );
+	MONO_DECLARE( Vehicle, SetFuelTankExplodable );
+	MONO_DECLARE( Vehicle, SetTrainDerailed );
+	MONO_DECLARE( Vehicle, SetTrainDerailable );
+	MONO_DECLARE( Vehicle, SetTrainDirection );
+	MONO_DECLARE( Vehicle, SetTrainSpeed );
+	MONO_DECLARE( Vehicle, SetHeadLightColor );
+	MONO_DECLARE( Vehicle, SetTurretPosition );
+	MONO_DECLARE( Vehicle, SetDoorOpenRatio );
+	MONO_DECLARE( Vehicle, SetVariant );
+	MONO_DECLARE( Vehicle, GiveSirens );
+	MONO_DECLARE( Vehicle, RemoveSirens );
+	MONO_DECLARE( Vehicle, SetSirens );
+	MONO_DECLARE( Vehicle, GetSirens );
+	MONO_DECLARE( Vehicle, GetSirenParams );
+	MONO_DECLARE( Vehicle, SetPlateText );
+	
+	// Marker create/destroy functions
+	MONO_DECLARE( Marker, Create );
+
+	// Marker get functions
+	MONO_DECLARE( Marker, GetCount );
+	MONO_DECLARE( Marker, GetType );
+	MONO_DECLARE( Marker, GetSize );
+	MONO_DECLARE( Marker, GetColor );
+	MONO_DECLARE( Marker, GetTarget );
+	MONO_DECLARE( Marker, GetIcon );
+
+	// Marker set functions
+	MONO_DECLARE( Marker, SetType );
+	MONO_DECLARE( Marker, SetSize );
+	MONO_DECLARE( Marker, SetColor );
+	MONO_DECLARE( Marker, SetTarget );
+	MONO_DECLARE( Marker, SetIcon );
+
+	// Blip create/destroy functions
+	MONO_DECLARE( Blip, Create );
+	MONO_DECLARE( Blip, CreateAttachedTo );
+	
+	// Blip get functions
+	MONO_DECLARE( Blip, GetIcon );
+	MONO_DECLARE( Blip, GetSize );
+	MONO_DECLARE( Blip, GetColor );
+	MONO_DECLARE( Blip, GetOrdering );
+	MONO_DECLARE( Blip, GetVisibleDistance );
+
+	// Blip set functions
+	MONO_DECLARE( Blip, SetIcon );
+	MONO_DECLARE( Blip, SetSize );
+	MONO_DECLARE( Blip, SetColor );
+	MONO_DECLARE( Blip, SetOrdering );
+	MONO_DECLARE( Blip, SetVisibleDistance );
+
+	// Object create/destroy functions
+	MONO_DECLARE( Object, Create );
+
+	// Object get functions
+	MONO_DECLARE( Object, GetScale );
+
+	// Object set functions
+	MONO_DECLARE( Object, SetScale );
+	MONO_DECLARE( Object, Move );
+	MONO_DECLARE( Object, Stop );
+
+	// Radar area create/destroy funcs
+	MONO_DECLARE( RadarArea, Create );
+
+	// Radar area get funcs
+	MONO_DECLARE( RadarArea, GetSize );
+	MONO_DECLARE( RadarArea, GetColor );
+	MONO_DECLARE( RadarArea, IsFlashing );
+	MONO_DECLARE( RadarArea, IsInside );
+
+	// Radar area set funcs
+	MONO_DECLARE( RadarArea, SetSize );
+	MONO_DECLARE( RadarArea, SetColor );
+	MONO_DECLARE( RadarArea, SetFlashing );
+
+	// Pickup create/destroy funcs
+	MONO_DECLARE( Pickup, Create );
+
+	// Pickup get funcs
+	MONO_DECLARE( Pickup, GetType );
+	MONO_DECLARE( Pickup, GetWeapon );
+	MONO_DECLARE( Pickup, GetAmount );
+	MONO_DECLARE( Pickup, GetAmmo );
+	MONO_DECLARE( Pickup, GetRespawnInterval );
+	MONO_DECLARE( Pickup, IsSpawned );
+
+	// Pickup set funcs
+	MONO_DECLARE( Pickup, SetType );
+	MONO_DECLARE( Pickup, SetRespawnInterval );
+	MONO_DECLARE( Pickup, Use );
+
+	// Shape create funcs
+	MONO_DECLARE( Shape, CreateCircle );
+	MONO_DECLARE( Shape, CreateCuboid );
+	MONO_DECLARE( Shape, CreateSphere );
+	MONO_DECLARE( Shape, CreateRectangle );
+	MONO_DECLARE( Shape, CreatePolygon );
+	MONO_DECLARE( Shape, CreateTube );
+
+	// Explosion funcs
+	MONO_DECLARE( Explosion, Create );
+
+	// Audio funcs
+	MONO_DECLARE( Audio, PlayFrontEnd );
+	MONO_DECLARE( Audio, PlayMission );
+
+	// Team get funcs
+	MONO_DECLARE( Team, Create );
+	MONO_DECLARE( Team, GetFromName );
+	MONO_DECLARE( Team, GetName );
+	MONO_DECLARE( Team, GetColor );
+	MONO_DECLARE( Team, CountPlayers );
+	MONO_DECLARE( Team, GetFriendlyFire );
+
+	// Team set funcs
+	MONO_DECLARE( Team, SetName );
+	MONO_DECLARE( Team, SetColor );
+	MONO_DECLARE( Team, SetFriendlyFire );
+
+	// Water funcs
+	MONO_DECLARE( Water, Create );
+	MONO_DECLARE( Water, SetLevel );
+	MONO_DECLARE( Water, SetLevelAll );
+	MONO_DECLARE( Water, SetLevelWorld );
+	MONO_DECLARE( Water, ResetLevelWorld );
+	MONO_DECLARE( Water, GetVertexPosition );
+	MONO_DECLARE( Water, SetVertexPosition );
+	MONO_DECLARE( Water, GetColor );
+	MONO_DECLARE( Water, SetColor );
+	MONO_DECLARE( Water, ResetColor );
+
+	// General world get funcs
+	MONO_DECLARE( World, GetTime );
+	MONO_DECLARE( World, GetWeather );
+	MONO_DECLARE( World, GetZoneName );
+	MONO_DECLARE( World, GetGravity );
+	MONO_DECLARE( World, GetGameSpeed );
+	MONO_DECLARE( World, GetWaveHeight );
+	MONO_DECLARE( World, GetFPSLimit );
+	MONO_DECLARE( World, GetMinuteDuration );
+	MONO_DECLARE( World, IsGarageOpen );
+	MONO_DECLARE( World, GetTrafficLightState );
+	MONO_DECLARE( World, GetTrafficLightsLocked );
+	MONO_DECLARE( World, GetJetpackMaxHeight );
+	MONO_DECLARE( World, GetAircraftMaxVelocity );
+	MONO_DECLARE( World, GetInteriorSoundsEnabled );
+	MONO_DECLARE( World, GetRainLevel );
+	MONO_DECLARE( World, GetSunSize );
+	MONO_DECLARE( World, GetSunColor );
+	MONO_DECLARE( World, GetWindVelocity );
+	MONO_DECLARE( World, GetFarClipDistance );
+	MONO_DECLARE( World, GetFogDistance );
+	MONO_DECLARE( World, GetAircraftMaxHeight );
+	MONO_DECLARE( World, GetOcclusionsEnabled );
+	MONO_DECLARE( World, GetMoonSize );
+	MONO_DECLARE( World, GetSkyGradient );
+	MONO_DECLARE( World, GetHeatHaze );
+	MONO_DECLARE( World, GetJetpackWeaponEnabled );
+	MONO_DECLARE( World, GetCloudsEnabled );
+
+	// General world set funcs
+	MONO_DECLARE( World, SetTime );
+	MONO_DECLARE( World, SetWeather );
+	MONO_DECLARE( World, SetWeatherBlended );
+	MONO_DECLARE( World, SetGravity );
+	MONO_DECLARE( World, SetGameSpeed );
+	MONO_DECLARE( World, SetWaveHeight );
+	MONO_DECLARE( World, SetSkyGradient );
+	MONO_DECLARE( World, ResetSkyGradient );
+	MONO_DECLARE( World, SetHeatHaze );
+	MONO_DECLARE( World, ResetHeatHaze );
+	MONO_DECLARE( World, SetFPSLimit );
+	MONO_DECLARE( World, SetMinuteDuration );
+	MONO_DECLARE( World, SetGarageOpen );
+	MONO_DECLARE( World, SetGlitchEnabled );
+	MONO_DECLARE( World, IsGlitchEnabled );
+	MONO_DECLARE( World, SetJetpackWeaponEnabled );
+	MONO_DECLARE( World, SetCloudsEnabled );
+	MONO_DECLARE( World, SetTrafficLightState );
+	MONO_DECLARE( World, SetTrafficLightsLocked );
+	MONO_DECLARE( World, SetJetpackMaxHeight );
+	MONO_DECLARE( World, SetInteriorSoundsEnabled );
+	MONO_DECLARE( World, SetRainLevel );
+	MONO_DECLARE( World, SetSunSize );
+	MONO_DECLARE( World, SetSunColor );
+	MONO_DECLARE( World, SetWindVelocity );
+	MONO_DECLARE( World, SetFarClipDistance );
+	MONO_DECLARE( World, SetFogDistance );
+	MONO_DECLARE( World, SetAircraftMaxHeight );
+	MONO_DECLARE( World, SetAircraftMaxVelocity );
+	MONO_DECLARE( World, SetOcclusionsEnabled );
+	MONO_DECLARE( World, ResetRainLevel );
+	MONO_DECLARE( World, ResetSunSize );
+	MONO_DECLARE( World, ResetSunColor );
+	MONO_DECLARE( World, ResetWindVelocity );
+	MONO_DECLARE( World, ResetFarClipDistance );
+	MONO_DECLARE( World, ResetFogDistance );
+	MONO_DECLARE( World, RemoveWorldModel );
+	MONO_DECLARE( World, RestoreWorldModel );
+	MONO_DECLARE( World, RestoreAllWorldModels );
+	MONO_DECLARE( World, SetMoonSize );
+	MONO_DECLARE( World, ResetMoonSize );
+
+	// Account get funcs
+	MONO_DECLARE( Account, Get );
+	MONO_DECLARE( Account, GetAll );
+	MONO_DECLARE( Account, GetPlayer );
+	MONO_DECLARE( Account, IsGuest );
+//	MONO_DECLARE( Account, GetData );
+//	MONO_DECLARE( Account, GetAllData );
+	MONO_DECLARE( Account, GetSerial );
+//	MONO_DECLARE( Account, GetBySerial );
+
+	// Account set funcs
+	MONO_DECLARE( Account, Add );
+	MONO_DECLARE( Account, Remove );
+	MONO_DECLARE( Account, SetPassword );
+//	MONO_DECLARE( Account, SetData );
+	MONO_DECLARE( Account, CopyData );
+
+	MONO_DECLARE( Ban, Add );
+	MONO_DECLARE( Ban, Remove );
+
+//	MONO_DECLARE( Ban, GetBans );
+	MONO_DECLARE( Ban, Reload );
+
+	MONO_DECLARE( Ban, GetIP );
+	MONO_DECLARE( Ban, GetSerial );
+	MONO_DECLARE( Ban, GetUsername );
+	MONO_DECLARE( Ban, GetNick );
+	MONO_DECLARE( Ban, GetReason );
+	MONO_DECLARE( Ban, GetAdmin );
+
+	MONO_DECLARE( Ban, GetBanTime );
+	MONO_DECLARE( Ban, GetUnbanTime );
+
+	MONO_DECLARE( Ban, SetUnbanTime );
+	MONO_DECLARE( Ban, SetReason );
+	MONO_DECLARE( Ban, SetAdmin );
+
+	// Resource funcs
+	MONO_DECLARE( Resource, Create );
+	MONO_DECLARE( Resource, Copy );
+	MONO_DECLARE( Resource, GetRootElement );
+	MONO_DECLARE( Resource, GetMapRootElement );
+	MONO_DECLARE( Resource, GetDynamicElementRoot );
+//	MONO_DECLARE( Resource, AddMap );
+//	MONO_DECLARE( Resource, AddConfig );
+	MONO_DECLARE( Resource, RemoveFile );
+//	MONO_DECLARE( Resource, AddConfig );
+//	MONO_DECLARE( Resource, AddMap );
+//	MONO_DECLARE( Resource, GetConfig );
+//	MONO_DECLARE( Resource, GetExportedFunctions );
+	MONO_DECLARE( Resource, GetFromName );
+	MONO_DECLARE( Resource, GetInfo );
+	MONO_DECLARE( Resource, GetLastStartTime );
+	MONO_DECLARE( Resource, GetLoadFailureReason );
+	MONO_DECLARE( Resource, GetLoadTime );
+	MONO_DECLARE( Resource, GetName );
+	MONO_DECLARE( Resource, GetResources );
+	MONO_DECLARE( Resource, GetState );
+	MONO_DECLARE( Resource, GetCurrent );
+	MONO_DECLARE( Resource, Refresh );
+	MONO_DECLARE( Resource, RemoveDefaultSetting );
+	MONO_DECLARE( Resource, Start );
+	MONO_DECLARE( Resource, Restart );
+	MONO_DECLARE( Resource, Stop );
+	MONO_DECLARE( Resource, SetDefaultSetting );
+//	MONO_DECLARE( Resource, SetDefaultSetting );
+//	MONO_DECLARE( Resource, SetDefaultSetting );
+	MONO_DECLARE( Resource, SetInfo );
+	MONO_DECLARE( Resource, Rename );
+	MONO_DECLARE( Resource, Delete );
+//	MONO_DECLARE( Resource, GetACLRequests );
+	MONO_DECLARE( Resource, UpdateACLRequest );
 }
 
 void CMonoFunctions::Debug::Log( MonoString *string )
@@ -149,385 +646,99 @@ bool CMonoFunctions::Config::Set( MonoString *msKey, MonoString *msValue )
 	return false;
 }
 
-// Element create/destroy
-
-DWORD CMonoFunctions::Element::Create( MonoString* msTypeName, MonoString* msID )
+unsigned int CMonoFunctions::Server::GetMaxPlayers( void )
 {
 	if( RESOURCE )
 	{
-		const char* szTypeName	= mono_string_to_utf8( msTypeName );
-		const char* szID		= mono_string_to_utf8( msID );
-
-		return (DWORD)CLuaFunctionDefinitions::CreateElement( RESOURCE->GetLua(), szTypeName, szID );
+		return CLuaFunctionDefinitions::GetMaxPlayers( RESOURCE->GetLua() );
 	}
-
-	return NULL;
-}
-
-bool CMonoFunctions::Element::Destroy( DWORD pUserData )
-{
-	if( RESOURCE )
-	{
-		return CLuaFunctionDefinitions::DestroyElement( RESOURCE->GetLua(), (void*)pUserData );
-	}
-
-	return false;
-}
-
-DWORD CMonoFunctions::Element::Clone( DWORD pUserData, MonoObject* vecPosition, bool bCloneElement )
-{
-	if( RESOURCE )
-	{
-		CMonoObject pPosition( vecPosition );
-		
-		float fX = pPosition.GetPropertyValue<float>( "X" );
-		float fY = pPosition.GetPropertyValue<float>( "Y" );
-		float fZ = pPosition.GetPropertyValue<float>( "Z" );
-
-		return (DWORD)CLuaFunctionDefinitions::CloneElement( RESOURCE->GetLua(), (void*)pUserData, Vector3( fX, fY, fZ ), bCloneElement );
-	}
-
-	return false;
-}
-
-// Element get funcs
-
-bool CMonoFunctions::Element::IsElement( DWORD pUserData )
-{
-	if( RESOURCE )
-	{
-		return (unsigned int)CLuaFunctionDefinitions::IsElement( RESOURCE->GetLua(), (void*)pUserData );
-	}
-
-	return false;
-}
-
-MonoString* CMonoFunctions::Element::GetType( DWORD pUserData )
-{
-	if( RESOURCE )
-	{
-		const string strType = CLuaFunctionDefinitions::GetElementType( RESOURCE->GetLua(), (void*)pUserData );
-
-		return mono_string_new( mono_domain_get(), strType.c_str() );
-	}
-
-	return mono_string_new( mono_domain_get(), "" );
-}
-
-DWORD CMonoFunctions::Element::GetByID( MonoString* msID, unsigned int uiIndex )
-{
-	if( RESOURCE )
-	{
-		const char* szID = mono_string_to_utf8( msID );
-
-		return (DWORD)CLuaFunctionDefinitions::GetElementByID( RESOURCE->GetLua(), szID, uiIndex );
-	}
-
-	return NULL;
-}
-
-DWORD CMonoFunctions::Element::GetByIndex( int iIndex )
-{
-	if( RESOURCE )
-	{
-		return (DWORD)CLuaFunctionDefinitions::GetElementByIndex( RESOURCE->GetLua(), iIndex );
-	}
-
-	return NULL;
-}
-
-DWORD CMonoFunctions::Element::GetChild( DWORD pUserData, int iIndex )
-{
-	if( RESOURCE )
-	{
-		return (DWORD)CLuaFunctionDefinitions::GetElementChild( RESOURCE->GetLua(), (void*)pUserData, iIndex );
-	}
-
-	return NULL;
-}
-
-int CMonoFunctions::Element::GetChildrenCount( DWORD pUserData )
-{
-	if( RESOURCE )
-	{
-		return CLuaFunctionDefinitions::GetElementChildrenCount( RESOURCE->GetLua(), (void*)pUserData );
-	}
-
+	
 	return 0;
 }
 
-MonoString* CMonoFunctions::Element::GetID( DWORD pUserData )
+bool CMonoFunctions::Server::SetMaxPlayers( unsigned int uiMax )
 {
 	if( RESOURCE )
 	{
-		const string strID = CLuaFunctionDefinitions::GetElementID( RESOURCE->GetLua(), (void*)pUserData );
-
-		return mono_string_new( mono_domain_get(), strID.c_str() );
+		return CLuaFunctionDefinitions::SetMaxPlayers( RESOURCE->GetLua(), uiMax );
 	}
-
-	return mono_string_new( mono_domain_get(), "" );
-}
-
-unsigned int CMonoFunctions::Element::GetParent( DWORD pUserData )
-{
-	if( RESOURCE )
-	{
-		return (unsigned int)CLuaFunctionDefinitions::GetElementParent( RESOURCE->GetLua(), (void*)pUserData );
-	}
-
-	return NULL;
-}
-
-MonoObject* CMonoFunctions::Element::GetPosition( DWORD pUserData )
-{
-	if( RESOURCE )
-	{
-		Vector3 vecPosition;
-		
-		if( CLuaFunctionDefinitions::GetElementPosition( RESOURCE->GetLua(), (void*)pUserData, vecPosition ) )
-		{
-			CMonoObject* pObject = RESOURCE->NewObject( "MultiTheftAuto", "Vector3", vecPosition );
-			
-			if( pObject )
-			{
-				return pObject->GetObject();
-			}
-		}
-	}
-
-	return NULL;
-}
-
-MonoObject* CMonoFunctions::Element::GetRotation( DWORD pUserData )
-{
-	if( RESOURCE )
-	{
-		Vector3 vecPosition;
-		
-		if( CLuaFunctionDefinitions::GetElementRotation( RESOURCE->GetLua(), (void*)pUserData, vecPosition ) )
-		{
-			CMonoObject* pObject = RESOURCE->NewObject( "MultiTheftAuto", "Vector3", vecPosition );
-			
-			if( pObject )
-			{
-				return pObject->GetObject();
-			}
-		}
-	}
-
-	return NULL;
-}
-
-MonoObject* CMonoFunctions::Element::GetVelocity( DWORD pUserData )
-{
-	if( RESOURCE )
-	{
-		Vector3 vecPosition;
-		
-		if( CLuaFunctionDefinitions::GetElementVelocity( RESOURCE->GetLua(), (void*)pUserData, vecPosition ) )
-		{
-			CMonoObject* pObject = RESOURCE->NewObject( "MultiTheftAuto", "Vector3", vecPosition );
-			
-			if( pObject )
-			{
-				return pObject->GetObject();
-			}
-		}
-	}
-
-	return NULL;
-}
-
-unsigned char CMonoFunctions::Element::GetInterior( DWORD pUserData )
-{
-	if( RESOURCE )
-	{
-		unsigned char ucInterior;
-
-		if( CLuaFunctionDefinitions::GetElementInterior( RESOURCE->GetLua(), (void*)pUserData, ucInterior ) )
-		{
-			return ucInterior;
-		}
-	}
-
+	
 	return 0;
 }
 
-bool CMonoFunctions::Element::IsWithinColShape( DWORD pUserData )
+bool CMonoFunctions::Server::OutputChatBox( MonoString* msText, DWORD pElement, MonoObject* mpColor, bool bColorCoded )
 {
 	if( RESOURCE )
 	{
-		bool bWithin;
+		const char* szText		= mono_string_to_utf8( msText );
 
-		if( CLuaFunctionDefinitions::IsElementWithinColShape( RESOURCE->GetLua(), (void*)pUserData, bWithin ) )
-		{
-			return bWithin;
-		}
-	}
-
-	return false;
-}
-
-bool CMonoFunctions::Element::IsWithinMarker( DWORD pUserData )
-{
-	if( RESOURCE )
-	{
-		bool bWithin;
-
-		if( CLuaFunctionDefinitions::IsElementWithinMarker( RESOURCE->GetLua(), (void*)pUserData, bWithin ) )
-		{
-			return bWithin;
-		}
-	}
-
-	return false;
-}
-
-unsigned short CMonoFunctions::Element::GetDimension( DWORD pUserData )
-{
-	if( RESOURCE )
-	{
-		unsigned short usDimension;
-
-		if( CLuaFunctionDefinitions::GetElementDimension( RESOURCE->GetLua(), (void*)pUserData, usDimension ) )
-		{
-			return usDimension;
-		}
-	}
-
-	return 0;
-}
-
-MonoString* CMonoFunctions::Element::GetZoneName( DWORD pUserData, bool bCitiesOnly )
-{
-	if( RESOURCE )
-	{
-		string strOutName;
-
-		if( CLuaFunctionDefinitions::GetElementZoneName( RESOURCE->GetLua(), (void*)pUserData, strOutName, bCitiesOnly ) )
-		{
-			return RESOURCE->NewString( strOutName );
-		}
-	}
-
-	return NULL;
-}
-
-bool CMonoFunctions::Element::IsAttached( DWORD pUserData )
-{
-	if( RESOURCE )
-	{
-		return CLuaFunctionDefinitions::IsElementAttached( RESOURCE->GetLua(), (void*)pUserData );
-	}
-
-	return false;
-}
-
-DWORD CMonoFunctions::Element::GetAttachedTo( DWORD pUserData )
-{
-	if( RESOURCE )
-	{
-		return (DWORD)CLuaFunctionDefinitions::GetElementAttachedTo( RESOURCE->GetLua(), (void*)pUserData );
-	}
-
-	return NULL;
-}
-
-DWORD CMonoFunctions::Element::GetColShape( DWORD pUserData )
-{
-	if( RESOURCE )
-	{
-		return (DWORD)CLuaFunctionDefinitions::GetElementColShape( RESOURCE->GetLua(), (void*)pUserData );
-	}
-
-	return NULL;
-}
-
-unsigned char CMonoFunctions::Element::GetAlpha( DWORD pUserData )
-{
-	if( RESOURCE )
-	{
-		unsigned char ucAlpha;
+		CMonoObject pColor( mpColor );
 		
-		if( CLuaFunctionDefinitions::GetElementAlpha( RESOURCE->GetLua(), (void*)pUserData, ucAlpha ) )
-		{
-			return ucAlpha;
-		}
+		unsigned char ucRed		= pColor.GetPropertyValue< unsigned char >( "R" );
+		unsigned char ucGreen	= pColor.GetPropertyValue< unsigned char >( "G" );
+		unsigned char ucBlue	= pColor.GetPropertyValue< unsigned char >( "B" );
+
+		return CLuaFunctionDefinitions::OutputChatBox( RESOURCE->GetLua(), szText, (void*)pElement, ucRed, ucGreen, ucBlue, bColorCoded );
 	}
-
-	return 0;
-}
-
-bool CMonoFunctions::Element::IsDoubleSided( DWORD pUserData )
-{
-	if( RESOURCE )
-	{
-		bool bDoubleSided;
-		
-		if( CLuaFunctionDefinitions::IsElementDoubleSided( RESOURCE->GetLua(), (void*)pUserData, bDoubleSided ) )
-		{
-			return bDoubleSided;
-		}
-	}
-
+	
 	return false;
 }
 
-float CMonoFunctions::Element::GetHealth( DWORD pUserData )
+bool CMonoFunctions::Server::OutputConsole( MonoString* msText, DWORD pElement )
 {
 	if( RESOURCE )
 	{
-		float fHealth;
-		
-		if( CLuaFunctionDefinitions::GetElementHealth( RESOURCE->GetLua(), (void*)pUserData, fHealth ) )
-		{
-			return fHealth;
-		}
-	}
+		const char* szText		= mono_string_to_utf8( msText );
 
+		return CLuaFunctionDefinitions::OutputConsole( RESOURCE->GetLua(), szText, (void*)pElement );
+	}
+	
 	return false;
 }
 
-unsigned short CMonoFunctions::Element::GetModel( DWORD pUserData )
+bool CMonoFunctions::Server::SetPassword( MonoString* msPassword, bool bSave )
 {
 	if( RESOURCE )
 	{
-		unsigned short usModel;
-		
-		if( CLuaFunctionDefinitions::GetElementModel( RESOURCE->GetLua(), (void*)pUserData, usModel ) )
-		{
-			return usModel;
-		}
-	}
+		const char* szPassword		= mono_string_to_utf8( msPassword );
 
+		return CLuaFunctionDefinitions::SetServerPassword( RESOURCE->GetLua(), szPassword, bSave );
+	}
+	
 	return false;
 }
 
-bool CMonoFunctions::Element::IsInWater( DWORD pUserData )
+MonoObject* CMonoFunctions::Server::GetVersion( void )
 {
 	if( RESOURCE )
 	{
-		bool bInWater;
-		
-		if( CLuaFunctionDefinitions::IsElementInWater( RESOURCE->GetLua(), (void*)pUserData, bInWater ) )
-		{
-			return bInWater;
-		}
-	}
+		LuaTable pLuaTable = CLuaFunctionDefinitions::GetVersion( RESOURCE->GetLua() );
 
-	return false;
-}
-
-MonoObject* CMonoFunctions::Element::GetAttachedOffsetPosition( DWORD pUserData )
-{
-	if( RESOURCE )
-	{
-		Vector3 vecPosition, vecRotation;
-		
-		if( CLuaFunctionDefinitions::GetElementAttachedOffsets( RESOURCE->GetLua(), (void*)pUserData, vecPosition, vecRotation ) )
+		if( !pLuaTable.empty() )
 		{
-			CMonoObject* pObject = RESOURCE->NewObject( "MultiTheftAuto", "Vector3", vecPosition );
-			
+			unsigned long	ulNumber	= pLuaTable[ "number" ]->GetNumber< unsigned long >();
+			const char*		szString	= pLuaTable[ "mta" ]->GetString();
+			const char*		szName		= pLuaTable[ "name" ]->GetString();
+			const char*		szBuildType	= pLuaTable[ "type" ]->GetString();
+			unsigned long	ulNetcode	= pLuaTable[ "netcode" ]->GetNumber< unsigned long >();
+			const char*		szOS		= pLuaTable[ "os" ]->GetString();
+			const char*		szBuildTag	= pLuaTable[ "tag" ]->GetString();
+			const char*		szSortable	= pLuaTable[ "sortable" ]->GetString();
+
+			void *args[] =
+			{
+				&ulNumber,
+				&szString,
+				&szName,
+				&szBuildType,
+				&ulNetcode,
+				&szOS,
+				&szBuildTag,
+				&szSortable
+			};
+
+			CMonoObject* pObject = RESOURCE->NewObject( "MultiTheftAuto", "ServerVersion", args, 8 );
+
 			if( pObject )
 			{
 				return pObject->GetObject();
@@ -537,395 +748,3 @@ MonoObject* CMonoFunctions::Element::GetAttachedOffsetPosition( DWORD pUserData 
 
 	return NULL;
 }
-
-MonoObject* CMonoFunctions::Element::GetAttachedOffsetRotation( DWORD pUserData )
-{
-	if( RESOURCE )
-	{
-		Vector3 vecPosition, vecRotation;
-		
-		if( CLuaFunctionDefinitions::GetElementAttachedOffsets( RESOURCE->GetLua(), (void*)pUserData, vecPosition, vecRotation ) )
-		{
-			CMonoObject* pObject = RESOURCE->NewObject( "MultiTheftAuto", "Vector3", vecRotation );
-			
-			if( pObject )
-			{
-				return pObject->GetObject();
-			}
-		}
-	}
-
-	return NULL;
-}
-
-DWORD CMonoFunctions::Element::GetSyncer( DWORD pUserData )
-{
-	if( RESOURCE )
-	{
-		return (DWORD)CLuaFunctionDefinitions::GetElementSyncer( RESOURCE->GetLua(), (void*)pUserData );
-	}
-
-	return NULL;
-}
-
-bool CMonoFunctions::Element::GetCollisionsEnabled( DWORD pUserData )
-{
-	if( RESOURCE )
-	{
-		return CLuaFunctionDefinitions::GetElementCollisionsEnabled( RESOURCE->GetLua(), (void*)pUserData );
-	}
-
-	return false;
-}
-
-bool CMonoFunctions::Element::IsFrozen( DWORD pUserData )
-{
-	if( RESOURCE )
-	{
-		bool bFrozen;
-		
-		if( CLuaFunctionDefinitions::IsElementFrozen( RESOURCE->GetLua(), (void*)pUserData, bFrozen ) )
-		{
-			return bFrozen;
-		}
-	}
-
-	return false;
-}
-
-DWORD CMonoFunctions::Element::GetLowLod( DWORD pUserData )
-{
-	if( RESOURCE )
-	{
-		void* pUserData;
-
-		if( CLuaFunctionDefinitions::GetLowLodElement( RESOURCE->GetLua(), (void*)pUserData, pUserData ) )
-		{
-			return (DWORD)pUserData;
-		}
-	}
-
-	return NULL;
-}
-
-bool CMonoFunctions::Element::IsLowLod( DWORD pUserData )
-{
-	if( RESOURCE )
-	{
-		bool bIsLowLod;
-		
-		if( CLuaFunctionDefinitions::IsElementLowLod( RESOURCE->GetLua(), (void*)pUserData, bIsLowLod ) )
-		{
-			return bIsLowLod;
-		}
-	}
-
-	return false;
-}
-
-// Element set funcs
-
-bool CMonoFunctions::Element::ClearVisibleTo( DWORD pUserData )
-{
-	if( RESOURCE )
-	{
-		return CLuaFunctionDefinitions::ClearElementVisibleTo( RESOURCE->GetLua(), (void*)pUserData );
-	}
-	
-	return false;
-}
-
-bool CMonoFunctions::Element::SetID( DWORD pUserData, MonoString* msID )
-{
-	if( RESOURCE )
-	{
-		return CLuaFunctionDefinitions::SetElementID( RESOURCE->GetLua(), (void*)pUserData, string( mono_string_to_utf8( msID ) ) );
-	}
-	
-	return false;
-}
-
-bool CMonoFunctions::Element::SetData( DWORD pUserData, MonoString* msKey, CLuaArgument& Variable )
-{
-	if( RESOURCE )
-	{
-		string strKey( mono_string_to_utf8( msKey ) );
-
-		return CLuaFunctionDefinitions::SetElementData( RESOURCE->GetLua(), (void*)pUserData, strKey, Variable );
-	}
-	
-	return false;
-}
-
-bool CMonoFunctions::Element::RemoveData( DWORD pUserData, MonoString* msKey )
-{
-	if( RESOURCE )
-	{
-		string strKey( mono_string_to_utf8( msKey ) );
-
-		return CLuaFunctionDefinitions::RemoveElementData( RESOURCE->GetLua(), (void*)pUserData, strKey );
-	}
-	
-	return false;
-}
-
-bool CMonoFunctions::Element::SetParent( DWORD pUserData, DWORD pTarget )
-{
-	if( RESOURCE )
-	{
-		return CLuaFunctionDefinitions::SetElementParent( RESOURCE->GetLua(), (void*)pUserData, (void*)pTarget );
-	}
-	
-	return false;
-}
-
-bool CMonoFunctions::Element::SetPosition( DWORD pUserData, MonoObject* pPosition, bool bWarp )
-{
-	if( RESOURCE )
-	{
-		CMonoObject pPosition( pPosition );
-		
-		float fX = pPosition.GetPropertyValue<float>( "X" );
-		float fY = pPosition.GetPropertyValue<float>( "Y" );
-		float fZ = pPosition.GetPropertyValue<float>( "Z" );
-
-		return CLuaFunctionDefinitions::SetElementPosition( RESOURCE->GetLua(), (void*)pUserData, Vector3( fX, fY, fZ ), bWarp );
-	}
-	
-	return false;
-}
-
-bool CMonoFunctions::Element::SetRotation( DWORD pUserData, MonoObject* pRotation, MonoString* msRotationOrder, bool bNewWay )
-{
-	if( RESOURCE )
-	{
-		CMonoObject pPosition( pRotation );
-		
-		float fX = pPosition.GetPropertyValue<float>( "X" );
-		float fY = pPosition.GetPropertyValue<float>( "Y" );
-		float fZ = pPosition.GetPropertyValue<float>( "Z" );
-
-		const char* szRotationOrder = mono_string_to_utf8( msRotationOrder );
-
-		return CLuaFunctionDefinitions::SetElementRotation( RESOURCE->GetLua(), (void*)pUserData, Vector3( fX, fY, fZ ), szRotationOrder, bNewWay );
-	}
-	
-	return false;
-}
-
-bool CMonoFunctions::Element::SetVelocity( DWORD pUserData, MonoObject* pVelocity )
-{
-	if( RESOURCE )
-	{
-		CMonoObject pPosition( pVelocity );
-		
-		float fX = pPosition.GetPropertyValue<float>( "X" );
-		float fY = pPosition.GetPropertyValue<float>( "Y" );
-		float fZ = pPosition.GetPropertyValue<float>( "Z" );
-		
-		return CLuaFunctionDefinitions::SetElementVelocity( RESOURCE->GetLua(), (void*)pUserData, Vector3( fX, fY, fZ ) );
-	}
-	
-	return false;
-}
-
-bool CMonoFunctions::Element::SetVisibleTo( DWORD pUserData, DWORD pTarget, bool bVisible )
-{
-	if( RESOURCE )
-	{
-		return CLuaFunctionDefinitions::SetElementVisibleTo( RESOURCE->GetLua(), (void*)pUserData, (void*)pTarget, bVisible );
-	}
-	
-	return false;
-}
-
-bool CMonoFunctions::Element::SetInterior( DWORD pUserData, int iInterior )
-{
-	if( RESOURCE )
-	{
-		return CLuaFunctionDefinitions::SetElementInterior( RESOURCE->GetLua(), (void*)pUserData, iInterior );
-	}
-	
-	return false;
-}
-
-bool CMonoFunctions::Element::SetDimension( DWORD pUserData, int iDimension )
-{
-	if( RESOURCE )
-	{
-		return CLuaFunctionDefinitions::SetElementDimension( RESOURCE->GetLua(), (void*)pUserData, iDimension );
-	}
-	
-	return false;
-}
-
-bool CMonoFunctions::Element::Attach( DWORD pUserData, DWORD pTarget, MonoObject* pMonoPosition, MonoObject* pMonoRotation )
-{
-	if( RESOURCE )
-	{
-		Vector3
-			vecPosition, vecRotation;
-		
-		CMonoObject
-			pPosition( pMonoPosition ), pRotation( pMonoRotation );
-		
-		vecPosition.fX = pPosition.GetPropertyValue<float>( "X" );
-		vecPosition.fY = pPosition.GetPropertyValue<float>( "Y" );
-		vecPosition.fZ = pPosition.GetPropertyValue<float>( "Z" );
-		
-		vecRotation.fX = pRotation.GetPropertyValue<float>( "X" );
-		vecRotation.fY = pRotation.GetPropertyValue<float>( "Y" );
-		vecRotation.fZ = pRotation.GetPropertyValue<float>( "Z" );
-		
-		return CLuaFunctionDefinitions::AttachElements( RESOURCE->GetLua(), (void*)pUserData, (void*)pTarget, vecPosition, vecRotation );
-	}
-	
-	return false;
-}
-
-bool CMonoFunctions::Element::Detach( DWORD pUserData, DWORD pTarget )
-{
-	if( RESOURCE )
-	{
-		return CLuaFunctionDefinitions::DetachElements( RESOURCE->GetLua(), (void*)pUserData, (void*)pTarget );
-	}
-	
-	return false;
-}
-
-bool CMonoFunctions::Element::SetAlpha( DWORD pUserData, int iAlpha )
-{
-	if( RESOURCE )
-	{
-		return CLuaFunctionDefinitions::SetElementAlpha( RESOURCE->GetLua(), (void*)pUserData, iAlpha );
-	}
-	
-	return false;
-}
-
-bool CMonoFunctions::Element::SetDoubleSided( DWORD pUserData, bool bDoubleSided )
-{
-	if( RESOURCE )
-	{
-		return CLuaFunctionDefinitions::SetElementDoubleSided( RESOURCE->GetLua(), (void*)pUserData, bDoubleSided );
-	}
-	
-	return false;
-}
-
-bool CMonoFunctions::Element::SetHealth( DWORD pUserData, float fHealth )
-{
-	if( RESOURCE )
-	{
-		return CLuaFunctionDefinitions::SetElementHealth( RESOURCE->GetLua(), (void*)pUserData, fHealth );
-	}
-	
-	return false;
-}
-
-bool CMonoFunctions::Element::SetModel( DWORD pUserData, int iModel )
-{
-	if( RESOURCE )
-	{
-		return CLuaFunctionDefinitions::SetElementModel( RESOURCE->GetLua(), (void*)pUserData, iModel );
-	}
-	
-	return false;
-}
-
-bool CMonoFunctions::Element::SetAttachedOffsets( DWORD pUserData, MonoObject* pMonoPosition, MonoObject* pMonoRotation )
-{
-	if( RESOURCE )
-	{
-		Vector3
-			vecPosition, vecRotation;
-
-		CMonoObject
-			pPosition( pMonoPosition ), pRotation( pMonoRotation );
-		
-		vecPosition.fX = pPosition.GetPropertyValue<float>( "X" );
-		vecPosition.fY = pPosition.GetPropertyValue<float>( "Y" );
-		vecPosition.fZ = pPosition.GetPropertyValue<float>( "Z" );
-		
-		vecRotation.fX = pRotation.GetPropertyValue<float>( "X" );
-		vecRotation.fY = pRotation.GetPropertyValue<float>( "Y" );
-		vecRotation.fZ = pRotation.GetPropertyValue<float>( "Z" );
-		
-		return CLuaFunctionDefinitions::SetElementAttachedOffsets( RESOURCE->GetLua(), (void*)pUserData, vecPosition, vecRotation );
-	}
-	
-	return false;
-}
-
-bool CMonoFunctions::Element::SetSyncer( DWORD pUserData, DWORD pPlayer )
-{
-	if( RESOURCE )
-	{
-		return CLuaFunctionDefinitions::SetElementSyncer( RESOURCE->GetLua(), (void*)pUserData, (void*)pPlayer );
-	}
-	
-	return false;
-}
-
-bool CMonoFunctions::Element::SetCollisionsEnabled( DWORD pUserData, bool bEnabled )
-{
-	if( RESOURCE )
-	{
-		return CLuaFunctionDefinitions::SetElementCollisionsEnabled( RESOURCE->GetLua(), (void*)pUserData, bEnabled );
-	}
-	
-	return false;
-}
-
-bool CMonoFunctions::Element::SetFrozen( DWORD pUserData, bool bFrozen )
-{
-	if( RESOURCE )
-	{
-		return CLuaFunctionDefinitions::SetElementFrozen( RESOURCE->GetLua(), (void*)pUserData, bFrozen );
-	}
-	
-	return false;
-}
-
-bool CMonoFunctions::Element::SetLowLod( DWORD pUserData, bool bEnabled )
-{
-	if( RESOURCE )
-	{
-		return CLuaFunctionDefinitions::SetLowLodElement( RESOURCE->GetLua(), (void*)pUserData, bEnabled );
-	}
-	
-	return false;
-}
-
-
-// Vehicle create/destroy functions
-
-DWORD CMonoFunctions::Vehicle::Create( int model, MonoObject* position, MonoObject* rotation, MonoString* numberplate, bool direction, int variant1, int variant2 )
-{
-	if( RESOURCE )
-	{
-		CMonoObject pPosition( position );
-		
-		float fX = pPosition.GetPropertyValue<float>( "X" );
-		float fY = pPosition.GetPropertyValue<float>( "Y" );
-		float fZ = pPosition.GetPropertyValue<float>( "Z" );
-		
-		CMonoObject pRotation( rotation );
-
-		float fRX = pRotation.GetPropertyValue<float>( "X" );
-		float fRY = pRotation.GetPropertyValue<float>( "Y" );
-		float fRZ = pRotation.GetPropertyValue<float>( "Z" );
-
-		string sNumberplate = "";
-
-		if( numberplate && mono_string_length( numberplate ) > 0 )
-		{
-			sNumberplate = mono_string_to_utf8( numberplate );
-		}
-
-		return (DWORD)CLuaFunctionDefinitions::CreateVehicle( RESOURCE->GetLua(), model, fX, fY, fZ, fRX, fRY, fRZ, sNumberplate, direction, variant1, variant2 );
-	}
-	
-	return NULL;
-}
-

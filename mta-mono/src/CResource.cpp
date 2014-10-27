@@ -160,9 +160,34 @@ CMonoObject* CResource::NewObject( const char* szNamespace, const char* szName )
 	return NULL;
 }
 
-CMonoObject* CResource::NewObject( const char* szNamespace, const char* szName, Vector3& vecVector )
+CMonoObject* CResource::NewObject( SColor& pColor )
 {
-	CMonoClass* pClass = this->GetClassFromName( szNamespace, szName );
+	CMonoClass* pClass = this->GetClassFromName( "MultiTheftAuto", "Color" );
+			
+	if( pClass )
+	{
+		CMonoObject* pObject = pClass->New( mono_domain_get(), pColor );
+				
+		if( pObject )
+		{
+			return pObject;
+		}
+		else
+		{
+			g_pModuleManager->ErrorPrintf( "%s:%d: failed to create instance of 'MultiTheftAuto::Vector2'\n", __FILE__, __LINE__ );
+		}
+	}
+	else
+	{
+		g_pModuleManager->ErrorPrintf( "%s:%d: class 'MultiTheftAuto::Vector2' not found\n", __FILE__, __LINE__ );
+	}
+
+	return NULL;
+}
+
+CMonoObject* CResource::NewObject( Vector2& vecVector )
+{
+	CMonoClass* pClass = this->GetClassFromName( "MultiTheftAuto", "Vector2" );
 			
 	if( pClass )
 	{
@@ -174,12 +199,37 @@ CMonoObject* CResource::NewObject( const char* szNamespace, const char* szName, 
 		}
 		else
 		{
-			g_pModuleManager->ErrorPrintf( "%s:%d: failed to create instance of '%s::%s'\n", __FILE__, __LINE__, szNamespace, szName );
+			g_pModuleManager->ErrorPrintf( "%s:%d: failed to create instance of 'MultiTheftAuto::Vector2'\n", __FILE__, __LINE__ );
 		}
 	}
 	else
 	{
-		g_pModuleManager->ErrorPrintf( "%s:%d: class '%s::%s' not found\n", __FILE__, __LINE__, szNamespace, szName );
+		g_pModuleManager->ErrorPrintf( "%s:%d: class 'MultiTheftAuto::Vector2' not found\n", __FILE__, __LINE__ );
+	}
+
+	return NULL;
+}
+
+CMonoObject* CResource::NewObject( Vector3& vecVector )
+{
+	CMonoClass* pClass = this->GetClassFromName( "MultiTheftAuto", "Vector3" );
+			
+	if( pClass )
+	{
+		CMonoObject* pObject = pClass->New( mono_domain_get(), vecVector );
+				
+		if( pObject )
+		{
+			return pObject;
+		}
+		else
+		{
+			g_pModuleManager->ErrorPrintf( "%s:%d: failed to create instance of 'MultiTheftAuto::Vector3'\n", __FILE__, __LINE__ );
+		}
+	}
+	else
+	{
+		g_pModuleManager->ErrorPrintf( "%s:%d: class 'MultiTheftAuto::Vector3' not found\n", __FILE__, __LINE__ );
 	}
 
 	return NULL;

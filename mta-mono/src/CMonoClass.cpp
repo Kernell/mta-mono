@@ -26,11 +26,26 @@ CMonoObject* CMonoClass::New( MonoDomain* pMonoDomain )
 	return new CMonoObject( pObject );
 }
 
+CMonoObject* CMonoClass::New( MonoDomain* pMonoDomain, SColor& pColor )
+{
+	void *args[] = { &pColor.R, &pColor.G, &pColor.B, &pColor.A };
+
+	return this->New( pMonoDomain, args, 4 );
+}
+
+
+CMonoObject* CMonoClass::New( MonoDomain* pMonoDomain, Vector2& vecVector )
+{
+	void *args[] = { &vecVector.fX, &vecVector.fY };
+
+	return this->New( pMonoDomain, args, 2 );
+}
+
 CMonoObject* CMonoClass::New( MonoDomain* pMonoDomain, Vector3& vecVector )
 {
 	void *args[] = { &vecVector.fX, &vecVector.fY, &vecVector.fZ };
 
-	return this->New( mono_domain_get(), args, 3 );
+	return this->New( pMonoDomain, args, 3 );
 }
 
 CMonoObject* CMonoClass::New( MonoDomain* pMonoDomain, void** args, int argc )
@@ -44,7 +59,7 @@ CMonoObject* CMonoClass::New( MonoDomain* pMonoDomain, void** args, int argc )
 		return NULL;
 	}
 
-	MonoMethod* pMonoMethod = mono_class_get_method_from_name( this->m_pMonoClass, ".ctor", argc );
+	MonoMethod* pMonoMethod = this->GetMethod( ".ctor", argc );
 
 	if( !pMonoMethod )
 	{

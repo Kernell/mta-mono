@@ -16,6 +16,8 @@
 *
 *********************************************************/
 
+class CLuaArgument;
+
 #ifndef __CLUAARGUMENT_H
 #define __CLUAARGUMENT_H
 
@@ -23,6 +25,12 @@ extern "C"
 {
     #include <lua.h>
 }
+
+#include "CLuaArguments.h"
+#include <string>
+#include <map>
+
+typedef std::map<std::string, CLuaArgument*> LuaTable;
 
 class CLuaArgument
 {
@@ -41,15 +49,17 @@ public:
     bool                    operator ==         ( const CLuaArgument& Argument );
     bool                    operator !=         ( const CLuaArgument& Argument );
 
-    void                    Read                ( lua_State* luaVM, unsigned int uiArgument );
+    void                    Read                ( lua_State* luaVM, signed int uiArgument );
     void                    Push                ( lua_State* luaVM ) const;
 
     inline int              GetType             ( void ) const      { return m_iType; };
 
-    inline bool             GetBoolean          ( void ) const      { return m_bBoolean; };
-    inline lua_Number       GetNumber           ( void ) const      { return m_Number; };
-    inline const char*      GetString           ( void ) const      { return m_szString; };
-    inline void*            GetLightUserData    ( void ) const      { return m_pLightUserData; };
+    inline bool				GetBoolean          ( void ) const      { return m_bBoolean; };
+    inline lua_Number		GetNumber           ( void ) const      { return m_Number; };
+    inline const char*		GetString           ( void ) const      { return m_szString; };
+    inline void*			GetLightUserData    ( void ) const      { return m_pLightUserData; };
+	inline CLuaArguments*	GetArray			( void ) const		{ return m_pArray; };
+	inline LuaTable			GetTable			( void ) const		{ return m_pTable; };
 
 	template <class T> T	GetNumber()
 	{
@@ -57,12 +67,14 @@ public:
 	}
 
 private:
-    int                     m_iType;
-    bool                    m_bBoolean;
-    lua_Number              m_Number;
-    char*                   m_szString;
-    void*                   m_pLightUserData;
-	lua_CFunction			m_Function;
+    int				m_iType;
+    bool			m_bBoolean;
+    lua_Number		m_Number;
+    char*			m_szString;
+    void*			m_pLightUserData;
+	lua_CFunction	m_Function;
+	CLuaArguments*	m_pArray;
+	LuaTable		m_pTable;
 };
 
 #endif
