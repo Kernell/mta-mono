@@ -51,12 +51,12 @@ bool CResource::Init( void )
 {
 	if( this->m_pLuaVM )
 	{
-		string sDirectory	( "mods/deathmatch/mono/resources/" );
+		string sDirectory	( "mods/deathmatch/resources/[ire]/" + this->m_sName + "/" );
 		string sPath		( sDirectory + this->m_sName + ".dll" );
 		string sNamespace	( this->m_sName );
-		string sClass		( "Resource" );
+		string sClass		( "Program" );
 
-		this->m_pMonoDomain			= mono_domain_create_appdomain( (char*)this->m_sName.c_str(), NULL );
+		this->m_pMonoDomain			= mono_domain_create_appdomain( const_cast< char* >( this->m_sName.c_str() ), NULL );
 
 		if( !this->m_pMonoDomain )
 		{
