@@ -28,6 +28,15 @@ void CMonoFunctions::AddInternals( void )
 	MONO_DECLARE( Server, SetPassword );
 	MONO_DECLARE( Server, GetVersion );
 
+	MONO_DECLARE( Server, GetGameType );
+	MONO_DECLARE( Server, GetMapName );
+
+	MONO_DECLARE( Server, SetGameType );
+	MONO_DECLARE( Server, SetMapName );
+	MONO_DECLARE( Server, GetRuleValue );
+	MONO_DECLARE( Server, SetRuleValue );
+	MONO_DECLARE( Server, RemoveRuleValue );
+
 	// Element create/destroy
 	MONO_DECLARE( Element, Create );
 	MONO_DECLARE( Element, Destroy );
@@ -115,6 +124,7 @@ void CMonoFunctions::AddInternals( void )
 	MONO_DECLARE( Player, GetAccount );
 	MONO_DECLARE( Player, GetVersion );
 	MONO_DECLARE( Player, GetACInfo );
+	MONO_DECLARE( Player, GetPlayerAnnounceValue );
 
 	// Player set functions
 	MONO_DECLARE( Player, SetMoney );
@@ -134,6 +144,7 @@ void CMonoFunctions::AddInternals( void )
 	MONO_DECLARE( Player, DetonateSatchels );
 	MONO_DECLARE( Player, TakeScreenShot );
 	MONO_DECLARE( Player, SetTeam );
+	MONO_DECLARE( Player, SetPlayerAnnounceValue );
 
 	// Input funcs
 	MONO_DECLARE( Player, BindKey );
@@ -607,7 +618,7 @@ void CMonoFunctions::Debug::Info( MonoString *string )
 {
 	if( RESOURCE )
 	{
-		g_pModuleManager->DebugPrintf( RESOURCE->GetLua(), "%s\n", mono_string_to_utf8( string ) );
+		g_pModuleManager->DebugPrintf( RESOURCE->GetLua(), "%s", mono_string_to_utf8( string ) );
 	}
 }
 
@@ -748,3 +759,85 @@ MonoObject* CMonoFunctions::Server::GetVersion( void )
 
 	return NULL;
 }
+
+MonoString* CMonoFunctions::Server::GetGameType( void )
+{
+	if( RESOURCE )
+	{
+		return RESOURCE->NewString( CLuaFunctionDefinitions::GetGameType( RESOURCE->GetLua() ) );
+	}
+
+	return NULL;
+}
+
+MonoString* CMonoFunctions::Server::GetMapName( void )
+{
+	if( RESOURCE )
+	{
+		return RESOURCE->NewString( CLuaFunctionDefinitions::GetMapName( RESOURCE->GetLua() ) );
+	}
+
+	return NULL;
+}
+
+bool CMonoFunctions::Server::SetGameType( MonoString* msGameType )
+{
+	if( RESOURCE )
+	{
+		const char* szGameType = mono_string_to_utf8( msGameType );
+
+		return CLuaFunctionDefinitions::SetGameType( RESOURCE->GetLua(), szGameType );
+	}
+
+	return false;
+}
+
+bool CMonoFunctions::Server::SetMapName( MonoString* msMapName )
+{
+	if( RESOURCE )
+	{
+		const char* szMapName = mono_string_to_utf8( msMapName );
+
+		return CLuaFunctionDefinitions::SetMapName( RESOURCE->GetLua(), szMapName );
+	}
+
+	return false;
+}
+
+MonoString* CMonoFunctions::Server::GetRuleValue( MonoString* msKey )
+{
+	if( RESOURCE )
+	{
+		const char* szKey	= mono_string_to_utf8( msKey );
+
+		return RESOURCE->NewString( CLuaFunctionDefinitions::GetRuleValue( RESOURCE->GetLua(), szKey ) );
+	}
+
+	return false;
+}
+
+bool CMonoFunctions::Server::SetRuleValue( MonoString* msKey, MonoString* msValue )
+{
+	if( RESOURCE )
+	{
+		const char* szKey	= mono_string_to_utf8( msKey );
+		const char* szValue	= mono_string_to_utf8( msValue );
+
+		return CLuaFunctionDefinitions::SetRuleValue( RESOURCE->GetLua(), szKey, szValue );
+	}
+
+	return false;
+}
+
+bool CMonoFunctions::Server::RemoveRuleValue( MonoString* msKey )
+{
+	if( RESOURCE )
+	{
+		const char* szKey = mono_string_to_utf8( msKey );
+
+		return CLuaFunctionDefinitions::RemoveRuleValue( RESOURCE->GetLua(), szKey );
+	}
+
+	return false;
+}
+

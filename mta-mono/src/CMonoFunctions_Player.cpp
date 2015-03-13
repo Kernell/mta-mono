@@ -358,7 +358,7 @@ MonoObject* CMonoFunctions::Player::GetACInfo( DWORD pUserData )
 				&msD3D9SHA256
 			};
 
-			CMonoObject* pObject = RESOURCE->NewObject( "MultiTheftAuto", "ServerVersion", args, 8 );
+			CMonoObject* pObject = RESOURCE->NewObject( "MultiTheftAuto", "PlayerACInfo", args, 4 );
 
 			if( pObject )
 			{
@@ -366,6 +366,18 @@ MonoObject* CMonoFunctions::Player::GetACInfo( DWORD pUserData )
 			}
 		}
 	}
+	return NULL;
+}
+
+MonoString* CMonoFunctions::Player::GetPlayerAnnounceValue( DWORD pElement, MonoString* msKey )
+{
+	if( RESOURCE )
+	{
+		const char* szKey = mono_string_to_utf8( msKey );
+
+		return RESOURCE->NewString( CLuaFunctionDefinitions::GetPlayerAnnounceValue( RESOURCE->GetLua(), (void*)pElement, szKey ) );
+	}
+
 	return NULL;
 }
 
@@ -556,6 +568,20 @@ bool CMonoFunctions::Player::SetTeam( DWORD pUserData, DWORD pTeam )
 	}
 	
 	return false;
+}
+
+bool CMonoFunctions::Player::SetPlayerAnnounceValue( DWORD pElement, MonoString* msKey, MonoString* msValue )
+{
+
+	if( RESOURCE )
+	{
+		const char* szKey	= mono_string_to_utf8( msKey );
+		const char* szValue	= mono_string_to_utf8( msValue );
+
+		return CLuaFunctionDefinitions::SetPlayerAnnounceValue( RESOURCE->GetLua(), (void*)pElement, szKey, szValue );
+	}
+
+	return NULL;
 }
 
 // Input funcs

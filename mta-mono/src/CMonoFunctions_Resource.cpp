@@ -49,13 +49,13 @@ DWORD CMonoFunctions::Resource::GetRootElement( DWORD pResource )
 	return NULL;
 }
 
-DWORD CMonoFunctions::Resource::GetMapRootElement( MonoString* msMap )
+DWORD CMonoFunctions::Resource::GetMapRootElement( DWORD pResource, MonoString* msMap )
 {
 	if( RESOURCE )
 	{
 		const char* szMap = mono_string_to_utf8( msMap );
 
-		return (DWORD)CLuaFunctionDefinitions::GetResourceMapRootElement( RESOURCE->GetLua(), szMap );
+		return (DWORD)CLuaFunctionDefinitions::GetResourceMapRootElement( RESOURCE->GetLua(), (void*)pResource, szMap );
 	}
 
 	return NULL;
@@ -71,13 +71,13 @@ DWORD CMonoFunctions::Resource::GetDynamicElementRoot( DWORD pResource )
 	return NULL;
 }
 
-bool CMonoFunctions::Resource::RemoveFile( MonoString* msFilename )
+bool CMonoFunctions::Resource::RemoveFile( DWORD pResource, MonoString* msFilename )
 {
 	if( RESOURCE )
 	{
 		const char* szFileName = mono_string_to_utf8( msFilename );
 
-		return CLuaFunctionDefinitions::RemoveResourceFile( RESOURCE->GetLua(), szFileName );
+		return CLuaFunctionDefinitions::RemoveResourceFile( RESOURCE->GetLua(), (void*)pResource, szFileName );
 	}
 
 	return false;
@@ -89,7 +89,7 @@ DWORD CMonoFunctions::Resource::GetFromName( MonoString* msResourceName )
 	{
 		const char* szResourceName = mono_string_to_utf8( msResourceName );
 
-		return (DWORD)CLuaFunctionDefinitions::RemoveResourceFile( RESOURCE->GetLua(), szResourceName );
+		return (DWORD)CLuaFunctionDefinitions::GetResourceFromName( RESOURCE->GetLua(), szResourceName );
 	}
 
 	return false;

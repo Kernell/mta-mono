@@ -29,8 +29,8 @@ public:
     static string					GetRuleValue                    ( lua_State* pLuaVM, const char* szKey );
     static bool						SetRuleValue                    ( lua_State* pLuaVM, const char* szKey, const char* szValue );
     static bool						RemoveRuleValue                 ( lua_State* pLuaVM, const char* szKey );
-    static string					GetPlayerAnnounceValue          ( lua_State* pLuaVM, void* pElement, const string& strKey );
-    static string					SetPlayerAnnounceValue          ( lua_State* pLuaVM, void* pElement, const string& strKey );
+    static string					GetPlayerAnnounceValue          ( lua_State* pLuaVM, void* pElement, const char* szKey );
+    static bool						SetPlayerAnnounceValue          ( lua_State* pLuaVM, void* pElement, const char* szKey, const char* szValue );
 
 	static string					Get								( lua_State* pLuaVM, const char* szKey );
 	static bool						Set								( lua_State* pLuaVM, const char* szKey, const char* szValue );
@@ -604,11 +604,11 @@ public:
 	static void*					CreateResource					( lua_State* pLuaVM, const char* szResourceName, const char* szOrganizationalDir );
 	static void*					CopyResource					( lua_State* pLuaVM, void* pResource, const char* szNewResourceName, const char* szOrganizationalDir );
 	static void*					GetResourceRootElement			( lua_State* pLuaVM, void* pResource = NULL );
-	static void*					GetResourceMapRootElement		( lua_State* pLuaVM, const char* szMap );
+	static void*					GetResourceMapRootElement		( lua_State* pLuaVM, void* pResource, const char* szMap );
 	static void*					GetResourceDynamicElementRoot	( lua_State* pLuaVM, void* pResource );
 //	static CXMLNode*				AddResourceMap					( lua_State* pLuaVM, const string& strFilePath, const std::string& strMapName, int iDimension );
 //	static CXMLNode*				AddResourceConfig				( lua_State* pLuaVM, const string& strFilePath, const std::string& strConfigName, int iType );
-	static bool						RemoveResourceFile				( lua_State* pLuaVM, const char* szFilename );
+	static bool						RemoveResourceFile				( lua_State* pLuaVM, void* pResource, const char* szFilename );
 //	static CXMLNode					AddResourceConfig				( lua_State* pLuaVM, const char* szFilePath, const char* szFileType = "server" );
 //	static CXMLNode					AddResourceMap					( lua_State* pLuaVM, const char* szFilePath, unsigned int uiDimension = 0 );
 //	static CXMLNode					GetResourceConfig				( lua_State* pLuaVM, const char* szFilePath );

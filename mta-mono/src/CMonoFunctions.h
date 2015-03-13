@@ -59,6 +59,15 @@ public:
 		static bool						OutputConsole			( MonoString* szText, DWORD pElement );
 		static bool						SetPassword				( MonoString* msPassword, bool bSave );
 		static MonoObject*				GetVersion				( void );
+
+		static MonoString*				GetGameType             ( void );
+		static MonoString*				GetMapName				( void );
+
+		static bool						SetGameType             ( MonoString* msGameType );
+		static bool						SetMapName              ( MonoString* msMapName );
+		static MonoString*				GetRuleValue            ( MonoString* msKey );
+		static bool						SetRuleValue            ( MonoString* msKey, MonoString* msValue );
+		static bool						RemoveRuleValue         ( MonoString* msKey );
 	};
 
 	class Element
@@ -158,6 +167,7 @@ public:
 		static DWORD                GetAccount						( DWORD pUserData );
 		static MonoString*          GetVersion						( DWORD pUserData );
 		static MonoObject*			GetACInfo						( DWORD pUserData );
+		static MonoString*			GetPlayerAnnounceValue			( DWORD pElement, MonoString* msKey );
 
 		// Player set functions
 		static bool					SetMoney						( DWORD pUserData, int iAmount, bool bInstant );
@@ -177,6 +187,7 @@ public:
 		static bool					DetonateSatchels				( DWORD pUserData );
 		static bool					TakeScreenShot					( DWORD pUserData, int iWidth, int iHeight, MonoString* sTag, int iQuality, int iMaxBandwith );
 		static bool					SetTeam							( DWORD pUserData, DWORD pTeam );
+		static bool					SetPlayerAnnounceValue			( DWORD pElement, MonoString* msKey, MonoString* msValue );
 
 		// Input funcs
 		static bool					BindKey							( DWORD pUserData, MonoString* msKey, MonoString* msHitState, MonoString* msCommandName, MonoString* msArguments );
@@ -669,11 +680,11 @@ public:
 		static DWORD					Create					( MonoString* msResourceName, MonoString* msOrganizationalDir );
 		static DWORD					Copy					( DWORD pResource, MonoString* msNewResourceName, MonoString* msOrganizationalDir );
 		static DWORD					GetRootElement			( DWORD pResource = NULL );
-		static DWORD					GetMapRootElement		( MonoString* msMap );
+		static DWORD					GetMapRootElement		( DWORD pResource, MonoString* msMap );
 		static DWORD					GetDynamicElementRoot	( DWORD pResource );
 	//	static CXMLNode*				AddMap					( MonoString* msFilePath, MonoString* msMapName, int iDimension );
 	//	static CXMLNode*				AddConfig				( MonoString* msFilePath, MonoString* msConfigName, int iType );
-		static bool						RemoveFile				( MonoString* msFilename );
+		static bool						RemoveFile				( DWORD pResource, MonoString* msFilename );
 	//	static CXMLNode					AddConfig				( MonoString* msFilePath, MonoString* msFileType );
 	//	static CXMLNode					AddMap					( MonoString* msFilePath, unsigned int uiDimension = 0 );
 	//	static CXMLNode					GetConfig				( MonoString* msFilePath );

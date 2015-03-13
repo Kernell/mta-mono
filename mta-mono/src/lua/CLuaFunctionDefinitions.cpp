@@ -164,6 +164,42 @@ bool CLuaFunctionDefinitions::SetRuleValue( lua_State *pLuaVM, const char* szKey
 	return false;
 }
 
+string CLuaFunctionDefinitions::GetPlayerAnnounceValue( lua_State* pLuaVM, void* pElement, const char* szKey )
+{
+	CLuaArguments pLuaArguments; 
+	
+	pLuaArguments.PushUserData( pElement );
+	pLuaArguments.PushString( szKey );
+	
+	if( pLuaArguments.Call( pLuaVM, "getPlayerAnnounceValue", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+		
+		if( const char *szString = pLuaArgument.GetString() )
+			return string( szString );
+	}
+	
+	return string();
+}
+
+bool CLuaFunctionDefinitions::SetPlayerAnnounceValue( lua_State* pLuaVM, void* pElement, const char* szKey, const char* szValue )
+{
+	CLuaArguments pLuaArguments; 
+	
+	pLuaArguments.PushUserData( pElement );
+	pLuaArguments.PushString( szKey );
+	pLuaArguments.PushString( szValue );
+	
+	if( pLuaArguments.Call( pLuaVM, "setPlayerAnnounceValue", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+		
+		return pLuaArgument.GetBoolean();
+	}
+	
+	return false;
+}
+
 // Element create/destroy
 
 void* CLuaFunctionDefinitions::CreateElement( lua_State* pLuaVM, const char* szTypeName, const char* szID )
@@ -7907,10 +7943,11 @@ void* CLuaFunctionDefinitions::GetResourceRootElement( lua_State* pLuaVM, void* 
 	return NULL;
 }
 
-void* CLuaFunctionDefinitions::GetResourceMapRootElement( lua_State* pLuaVM, const char* szMap )
+void* CLuaFunctionDefinitions::GetResourceMapRootElement( lua_State* pLuaVM, void* pResource, const char* szMap )
 {
 	CLuaArguments pLuaArguments;
 
+	pLuaArguments.PushUserData( pResource );
 	pLuaArguments.PushString( szMap );
 
 	if( pLuaArguments.Call( pLuaVM, "getResourceMapRootElement", 1 ) )
@@ -7939,10 +7976,11 @@ void* CLuaFunctionDefinitions::GetResourceDynamicElementRoot( lua_State* pLuaVM,
 	return NULL;
 }
 
-bool CLuaFunctionDefinitions::RemoveResourceFile( lua_State* pLuaVM, const char* szFilename )
+bool CLuaFunctionDefinitions::RemoveResourceFile( lua_State* pLuaVM, void* pResource, const char* szFilename )
 {
 	CLuaArguments pLuaArguments;
 
+	pLuaArguments.PushUserData( pResource );
 	pLuaArguments.PushString( szFilename );
 
 	if( pLuaArguments.Call( pLuaVM, "removeResourceFile", 1 ) )
