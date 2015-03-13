@@ -62,7 +62,7 @@ public:
 
 			g_pModuleManager->GetResourceName( luaVM, sName );
 
-			string sPath( "mods/deathmatch/mono/resources/" + sName + ".dll" );
+			string sPath( "mods/deathmatch/mono/resources/[ire]/" + sName + "/" + sName + ".dll" );
 
 			struct stat buf;
 
