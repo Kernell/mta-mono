@@ -10,7 +10,7 @@
 *
 *********************************************************/
 
-#define MODULE_NAME         "Mono .NET"
+#define MODULE_NAME         "Mono 3.12.1"
 #define MODULE_AUTHOR       "Dmitry Korolev <kernell@mtaroleplay.ru>"
 #define MODULE_VERSION      0.1f
 
