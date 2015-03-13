@@ -46,6 +46,8 @@ extern "C"
 #include <mono/metadata/mono-debug.h>
 #include <mono/metadata/debug-helpers.h>
 #include <mono/metadata/environment.h>
+#include <mono/metadata/threads.h>
+#include <mono/metadata/mono-gc.h>
 
 #include "include/ILuaModuleManager.h"
 

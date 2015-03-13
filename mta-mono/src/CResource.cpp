@@ -34,17 +34,26 @@ CResource::CResource( lua_State *pLuaVM, string sName )
 
 CResource::~CResource( void )
 {
-	if( this->m_pMonoGCHandle )
-	{
-		mono_gchandle_free( this->m_pMonoGCHandle );
-	}
+	mono_domain_set( mono_get_root_domain(), false );
 
 	if( this->m_pMonoDomain )
 	{
 		mono_domain_unload( this->m_pMonoDomain );
 	}
 
+	mono_gc_collect( mono_gc_max_generation() );
+
 	g_pResourceManager->RemoveFromList( this );
+
+	this->m_pMonoAssembly		= NULL;
+	this->m_pMonoAssemblyLib	= NULL;
+	this->m_pMonoGCHandle		= NULL;
+	this->m_pMonoDomain			= NULL;
+	this->m_pMonoImage			= NULL;
+	this->m_pMonoImageLib		= NULL;
+	this->m_pMonoClass			= NULL;
+
+	this->m_pLuaVM				= NULL;
 }
 
 bool CResource::Init( void )
@@ -56,7 +65,7 @@ bool CResource::Init( void )
 		string sNamespace	( this->m_sName );
 		string sClass		( "Program" );
 
-		this->m_pMonoDomain			= mono_domain_create_appdomain( const_cast< char* >( this->m_sName.c_str() ), NULL );
+		this->m_pMonoDomain = mono_domain_create_appdomain( const_cast< char* >( this->m_sName.c_str( ) ), NULL );
 
 		if( !this->m_pMonoDomain )
 		{
@@ -88,7 +97,7 @@ bool CResource::Init( void )
 
 		MonoObject *pMonoObject = mono_object_new( this->m_pMonoDomain, this->m_pMonoClass );
 
-		this->m_pMonoGCHandle = mono_gchandle_new( pMonoObject, true );
+		mono_gchandle_new( pMonoObject, false );
 
 		mono_runtime_object_init( pMonoObject );
 

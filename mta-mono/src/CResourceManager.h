@@ -35,7 +35,7 @@ public:
 
 	//	mono_config_parse( NULL );
 
-		mono_debug_init( MONO_DEBUG_FORMAT_MONO );
+	//	mono_debug_init( MONO_DEBUG_FORMAT_MONO );
 
 		this->m_pMonoDomain			= mono_jit_init_version( "Mono Root", "v4.0.30319" );
 
