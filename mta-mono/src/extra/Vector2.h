@@ -14,6 +14,7 @@
 
 #include <cmath>
 #include "Vector3.h"
+#include "../CMonoObject.h"
 
 /**
  * CVector2D Structure used to store a 2D vertex.
@@ -21,136 +22,35 @@
 class Vector2
 {
 public:
-    Vector2 ( void )
-    {
-        fX = 0;
-        fY = 0;
-    }
+	float fX;
+	float fY;
 
-    Vector2 ( float _fX, float _fY )
-    {
-        fX = _fX;
-        fY = _fY;
-    }
+	Vector2( void );
+	Vector2( float _fX, float _fY );
+	Vector2( MonoObject* pObject );
 
-    float DotProduct ( Vector2& other ) const
-    {
-        return fX*other.fX + fY*other.fY;
-    }
+	float		DotProduct		( Vector2& other ) const;
+	float		Length			( void ) const;
+	float		LengthSquared	( void ) const;
+	void		Normalize		( void );
 
-    float Length () const
-    {
-        return sqrt ( fX * fX + fY * fY );
-    }
+	Vector2 operator * ( float fRight ) const;
+	Vector2 operator / ( float fRight ) const;
+	Vector2 operator + ( const Vector2& vecRight ) const;
+	Vector2 operator - ( const Vector2& vecRight ) const;
+	Vector2 operator * ( const Vector2& vecRight ) const;
+	Vector2 operator / ( const Vector2& vecRight ) const;
 
-    float LengthSquared ( void ) const
-    {
-        return (fX*fX) + (fY*fY);
-    }
-
-    void Normalize ( void ) 
-    { 
-        float fLength = Length ();
-        if ( fLength > 0.0f )
-        {
-            fX /= fLength;
-            fY /= fLength;
-        }
-    }
-
-    Vector2 operator * ( float fRight ) const
-    {
-        return Vector2 ( fX * fRight, fY * fRight );
-    }
-
-    Vector2 operator / ( float fRight ) const
-    {
-        float fRcpValue = 1 / fRight;
-        return Vector2 ( fX * fRcpValue, fY * fRcpValue );
-    }
-
-    Vector2 operator + ( const Vector2& vecRight ) const
-    {
-        return Vector2 ( fX + vecRight.fX, fY + vecRight.fY );
-    }
-
-    Vector2 operator - ( const Vector2& vecRight ) const
-    {
-        return Vector2 ( fX - vecRight.fX, fY - vecRight.fY );
-    }
-
-    Vector2 operator * ( const Vector2& vecRight ) const
-    {
-        return Vector2 ( fX * vecRight.fX, fY * vecRight.fY );
-    }
-
-    Vector2 operator / ( const Vector2& vecRight ) const
-    {
-        return Vector2 ( fX / vecRight.fX, fY / vecRight.fY );
-    }
-
-    void operator += ( float fRight )
-    {
-        fX += fRight;
-        fY += fRight;
-    }
-
-    void operator += ( const Vector2& vecRight )
-    {
-        fX += vecRight.fX;
-        fY += vecRight.fY;
-    }
-
-    void operator -= ( float fRight )
-    {
-        fX -= fRight;
-        fY -= fRight;
-    }
-
-    void operator -= ( const Vector2& vecRight )
-    {
-        fX -= vecRight.fX;
-        fY -= vecRight.fY;
-    }
-
-    void operator *= ( float fRight )
-    {
-        fX *= fRight;
-        fY *= fRight;
-    }
-
-    void operator *= ( const Vector2& vecRight )
-    {
-        fX *= vecRight.fX;
-        fY *= vecRight.fY;
-    }
-
-    void operator /= ( float fRight )
-    {
-        fX /= fRight;
-        fY /= fRight;
-    }
-
-    void operator /= ( const Vector2& vecRight )
-    {
-        fX /= vecRight.fX;
-        fY /= vecRight.fY;
-    }
-
-    bool operator== ( const Vector2& param ) const
-    {
-        return ( ( fabs ( fX - param.fX ) < FLOAT_EPSILON ) &&
-                 ( fabs ( fY - param.fY ) < FLOAT_EPSILON ) );
-    }
-
-    bool operator!= ( const Vector2& param ) const
-    {
-        return ( ( fabs ( fX - param.fX ) >= FLOAT_EPSILON ) ||
-                 ( fabs ( fY - param.fY ) >= FLOAT_EPSILON ) );
-    }
-
-    float fX;
-    float fY;
+	void operator += ( float fRight );
+	void operator += ( const Vector2& vecRight );
+	void operator -= ( float fRight );
+	void operator -= ( const Vector2& vecRight );
+	void operator *= ( float fRight );
+	void operator *= ( const Vector2& vecRight );
+	void operator /= ( float fRight );
+	void operator /= ( const Vector2& vecRight );
+	bool operator == ( const Vector2& param ) const;
+	bool operator != ( const Vector2& param ) const;
 };
 
 
