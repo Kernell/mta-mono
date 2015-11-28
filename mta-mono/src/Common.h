@@ -41,7 +41,7 @@ extern "C"
 #include <glib.h>
 #pragma warning( pop )
 
-#include <mono/mini/jit.h>
+#include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
 #include <mono/metadata/mono-debug.h>
 #include <mono/metadata/debug-helpers.h>
@@ -53,7 +53,6 @@ extern "C"
 
 #include "extra/Vector2.h"
 #include "extra/Vector3.h"
-// Obviously i can't get us this so other includes will most likely be needed later on
 
 using namespace std;
 
