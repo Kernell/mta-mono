@@ -34,10 +34,11 @@
     <ClCompile Include="src\CMonoObject.cpp" />
     <ClCompile Include="src\Common.cpp" />
     <ClCompile Include="src\CResource.cpp" />
+    <ClCompile Include="src\CResourceManager.cpp" />
+    <ClCompile Include="src\extra\Vector2.cpp" />
+    <ClCompile Include="src\extra\Vector3.cpp" />
     <ClCompile Include="src\mta-mono.cpp" />
     <ClCompile Include="src\CFunctions.cpp" />
-    <ClCompile Include="src\CThread.cpp" />
-    <ClCompile Include="src\CThreadData.cpp" />
     <ClCompile Include="src\extra\CLuaArgument.cpp" />
     <ClCompile Include="src\extra\CLuaArguments.cpp" />
     <ClCompile Include="src\lua\CLuaFunctionDefinitions.cpp" />
@@ -50,20 +51,43 @@
     <ClInclude Include="src\CResourceManager.h" />
     <ClInclude Include="src\extra\Vector2.h" />
     <ClInclude Include="src\extra\Vector3.h" />
+    <ClInclude Include="src\include\mono\jit\jit.h" />
+    <ClInclude Include="src\include\mono\metadata\appdomain.h" />
+    <ClInclude Include="src\include\mono\metadata\assembly.h" />
+    <ClInclude Include="src\include\mono\metadata\attrdefs.h" />
+    <ClInclude Include="src\include\mono\metadata\blob.h" />
+    <ClInclude Include="src\include\mono\metadata\class.h" />
+    <ClInclude Include="src\include\mono\metadata\debug-helpers.h" />
+    <ClInclude Include="src\include\mono\metadata\debug-mono-symfile.h" />
+    <ClInclude Include="src\include\mono\metadata\environment.h" />
+    <ClInclude Include="src\include\mono\metadata\exception.h" />
+    <ClInclude Include="src\include\mono\metadata\image.h" />
+    <ClInclude Include="src\include\mono\metadata\loader.h" />
+    <ClInclude Include="src\include\mono\metadata\metadata.h" />
+    <ClInclude Include="src\include\mono\metadata\mono-config.h" />
+    <ClInclude Include="src\include\mono\metadata\mono-debug.h" />
+    <ClInclude Include="src\include\mono\metadata\mono-gc.h" />
+    <ClInclude Include="src\include\mono\metadata\object.h" />
+    <ClInclude Include="src\include\mono\metadata\opcodes.h" />
+    <ClInclude Include="src\include\mono\metadata\profiler.h" />
+    <ClInclude Include="src\include\mono\metadata\reflection.h" />
+    <ClInclude Include="src\include\mono\metadata\row-indexes.h" />
+    <ClInclude Include="src\include\mono\metadata\sgen-bridge.h" />
+    <ClInclude Include="src\include\mono\metadata\threads.h" />
+    <ClInclude Include="src\include\mono\metadata\tokentype.h" />
+    <ClInclude Include="src\include\mono\metadata\verify.h" />
+    <ClInclude Include="src\include\mono\utils\mono-counters.h" />
+    <ClInclude Include="src\include\mono\utils\mono-dl-fallback.h" />
+    <ClInclude Include="src\include\mono\utils\mono-error.h" />
+    <ClInclude Include="src\include\mono\utils\mono-logger.h" />
+    <ClInclude Include="src\include\mono\utils\mono-publib.h" />
     <ClInclude Include="src\mta-mono.h" />
     <ClInclude Include="src\CFunctions.h" />
     <ClInclude Include="src\Common.h" />
-    <ClInclude Include="src\CThread.h" />
-    <ClInclude Include="src\CThreadData.h" />
     <ClInclude Include="src\extra\CLuaArgument.h" />
     <ClInclude Include="src\extra\CLuaArguments.h" />
     <ClInclude Include="src\include\ILuaModuleManager.h" />
     <ClInclude Include="src\lua\CLuaFunctionDefinitions.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="lib\eglib.lib" />
-    <Library Include="lib\lua51.lib" />
-    <Library Include="lib\mono-2.0.lib" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5E5C7A85-A869-4D86-88FF-05DCEFC07AC3}</ProjectGuid>
@@ -100,12 +124,12 @@
     <_ProjectFileVersion>11.0.50727.1</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>bin</OutDir>
+    <OutDir>D:\Server\MTA\server\mods\deathmatch\modules</OutDir>
     <IntDir>bin\Debug\</IntDir>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>bin</OutDir>
+    <OutDir>D:\Server\MTA\server\mods\deathmatch\modules</OutDir>
     <IntDir>bin\Release\</IntDir>
     <LinkIncremental>false</LinkIncremental>
   </PropertyGroup>
@@ -116,7 +140,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.\src\include;.\vendor;.\vendor\lua51\src;.\vendor\mono;.\vendor\mysql;.\vendor\eglib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\include\mono;.\src\include;.\vendor;.\vendor\lua51\src;.\vendor\mysql;.\vendor\eglib</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;_USRDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -133,7 +157,7 @@
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mono-2.0.lib;lua51d.lib;eglib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <IgnoreSpecificDefaultLibraries>MSVCRT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <ModuleDefinitionFile />
@@ -145,6 +169,7 @@
       </ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <AdditionalLibraryDirectories>lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -153,7 +178,7 @@
       <MkTypLibCompatible>false</MkTypLibCompatible>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>.\src\include;.\vendor;.\vendor\lua51\src;.\vendor\mono;.\vendor\mysql;.\vendor\eglib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\include;.\src\include;.\vendor\lua51\src;.\vendor\mysql;.\vendor\eglib</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USRDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
@@ -172,7 +197,7 @@
       <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>mono-2.0.lib;lua51.lib;eglib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <ModuleDefinitionFile />
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -187,6 +212,7 @@
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <AdditionalLibraryDirectories>lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
