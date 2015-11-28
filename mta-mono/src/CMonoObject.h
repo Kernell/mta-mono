@@ -16,73 +16,44 @@ class CMonoObject;
 #define _C_MONO_OBJECT
 
 #include "Common.h"
-#include "CMonoClass.h"
 
 class CMonoObject
 {
-private:
-	MonoObject* m_pMonoObject;
-
 public:
-	CMonoObject( MonoObject* pMonoObject );
-	~CMonoObject();
+	static MonoClass* GetClass( MonoObject* pMonoObject );
 
-	CMonoClass* GetClass();
+	static bool SetPropertyValue( MonoObject* pMonoObject, const char* szPropertyName, int iValue );
+	static bool SetPropertyValue( MonoObject* pMonoObject, const char* szPropertyName, float fValue );
+	static bool SetPropertyValue( MonoObject* pMonoObject, const char* szPropertyName, char* szValue );
+	static bool SetPropertyValue( MonoObject* pMonoObject, const char* szPropertyName, gpointer gValue );
 
-	bool SetPropertyValue( const char* szPropertyName, int iValue );
-	bool SetPropertyValue( const char* szPropertyName, float fValue );
-	bool SetPropertyValue( const char* szPropertyName, char* szValue );
-	bool SetPropertyValue( const char* szPropertyName, gpointer gValue );
-
-	MonoObject* GetPropertyValue( const char* szPropertyName );
+	static MonoObject* GetPropertyValue( MonoObject* pMonoObject, const char* szPropertyName );
 	
-	Vector2 GetVector2()
-	{
-		float fX = this->GetPropertyValue< float >( "X" );
-		float fY = this->GetPropertyValue< float >( "Y" );
-
-		return Vector2( fX, fY );
-	}
-
-	Vector3 GetVector3()
-	{
-		float fX = this->GetPropertyValue< float >( "X" );
-		float fY = this->GetPropertyValue< float >( "Y" );
-		float fZ = this->GetPropertyValue< float >( "Z" );
-
-		return Vector3( fX, fY, fZ );
-	}
-
-	SColor GetColor()
+	static SColor GetColor( MonoObject* pMonoObject )
 	{
 		SColor pColor;
 
-		pColor.R = this->GetPropertyValue< unsigned char >( "R" );
-		pColor.G = this->GetPropertyValue< unsigned char >( "G" );
-		pColor.B = this->GetPropertyValue< unsigned char >( "B" );
-		pColor.A = this->GetPropertyValue< unsigned char >( "A" );
+		pColor.R = GetPropertyValue< unsigned char >( pMonoObject, "R" );
+		pColor.G = GetPropertyValue< unsigned char >( pMonoObject, "G" );
+		pColor.B = GetPropertyValue< unsigned char >( pMonoObject, "B" );
+		pColor.A = GetPropertyValue< unsigned char >( pMonoObject, "A" );
 
 		return pColor;
 	}
 	
-	template <class T> T GetPropertyValue( char* szPropertyName )
+	template <class T> static T GetPropertyValue( MonoObject* pMonoObject, char* szPropertyName )
 	{
-		return *( reinterpret_cast<T*>( mono_object_unbox( this->GetPropertyValue( szPropertyName ) ) ) );
+		return *( reinterpret_cast<T*>( mono_object_unbox( GetPropertyValue( pMonoObject, szPropertyName ) ) ) );
 	}
 
-	void* GetValue()
+	static void* GetValue( MonoObject* pMonoObject )
 	{
-		return mono_object_unbox( this->m_pMonoObject );
+		return mono_object_unbox( pMonoObject );
 	}
 
-	template <class T> T GetValue()
+	template <class T> static T GetValue( MonoObject* pMonoObject )
 	{
-		return *( reinterpret_cast<T*>( mono_object_unbox( this->m_pMonoObject ) ) );
-	}
-
-	MonoObject *GetObject()
-	{
-		return this->m_pMonoObject;
+		return *( reinterpret_cast<T*>( mono_object_unbox( pMonoObject ) ) );
 	}
 };
 

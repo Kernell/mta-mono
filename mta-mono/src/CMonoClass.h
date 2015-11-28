@@ -4,37 +4,25 @@ class CMonoClass;
 #define _C_MONO_CLASS
 
 #include "Common.h"
-#include "CMonoObject.h"
 
-extern ILuaModuleManager10	*g_pModuleManager; 
+extern ILuaModuleManager10 *g_pModuleManager;
 
 class CMonoClass
 {
-private:
-	MonoClass* m_pMonoClass;
-
 public:
-	CMonoClass( MonoClass* pMonoClass );
-	~CMonoClass();
+	static MonoObject* New( MonoClass* pMonoClass, MonoDomain* pMonoDomain );
+	static MonoObject* New( MonoClass* pMonoClass, MonoDomain* pMonoDomain, SColor& pColor );
+	static MonoObject* New( MonoClass* pMonoClass, MonoDomain* pMonoDomain, Vector2& vecVector );
+	static MonoObject* New( MonoClass* pMonoClass, MonoDomain* pMonoDomain, Vector3& vecVector );
+	static MonoObject* New( MonoClass* pMonoClass, MonoDomain* pMonoDomain, void** args, int argc );
 
-	CMonoObject* New( MonoDomain* pMonoDomain );
-	CMonoObject* New( MonoDomain* pMonoDomain, SColor& pColor );
-	CMonoObject* New( MonoDomain* pMonoDomain, Vector2& vecVector );
-	CMonoObject* New( MonoDomain* pMonoDomain, Vector3& vecVector );
-	CMonoObject* New( MonoDomain* pMonoDomain, void** args, int argc );
+	static const char* GetName( MonoClass* pMonoClass );
+	static const char* GetNameSpace( MonoClass* pMonoClass );
 
-	const char* GetName();
-	const char* GetNameSpace();
+	static MonoMethod* GetMethod( MonoClass* pMonoClass, const char* szMethodName, int iParamCount );
+	static MonoMethod* GetMethod( MonoClass* pMonoClass, const char* szMethodName );
 
-	MonoMethod* GetMethod( const char* szMethodName, int iParamCount );
-	MonoMethod* GetMethod( const char* szMethodName );
-
-	MonoClass* GetMonoClass()	{ return this->m_pMonoClass; };
-
-	MonoClass* GetClass()
-	{
-		return this->m_pMonoClass;
-	}
+	static MonoClass* GetClass( MonoClass* pMonoClass );
 };
 
 #endif

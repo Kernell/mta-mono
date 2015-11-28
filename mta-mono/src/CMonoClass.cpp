@@ -1,105 +1,100 @@
 #include "CMonoClass.h"
 
-CMonoClass::CMonoClass( MonoClass* pMonoClass )
+MonoObject* CMonoClass::New( MonoClass* pMonoClass, MonoDomain* pMonoDomain )
 {
-	this->m_pMonoClass	= pMonoClass;
-}
-
-
-CMonoClass::~CMonoClass()
-{
-}
-
-CMonoObject* CMonoClass::New( MonoDomain* pMonoDomain )
-{
-	MonoObject* pObject = mono_object_new( pMonoDomain, this->m_pMonoClass );
+	MonoObject* pObject = mono_object_new( pMonoDomain, pMonoClass );
 
 	if( !pObject )
 	{
-		g_pModuleManager->ErrorPrintf( "%s:%d: Failed to create mono object for %s::%s\n", this->GetNameSpace(), this->GetName(), __FILE__, __LINE__ );
+		g_pModuleManager->ErrorPrintf( "%s:%d: Failed to create mono object for %s::%s\n",
+			CMonoClass::GetNameSpace( pMonoClass ),
+			CMonoClass::GetName( pMonoClass ),
+			__FILE__,
+			__LINE__
+			);
 
-		return NULL;
+		return nullptr;
 	}
 
 	mono_runtime_object_init( pObject );
 
-	return new CMonoObject( pObject );
+	return pObject;
 }
 
-CMonoObject* CMonoClass::New( MonoDomain* pMonoDomain, SColor& pColor )
+MonoObject* CMonoClass::New( MonoClass* pMonoClass, MonoDomain* pMonoDomain, SColor& pColor )
 {
 	void *args[] = { &pColor.R, &pColor.G, &pColor.B, &pColor.A };
 
-	return this->New( pMonoDomain, args, 4 );
+	return CMonoClass::New( pMonoClass, pMonoDomain, args, 4 );
 }
 
 
-CMonoObject* CMonoClass::New( MonoDomain* pMonoDomain, Vector2& vecVector )
+MonoObject* CMonoClass::New( MonoClass* pMonoClass, MonoDomain* pMonoDomain, Vector2& vecVector )
 {
 	void *args[] = { &vecVector.fX, &vecVector.fY };
 
-	return this->New( pMonoDomain, args, 2 );
+	return CMonoClass::New( pMonoClass, pMonoDomain, args, 2 );
 }
 
-CMonoObject* CMonoClass::New( MonoDomain* pMonoDomain, Vector3& vecVector )
+MonoObject* CMonoClass::New( MonoClass* pMonoClass, MonoDomain* pMonoDomain, Vector3& vecVector )
 {
 	void *args[] = { &vecVector.fX, &vecVector.fY, &vecVector.fZ };
 
-	return this->New( pMonoDomain, args, 3 );
+	return CMonoClass::New( pMonoClass, pMonoDomain, args, 3 );
 }
 
-CMonoObject* CMonoClass::New( MonoDomain* pMonoDomain, void** args, int argc )
+MonoObject* CMonoClass::New( MonoClass* pMonoClass, MonoDomain* pMonoDomain, void** args, int argc )
 {
-	MonoObject* pObject = mono_object_new( pMonoDomain, this->m_pMonoClass );
+	MonoObject* pObject = mono_object_new( pMonoDomain, pMonoClass );
 
 	if( !pObject )
 	{
-		g_pModuleManager->ErrorPrintf( "%s:%d: Failed to create mono object for %s::%s\n", this->GetNameSpace(), this->GetName(), __FILE__, __LINE__ );
+		g_pModuleManager->ErrorPrintf( "%s:%d: Failed to create mono object for %s::%s\n", GetNameSpace( pMonoClass ), GetName( pMonoClass ), __FILE__, __LINE__ );
 
-		return NULL;
+		return nullptr;
 	}
 
-	MonoMethod* pMonoMethod = this->GetMethod( ".ctor", argc );
+	MonoMethod* pMonoMethod = CMonoClass::GetMethod( pMonoClass, ".ctor", argc );
 
 	if( !pMonoMethod )
 	{
-		g_pModuleManager->ErrorPrintf( "%s:%d: Could not lookup constructor for class %s::%s\n", this->GetNameSpace(), this->GetName(), __FILE__, __LINE__ );
+		g_pModuleManager->ErrorPrintf( "%s:%d: Could not lookup constructor for class %s::%s\n", GetNameSpace( pMonoClass ), GetName( pMonoClass ), __FILE__, __LINE__ );
 
-		return NULL;
+		return nullptr;
 	}
-	
-	mono_runtime_invoke( pMonoMethod, pObject, args, NULL );
 
-	return new CMonoObject( pObject );
+	mono_runtime_invoke( pMonoMethod, pObject, args, nullptr );
+
+	return pObject;
 }
 
-const char* CMonoClass::GetName()
+const char* CMonoClass::GetName( MonoClass* pMonoClass )
 {
-	return mono_class_get_name( this->m_pMonoClass );
+	return mono_class_get_name( pMonoClass );
 }
 
-const char* CMonoClass::GetNameSpace()
+const char* CMonoClass::GetNameSpace( MonoClass* pMonoClass )
 {
-	return mono_class_get_namespace( this->m_pMonoClass );
+	return mono_class_get_namespace( pMonoClass );
 }
 
-MonoMethod* CMonoClass::GetMethod( const char* szMethodName, int iParamCount )
+MonoMethod* CMonoClass::GetMethod( MonoClass* pMonoClass, const char* szMethodName, int iParamCount )
 {
-	return mono_class_get_method_from_name( this->m_pMonoClass, szMethodName, iParamCount );
+	return mono_class_get_method_from_name( pMonoClass, szMethodName, iParamCount );
 }
 
-MonoMethod* CMonoClass::GetMethod( const char* szMethodName )
+MonoMethod* CMonoClass::GetMethod( MonoClass* pMonoClass, const char* szMethodName )
 {
 	MonoMethodDesc* pMonoMethodDesc = mono_method_desc_new( szMethodName, false );
 
 	if( pMonoMethodDesc )
 	{
-		MonoMethod* pMethod = mono_method_desc_search_in_class( pMonoMethodDesc, this->m_pMonoClass );
+		MonoMethod* pMethod = mono_method_desc_search_in_class( pMonoMethodDesc, pMonoClass );
 
 		mono_method_desc_free( pMonoMethodDesc );
 
 		return pMethod;
 	}
 
-	return NULL;
+	return nullptr;
 }

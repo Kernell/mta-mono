@@ -12,60 +12,43 @@
 
 #include "CMonoObject.h"
 
-CMonoObject::CMonoObject( MonoObject* pMonoObject )
+MonoClass* CMonoObject::GetClass( MonoObject* pObject )
 {
-	this->m_pMonoObject = pMonoObject;
+	return mono_object_get_class( pObject );
 }
 
-
-CMonoObject::~CMonoObject()
+MonoObject* CMonoObject::GetPropertyValue( MonoObject* pObject, const char* szPropertyName )
 {
-}
-
-CMonoClass* CMonoObject::GetClass()
-{
-	MonoClass* pMonoClass = mono_object_get_class( this->m_pMonoObject );
-
-	if( pMonoClass )
-	{
-		return new CMonoClass( pMonoClass );
-	}
-
-	return NULL;
-}
-
-MonoObject* CMonoObject::GetPropertyValue( const char* szPropertyName )
-{
-	MonoClass* pMonoClass = mono_object_get_class( this->m_pMonoObject );
+	MonoClass* pMonoClass = mono_object_get_class( pObject );
 	
 	MonoProperty* pMonoProperty = mono_class_get_property_from_name( pMonoClass, szPropertyName );
 
 	if( !pMonoProperty )
 	{
-		return NULL;
+		return nullptr;
 	}
 
-	return mono_property_get_value( pMonoProperty, this->m_pMonoObject, NULL, NULL );
+	return mono_property_get_value( pMonoProperty, pObject, NULL, NULL );
 }
 
-bool CMonoObject::SetPropertyValue( const char* szPropertyName, int iValue )
+bool CMonoObject::SetPropertyValue( MonoObject* pObject, const char* szPropertyName, int iValue )
 {
-	return this->SetPropertyValue( szPropertyName, (void*)&iValue );
+	return CMonoObject::SetPropertyValue( pObject, szPropertyName, (void*)&iValue );
 }
 
-bool CMonoObject::SetPropertyValue( const char* szPropertyName, float fValue )
+bool CMonoObject::SetPropertyValue( MonoObject* pObject, const char* szPropertyName, float fValue )
 {
-	return this->SetPropertyValue( szPropertyName, (void*)&fValue );
+	return CMonoObject::SetPropertyValue( pObject, szPropertyName, (void*)&fValue );
 }
 
-bool CMonoObject::SetPropertyValue( const char* szPropertyName, char* szValue )
+bool CMonoObject::SetPropertyValue( MonoObject* pObject, const char* szPropertyName, char* szValue )
 {
-	return this->SetPropertyValue( szPropertyName, mono_string_new( mono_domain_get(), szValue ) );
+	return CMonoObject::SetPropertyValue( pObject, szPropertyName, mono_string_new( mono_domain_get(), szValue ) );
 }
 
-bool CMonoObject::SetPropertyValue( const char* szPropertyName, gpointer gValue )
+bool CMonoObject::SetPropertyValue( MonoObject* pObject, const char* szPropertyName, gpointer gValue )
 {
-	MonoClass* pMonoClass = mono_object_get_class( this->m_pMonoObject );
+	MonoClass* pMonoClass = mono_object_get_class( pObject );
 	
 	MonoProperty* pMonoProperty = mono_class_get_property_from_name( pMonoClass, szPropertyName );
 
@@ -76,7 +59,7 @@ bool CMonoObject::SetPropertyValue( const char* szPropertyName, gpointer gValue 
 
 	gpointer args[ 1 ] = { gValue };
 
-	mono_property_set_value( pMonoProperty, this->m_pMonoObject, args, NULL );
+	mono_property_set_value( pMonoProperty, pObject, args, NULL );
 
 	return true;
 }
