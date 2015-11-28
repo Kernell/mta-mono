@@ -25,18 +25,17 @@ MTAEXPORT bool InitModule( ILuaModuleManager10 *pManager, char *szModuleName, ch
     return true;
 }
 
-
 MTAEXPORT void RegisterFunctions( lua_State *pLuaVM )
 {
     if( g_pModuleManager && pLuaVM && g_pResourceManager )
 	{
 		if( g_pModuleManager->RegisterFunction( pLuaVM, "monoInit", CFunctions::monoInit ) )
 		{
-			luaL_dostring( pLuaVM, "addEventHandler( 'onResourceStart', resourceRoot, monoInit )" );
+			//luaL_dostring( pLuaVM, "addEventHandler( 'onResourceStart', resourceRoot, monoInit )" );
+			luaL_dostring( pLuaVM, "addEventHandler( 'onResourceStart', resourceRoot, function( res ) monoInit( getResourceName( res ) ) end )" );
 		}
 	}
 }
-
 
 MTAEXPORT bool DoPulse( void )
 {

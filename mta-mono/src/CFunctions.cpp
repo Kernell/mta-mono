@@ -17,14 +17,23 @@ int CFunctions::monoInit( lua_State *pLuaVM )
 {
 	if( pLuaVM )
 	{
-		CResource *pResource;
+		CResource *pResource = g_pResourceManager->GetFromList( pLuaVM );
 
-		if( !( pResource = g_pResourceManager->GetFromList( pLuaVM ) ) )
+		if( pResource == nullptr )
 		{
-			pResource = g_pResourceManager->Create( pLuaVM );
+			//if( g_pModuleManager->GetResourceName( luaVM, strName ) )
+
+			CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+			string strName = pLuaArgument.GetString();
+
+			if( !strName.empty() )
+			{
+				pResource = g_pResourceManager->Create( pLuaVM, strName );
+			}
 		}
 
-		if( pResource )
+		if( pResource != nullptr )
 		{
 			pResource->Init();
 
