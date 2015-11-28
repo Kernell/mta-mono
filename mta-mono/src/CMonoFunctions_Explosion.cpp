@@ -17,9 +17,7 @@ bool CMonoFunctions::Explosion::Create( MonoObject* pPosition, unsigned char ucT
 {
 	if( RESOURCE )
 	{
-		Vector3 vecPosition = CMonoObject( pPosition ).GetVector3();
-
-		return (DWORD)CLuaFunctionDefinitions::CreateExplosion( RESOURCE->GetLua(), vecPosition, ucType, (void*)pCreator );
+		return (DWORD)CLuaFunctionDefinitions::CreateExplosion( RESOURCE->GetLua(), Vector3( pPosition ), ucType, (void*)pCreator );
 	}
 
 	return NULL;

@@ -17,9 +17,9 @@ DWORD CMonoFunctions::Blip::Create( MonoObject* pPosition, unsigned char ucIcon,
 {
 	if( RESOURCE )
 	{
-		Vector3 vecPosition = CMonoObject( pPosition ).GetVector3();
+		Vector3 vecPosition( pPosition );
 
-		SColor pColor = CMonoObject( color ).GetColor();
+		SColor pColor = CMonoObject::GetColor( color );
 
 		return (DWORD)CLuaFunctionDefinitions::CreateBlip( RESOURCE->GetLua(), vecPosition, ucIcon, ucSize, pColor, sOrdering, usVisibleDistance, (void*)pVisibleTo );
 	}
@@ -31,7 +31,7 @@ DWORD CMonoFunctions::Blip::CreateAttachedTo( DWORD pTarget, unsigned char ucIco
 {
 	if( RESOURCE )
 	{
-		SColor pColor = CMonoObject( color ).GetColor();
+		SColor pColor = CMonoObject::GetColor( color );
 
 		return (DWORD)CLuaFunctionDefinitions::CreateBlipAttachedTo( RESOURCE->GetLua(), (void*)pTarget, ucIcon, ucSize, pColor, sOrdering, usVisibleDistance, (void*)pVisibleTo );
 	}
@@ -79,12 +79,7 @@ MonoObject* CMonoFunctions::Blip::GetColor( DWORD pUserData )
 		
 		if( CLuaFunctionDefinitions::GetBlipColor( RESOURCE->GetLua(), (void*)pUserData, outColor ) )
 		{
-			CMonoObject* pObject = RESOURCE->NewObject( outColor );
-
-			if( pObject )
-			{
-				return pObject->GetObject();
-			}
+			return RESOURCE->NewObject( outColor );
 		}
 	}
 
@@ -147,9 +142,7 @@ bool CMonoFunctions::Blip::SetColor( DWORD pUserData, MonoObject* color )
 {
 	if( RESOURCE )
 	{
-		SColor pColor = CMonoObject( color ).GetColor();
-		
-		return CLuaFunctionDefinitions::SetBlipColor( RESOURCE->GetLua(), (void*)pUserData, pColor );
+		return CLuaFunctionDefinitions::SetBlipColor( RESOURCE->GetLua(), (void*)pUserData, CMonoObject::GetColor( color ) );
 	}
 
 	return false;

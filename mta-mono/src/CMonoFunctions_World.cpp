@@ -59,7 +59,7 @@ MonoString* CMonoFunctions::World::GetZoneName( MonoObject* mPosition, bool bCit
 	{
 		string strOutName;
 
-		Vector3 vecPosition = CMonoObject( mPosition ).GetVector3();
+		Vector3 vecPosition( mPosition );
 
 		if( CLuaFunctionDefinitions::GetZoneName( RESOURCE->GetLua(), vecPosition, strOutName, bCitiesOnly ) )
 		{
@@ -275,15 +275,15 @@ MonoArray* CMonoFunctions::World::GetSunColor( void )
 		{
 			pCore.A	= pCorona.A = 255;
 
-			CMonoObject* pCoreObject	= RESOURCE->NewObject( pCore );
-			CMonoObject* pCoronaObject	= RESOURCE->NewObject( pCorona );
+			MonoObject* pCoreObject		= RESOURCE->NewObject( pCore );
+			MonoObject* pCoronaObject	= RESOURCE->NewObject( pCorona );
 
 			if( pCoreObject && pCoronaObject )
 			{
-				MonoArray* pMonoArray = mono_array_new( RESOURCE->m_pMonoDomain, pCoreObject->GetClass()->GetClass(), 2 );
+				MonoArray* pMonoArray = mono_array_new( RESOURCE->m_pMonoDomain, CMonoObject::GetClass( pCoreObject ), 2 );
 
-				mono_array_set( pMonoArray, MonoObject*, 0, pCoreObject->GetObject() );
-				mono_array_set( pMonoArray, MonoObject*, 1, pCoronaObject->GetObject() );
+				mono_array_set( pMonoArray, MonoObject*, 0, pCoreObject );
+				mono_array_set( pMonoArray, MonoObject*, 1, pCoronaObject );
 
 				return pMonoArray;
 			}
@@ -301,12 +301,7 @@ MonoObject* CMonoFunctions::World::GetWindVelocity( void )
 
 		if( CLuaFunctionDefinitions::GetWindVelocity( RESOURCE->GetLua(), vecVelocity.fX, vecVelocity.fY, vecVelocity.fZ ) )
 		{
-			CMonoObject* pObject = RESOURCE->NewObject( vecVelocity );
-
-			if( pObject )
-			{
-				return pObject->GetObject();
-			}
+			return RESOURCE->NewObject( vecVelocity );
 		}
 	}
 
@@ -398,15 +393,15 @@ MonoArray* CMonoFunctions::World::GetSkyGradient( void )
 		{
 			pCore.A	= pCorona.A = 255;
 
-			CMonoObject* pCoreObject	= RESOURCE->NewObject( pCore );
-			CMonoObject* pCoronaObject	= RESOURCE->NewObject( pCorona );
+			MonoObject* pCoreObject		= RESOURCE->NewObject( pCore );
+			MonoObject* pCoronaObject	= RESOURCE->NewObject( pCorona );
 
 			if( pCoreObject && pCoronaObject )
 			{
-				MonoArray* pMonoArray = mono_array_new( RESOURCE->m_pMonoDomain, pCoreObject->GetClass()->GetClass(), 2 );
+				MonoArray* pMonoArray = mono_array_new( RESOURCE->m_pMonoDomain, CMonoObject::GetClass( pCoreObject ), 2 );
 
-				mono_array_set( pMonoArray, MonoObject*, 0, pCoreObject->GetObject() );
-				mono_array_set( pMonoArray, MonoObject*, 1, pCoronaObject->GetObject() );
+				mono_array_set( pMonoArray, MonoObject*, 0, pCoreObject );
+				mono_array_set( pMonoArray, MonoObject*, 1, pCoronaObject );
 
 				return pMonoArray;
 			}
@@ -429,12 +424,7 @@ MonoObject* CMonoFunctions::World::GetHeatHaze( void )
 				&heatHazeSettings
 			};
 
-			CMonoObject* pObject = RESOURCE->NewObject( "MultiTheftAuto", "HeatHazeSettings", args, 1 );
-
-			if( pObject )
-			{
-				return pObject->GetObject();
-			}
+			return RESOURCE->NewObject( "MultiTheftAuto", "HeatHazeSettings", args, 1 );
 		}
 	}
 
@@ -527,8 +517,8 @@ bool CMonoFunctions::World::SetSkyGradient( MonoObject* pTopColor, MonoObject* p
 {
 	if( RESOURCE )
 	{
-		SColor pTop		= CMonoObject( pTopColor ).GetColor();
-		SColor pBottom	= CMonoObject( pBottomColor ).GetColor();
+		SColor pTop		= CMonoObject::GetColor( pTopColor );
+		SColor pBottom	= CMonoObject::GetColor( pBottomColor );
 
 		return CLuaFunctionDefinitions::SetSkyGradient( RESOURCE->GetLua(), pTop.R, pTop.G, pTop.B, pBottom.R, pBottom.G, pBottom.B );
 	}
@@ -550,19 +540,17 @@ bool CMonoFunctions::World::SetHeatHaze( MonoObject* heatHazeSettings )
 {
 	if( RESOURCE )
 	{
-		CMonoObject* pObject = new CMonoObject( heatHazeSettings );
-
 		SHeatHazeSettings pHeatHazeSettings;
 
-		pHeatHazeSettings.ucIntensity		= pObject->GetPropertyValue< unsigned char >( "ucIntensity" );
-		pHeatHazeSettings.ucRandomShift		= pObject->GetPropertyValue< unsigned char >( "ucRandomShift" );
-		pHeatHazeSettings.usSpeedMin		= pObject->GetPropertyValue< unsigned short >( "usSpeedMin" );
-		pHeatHazeSettings.usSpeedMax		= pObject->GetPropertyValue< unsigned short >( "usSpeedMax" );
-		pHeatHazeSettings.sScanSizeX		= pObject->GetPropertyValue< short >( "sScanSizeX" );
-		pHeatHazeSettings.sScanSizeY		= pObject->GetPropertyValue< short >( "sScanSizeY" );
-		pHeatHazeSettings.usRenderSizeX		= pObject->GetPropertyValue< unsigned short >( "usRenderSizeX" );
-		pHeatHazeSettings.usRenderSizeY		= pObject->GetPropertyValue< unsigned short >( "usRenderSizeY" );
-		pHeatHazeSettings.bInsideBuilding	= pObject->GetPropertyValue< bool >( "bInsideBuilding" );
+		pHeatHazeSettings.ucIntensity		= CMonoObject::GetPropertyValue< unsigned char >( heatHazeSettings, "ucIntensity" );
+		pHeatHazeSettings.ucRandomShift		= CMonoObject::GetPropertyValue< unsigned char >( heatHazeSettings, "ucRandomShift" );
+		pHeatHazeSettings.usSpeedMin		= CMonoObject::GetPropertyValue< unsigned short >( heatHazeSettings, "usSpeedMin" );
+		pHeatHazeSettings.usSpeedMax		= CMonoObject::GetPropertyValue< unsigned short >( heatHazeSettings, "usSpeedMax" );
+		pHeatHazeSettings.sScanSizeX		= CMonoObject::GetPropertyValue< short >( heatHazeSettings, "sScanSizeX" );
+		pHeatHazeSettings.sScanSizeY		= CMonoObject::GetPropertyValue< short >( heatHazeSettings, "sScanSizeY" );
+		pHeatHazeSettings.usRenderSizeX		= CMonoObject::GetPropertyValue< unsigned short >( heatHazeSettings, "usRenderSizeX" );
+		pHeatHazeSettings.usRenderSizeY		= CMonoObject::GetPropertyValue< unsigned short >( heatHazeSettings, "usRenderSizeY" );
+		pHeatHazeSettings.bInsideBuilding	= CMonoObject::GetPropertyValue< bool >( heatHazeSettings, "bInsideBuilding" );
 
 		return CLuaFunctionDefinitions::SetHeatHaze( RESOURCE->GetLua(), pHeatHazeSettings );
 	}
@@ -718,8 +706,8 @@ bool CMonoFunctions::World::SetSunColor( MonoObject* pCoreColor, MonoObject* pCo
 {
 	if( RESOURCE )
 	{
-		SColor pTop		= CMonoObject( pCoreColor ).GetColor();
-		SColor pBottom	= CMonoObject( pCoronaColor ).GetColor();
+		SColor pTop		= CMonoObject::GetColor( pCoreColor );
+		SColor pBottom	= CMonoObject::GetColor( pCoronaColor );
 
 		return CLuaFunctionDefinitions::SetSunColor( RESOURCE->GetLua(), pTop.R, pTop.G, pTop.B, pBottom.R, pBottom.G, pBottom.B );
 	}
@@ -731,7 +719,7 @@ bool CMonoFunctions::World::SetWindVelocity( MonoObject* pVelocity )
 {
 	if( RESOURCE )
 	{
-		Vector3 vecVelocity		= CMonoObject( pVelocity ).GetVector3();
+		Vector3 vecVelocity( pVelocity );
 
 		return CLuaFunctionDefinitions::SetWindVelocity( RESOURCE->GetLua(), vecVelocity.fX, vecVelocity.fY, vecVelocity.fZ );
 	}
@@ -853,7 +841,7 @@ bool CMonoFunctions::World::RemoveWorldModel( unsigned short usModel, float fRad
 {
 	if( RESOURCE )
 	{
-		Vector3 vecPosition = CMonoObject( pPosition ).GetVector3();
+		Vector3 vecPosition( pPosition );
 
 		return CLuaFunctionDefinitions::RemoveWorldModel( RESOURCE->GetLua(), usModel, fRadius, vecPosition, cInterior );
 	}
@@ -865,7 +853,7 @@ bool CMonoFunctions::World::RestoreWorldModel( unsigned short usModel, float fRa
 {
 	if( RESOURCE )
 	{
-		Vector3 vecPosition = CMonoObject( pPosition ).GetVector3();
+		Vector3 vecPosition( pPosition );
 
 		return CLuaFunctionDefinitions::RestoreWorldModel( RESOURCE->GetLua(), usModel, fRadius, vecPosition, cInterior );
 	}

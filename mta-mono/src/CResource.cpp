@@ -127,7 +127,7 @@ bool CResource::RegisterFunction( const char *szFunctionName, lua_CFunction Func
 	return true;
 }
 
-CMonoClass* CResource::GetClassFromName( const char* szNamespace, const char* szName )
+MonoClass* CResource::GetClassFromName( const char* szNamespace, const char* szName )
 {
 	MonoClass* pMonoClass = mono_class_from_name( this->m_pMonoImage, szNamespace, szName );
 
@@ -136,21 +136,16 @@ CMonoClass* CResource::GetClassFromName( const char* szNamespace, const char* sz
 		pMonoClass = mono_class_from_name( this->m_pMonoImageLib, szNamespace, szName );
 	}
 
-	if( pMonoClass )
-	{
-		return new CMonoClass( pMonoClass );
-	}
-
-	return NULL;
+	return pMonoClass;
 }
 
-CMonoObject* CResource::NewObject( const char* szNamespace, const char* szName )
+MonoObject* CResource::NewObject( const char* szNamespace, const char* szName )
 {
-	CMonoClass* pClass = this->GetClassFromName( szNamespace, szName );
+	MonoClass* pClass = this->GetClassFromName( szNamespace, szName );
 			
 	if( pClass )
 	{
-		CMonoObject* pObject = pClass->New( mono_domain_get() );
+		MonoObject* pObject = CMonoClass::New( pClass, mono_domain_get() );
 				
 		if( pObject )
 		{
@@ -166,16 +161,41 @@ CMonoObject* CResource::NewObject( const char* szNamespace, const char* szName )
 		g_pModuleManager->ErrorPrintf( "%s:%d: class '%s::%s' not found\n", __FILE__, __LINE__, szNamespace, szName );
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-CMonoObject* CResource::NewObject( SColor& pColor )
+MonoObject* CResource::NewObject( SColor& pColor )
 {
-	CMonoClass* pClass = this->GetClassFromName( "MultiTheftAuto", "Color" );
+	MonoClass* pClass = this->GetClassFromName( "MultiTheftAuto", "Color" );
 			
 	if( pClass )
 	{
-		CMonoObject* pObject = pClass->New( mono_domain_get(), pColor );
+		MonoObject* pObject = CMonoClass::New( pClass, mono_domain_get(), pColor );
+				
+		if( pObject )
+		{
+			return pObject;
+		}
+		else
+		{
+			g_pModuleManager->ErrorPrintf( "%s:%d: failed to create instance of 'MultiTheftAuto::Color'\n", __FILE__, __LINE__ );
+		}
+	}
+	else
+	{
+		g_pModuleManager->ErrorPrintf( "%s:%d: class 'MultiTheftAuto::Color' not found\n", __FILE__, __LINE__ );
+	}
+
+	return nullptr;
+}
+
+MonoObject* CResource::NewObject( Vector2& vecVector )
+{
+	MonoClass* pClass = this->GetClassFromName( "MultiTheftAuto", "Vector2" );
+			
+	if( pClass )
+	{
+		MonoObject* pObject = CMonoClass::New( pClass, mono_domain_get(), vecVector );
 				
 		if( pObject )
 		{
@@ -191,41 +211,16 @@ CMonoObject* CResource::NewObject( SColor& pColor )
 		g_pModuleManager->ErrorPrintf( "%s:%d: class 'MultiTheftAuto::Vector2' not found\n", __FILE__, __LINE__ );
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-CMonoObject* CResource::NewObject( Vector2& vecVector )
+MonoObject* CResource::NewObject( Vector3& vecVector )
 {
-	CMonoClass* pClass = this->GetClassFromName( "MultiTheftAuto", "Vector2" );
+	MonoClass* pClass = this->GetClassFromName( "MultiTheftAuto", "Vector3" );
 			
 	if( pClass )
 	{
-		CMonoObject* pObject = pClass->New( mono_domain_get(), vecVector );
-				
-		if( pObject )
-		{
-			return pObject;
-		}
-		else
-		{
-			g_pModuleManager->ErrorPrintf( "%s:%d: failed to create instance of 'MultiTheftAuto::Vector2'\n", __FILE__, __LINE__ );
-		}
-	}
-	else
-	{
-		g_pModuleManager->ErrorPrintf( "%s:%d: class 'MultiTheftAuto::Vector2' not found\n", __FILE__, __LINE__ );
-	}
-
-	return NULL;
-}
-
-CMonoObject* CResource::NewObject( Vector3& vecVector )
-{
-	CMonoClass* pClass = this->GetClassFromName( "MultiTheftAuto", "Vector3" );
-			
-	if( pClass )
-	{
-		CMonoObject* pObject = pClass->New( mono_domain_get(), vecVector );
+		MonoObject* pObject = CMonoClass::New( pClass, mono_domain_get(), vecVector );
 				
 		if( pObject )
 		{
@@ -241,16 +236,16 @@ CMonoObject* CResource::NewObject( Vector3& vecVector )
 		g_pModuleManager->ErrorPrintf( "%s:%d: class 'MultiTheftAuto::Vector3' not found\n", __FILE__, __LINE__ );
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-CMonoObject* CResource::NewObject( const char* szNamespace, const char* szName, void** args, int argc )
+MonoObject* CResource::NewObject( const char* szNamespace, const char* szName, void** args, int argc )
 {
-	CMonoClass* pClass = this->GetClassFromName( szNamespace, szName );
+	MonoClass* pClass = this->GetClassFromName( szNamespace, szName );
 			
 	if( pClass )
 	{
-		CMonoObject* pObject = pClass->New( mono_domain_get(), args, argc );
+		MonoObject* pObject = CMonoClass::New( pClass, mono_domain_get(), args, argc );
 				
 		if( pObject )
 		{
@@ -266,5 +261,5 @@ CMonoObject* CResource::NewObject( const char* szNamespace, const char* szName, 
 		g_pModuleManager->ErrorPrintf( "%s:%d: class '%s::%s' not found\n", __FILE__, __LINE__, szNamespace, szName );
 	}
 
-	return NULL;
+	return nullptr;
 }

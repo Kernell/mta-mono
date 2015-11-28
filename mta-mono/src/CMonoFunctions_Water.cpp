@@ -17,12 +17,12 @@ DWORD CMonoFunctions::Water::Create( MonoObject* pV1, MonoObject* pV2, MonoObjec
 {
 	if( RESOURCE )
 	{
-		Vector3* vec1			= &CMonoObject( pV1 ).GetVector3();
-		Vector3* vec2			= &CMonoObject( pV2 ).GetVector3();
-		Vector3* vec3			= &CMonoObject( pV3 ).GetVector3();
-		Vector3* vec4			= pV4 ? &CMonoObject( pV4 ).GetVector3() : NULL;
+		Vector3 vec1( pV1 );
+		Vector3 vec2( pV2 );
+		Vector3 vec3( pV3 );
+		Vector3 vec4 = pV4 ? Vector3( pV4 ) : NULL;
 
-		return (DWORD)CLuaFunctionDefinitions::CreateWater( RESOURCE->GetLua(), vec1, vec2, vec3, vec4, bShallow );
+		return (DWORD)CLuaFunctionDefinitions::CreateWater( RESOURCE->GetLua(), &vec1, &vec2, &vec3, &vec4, bShallow );
 	}
 
 	return NULL;
@@ -76,9 +76,7 @@ MonoObject* CMonoFunctions::Water::GetVertexPosition( DWORD pUserData, int iVert
 
 		if( CLuaFunctionDefinitions::GetWaterVertexPosition( RESOURCE->GetLua(), (void*)pUserData, iVertexIndex, vecPosition ) )
 		{
-			CMonoObject* pObject = RESOURCE->NewObject( vecPosition );
-
-			return pObject ? pObject->GetObject() : NULL;
+			return RESOURCE->NewObject( vecPosition );
 		}
 	}
 
@@ -89,7 +87,7 @@ bool CMonoFunctions::Water::SetVertexPosition( DWORD pUserData, int iVertexIndex
 {
 	if( RESOURCE )
 	{
-		Vector3 vecPosition = CMonoObject( mPosition ).GetVector3();
+		Vector3 vecPosition( mPosition );
 
 		return CLuaFunctionDefinitions::SetWaterVertexPosition( RESOURCE->GetLua(), (void*)pUserData, iVertexIndex, vecPosition );
 	}
@@ -105,9 +103,7 @@ MonoObject* CMonoFunctions::Water::GetColor( void )
 
 		if( CLuaFunctionDefinitions::GetWaterColor( RESOURCE->GetLua(), pColor.R, pColor.G, pColor.B, pColor.A ) )
 		{
-			CMonoObject* pObject = RESOURCE->NewObject( pColor );
-
-			return pObject ? pObject->GetObject() : NULL;
+			return RESOURCE->NewObject( pColor );
 		}
 	}
 
@@ -118,7 +114,7 @@ bool CMonoFunctions::Water::SetColor( MonoObject* mColor )
 {
 	if( RESOURCE )
 	{
-		SColor pColor = CMonoObject( mColor ).GetColor();
+		SColor pColor = CMonoObject::GetColor( mColor );
 
 		return CLuaFunctionDefinitions::SetWaterColor( RESOURCE->GetLua(), pColor.R, pColor.G, pColor.B, pColor.A );
 	}

@@ -17,7 +17,7 @@ DWORD CMonoFunctions::Shape::CreateCircle( MonoObject* pPosition, float fRadius 
 {
 	if( RESOURCE )
 	{
-		Vector2 vecPosition = CMonoObject( pPosition ).GetVector2();
+		Vector2 vecPosition( pPosition );
 
 		return (DWORD)CLuaFunctionDefinitions::CreateColCircle( RESOURCE->GetLua(), vecPosition, fRadius );
 	}
@@ -29,8 +29,8 @@ DWORD CMonoFunctions::Shape::CreateCuboid( MonoObject* pPosition, MonoObject* pS
 {
 	if( RESOURCE )
 	{
-		Vector3 vecPosition = CMonoObject( pPosition ).GetVector3();
-		Vector3 vecSize		= CMonoObject( pSize ).GetVector3();
+		Vector3 vecPosition( pPosition );
+		Vector3 vecSize( pSize );
 
 		return (DWORD)CLuaFunctionDefinitions::CreateColCuboid( RESOURCE->GetLua(), vecPosition, vecSize );
 	}
@@ -42,7 +42,7 @@ DWORD CMonoFunctions::Shape::CreateSphere( MonoObject* pPosition, float fRadius 
 {
 	if( RESOURCE )
 	{
-		Vector3 vecPosition = CMonoObject( pPosition ).GetVector3();
+		Vector3 vecPosition( pPosition );
 
 		return (DWORD)CLuaFunctionDefinitions::CreateColSphere( RESOURCE->GetLua(), vecPosition, fRadius );
 	}
@@ -54,8 +54,8 @@ DWORD CMonoFunctions::Shape::CreateRectangle( MonoObject* pPosition, MonoObject*
 {
 	if( RESOURCE )
 	{
-		Vector2 vecPosition = CMonoObject( pPosition ).GetVector2();
-		Vector2 vecSize		= CMonoObject( pSize ).GetVector2();
+		Vector2 vecPosition( pPosition );
+		Vector2 vecSize( pSize );
 
 		return (DWORD)CLuaFunctionDefinitions::CreateColRectangle( RESOURCE->GetLua(), vecPosition, vecSize );
 	}
@@ -75,9 +75,7 @@ DWORD CMonoFunctions::Shape::CreatePolygon( MonoArray* pPointList )
 
 			if( pObject )
 			{
-				Vector2 vecPosition = CMonoObject( pObject ).GetVector2();
-
-				vecPointList.push_back( vecPosition );
+				vecPointList.push_back( Vector2( pObject ) );
 			}
 		}
 
@@ -91,7 +89,7 @@ DWORD CMonoFunctions::Shape::CreateTube( MonoObject* pPosition, float fRadius, f
 {
 	if( RESOURCE )
 	{
-		Vector3 vecPosition = CMonoObject( pPosition ).GetVector3();
+		Vector3 vecPosition( pPosition );
 
 		return (DWORD)CLuaFunctionDefinitions::CreateColTube( RESOURCE->GetLua(), vecPosition, fRadius, fHeight );
 	}

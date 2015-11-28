@@ -224,12 +224,7 @@ MonoObject* CMonoFunctions::Player::GetNametagColor( DWORD pUserData )
 				&ucR, &ucG, &ucB
 			};
 			
-			CMonoObject* pObject = RESOURCE->NewObject( "MultiTheftAuto", "Color", args, 3 );
-			
-			if( pObject )
-			{
-				return pObject->GetObject();
-			}
+			return RESOURCE->NewObject( "MultiTheftAuto", "Color", args, 3 );
 		}
 	}
 	
@@ -358,12 +353,7 @@ MonoObject* CMonoFunctions::Player::GetACInfo( DWORD pUserData )
 				&msD3D9SHA256
 			};
 
-			CMonoObject* pObject = RESOURCE->NewObject( "MultiTheftAuto", "PlayerACInfo", args, 4 );
-
-			if( pObject )
-			{
-				return pObject->GetObject();
-			}
+			return RESOURCE->NewObject( "MultiTheftAuto", "PlayerACInfo", args, 4 );
 		}
 	}
 	return NULL;
@@ -417,13 +407,7 @@ bool CMonoFunctions::Player::Spawn( DWORD pUserData, MonoObject* pPosition, int 
 {
 	if( RESOURCE )
 	{
-		CMonoObject pPosition( pPosition );
-
-		float fX = pPosition.GetPropertyValue< float >( "X" );
-		float fY = pPosition.GetPropertyValue< float >( "Y" );
-		float fZ = pPosition.GetPropertyValue< float >( "Z" );
-
-		Vector3 vecPosition( fX, fY, fZ );
+		Vector3 vecPosition( pPosition );
 
 		return CLuaFunctionDefinitions::SpawnPlayer( RESOURCE->GetLua(), (void*)pUserData, vecPosition, iRotation, iSkinID, iInterior, iDimension, (void*)pTeam );
 	}
@@ -801,12 +785,7 @@ MonoObject* CMonoFunctions::Player::GetCameraMatrix( DWORD pPlayer )
 				&fFOV
 			};
 
-			CMonoObject* pObject = RESOURCE->NewObject( "MultiTheftAuto", "CameraMatrix", args, 8 );
-
-			if( pObject )
-			{
-				return pObject->GetObject();
-			}
+			return RESOURCE->NewObject( "MultiTheftAuto", "CameraMatrix", args, 8 );
 		}
 	}
 
@@ -844,22 +823,20 @@ bool CMonoFunctions::Player::SetCameraMatrix( DWORD pPlayer, MonoObject* pCamera
 {
 	if( RESOURCE )
 	{
-		CMonoObject pCameraMatrix( pCameraMatrix );
-		
-		float fX = pCameraMatrix.GetPropertyValue< float >( "X" );
-		float fY = pCameraMatrix.GetPropertyValue< float >( "Y" );
-		float fZ = pCameraMatrix.GetPropertyValue< float >( "Z" );
+		float fX = CMonoObject::GetPropertyValue< float >( pCameraMatrix, "X" );
+		float fY = CMonoObject::GetPropertyValue< float >( pCameraMatrix, "Y" );
+		float fZ = CMonoObject::GetPropertyValue< float >( pCameraMatrix, "Z" );
 
 		Vector3 vecPosition( fX, fY, fZ );
 		
-		float fLookAtX = pCameraMatrix.GetPropertyValue< float >( "LookAtX" );
-		float fLookAtY = pCameraMatrix.GetPropertyValue< float >( "LookAtY" );
-		float fLookAtZ = pCameraMatrix.GetPropertyValue< float >( "LookAtZ" );
+		float fLookAtX = CMonoObject::GetPropertyValue< float >( pCameraMatrix, "LookAtX" );
+		float fLookAtY = CMonoObject::GetPropertyValue< float >( pCameraMatrix, "LookAtY" );
+		float fLookAtZ = CMonoObject::GetPropertyValue< float >( pCameraMatrix, "LookAtZ" );
 
-		Vector3* vecLookAt = new Vector3( fLookAtX, fLookAtY, fLookAtZ );
+		Vector3 vecLookAt( fLookAtX, fLookAtY, fLookAtZ );
 
-		float fRoll = pCameraMatrix.GetPropertyValue< float >( "Roll" );
-		float fFOV	= pCameraMatrix.GetPropertyValue< float >( "FOV" );
+		float fRoll = CMonoObject::GetPropertyValue< float >( pCameraMatrix, "Roll" );
+		float fFOV	= CMonoObject::GetPropertyValue< float >( pCameraMatrix, "FOV" );
 
 		return CLuaFunctionDefinitions::SetCameraMatrix( RESOURCE->GetLua(), (void*)pPlayer, vecPosition, vecLookAt, fRoll, fFOV );
 	}
@@ -891,11 +868,9 @@ bool CMonoFunctions::Player::FadeCamera( DWORD pPlayer, bool bFadeIn, float fFad
 {
 	if( RESOURCE )
 	{
-		CMonoObject pColor( pColor );
-		
-		unsigned char ucReed	= pColor.GetPropertyValue< unsigned char >( "R" );
-		unsigned char ucGreen	= pColor.GetPropertyValue< unsigned char >( "G" );
-		unsigned char ucBlue	= pColor.GetPropertyValue< unsigned char >( "B" );
+		unsigned char ucReed	= CMonoObject::GetPropertyValue< unsigned char >( pColor, "R" );
+		unsigned char ucGreen	= CMonoObject::GetPropertyValue< unsigned char >( pColor, "G" );
+		unsigned char ucBlue	= CMonoObject::GetPropertyValue< unsigned char >( pColor, "B" );
 
 		return CLuaFunctionDefinitions::FadeCamera( RESOURCE->GetLua(), (void*)pPlayer, bFadeIn, fFadeTime, ucReed, ucGreen, ucBlue );
 	}

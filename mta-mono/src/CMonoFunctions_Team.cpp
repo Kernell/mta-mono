@@ -18,7 +18,7 @@ DWORD CMonoFunctions::Team::Create( MonoString* msTeamName, MonoObject* mColor )
 	if( RESOURCE )
 	{
 		const char*	szTeamName	= mono_string_to_utf8( msTeamName );
-		SColor pColor			= CMonoObject( mColor ).GetColor();
+		SColor pColor			= CMonoObject::GetColor( mColor );
 
 		return (DWORD)CLuaFunctionDefinitions::CreateTeam( RESOURCE->GetLua(), szTeamName, pColor.R, pColor.G, pColor.B );
 	}
@@ -61,12 +61,7 @@ MonoObject* CMonoFunctions::Team::GetColor( DWORD pUserData )
 
 		if( CLuaFunctionDefinitions::GetTeamColor( RESOURCE->GetLua(), (void*)pUserData, pColor.R, pColor.G, pColor.B ) )
 		{
-			CMonoObject* pObject = RESOURCE->NewObject( pColor );
-
-			if( pObject )
-			{
-				return pObject->GetObject();
-			}
+			return RESOURCE->NewObject( pColor );
 		}
 	}
 
@@ -121,7 +116,7 @@ bool CMonoFunctions::Team::SetColor( DWORD pUserData, MonoObject* mColor )
 {
 	if( RESOURCE )
 	{
-		SColor pColor = CMonoObject( mColor ).GetColor();
+		SColor pColor = CMonoObject::GetColor( mColor );
 
 		return CLuaFunctionDefinitions::SetTeamColor( RESOURCE->GetLua(), (void*)pUserData, pColor.R, pColor.G, pColor.B );
 	}

@@ -17,26 +17,9 @@ DWORD CMonoFunctions::RadarArea::Create( MonoObject* pPosition, MonoObject* pSiz
 {
 	if( RESOURCE )
 	{
-		Vector2 vecPosition, vecSize;
-
-		CMonoObject pPosition( pPosition );
-
-		vecPosition.fX = pPosition.GetPropertyValue< float >( "X" );
-		vecPosition.fY = pPosition.GetPropertyValue< float >( "Y" );
-
-		CMonoObject pSize( pSize );
-
-		vecSize.fX = pSize.GetPropertyValue< float >( "X" );
-		vecSize.fY = pSize.GetPropertyValue< float >( "Y" );
-
-		CMonoObject pMonoColor( color );
-
-		SColor pColor;
-
-		pColor.R = pMonoColor.GetPropertyValue< unsigned char >( "R" );
-		pColor.G = pMonoColor.GetPropertyValue< unsigned char >( "G" );
-		pColor.B = pMonoColor.GetPropertyValue< unsigned char >( "B" );
-		pColor.A = pMonoColor.GetPropertyValue< unsigned char >( "A" );
+		Vector2 vecPosition( pPosition );
+		Vector2 vecSize( pSize );
+		SColor pColor			= CMonoObject::GetColor( color );
 
 		return (DWORD)CLuaFunctionDefinitions::CreateRadarArea( RESOURCE->GetLua(), vecPosition, vecSize, pColor, (void*)pVisibleTo );
 	}
@@ -54,12 +37,7 @@ MonoObject* CMonoFunctions::RadarArea::GetSize( DWORD pUserData )
 		
 		if( CLuaFunctionDefinitions::GetRadarAreaSize( RESOURCE->GetLua(), (void*)pUserData, vecSize ) )
 		{
-			CMonoObject* pObject = RESOURCE->NewObject( vecSize );
-
-			if( pObject )
-			{
-				return pObject->GetObject();
-			}
+			return RESOURCE->NewObject( vecSize );
 		}
 	}
 
@@ -74,12 +52,7 @@ MonoObject* CMonoFunctions::RadarArea::GetColor( DWORD pUserData )
 		
 		if( CLuaFunctionDefinitions::GetRadarAreaColor( RESOURCE->GetLua(), (void*)pUserData, outColor ) )
 		{
-			CMonoObject* pObject = RESOURCE->NewObject( outColor );
-
-			if( pObject )
-			{
-				return pObject->GetObject();
-			}
+			return RESOURCE->NewObject( outColor );
 		}
 	}
 
@@ -102,10 +75,8 @@ bool CMonoFunctions::RadarArea::IsInside( DWORD pUserData, MonoObject* pPosition
 	{
 		bool bInside;
 
-		CMonoObject pPosition( pPosition );
-
-		float fX = pPosition.GetPropertyValue< float >( "X" );
-		float fY = pPosition.GetPropertyValue< float >( "Y" );
+		float fX = CMonoObject::GetPropertyValue< float >( pPosition, "X" );
+		float fY = CMonoObject::GetPropertyValue< float >( pPosition, "Y" );
 
 		Vector2 vecPosition( fX, fY );
 
@@ -124,10 +95,8 @@ bool CMonoFunctions::RadarArea::SetSize( DWORD pUserData, MonoObject* pSize )
 {
 	if( RESOURCE )
 	{
-		CMonoObject pSize( pSize );
-
-		float fX = pSize.GetPropertyValue< float >( "X" );
-		float fY = pSize.GetPropertyValue< float >( "Y" );
+		float fX = CMonoObject::GetPropertyValue< float >( pSize, "X" );
+		float fY = CMonoObject::GetPropertyValue< float >( pSize, "Y" );
 
 		Vector2 vecPosition( fX, fY );
 
@@ -141,14 +110,7 @@ bool CMonoFunctions::RadarArea::SetColor( DWORD pUserData, MonoObject* color )
 {
 	if( RESOURCE )
 	{
-		SColor pColor;
-
-		CMonoObject pObject( color );
-
-		pColor.R = pObject.GetPropertyValue< unsigned char >( "R" );
-		pColor.G = pObject.GetPropertyValue< unsigned char >( "G" );
-		pColor.B = pObject.GetPropertyValue< unsigned char >( "B" );
-		pColor.A = pObject.GetPropertyValue< unsigned char >( "A" );
+		SColor pColor = CMonoObject::GetColor( color );
 
 		return CLuaFunctionDefinitions::SetRadarAreaColor( RESOURCE->GetLua(), (void*)pUserData, pColor );
 	}

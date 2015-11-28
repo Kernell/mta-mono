@@ -17,26 +17,9 @@ DWORD CMonoFunctions::Marker::Create( MonoObject* pPosition, MonoString* msType,
 {
 	if( RESOURCE )
 	{
-		CMonoObject pPosition( pPosition );
-
-		float fX = pPosition.GetPropertyValue< float >( "X" );
-		float fY = pPosition.GetPropertyValue< float >( "Y" );
-		float fZ = pPosition.GetPropertyValue< float >( "Z" );
-
-		Vector3 vecPosition( fX, fY, fZ );
-
 		const char* szType = mono_string_to_utf8( msType );
 
-		CMonoObject pMonoColor( pColor );
-
-		SColor pColor;
-
-		pColor.R = pMonoColor.GetPropertyValue< unsigned char >( "R" );
-		pColor.G = pMonoColor.GetPropertyValue< unsigned char >( "G" );
-		pColor.B = pMonoColor.GetPropertyValue< unsigned char >( "B" );
-		pColor.A = pMonoColor.GetPropertyValue< unsigned char >( "A" );
-
-		return (DWORD)CLuaFunctionDefinitions::CreateMarker( RESOURCE->GetLua(), vecPosition, szType, fSize, pColor, (void*)pVisibleTo );
+		return (DWORD)CLuaFunctionDefinitions::CreateMarker( RESOURCE->GetLua(), Vector3( pPosition ), szType, fSize, CMonoObject::GetColor( pColor ), (void*)pVisibleTo );
 	}
 
 	return NULL;
@@ -97,12 +80,7 @@ MonoObject* CMonoFunctions::Marker::GetColor( DWORD pUserData )
 		
 		if( CLuaFunctionDefinitions::GetMarkerColor( RESOURCE->GetLua(), (void*)pUserData, outColor ) )
 		{
-			CMonoObject* pObject = RESOURCE->NewObject( outColor );
-
-			if( pObject )
-			{
-				return pObject->GetObject();
-			}
+			return RESOURCE->NewObject( outColor );
 		}
 	}
 
@@ -117,12 +95,7 @@ MonoObject* CMonoFunctions::Marker::GetTarget( DWORD pUserData )
 		
 		if( CLuaFunctionDefinitions::GetMarkerTarget( RESOURCE->GetLua(), (void*)pUserData, vecPosition ) )
 		{
-			CMonoObject* pObject = RESOURCE->NewObject( vecPosition );
-
-			if( pObject )
-			{
-				return pObject->GetObject();
-			}
+			return RESOURCE->NewObject( vecPosition );
 		}
 	}
 
@@ -168,20 +141,11 @@ bool CMonoFunctions::Marker::SetSize( DWORD pUserData, float fSize )
 	return false;
 }
 
-bool CMonoFunctions::Marker::SetColor( DWORD pUserData, MonoObject* color )
+bool CMonoFunctions::Marker::SetColor( DWORD pUserData, MonoObject* pColor )
 {
 	if( RESOURCE )
 	{
-		SColor pColor;
-
-		CMonoObject pMonoColor( color );
-
-		pColor.R = pMonoColor.GetPropertyValue< unsigned char >( "R" );
-		pColor.G = pMonoColor.GetPropertyValue< unsigned char >( "G" );
-		pColor.B = pMonoColor.GetPropertyValue< unsigned char >( "B" );
-		pColor.A = pMonoColor.GetPropertyValue< unsigned char >( "A" );
-		
-		return CLuaFunctionDefinitions::SetMarkerColor( RESOURCE->GetLua(), (void*)pUserData, pColor );
+		return CLuaFunctionDefinitions::SetMarkerColor( RESOURCE->GetLua(), (void*)pUserData, CMonoObject::GetColor( pColor ) );
 	}
 
 	return false;
@@ -191,15 +155,7 @@ bool CMonoFunctions::Marker::SetTarget( DWORD pUserData, MonoObject* pTarget )
 {
 	if( RESOURCE )
 	{
-		Vector3* vecPosition = new Vector3;
-
-		CMonoObject pTarget( pTarget );
-
-		vecPosition->fX = pTarget.GetPropertyValue< float >( "X" );
-		vecPosition->fY = pTarget.GetPropertyValue< float >( "Y" );
-		vecPosition->fZ = pTarget.GetPropertyValue< float >( "Z" );
-		
-		return CLuaFunctionDefinitions::SetMarkerTarget( RESOURCE->GetLua(), (void*)pUserData, vecPosition );
+		return CLuaFunctionDefinitions::SetMarkerTarget( RESOURCE->GetLua(), (void*)pUserData, Vector3( pTarget ) );
 	}
 
 	return false;

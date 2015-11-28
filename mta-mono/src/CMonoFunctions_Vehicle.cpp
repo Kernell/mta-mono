@@ -17,17 +17,13 @@ DWORD CMonoFunctions::Vehicle::Create( int model, MonoObject* position, MonoObje
 {
 	if( RESOURCE )
 	{
-		CMonoObject pPosition( position );
+		float fX = CMonoObject::GetPropertyValue< float >( position, "X" );
+		float fY = CMonoObject::GetPropertyValue< float >( position, "Y" );
+		float fZ = CMonoObject::GetPropertyValue< float >( position, "Z" );
 
-		float fX = pPosition.GetPropertyValue< float >( "X" );
-		float fY = pPosition.GetPropertyValue< float >( "Y" );
-		float fZ = pPosition.GetPropertyValue< float >( "Z" );
-
-		CMonoObject pRotation( rotation );
-
-		float fRX = pRotation.GetPropertyValue< float >( "X" );
-		float fRY = pRotation.GetPropertyValue< float >( "Y" );
-		float fRZ = pRotation.GetPropertyValue< float >( "Z" );
+		float fRX = CMonoObject::GetPropertyValue< float >( rotation, "X" );
+		float fRY = CMonoObject::GetPropertyValue< float >( rotation, "Y" );
+		float fRZ = CMonoObject::GetPropertyValue< float >( rotation, "Z" );
 
 		string sNumberplate = "";
 
@@ -103,12 +99,7 @@ MonoObject* CMonoFunctions::Vehicle::GetColor( DWORD pUserData )
 				&pColor4
 			};
 
-			CMonoObject* pObject = RESOURCE->NewObject( "MultiTheftAuto", "VehicleColor", args, 4 );
-
-			if( pObject )
-			{
-				return pObject->GetObject();
-			}
+			return RESOURCE->NewObject( "MultiTheftAuto", "VehicleColor", args, 4 );
 		}
 	}
 
@@ -247,12 +238,7 @@ MonoObject* CMonoFunctions::Vehicle::GetTurnVelocity( DWORD pUserData )
 
 		if( CLuaFunctionDefinitions::GetVehicleTurnVelocity( RESOURCE->GetLua(), (void*)pUserData, vecVelocity ) )
 		{
-			CMonoObject* pObject = RESOURCE->NewObject( vecVelocity );
-
-			if( pObject )
-			{
-				return pObject->GetObject();
-			}
+			return RESOURCE->NewObject( vecVelocity );
 		}
 	}
 
@@ -267,12 +253,7 @@ MonoObject* CMonoFunctions::Vehicle::GetTurretPosition( DWORD pUserData )
 
 		if( CLuaFunctionDefinitions::GetVehicleTurretPosition( RESOURCE->GetLua(), (void*)pUserData, vecPosition ) )
 		{
-			CMonoObject* pObject = RESOURCE->NewObject( vecPosition );
-
-			if( pObject )
-			{
-				return pObject->GetObject();
-			}
+			return RESOURCE->NewObject( vecPosition );
 		}
 	}
 
@@ -388,12 +369,7 @@ MonoObject* CMonoFunctions::Vehicle::GetWheelStates( DWORD pUserData )
 				&ucFrontLeft, &ucRearLeft, &ucFrontRight, &ucRearRight
 			};
 
-			CMonoObject* pObject = RESOURCE->NewObject( "MultiTheftAuto.Vehicle", "VehicleWheelsState", args, 4 );
-
-			if( pObject )
-			{
-				return pObject->GetObject();
-			}
+			return RESOURCE->NewObject( "MultiTheftAuto.Vehicle", "VehicleWheelsState", args, 4 );
 		}
 	}
 
@@ -648,12 +624,7 @@ MonoObject* CMonoFunctions::Vehicle::GetHeadLightColor( DWORD pUserData )
 
 		if( CLuaFunctionDefinitions::GetVehicleHeadLightColor( RESOURCE->GetLua(), (void*)pUserData, outColor ) )
 		{
-			CMonoObject* pMonoObject = RESOURCE->NewObject( outColor );
-
-			if( pMonoObject )
-			{
-				return pMonoObject->GetObject();
-			}
+			return RESOURCE->NewObject( outColor );
 		}
 	}
 
@@ -716,11 +687,9 @@ bool CMonoFunctions::Vehicle::SetTurnVelocity( DWORD pUserData, MonoObject* pVel
 {
 	if( RESOURCE )
 	{
-		CMonoObject pVelocity( pVelocity );
-
-		float fX = pVelocity.GetPropertyValue< float >( "X" );
-		float fY = pVelocity.GetPropertyValue< float >( "Y" );
-		float fZ = pVelocity.GetPropertyValue< float >( "Z" );
+		float fX = CMonoObject::GetPropertyValue< float >( pVelocity, "X" );
+		float fY = CMonoObject::GetPropertyValue< float >( pVelocity, "Y" );
+		float fZ = CMonoObject::GetPropertyValue< float >( pVelocity, "Z" );
 
 		return CLuaFunctionDefinitions::SetVehicleTurnVelocity( RESOURCE->GetLua(), (void*)pUserData, fX, fY, fZ );
 	}
@@ -732,29 +701,21 @@ bool CMonoFunctions::Vehicle::SetColor( DWORD pUserData, MonoObject* pColor1, Mo
 {
 	if( RESOURCE )
 	{
-		CMonoObject pColor1( pColor1 );
+		unsigned char ucR1 = CMonoObject::GetPropertyValue< unsigned char >( pColor1, "R" );
+		unsigned char ucG1 = CMonoObject::GetPropertyValue< unsigned char >( pColor1, "G" );
+		unsigned char ucB1 = CMonoObject::GetPropertyValue< unsigned char >( pColor1, "B" );
 
-		unsigned char ucR1 = pColor1.GetPropertyValue< unsigned char >( "R" );
-		unsigned char ucG1 = pColor1.GetPropertyValue< unsigned char >( "G" );
-		unsigned char ucB1 = pColor1.GetPropertyValue< unsigned char >( "B" );
+		unsigned char ucR2 = CMonoObject::GetPropertyValue< unsigned char >( pColor2, "R" );
+		unsigned char ucG2 = CMonoObject::GetPropertyValue< unsigned char >( pColor2, "G" );
+		unsigned char ucB2 = CMonoObject::GetPropertyValue< unsigned char >( pColor2, "B" );
 
-		CMonoObject pColor2( pColor2 );
+		unsigned char ucR3 = CMonoObject::GetPropertyValue< unsigned char >( pColor3, "R" );
+		unsigned char ucG3 = CMonoObject::GetPropertyValue< unsigned char >( pColor3, "G" );
+		unsigned char ucB3 = CMonoObject::GetPropertyValue< unsigned char >( pColor3, "B" );
 
-		unsigned char ucR2 = pColor2.GetPropertyValue< unsigned char >( "R" );
-		unsigned char ucG2 = pColor2.GetPropertyValue< unsigned char >( "G" );
-		unsigned char ucB2 = pColor2.GetPropertyValue< unsigned char >( "B" );
-
-		CMonoObject pColor3( pColor3 );
-
-		unsigned char ucR3 = pColor3.GetPropertyValue< unsigned char >( "R" );
-		unsigned char ucG3 = pColor3.GetPropertyValue< unsigned char >( "G" );
-		unsigned char ucB3 = pColor3.GetPropertyValue< unsigned char >( "B" );
-
-		CMonoObject pColor4( pColor4 );
-
-		unsigned char ucR4 = pColor4.GetPropertyValue< unsigned char >( "R" );
-		unsigned char ucG4 = pColor4.GetPropertyValue< unsigned char >( "G" );
-		unsigned char ucB4 = pColor4.GetPropertyValue< unsigned char >( "B" );
+		unsigned char ucR4 = CMonoObject::GetPropertyValue< unsigned char >( pColor4, "R" );
+		unsigned char ucG4 = CMonoObject::GetPropertyValue< unsigned char >( pColor4, "G" );
+		unsigned char ucB4 = CMonoObject::GetPropertyValue< unsigned char >( pColor4, "B" );
 
 		return CLuaFunctionDefinitions::SetVehicleColor( RESOURCE->GetLua(), (void*)pUserData, ucR1, ucG1, ucB1, ucR2, ucG2, ucB2, ucR3, ucG3, ucB3, ucR4, ucG4, ucB4 );
 	}
@@ -896,17 +857,13 @@ bool CMonoFunctions::Vehicle::SetRespawnPosition( DWORD pUserData, MonoObject* p
 {
 	if( RESOURCE )
 	{
-		CMonoObject pPosition( pPosition );
+		float fX = CMonoObject::GetPropertyValue< float >( pPosition, "X" );
+		float fY = CMonoObject::GetPropertyValue< float >( pPosition, "Y" );
+		float fZ = CMonoObject::GetPropertyValue< float >( pPosition, "Z" );
 
-		float fX = pPosition.GetPropertyValue< float >( "X" );
-		float fY = pPosition.GetPropertyValue< float >( "X" );
-		float fZ = pPosition.GetPropertyValue< float >( "X" );
-
-		CMonoObject pRotation( pRotation );
-
-		float fRX = pRotation.GetPropertyValue< float >( "X" );
-		float fRY = pRotation.GetPropertyValue< float >( "X" );
-		float fRZ = pRotation.GetPropertyValue< float >( "X" );
+		float fRX = CMonoObject::GetPropertyValue< float >( pRotation, "X" );
+		float fRY = CMonoObject::GetPropertyValue< float >( pRotation, "Y" );
+		float fRZ = CMonoObject::GetPropertyValue< float >( pRotation, "Z" );
 
 		return CLuaFunctionDefinitions::SetVehicleRespawnPosition( RESOURCE->GetLua(), (void*)pUserData, fX, fY, fZ, fRX, fRY, fRZ );
 	}
@@ -948,17 +905,13 @@ bool CMonoFunctions::Vehicle::Spawn( DWORD pUserData, MonoObject* pPosition, Mon
 {
 	if( RESOURCE )
 	{
-		CMonoObject pPosition( pPosition );
+		float fX = CMonoObject::GetPropertyValue< float >( pPosition, "X" );
+		float fY = CMonoObject::GetPropertyValue< float >( pPosition, "Y" );
+		float fZ = CMonoObject::GetPropertyValue< float >( pPosition, "Z" );
 
-		float fX = pPosition.GetPropertyValue< float >( "X" );
-		float fY = pPosition.GetPropertyValue< float >( "X" );
-		float fZ = pPosition.GetPropertyValue< float >( "X" );
-
-		CMonoObject pRotation( pRotation );
-
-		float fRX = pRotation.GetPropertyValue< float >( "X" );
-		float fRY = pRotation.GetPropertyValue< float >( "X" );
-		float fRZ = pRotation.GetPropertyValue< float >( "X" );
+		float fRX = CMonoObject::GetPropertyValue< float >( pRotation, "X" );
+		float fRY = CMonoObject::GetPropertyValue< float >( pRotation, "Y" );
+		float fRZ = CMonoObject::GetPropertyValue< float >( pRotation, "Z" );
 
 		return CLuaFunctionDefinitions::SpawnVehicle( RESOURCE->GetLua(), (void*)pUserData, fX, fY, fZ, fRX, fRY, fRZ );
 	}
@@ -1100,11 +1053,9 @@ bool CMonoFunctions::Vehicle::SetHeadLightColor( DWORD pUserData, MonoObject* pC
 {
 	if( RESOURCE )
 	{
-		CMonoObject pColor1( pColor );
-
-		unsigned char ucR1 = pColor1.GetPropertyValue< unsigned char >( "R" );
-		unsigned char ucG1 = pColor1.GetPropertyValue< unsigned char >( "G" );
-		unsigned char ucB1 = pColor1.GetPropertyValue< unsigned char >( "B" );
+		unsigned char ucR1 = CMonoObject::GetPropertyValue< unsigned char >( pColor, "R" );
+		unsigned char ucG1 = CMonoObject::GetPropertyValue< unsigned char >( pColor, "G" );
+		unsigned char ucB1 = CMonoObject::GetPropertyValue< unsigned char >( pColor, "B" );
 
 		return CLuaFunctionDefinitions::SetVehicleHeadLightColor( RESOURCE->GetLua(), (void*)pUserData, ucR1, ucG1, ucB1 );
 	}
@@ -1116,10 +1067,8 @@ bool CMonoFunctions::Vehicle::SetTurretPosition( DWORD pUserData, MonoObject* pP
 {
 	if( RESOURCE )
 	{
-		CMonoObject pPosition( pPosition );
-
-		float fX = pPosition.GetPropertyValue< float >( "X" );
-		float fY = pPosition.GetPropertyValue< float >( "Y" );
+		float fX = CMonoObject::GetPropertyValue< float >( pPosition, "X" );
+		float fY = CMonoObject::GetPropertyValue< float >( pPosition, "Y" );
 
 		return CLuaFunctionDefinitions::SetVehicleTurretPosition( RESOURCE->GetLua(), (void*)pUserData, fX, fY );
 	}
@@ -1171,18 +1120,14 @@ bool CMonoFunctions::Vehicle::SetSirens( DWORD pUserData, unsigned char ucSirenI
 {
 	if( RESOURCE )
 	{
-		CMonoObject pPosition( pPosition );
+		float fX		= CMonoObject::GetPropertyValue< float >( pPosition, "X" );
+		float fY		= CMonoObject::GetPropertyValue< float >( pPosition, "Y" );
+		float fZ		= CMonoObject::GetPropertyValue< float >( pPosition, "Z" );
 
-		float fX		= pPosition.GetPropertyValue< float >( "X" );
-		float fY		= pPosition.GetPropertyValue< float >( "Y" );
-		float fZ		= pPosition.GetPropertyValue< float >( "Z" );
-
-		CMonoObject pColor( pColor );
-
-		float fRed		= pColor.GetPropertyValue< float >( "R" );
-		float fGreen	= pColor.GetPropertyValue< float >( "G" );
-		float fBlue		= pColor.GetPropertyValue< float >( "B" );
-		float fAlpha	= pColor.GetPropertyValue< float >( "A" );
+		float fRed		= CMonoObject::GetPropertyValue< float >( pColor, "R" );
+		float fGreen	= CMonoObject::GetPropertyValue< float >( pColor, "G" );
+		float fBlue		= CMonoObject::GetPropertyValue< float >( pColor, "B" );
+		float fAlpha	= CMonoObject::GetPropertyValue< float >( pColor, "A" );
 
 		return CLuaFunctionDefinitions::SetVehicleSirens( RESOURCE->GetLua(), (void*)pUserData, ucSirenID, fX, fY, fZ, fRed, fGreen, fBlue, fAlpha, fMinAlpha );
 	}

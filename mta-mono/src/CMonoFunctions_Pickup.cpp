@@ -17,13 +17,7 @@ DWORD CMonoFunctions::Pickup::Create( MonoObject* pPosition, unsigned char ucTyp
 {
 	if( RESOURCE )
 	{
-		CMonoObject pPosition( pPosition );
-
-		float fX = pPosition.GetPropertyValue< float >( "X" );
-		float fY = pPosition.GetPropertyValue< float >( "Y" );
-		float fZ = pPosition.GetPropertyValue< float >( "Z" );
-
-		Vector3 vecPosition( fX, fY, fZ );
+		Vector3 vecPosition( pPosition );
 
 		return (DWORD)CLuaFunctionDefinitions::CreatePickup( RESOURCE->GetLua(), vecPosition, ucType, dFive, ulRespawnInterval, dSix );
 	}

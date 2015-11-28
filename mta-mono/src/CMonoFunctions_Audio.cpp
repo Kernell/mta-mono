@@ -27,9 +27,7 @@ bool CMonoFunctions::Audio::PlayMission( DWORD pUserData, MonoObject* pPosition,
 {
 	if( RESOURCE )
 	{
-		Vector3 vecPosition = CMonoObject( pPosition ).GetVector3();
-	
-		return CLuaFunctionDefinitions::PlayMissionAudio( RESOURCE->GetLua(), (void*)pUserData, vecPosition, usSlot );
+		return CLuaFunctionDefinitions::PlayMissionAudio( RESOURCE->GetLua(), (void*)pUserData, Vector3( pPosition ), usSlot );
 	}
 
 	return false;

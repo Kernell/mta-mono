@@ -41,13 +41,7 @@ DWORD CMonoFunctions::Element::Clone( DWORD pUserData, MonoObject* vecPosition, 
 {
 	if( RESOURCE )
 	{
-		CMonoObject pPosition( vecPosition );
-		
-		float fX = pPosition.GetPropertyValue< float >( "X" );
-		float fY = pPosition.GetPropertyValue< float >( "Y" );
-		float fZ = pPosition.GetPropertyValue< float >( "Z" );
-
-		return (DWORD)CLuaFunctionDefinitions::CloneElement( RESOURCE->GetLua(), (void*)pUserData, Vector3( fX, fY, fZ ), bCloneElement );
+		return (DWORD)CLuaFunctionDefinitions::CloneElement( RESOURCE->GetLua(), (void*)pUserData, Vector3( vecPosition ), bCloneElement );
 	}
 
 	return false;
@@ -163,12 +157,7 @@ MonoObject* CMonoFunctions::Element::GetPosition( DWORD pUserData )
 		
 		if( CLuaFunctionDefinitions::GetElementPosition( RESOURCE->GetLua(), (void*)pUserData, vecPosition ) )
 		{
-			CMonoObject* pObject = RESOURCE->NewObject( vecPosition );
-			
-			if( pObject )
-			{
-				return pObject->GetObject();
-			}
+			return RESOURCE->NewObject( vecPosition );
 		}
 	}
 
@@ -183,12 +172,7 @@ MonoObject* CMonoFunctions::Element::GetRotation( DWORD pUserData )
 		
 		if( CLuaFunctionDefinitions::GetElementRotation( RESOURCE->GetLua(), (void*)pUserData, vecPosition ) )
 		{
-			CMonoObject* pObject = RESOURCE->NewObject( vecPosition );
-			
-			if( pObject )
-			{
-				return pObject->GetObject();
-			}
+			return RESOURCE->NewObject( vecPosition );
 		}
 	}
 
@@ -203,12 +187,7 @@ MonoObject* CMonoFunctions::Element::GetVelocity( DWORD pUserData )
 		
 		if( CLuaFunctionDefinitions::GetElementVelocity( RESOURCE->GetLua(), (void*)pUserData, vecPosition ) )
 		{
-			CMonoObject* pObject = RESOURCE->NewObject( vecPosition );
-			
-			if( pObject )
-			{
-				return pObject->GetObject();
-			}
+			return RESOURCE->NewObject( vecPosition );
 		}
 	}
 
@@ -403,12 +382,7 @@ MonoObject* CMonoFunctions::Element::GetAttachedOffsetPosition( DWORD pUserData 
 		
 		if( CLuaFunctionDefinitions::GetElementAttachedOffsets( RESOURCE->GetLua(), (void*)pUserData, vecPosition, vecRotation ) )
 		{
-			CMonoObject* pObject = RESOURCE->NewObject( vecPosition );
-			
-			if( pObject )
-			{
-				return pObject->GetObject();
-			}
+			return RESOURCE->NewObject( vecPosition );
 		}
 	}
 
@@ -423,12 +397,7 @@ MonoObject* CMonoFunctions::Element::GetAttachedOffsetRotation( DWORD pUserData 
 		
 		if( CLuaFunctionDefinitions::GetElementAttachedOffsets( RESOURCE->GetLua(), (void*)pUserData, vecPosition, vecRotation ) )
 		{
-			CMonoObject* pObject = RESOURCE->NewObject( vecRotation );
-			
-			if( pObject )
-			{
-				return pObject->GetObject();
-			}
+			return RESOURCE->NewObject( vecRotation );
 		}
 	}
 
@@ -560,13 +529,7 @@ bool CMonoFunctions::Element::SetPosition( DWORD pUserData, MonoObject* pPositio
 {
 	if( RESOURCE )
 	{
-		CMonoObject pPosition( pPosition );
-		
-		float fX = pPosition.GetPropertyValue< float >( "X" );
-		float fY = pPosition.GetPropertyValue< float >( "Y" );
-		float fZ = pPosition.GetPropertyValue< float >( "Z" );
-
-		return CLuaFunctionDefinitions::SetElementPosition( RESOURCE->GetLua(), (void*)pUserData, Vector3( fX, fY, fZ ), bWarp );
+		return CLuaFunctionDefinitions::SetElementPosition( RESOURCE->GetLua(), (void*)pUserData, Vector3( pPosition ), bWarp );
 	}
 	
 	return false;
@@ -576,15 +539,9 @@ bool CMonoFunctions::Element::SetRotation( DWORD pUserData, MonoObject* pRotatio
 {
 	if( RESOURCE )
 	{
-		CMonoObject pPosition( pRotation );
-		
-		float fX = pPosition.GetPropertyValue<float>( "X" );
-		float fY = pPosition.GetPropertyValue<float>( "Y" );
-		float fZ = pPosition.GetPropertyValue<float>( "Z" );
-
 		const char* szRotationOrder = mono_string_to_utf8( msRotationOrder );
 
-		return CLuaFunctionDefinitions::SetElementRotation( RESOURCE->GetLua(), (void*)pUserData, Vector3( fX, fY, fZ ), szRotationOrder, bNewWay );
+		return CLuaFunctionDefinitions::SetElementRotation( RESOURCE->GetLua(), (void*)pUserData, Vector3( pRotation ), szRotationOrder, bNewWay );
 	}
 	
 	return false;
@@ -594,13 +551,7 @@ bool CMonoFunctions::Element::SetVelocity( DWORD pUserData, MonoObject* pVelocit
 {
 	if( RESOURCE )
 	{
-		CMonoObject pPosition( pVelocity );
-		
-		float fX = pPosition.GetPropertyValue<float>( "X" );
-		float fY = pPosition.GetPropertyValue<float>( "Y" );
-		float fZ = pPosition.GetPropertyValue<float>( "Z" );
-		
-		return CLuaFunctionDefinitions::SetElementVelocity( RESOURCE->GetLua(), (void*)pUserData, Vector3( fX, fY, fZ ) );
+		return CLuaFunctionDefinitions::SetElementVelocity( RESOURCE->GetLua(), (void*)pUserData, Vector3( pVelocity ) );
 	}
 	
 	return false;
@@ -641,18 +592,8 @@ bool CMonoFunctions::Element::Attach( DWORD pUserData, DWORD pTarget, MonoObject
 	if( RESOURCE )
 	{
 		Vector3
-			vecPosition, vecRotation;
-		
-		CMonoObject
-			pPosition( pMonoPosition ), pRotation( pMonoRotation );
-		
-		vecPosition.fX = pPosition.GetPropertyValue<float>( "X" );
-		vecPosition.fY = pPosition.GetPropertyValue<float>( "Y" );
-		vecPosition.fZ = pPosition.GetPropertyValue<float>( "Z" );
-		
-		vecRotation.fX = pRotation.GetPropertyValue<float>( "X" );
-		vecRotation.fY = pRotation.GetPropertyValue<float>( "Y" );
-		vecRotation.fZ = pRotation.GetPropertyValue<float>( "Z" );
+			vecPosition( pMonoPosition ),
+			vecRotation( pMonoRotation );
 		
 		return CLuaFunctionDefinitions::AttachElements( RESOURCE->GetLua(), (void*)pUserData, (void*)pTarget, vecPosition, vecRotation );
 	}
@@ -715,18 +656,8 @@ bool CMonoFunctions::Element::SetAttachedOffsets( DWORD pUserData, MonoObject* p
 	if( RESOURCE )
 	{
 		Vector3
-			vecPosition, vecRotation;
-
-		CMonoObject
-			pPosition( pMonoPosition ), pRotation( pMonoRotation );
-		
-		vecPosition.fX = pPosition.GetPropertyValue<float>( "X" );
-		vecPosition.fY = pPosition.GetPropertyValue<float>( "Y" );
-		vecPosition.fZ = pPosition.GetPropertyValue<float>( "Z" );
-		
-		vecRotation.fX = pRotation.GetPropertyValue<float>( "X" );
-		vecRotation.fY = pRotation.GetPropertyValue<float>( "Y" );
-		vecRotation.fZ = pRotation.GetPropertyValue<float>( "Z" );
+			vecPosition( pMonoPosition ),
+			vecRotation( pMonoRotation );
 		
 		return CLuaFunctionDefinitions::SetElementAttachedOffsets( RESOURCE->GetLua(), (void*)pUserData, vecPosition, vecRotation );
 	}

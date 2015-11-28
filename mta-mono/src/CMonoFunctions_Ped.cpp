@@ -20,13 +20,7 @@ DWORD CMonoFunctions::Ped::Create( int iModelid, MonoObject* pMonoPosition, floa
 {
 	if( RESOURCE )
 	{
-		CMonoObject pPosition( pMonoPosition );
-		
-		float fX = pPosition.GetPropertyValue< float >( "X" );
-		float fY = pPosition.GetPropertyValue< float >( "Y" );
-		float fZ = pPosition.GetPropertyValue< float >( "Z" );
-
-		Vector3 vecPosition( fX, fY, fZ );
+		Vector3 vecPosition( pMonoPosition );
 		
 		return (DWORD)CLuaFunctionDefinitions::CreatePed( RESOURCE->GetLua(), iModelid, vecPosition, fRot, bSynced );
 	}

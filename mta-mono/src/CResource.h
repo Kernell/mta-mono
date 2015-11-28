@@ -43,13 +43,13 @@ public:
 	void	DoPulse				( void );
 	bool	RegisterFunction	( const char *szFunctionName, lua_CFunction Func );
 
-	CMonoClass* GetClassFromName( const char* szNamespace, const char* szName );
+	MonoClass* GetClassFromName( const char* szNamespace, const char* szName );
 
-	CMonoObject* NewObject( const char* szNamespace, const char* szName );
-	CMonoObject* NewObject( SColor& pColor );
-	CMonoObject* NewObject( Vector2& vecVector );
-	CMonoObject* NewObject( Vector3& vecVector );
-	CMonoObject* NewObject( const char* szNamespace, const char* szName, void** args, int argc );
+	MonoObject* NewObject( const char* szNamespace, const char* szName );
+	MonoObject* NewObject( SColor& pColor );
+	MonoObject* NewObject( Vector2& vecVector );
+	MonoObject* NewObject( Vector3& vecVector );
+	MonoObject* NewObject( const char* szNamespace, const char* szName, void** args, int argc );
 	
 	MonoString*	NewString( const char* szText )
 	{

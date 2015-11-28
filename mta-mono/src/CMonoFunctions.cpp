@@ -683,11 +683,9 @@ bool CMonoFunctions::Server::OutputChatBox( MonoString* msText, DWORD pElement, 
 	{
 		const char* szText		= mono_string_to_utf8( msText );
 
-		CMonoObject pColor( mpColor );
-		
-		unsigned char ucRed		= pColor.GetPropertyValue< unsigned char >( "R" );
-		unsigned char ucGreen	= pColor.GetPropertyValue< unsigned char >( "G" );
-		unsigned char ucBlue	= pColor.GetPropertyValue< unsigned char >( "B" );
+		unsigned char ucRed		= CMonoObject::GetPropertyValue< unsigned char >( mpColor, "R" );
+		unsigned char ucGreen	= CMonoObject::GetPropertyValue< unsigned char >( mpColor, "G" );
+		unsigned char ucBlue	= CMonoObject::GetPropertyValue< unsigned char >( mpColor, "B" );
 
 		return CLuaFunctionDefinitions::OutputChatBox( RESOURCE->GetLua(), szText, (void*)pElement, ucRed, ucGreen, ucBlue, bColorCoded );
 	}
@@ -748,12 +746,7 @@ MonoObject* CMonoFunctions::Server::GetVersion( void )
 				&szSortable
 			};
 
-			CMonoObject* pObject = RESOURCE->NewObject( "MultiTheftAuto", "ServerVersion", args, 8 );
-
-			if( pObject )
-			{
-				return pObject->GetObject();
-			}
+			return RESOURCE->NewObject( "MultiTheftAuto", "ServerVersion", args, 8 );
 		}
 	}
 
