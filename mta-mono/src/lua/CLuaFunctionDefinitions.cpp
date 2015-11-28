@@ -4458,14 +4458,14 @@ bool CLuaFunctionDefinitions::SetMarkerColor( lua_State* pLuaVM, void* pUserData
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetMarkerTarget( lua_State* pLuaVM, void* pUserData, const Vector3* pTarget )
+bool CLuaFunctionDefinitions::SetMarkerTarget( lua_State* pLuaVM, void* pUserData, const Vector3& pTarget )
 {
 	CLuaArguments pLuaArguments;
 
 	pLuaArguments.PushUserData( pUserData );
-	pLuaArguments.PushNumber( pTarget->fX );
-	pLuaArguments.PushNumber( pTarget->fY );
-	pLuaArguments.PushNumber( pTarget->fZ );
+	pLuaArguments.PushNumber( pTarget.fX );
+	pLuaArguments.PushNumber( pTarget.fY );
+	pLuaArguments.PushNumber( pTarget.fZ );
 
 	if( pLuaArguments.Call( pLuaVM, "setMarkerTarget", 1 ) )
 	{
@@ -8451,7 +8451,7 @@ bool CLuaFunctionDefinitions::GetCameraInterior( lua_State* pLuaVM, void* pPlaye
 
 // Camera set functions
 
-bool CLuaFunctionDefinitions::SetCameraMatrix( lua_State* pLuaVM, void* pElement, const Vector3& vecPosition, Vector3* pvecLookAt, float fRoll, float fFOV )
+bool CLuaFunctionDefinitions::SetCameraMatrix( lua_State* pLuaVM, void* pElement, const Vector3& vecPosition, Vector3& pvecLookAt, float fRoll, float fFOV )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8461,16 +8461,16 @@ bool CLuaFunctionDefinitions::SetCameraMatrix( lua_State* pLuaVM, void* pElement
 	pLuaArguments.PushNumber( vecPosition.fY );
 	pLuaArguments.PushNumber( vecPosition.fZ );
 
-	pLuaArguments.PushNumber( pvecLookAt->fX );
-	pLuaArguments.PushNumber( pvecLookAt->fY );
-	pLuaArguments.PushNumber( pvecLookAt->fZ );
+	pLuaArguments.PushNumber( pvecLookAt.fX );
+	pLuaArguments.PushNumber( pvecLookAt.fY );
+	pLuaArguments.PushNumber( pvecLookAt.fZ );
 
 	pLuaArguments.PushNumber( fRoll );
 	pLuaArguments.PushNumber( fFOV );
 	
 	if( pLuaArguments.Call( pLuaVM, "setCameraMatrix", 1 ) )
 	{
-		return ( new CLuaArgument( pLuaVM, -1 ) )->GetBoolean();
+		return CLuaArgument( pLuaVM, -1 ).GetBoolean();
 	}
 
 	return false;

@@ -331,7 +331,7 @@ public:
     static bool						SetMarkerType					( lua_State* pLuaVM, void* pUserData, const char* szType );
     static bool						SetMarkerSize					( lua_State* pLuaVM, void* pUserData, float fSize );
     static bool						SetMarkerColor					( lua_State* pLuaVM, void* pUserData, const SColor color );
-    static bool						SetMarkerTarget					( lua_State* pLuaVM, void* pUserData, const Vector3* pTarget );
+    static bool						SetMarkerTarget					( lua_State* pLuaVM, void* pUserData, const Vector3& pTarget );
     static bool						SetMarkerIcon					( lua_State* pLuaVM, void* pUserData, const char* szIcon );
 
     // Blip create/destroy functions
@@ -645,7 +645,7 @@ public:
 	static bool						GetCameraInterior				( lua_State* pLuaVM, void* pPlayer, unsigned char & ucInterior );
 
     // Camera set functions
-    static bool						SetCameraMatrix					( lua_State* pLuaVM, void* pPlayer, const Vector3& vecPosition, Vector3* pvecLookAt, float fRoll, float fFOV );
+    static bool						SetCameraMatrix					( lua_State* pLuaVM, void* pPlayer, const Vector3& vecPosition, Vector3& pvecLookAt, float fRoll, float fFOV );
     static bool						SetCameraTarget					( lua_State* pLuaVM, void* pPlayer, void* pTarget );
     static bool						SetCameraInterior				( lua_State* pLuaVM, void* pPlayer, unsigned char ucInterior );
     static bool						FadeCamera						( lua_State* pLuaVM, void* pPlayer, bool bFadeIn, float fFadeTime, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue );
