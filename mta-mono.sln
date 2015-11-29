@@ -15,10 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiTheftAuto", "MultiThef
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{CBD7F8D5-39F2-4AA5-9FFF-2D3185533DDD}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mono-test", "mono-test\mono-test.vcxproj", "{63CBE79D-C717-4797-860B-174FABF780A0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoTest", "MonoTest\MonoTest.csproj", "{DC461F17-D2EC-4B7C-8CDB-AE81BEDEBD0F}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmono", "mta-mono\vendor\mono\libmono.vcxproj", "{CB0D9E92-293C-439C-9AC7-C5F59B6E0771}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libmonoruntime", "mta-mono\vendor\mono\libmonoruntime.vcxproj", "{C36612BD-22D3-4B95-85E2-7FDC4FC5D739}"
@@ -147,55 +143,6 @@ Global
 		{CBD7F8D5-39F2-4AA5-9FFF-2D3185533DDD}.Release|Win32.ActiveCfg = Release|Any CPU
 		{CBD7F8D5-39F2-4AA5-9FFF-2D3185533DDD}.Release|Win32.Build.0 = Release|Any CPU
 		{CBD7F8D5-39F2-4AA5-9FFF-2D3185533DDD}.Release|x64.ActiveCfg = Release|Any CPU
-		{63CBE79D-C717-4797-860B-174FABF780A0}.Debug_SGen|Any CPU.ActiveCfg = Debug|Win32
-		{63CBE79D-C717-4797-860B-174FABF780A0}.Debug_SGen|Mixed Platforms.ActiveCfg = Debug|Win32
-		{63CBE79D-C717-4797-860B-174FABF780A0}.Debug_SGen|Mixed Platforms.Build.0 = Debug|Win32
-		{63CBE79D-C717-4797-860B-174FABF780A0}.Debug_SGen|Win32.ActiveCfg = Debug|Win32
-		{63CBE79D-C717-4797-860B-174FABF780A0}.Debug_SGen|Win32.Build.0 = Debug|Win32
-		{63CBE79D-C717-4797-860B-174FABF780A0}.Debug_SGen|x64.ActiveCfg = Debug|Win32
-		{63CBE79D-C717-4797-860B-174FABF780A0}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{63CBE79D-C717-4797-860B-174FABF780A0}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{63CBE79D-C717-4797-860B-174FABF780A0}.Debug|Mixed Platforms.Build.0 = Debug|Win32
-		{63CBE79D-C717-4797-860B-174FABF780A0}.Debug|Win32.ActiveCfg = Debug|Win32
-		{63CBE79D-C717-4797-860B-174FABF780A0}.Debug|Win32.Build.0 = Debug|Win32
-		{63CBE79D-C717-4797-860B-174FABF780A0}.Debug|x64.ActiveCfg = Debug|Win32
-		{63CBE79D-C717-4797-860B-174FABF780A0}.Release_SGen|Any CPU.ActiveCfg = Release|Win32
-		{63CBE79D-C717-4797-860B-174FABF780A0}.Release_SGen|Mixed Platforms.ActiveCfg = Release|Win32
-		{63CBE79D-C717-4797-860B-174FABF780A0}.Release_SGen|Mixed Platforms.Build.0 = Release|Win32
-		{63CBE79D-C717-4797-860B-174FABF780A0}.Release_SGen|Win32.ActiveCfg = Release|Win32
-		{63CBE79D-C717-4797-860B-174FABF780A0}.Release_SGen|Win32.Build.0 = Release|Win32
-		{63CBE79D-C717-4797-860B-174FABF780A0}.Release_SGen|x64.ActiveCfg = Release|Win32
-		{63CBE79D-C717-4797-860B-174FABF780A0}.Release|Any CPU.ActiveCfg = Release|Win32
-		{63CBE79D-C717-4797-860B-174FABF780A0}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{63CBE79D-C717-4797-860B-174FABF780A0}.Release|Mixed Platforms.Build.0 = Release|Win32
-		{63CBE79D-C717-4797-860B-174FABF780A0}.Release|Win32.ActiveCfg = Release|Win32
-		{63CBE79D-C717-4797-860B-174FABF780A0}.Release|Win32.Build.0 = Release|Win32
-		{63CBE79D-C717-4797-860B-174FABF780A0}.Release|x64.ActiveCfg = Release|Win32
-		{DC461F17-D2EC-4B7C-8CDB-AE81BEDEBD0F}.Debug_SGen|Any CPU.ActiveCfg = Debug|Any CPU
-		{DC461F17-D2EC-4B7C-8CDB-AE81BEDEBD0F}.Debug_SGen|Any CPU.Build.0 = Debug|Any CPU
-		{DC461F17-D2EC-4B7C-8CDB-AE81BEDEBD0F}.Debug_SGen|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{DC461F17-D2EC-4B7C-8CDB-AE81BEDEBD0F}.Debug_SGen|Mixed Platforms.Build.0 = Debug|Any CPU
-		{DC461F17-D2EC-4B7C-8CDB-AE81BEDEBD0F}.Debug_SGen|Win32.ActiveCfg = Debug|Any CPU
-		{DC461F17-D2EC-4B7C-8CDB-AE81BEDEBD0F}.Debug_SGen|x64.ActiveCfg = Debug|Any CPU
-		{DC461F17-D2EC-4B7C-8CDB-AE81BEDEBD0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DC461F17-D2EC-4B7C-8CDB-AE81BEDEBD0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DC461F17-D2EC-4B7C-8CDB-AE81BEDEBD0F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{DC461F17-D2EC-4B7C-8CDB-AE81BEDEBD0F}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{DC461F17-D2EC-4B7C-8CDB-AE81BEDEBD0F}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{DC461F17-D2EC-4B7C-8CDB-AE81BEDEBD0F}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{DC461F17-D2EC-4B7C-8CDB-AE81BEDEBD0F}.Release_SGen|Any CPU.ActiveCfg = Release|Any CPU
-		{DC461F17-D2EC-4B7C-8CDB-AE81BEDEBD0F}.Release_SGen|Any CPU.Build.0 = Release|Any CPU
-		{DC461F17-D2EC-4B7C-8CDB-AE81BEDEBD0F}.Release_SGen|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{DC461F17-D2EC-4B7C-8CDB-AE81BEDEBD0F}.Release_SGen|Mixed Platforms.Build.0 = Release|Any CPU
-		{DC461F17-D2EC-4B7C-8CDB-AE81BEDEBD0F}.Release_SGen|Win32.ActiveCfg = Release|Any CPU
-		{DC461F17-D2EC-4B7C-8CDB-AE81BEDEBD0F}.Release_SGen|x64.ActiveCfg = Release|Any CPU
-		{DC461F17-D2EC-4B7C-8CDB-AE81BEDEBD0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DC461F17-D2EC-4B7C-8CDB-AE81BEDEBD0F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DC461F17-D2EC-4B7C-8CDB-AE81BEDEBD0F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{DC461F17-D2EC-4B7C-8CDB-AE81BEDEBD0F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{DC461F17-D2EC-4B7C-8CDB-AE81BEDEBD0F}.Release|Win32.ActiveCfg = Release|Any CPU
-		{DC461F17-D2EC-4B7C-8CDB-AE81BEDEBD0F}.Release|Win32.Build.0 = Release|Any CPU
-		{DC461F17-D2EC-4B7C-8CDB-AE81BEDEBD0F}.Release|x64.ActiveCfg = Release|Any CPU
 		{CB0D9E92-293C-439C-9AC7-C5F59B6E0771}.Debug_SGen|Any CPU.ActiveCfg = Debug_SGen|Win32
 		{CB0D9E92-293C-439C-9AC7-C5F59B6E0771}.Debug_SGen|Mixed Platforms.ActiveCfg = Debug_SGen|Win32
 		{CB0D9E92-293C-439C-9AC7-C5F59B6E0771}.Debug_SGen|Mixed Platforms.Build.0 = Debug_SGen|Win32
@@ -349,9 +296,9 @@ Global
 		{EB56000B-C80B-4E8B-908D-D84D31B517D3} = {AC4FC54A-60A7-4EB0-A40D-14768DD633F1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		AMDCaProjectFile = C:\Users\Owner\Development\monogit\mono\msvc\CodeAnalyst\mono.caw
-		AMDCaPersistentStartup = mono
 		AMDCaPersistentConfig = Debug|Win32
+		AMDCaPersistentStartup = mono
+		AMDCaProjectFile = C:\Users\Owner\Development\monogit\mono\msvc\CodeAnalyst\mono.caw
 	EndGlobalSection
 	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
 		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
