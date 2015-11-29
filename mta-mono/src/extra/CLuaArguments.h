@@ -50,10 +50,12 @@ public:
     CLuaArgument*                                       PushNumber          ( double dNumber );
     CLuaArgument*                                       PushString          ( const char* szString );
     CLuaArgument*                                       PushUserData        ( void* pUserData );
+    CLuaArgument*                                       PushFunction        ( lua_CFunction iFunction );
 	CLuaArgument*                                       PushArgument        ( const CLuaArgument& argument );
 
     void                                                DeleteArguments     ( void );
 
+	inline vector < CLuaArgument* >						GetArguments		( void )				{ return m_Arguments; }
     inline unsigned int                                 Count               ( void ) const          { return static_cast < unsigned int > ( m_Arguments.size () ); };
     inline vector < CLuaArgument* > ::const_iterator    IterBegin           ( void )                { return m_Arguments.begin (); };
     inline vector < CLuaArgument* > ::const_iterator    IterEnd             ( void )                { return m_Arguments.end (); };

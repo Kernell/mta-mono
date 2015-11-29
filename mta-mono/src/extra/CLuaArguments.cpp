@@ -151,6 +151,14 @@ CLuaArgument* CLuaArguments::PushUserData ( void* pUserData )
 }
 
 
+CLuaArgument* CLuaArguments::PushFunction( lua_CFunction iFunction )
+{
+	CLuaArgument* pArgument = new CLuaArgument ( iFunction );
+    m_Arguments.push_back ( pArgument );
+    return pArgument;
+}
+
+
 CLuaArgument* CLuaArguments::PushArgument ( const CLuaArgument & argument )
 {
     CLuaArgument* pArgument = new CLuaArgument (argument); // create a copy
