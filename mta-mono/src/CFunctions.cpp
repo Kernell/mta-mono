@@ -10,6 +10,7 @@
 *
 *********************************************************/
 
+#include "StdInc.h"
 #include "CFunctions.h"
 #include "extra/CLuaArguments.h"
 
@@ -36,6 +37,34 @@ int CFunctions::monoInit( lua_State *pLuaVM )
 		if( pResource != nullptr )
 		{
 			pResource->Init();
+
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
+int CFunctions::monoEventHandler( lua_State *pLuaVM )
+{
+	if( pLuaVM )
+	{
+		CResource *pResource = g_pResourceManager->GetFromList( pLuaVM );
+
+		if( pResource )
+		{
+			// eventName, this, source, client, ...
+
+			string	strEventName		= CLuaArgument( pLuaVM, -4 ).GetString();
+			void*	pThis				= CLuaArgument( pLuaVM, -3 ).GetLightUserData();
+			void*	pSource				= CLuaArgument( pLuaVM, -2 ).GetLightUserData();
+			void*	pClient				= CLuaArgument( pLuaVM, -1 ).GetLightUserData();
+
+			//void *args[] = { &vecVector.fX, &vecVector.fY };
+
+			g_pModuleManager->DebugPrintf( pLuaVM, "event: %s", strEventName.c_str() );
+
+			pResource->CallEvent( strEventName, pThis, pSource, pClient, nullptr );
 
 			return 1;
 		}

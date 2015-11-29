@@ -126,7 +126,7 @@ MonoArray* CMonoFunctions::Player::GetAlivePlayers( void )
 
 		if( pLuaArguments )
 		{
-			MonoArray* pArray = mono_array_new( RESOURCE->m_pMonoDomain, mono_get_uint32_class(), pLuaArguments->Count() );
+			MonoArray* pArray = mono_array_new( RESOURCE->GetDomain()->GetMonoPtr(), mono_get_uint32_class(), pLuaArguments->Count() );
 
 			vector< CLuaArgument* >::const_iterator iter = pLuaArguments->IterBegin();
 
@@ -150,7 +150,7 @@ MonoArray* CMonoFunctions::Player::GetDeadPlayers( void )
 
 		if( pLuaArguments )
 		{
-			MonoArray* pArray = mono_array_new( RESOURCE->m_pMonoDomain, mono_get_uint32_class(), pLuaArguments->Count() );
+			MonoArray* pArray = mono_array_new( RESOURCE->GetDomain()->GetMonoPtr(), mono_get_uint32_class(), pLuaArguments->Count() );
 
 			vector< CLuaArgument* >::const_iterator iter = pLuaArguments->IterBegin();
 
@@ -204,7 +204,7 @@ MonoString* CMonoFunctions::Player::GetNametagText( DWORD pUserData )
 		
 		if( CLuaFunctionDefinitions::GetPlayerNametagText( RESOURCE->GetLua(), (void*)pUserData, strOutText ) )
 		{
-			return RESOURCE->NewString( strOutText );
+			return RESOURCE->GetDomain()->NewString( strOutText );
 		}
 	}
 	
@@ -224,7 +224,7 @@ MonoObject* CMonoFunctions::Player::GetNametagColor( DWORD pUserData )
 				&ucR, &ucG, &ucB
 			};
 			
-			return RESOURCE->NewObject( "MultiTheftAuto", "Color", args, 3 );
+			return RESOURCE->GetDomain()->GetMTALib()->Color->New( args, 3 );
 		}
 	}
 	
@@ -250,7 +250,7 @@ MonoString* CMonoFunctions::Player::GetSerial( DWORD pUserData )
 {
 	if( RESOURCE )
 	{
-		return RESOURCE->NewString( CLuaFunctionDefinitions::GetPlayerSerial( RESOURCE->GetLua(), (void*)pUserData ) );
+		return RESOURCE->GetDomain()->NewString( CLuaFunctionDefinitions::GetPlayerSerial( RESOURCE->GetLua(), (void*)pUserData ) );
 	}
 	
 	return NULL;
@@ -260,7 +260,7 @@ MonoString* CMonoFunctions::Player::GetUserName( DWORD pUserData )
 {
 	if( RESOURCE )
 	{
-		return RESOURCE->NewString( CLuaFunctionDefinitions::GetPlayerUserName( RESOURCE->GetLua(), (void*)pUserData ) );
+		return RESOURCE->GetDomain()->NewString( CLuaFunctionDefinitions::GetPlayerUserName( RESOURCE->GetLua(), (void*)pUserData ) );
 	}
 	
 	return NULL;
@@ -289,7 +289,7 @@ MonoString* CMonoFunctions::Player::GetName( DWORD pUserData )
 		
 		if( CLuaFunctionDefinitions::GetPlayerName( RESOURCE->GetLua(), (void*)pUserData, strOutName ) )
 		{
-			return RESOURCE->NewString( strOutName );
+			return RESOURCE->GetDomain()->NewString( strOutName );
 		}
 	}
 	
@@ -304,7 +304,7 @@ MonoString* CMonoFunctions::Player::GetIP( DWORD pUserData )
 		
 		if( CLuaFunctionDefinitions::GetPlayerIP( RESOURCE->GetLua(), (void*)pUserData, strIP ) )
 		{
-			return RESOURCE->NewString( strIP );
+			return RESOURCE->GetDomain()->NewString( strIP );
 		}
 	}
 	
@@ -325,7 +325,7 @@ MonoString* CMonoFunctions::Player::GetVersion( DWORD pUserData )
 {
 	if( RESOURCE )
 	{
-		return RESOURCE->NewString( CLuaFunctionDefinitions::GetPlayerVersion( RESOURCE->GetLua(), (void*)pUserData ) );
+		return RESOURCE->GetDomain()->NewString( CLuaFunctionDefinitions::GetPlayerVersion( RESOURCE->GetLua(), (void*)pUserData ) );
 	}
 	
 	return NULL;
@@ -339,9 +339,9 @@ MonoObject* CMonoFunctions::Player::GetACInfo( DWORD pUserData )
 
 		if( !pLuaTable.empty() )
 		{
-			MonoString* msDetectedAC	= RESOURCE->NewString( pLuaTable[ "DetectedAC" ]->GetString() );
-			MonoString* msD3D9MD5		= RESOURCE->NewString( pLuaTable[ "d3d9MD5" ]->GetString() );
-			MonoString* msD3D9SHA256	= RESOURCE->NewString( pLuaTable[ "d3d9SHA256" ]->GetString() );
+			MonoString* msDetectedAC	= RESOURCE->GetDomain()->NewString( pLuaTable[ "DetectedAC" ]->GetString() );
+			MonoString* msD3D9MD5		= RESOURCE->GetDomain()->NewString( pLuaTable[ "d3d9MD5" ]->GetString() );
+			MonoString* msD3D9SHA256	= RESOURCE->GetDomain()->NewString( pLuaTable[ "d3d9SHA256" ]->GetString() );
 
 			unsigned int iD3D9Size		= pLuaTable[ "d3d9Size" ]->GetNumber< unsigned int >();
 
@@ -353,7 +353,7 @@ MonoObject* CMonoFunctions::Player::GetACInfo( DWORD pUserData )
 				&msD3D9SHA256
 			};
 
-			return RESOURCE->NewObject( "MultiTheftAuto", "PlayerACInfo", args, 4 );
+			return RESOURCE->GetDomain()->GetMTALib()->GetClass( "PlayerACInfo" )->New( args, 4 );
 		}
 	}
 	return NULL;
@@ -365,7 +365,7 @@ MonoString* CMonoFunctions::Player::GetPlayerAnnounceValue( DWORD pElement, Mono
 	{
 		const char* szKey = mono_string_to_utf8( msKey );
 
-		return RESOURCE->NewString( CLuaFunctionDefinitions::GetPlayerAnnounceValue( RESOURCE->GetLua(), (void*)pElement, szKey ) );
+		return RESOURCE->GetDomain()->NewString( CLuaFunctionDefinitions::GetPlayerAnnounceValue( RESOURCE->GetLua(), (void*)pElement, szKey ) );
 	}
 
 	return NULL;
@@ -785,7 +785,7 @@ MonoObject* CMonoFunctions::Player::GetCameraMatrix( DWORD pPlayer )
 				&fFOV
 			};
 
-			return RESOURCE->NewObject( "MultiTheftAuto", "CameraMatrix", args, 8 );
+			return RESOURCE->GetDomain()->GetMTALib()->GetClass( "CameraMatrix" )->New( args, 8 );
 		}
 	}
 

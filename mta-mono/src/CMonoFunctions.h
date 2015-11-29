@@ -18,10 +18,13 @@ class CMonoFunctions;
 #ifndef __CMONOFUNCTIONS_H
 #define __CMONOFUNCTIONS_H
 
-#include "Common.h"
 #include "lua/CLuaFunctionDefinitions.h"
 
+#include "CMonoDomain.h"
+#include "CMonoClass.h"
 #include "CMonoObject.h"
+#include "CMonoCorlib.h"
+#include "CMonoMTALib.h"
 
 extern ILuaModuleManager10	*g_pModuleManager;
 extern CResourceManager	*g_pResourceManager;
@@ -70,6 +73,12 @@ public:
 		static bool						RemoveRuleValue         ( MonoString* msKey );
 	};
 
+	class Event
+	{
+	public:
+		static bool				AddHandler							( MonoString* msName, DWORD pUserData, lua_CFunction iLuaFunction, bool bPropagated, MonoString* msEventPriority );
+	};
+
 	class Element
 	{
 	public:
@@ -79,6 +88,7 @@ public:
 		static DWORD			Clone								( DWORD pUserData, MonoObject* vecPosition, bool bCloneElement );
 
 		// Element get funcs
+		static DWORD			GetRootElement						( void );
 		static MonoArray*		GetByType							( MonoString* msType, DWORD pStartElement );
 
 		static bool				IsElement							( DWORD pUserData );

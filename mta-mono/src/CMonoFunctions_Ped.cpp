@@ -131,7 +131,7 @@ MonoString* CMonoFunctions::Ped::GetClothesTexture( DWORD pUserData, unsigned ch
 
 		if( CLuaFunctionDefinitions::GetPedClothes( RESOURCE->GetLua(), (void*)pUserData, ucType, strOutTexture, strOutModel ) )
 		{
-			return RESOURCE->NewString( strOutTexture );
+			return RESOURCE->GetDomain()->NewString( strOutTexture );
 		}
 	}
 
@@ -146,7 +146,7 @@ MonoString* CMonoFunctions::Ped::GetClothesModel( DWORD pUserData, unsigned char
 
 		if( CLuaFunctionDefinitions::GetPedClothes( RESOURCE->GetLua(), (void*)pUserData, ucType, strOutTexture, strOutModel ) )
 		{
-			return RESOURCE->NewString( strOutModel );
+			return RESOURCE->GetDomain()->NewString( strOutModel );
 		}
 	}
 
@@ -635,7 +635,7 @@ MonoString* CMonoFunctions::Ped::GetBodyPartName( unsigned char ucID )
 		
 		if( CLuaFunctionDefinitions::GetBodyPartName( RESOURCE->GetLua(), ucID, szName ) )
 		{
-			return RESOURCE->NewString( szName );
+			return RESOURCE->GetDomain()->NewString( szName );
 		}
 	}
 	
@@ -651,12 +651,12 @@ MonoArray* CMonoFunctions::Ped::GetClothesByTypeIndex( unsigned char ucType, uns
 		
 		if( CLuaFunctionDefinitions::GetClothesByTypeIndex( RESOURCE->GetLua(), ucType, ucIndex, szTexture, szModel ) )
 		{
-			MonoArray* pArray = mono_array_new( RESOURCE->m_pMonoDomain, mono_get_string_class(), 2 );
+			MonoArray* pArray = mono_array_new( RESOURCE->GetDomain()->GetMonoPtr(), mono_get_string_class(), 2 );
 
 			if( pArray )
 			{
-				mono_array_set( pArray, MonoString*, 0, RESOURCE->NewString( szTexture ) );
-				mono_array_set( pArray, MonoString*, 1, RESOURCE->NewString( szModel ) );
+				mono_array_set( pArray, MonoString*, 0, RESOURCE->GetDomain()->NewString( szTexture ) );
+				mono_array_set( pArray, MonoString*, 1, RESOURCE->GetDomain()->NewString( szModel ) );
 
 				return pArray;
 			}
@@ -677,7 +677,7 @@ MonoArray* CMonoFunctions::Ped::GetTypeIndexFromClothes( MonoString* msTexture, 
 		
 		if( CLuaFunctionDefinitions::GetTypeIndexFromClothes( RESOURCE->GetLua(), szTexture, szModel, ucType, ucIndex ) )
 		{
-			MonoArray* pArray = mono_array_new( RESOURCE->m_pMonoDomain, mono_get_char_class(), 2 );
+			MonoArray* pArray = mono_array_new( RESOURCE->GetDomain()->GetMonoPtr(), mono_get_char_class(), 2 );
 
 			if( pArray )
 			{
@@ -700,7 +700,7 @@ MonoString* CMonoFunctions::Ped::GetClothesTypeName( unsigned char ucType )
 		
 		if( CLuaFunctionDefinitions::GetClothesTypeName( RESOURCE->GetLua(), ucType, szName ) )
 		{
-			return RESOURCE->NewString( szName );
+			return RESOURCE->GetDomain()->NewString( szName );
 		}
 	}
 	

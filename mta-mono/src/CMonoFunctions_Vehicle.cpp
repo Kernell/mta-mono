@@ -47,7 +47,7 @@ MonoString* CMonoFunctions::Vehicle::GetType( DWORD pUserData )
 		
 		if( CLuaFunctionDefinitions::GetVehicleType( RESOURCE->GetLua(), (void*)pUserData, strType ) )
 		{
-			return RESOURCE->NewString( strType );
+			return RESOURCE->GetDomain()->NewString( strType );
 		}
 	}
 
@@ -63,7 +63,7 @@ MonoArray* CMonoFunctions::Vehicle::GetVariant( DWORD pUserData )
 		
 		if( CLuaFunctionDefinitions::GetVehicleVariant( RESOURCE->GetLua(), (void*)pUserData, ucVariant, ucVariant2 ) )
 		{
-			MonoArray* pArray = mono_array_new( RESOURCE->m_pMonoDomain, mono_get_char_class(), 2 );
+			MonoArray* pArray = mono_array_new( RESOURCE->GetDomain()->GetMonoPtr(), mono_get_char_class(), 2 );
 
 			if( pArray )
 			{
@@ -99,7 +99,7 @@ MonoObject* CMonoFunctions::Vehicle::GetColor( DWORD pUserData )
 				&pColor4
 			};
 
-			return RESOURCE->NewObject( "MultiTheftAuto", "VehicleColor", args, 4 );
+			return RESOURCE->GetDomain()->GetMTALib()->GetClass( "VehicleColor" )->New( args, 4 );
 		}
 	}
 
@@ -161,7 +161,7 @@ MonoString* CMonoFunctions::Vehicle::GetName( DWORD pUserData )
 		
 		if( CLuaFunctionDefinitions::GetVehicleName( RESOURCE->GetLua(), (void*)pUserData, strOutName ) )
 		{
-			return RESOURCE->NewString( strOutName );
+			return RESOURCE->GetDomain()->NewString( strOutName );
 		}
 	}
 
@@ -176,7 +176,7 @@ MonoString* CMonoFunctions::Vehicle::GetNameFromModel( unsigned short usModel )
 		
 		if( CLuaFunctionDefinitions::GetVehicleNameFromModel( RESOURCE->GetLua(), usModel, strOutName ) )
 		{
-			return RESOURCE->NewString( strOutName );
+			return RESOURCE->GetDomain()->NewString( strOutName );
 		}
 	}
 
@@ -199,7 +199,7 @@ MonoArray* CMonoFunctions::Vehicle::GetOccupants( DWORD pUserData )
 	{
 		CLuaArguments* pLuaArguments = CLuaFunctionDefinitions::GetVehicleOccupants( RESOURCE->GetLua(), (void*)pUserData );
 
-		return RESOURCE->NewArray<DWORD, LUA_TLIGHTUSERDATA>( mono_get_uint32_class(), pLuaArguments );
+		return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TLIGHTUSERDATA>( mono_get_uint32_class(), pLuaArguments );
 	}
 
 	return NULL;
@@ -238,7 +238,7 @@ MonoObject* CMonoFunctions::Vehicle::GetTurnVelocity( DWORD pUserData )
 
 		if( CLuaFunctionDefinitions::GetVehicleTurnVelocity( RESOURCE->GetLua(), (void*)pUserData, vecVelocity ) )
 		{
-			return RESOURCE->NewObject( vecVelocity );
+			return RESOURCE->GetDomain()->GetMTALib()->Vector3->New( vecVelocity );
 		}
 	}
 
@@ -253,7 +253,7 @@ MonoObject* CMonoFunctions::Vehicle::GetTurretPosition( DWORD pUserData )
 
 		if( CLuaFunctionDefinitions::GetVehicleTurretPosition( RESOURCE->GetLua(), (void*)pUserData, vecPosition ) )
 		{
-			return RESOURCE->NewObject( vecPosition );
+			return RESOURCE->GetDomain()->GetMTALib()->Vector3->New( vecPosition );
 		}
 	}
 
@@ -281,7 +281,7 @@ MonoArray* CMonoFunctions::Vehicle::GetOfType( unsigned int uiModel )
 	{
 		CLuaArguments* pLuaArguments = CLuaFunctionDefinitions::GetVehiclesOfType( RESOURCE->GetLua(), uiModel );
 
-		return RESOURCE->NewArray<DWORD, LUA_TLIGHTUSERDATA>( mono_get_uint32_class(), pLuaArguments );
+		return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TLIGHTUSERDATA>( mono_get_uint32_class(), pLuaArguments );
 	}
 
 	return NULL;
@@ -308,7 +308,7 @@ MonoArray* CMonoFunctions::Vehicle::GetUpgrades( DWORD pUserData )
 	{
 		CLuaArguments* pLuaArguments = CLuaFunctionDefinitions::GetVehicleUpgrades( RESOURCE->GetLua(), (void*)pUserData );
 
-		return RESOURCE->NewArray<uint, LUA_TNUMBER>( mono_get_uint32_class(), pLuaArguments );
+		return RESOURCE->GetDomain()->NewArray<uint, LUA_TNUMBER>( mono_get_uint32_class(), pLuaArguments );
 	}
 
 	return NULL;
@@ -322,7 +322,7 @@ MonoString* CMonoFunctions::Vehicle::GetUpgradeSlotName( unsigned short usUpgrad
 		
 		if( CLuaFunctionDefinitions::GetVehicleUpgradeSlotName( RESOURCE->GetLua(), usUpgrade, strOutName ) )
 		{
-			return RESOURCE->NewString( strOutName );
+			return RESOURCE->GetDomain()->NewString( strOutName );
 		}
 	}
 
@@ -335,7 +335,7 @@ MonoArray* CMonoFunctions::Vehicle::GetCompatibleUpgrades( DWORD pUserData )
 	{
 		CLuaArguments* pLuaArguments = CLuaFunctionDefinitions::GetVehicleCompatibleUpgrades( RESOURCE->GetLua(), (void*)pUserData );
 
-		return RESOURCE->NewArray<uint, LUA_TNUMBER>( mono_get_uint32_class(), pLuaArguments );
+		return RESOURCE->GetDomain()->NewArray<uint, LUA_TNUMBER>( mono_get_uint32_class(), pLuaArguments );
 	}
 
 	return NULL;
@@ -369,7 +369,7 @@ MonoObject* CMonoFunctions::Vehicle::GetWheelStates( DWORD pUserData )
 				&ucFrontLeft, &ucRearLeft, &ucFrontRight, &ucRearRight
 			};
 
-			return RESOURCE->NewObject( "MultiTheftAuto.Vehicle", "VehicleWheelsState", args, 4 );
+			return RESOURCE->GetDomain()->GetMTALib()->GetClass( "Vehicle", "VehicleWheelsState" )->New( args, 4 );
 		}
 	}
 
@@ -464,7 +464,7 @@ MonoString* CMonoFunctions::Vehicle::GetPlateText( DWORD pUserData )
 		
 		if( CLuaFunctionDefinitions::GetVehiclePlateText( RESOURCE->GetLua(), (void*)pUserData, szPlateText ) )
 		{
-			return RESOURCE->NewString( szPlateText );
+			return RESOURCE->GetDomain()->NewString( szPlateText );
 		}
 	}
 
@@ -624,7 +624,7 @@ MonoObject* CMonoFunctions::Vehicle::GetHeadLightColor( DWORD pUserData )
 
 		if( CLuaFunctionDefinitions::GetVehicleHeadLightColor( RESOURCE->GetLua(), (void*)pUserData, outColor ) )
 		{
-			return RESOURCE->NewObject( outColor );
+			return RESOURCE->GetDomain()->GetMTALib()->Color->New( outColor );
 		}
 	}
 

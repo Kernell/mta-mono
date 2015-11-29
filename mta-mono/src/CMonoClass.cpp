@@ -1,18 +1,35 @@
+/*********************************************************
+*
+*  Copyright © 2013, Innovation Roleplay Engine. 
+*
+*  All Rights Reserved.
+*
+*  Redistribution and use in source and binary forms,
+*  with or without modification,
+*  is permitted only for authors.
+*
+*********************************************************/
+
 #include "CMonoClass.h"
 
-MonoObject* CMonoClass::New( MonoClass* pMonoClass, MonoDomain* pMonoDomain )
+CMonoClass::CMonoClass( MonoClass* pMonoClass, CMonoDomain* pDomain )
 {
-	MonoObject* pObject = mono_object_new( pMonoDomain, pMonoClass );
+	this->m_pClass		= pMonoClass;
+	this->m_pDomain		= pDomain;
+}
+
+CMonoClass::~CMonoClass( void )
+{
+	this->m_pDomain		= nullptr;
+	this->m_pClass		= nullptr;
+}
+
+MonoObject* CMonoClass::New( void )
+{
+	MonoObject* pObject = this->m_pDomain->CreateObject( this->m_pClass );
 
 	if( !pObject )
 	{
-		g_pModuleManager->ErrorPrintf( "%s:%d: Failed to create mono object for %s::%s\n",
-			CMonoClass::GetNameSpace( pMonoClass ),
-			CMonoClass::GetName( pMonoClass ),
-			__FILE__,
-			__LINE__
-			);
-
 		return nullptr;
 	}
 
@@ -21,45 +38,40 @@ MonoObject* CMonoClass::New( MonoClass* pMonoClass, MonoDomain* pMonoDomain )
 	return pObject;
 }
 
-MonoObject* CMonoClass::New( MonoClass* pMonoClass, MonoDomain* pMonoDomain, SColor& pColor )
+MonoObject* CMonoClass::New( SColor& pColor )
 {
 	void *args[] = { &pColor.R, &pColor.G, &pColor.B, &pColor.A };
 
-	return CMonoClass::New( pMonoClass, pMonoDomain, args, 4 );
+	return this->New( args, 4 );
 }
 
-
-MonoObject* CMonoClass::New( MonoClass* pMonoClass, MonoDomain* pMonoDomain, Vector2& vecVector )
+MonoObject* CMonoClass::New( Vector2& vecVector )
 {
 	void *args[] = { &vecVector.fX, &vecVector.fY };
 
-	return CMonoClass::New( pMonoClass, pMonoDomain, args, 2 );
+	return this->New( args, 2 );
 }
 
-MonoObject* CMonoClass::New( MonoClass* pMonoClass, MonoDomain* pMonoDomain, Vector3& vecVector )
+MonoObject* CMonoClass::New( Vector3& vecVector )
 {
 	void *args[] = { &vecVector.fX, &vecVector.fY, &vecVector.fZ };
 
-	return CMonoClass::New( pMonoClass, pMonoDomain, args, 3 );
+	return this->New( args, 3 );
 }
 
-MonoObject* CMonoClass::New( MonoClass* pMonoClass, MonoDomain* pMonoDomain, void** args, int argc )
+MonoObject* CMonoClass::New( void** args, int argc )
 {
-	MonoObject* pObject = mono_object_new( pMonoDomain, pMonoClass );
+	MonoObject* pObject = this->m_pDomain->CreateObject( this->m_pClass );
 
 	if( !pObject )
 	{
-		g_pModuleManager->ErrorPrintf( "%s:%d: Failed to create mono object for %s::%s\n", GetNameSpace( pMonoClass ), GetName( pMonoClass ), __FILE__, __LINE__ );
-
 		return nullptr;
 	}
 
-	MonoMethod* pMonoMethod = CMonoClass::GetMethod( pMonoClass, ".ctor", argc );
+	MonoMethod* pMonoMethod = this->GetMethod( ".ctor", argc );
 
 	if( !pMonoMethod )
 	{
-		g_pModuleManager->ErrorPrintf( "%s:%d: Could not lookup constructor for class %s::%s\n", GetNameSpace( pMonoClass ), GetName( pMonoClass ), __FILE__, __LINE__ );
-
 		return nullptr;
 	}
 
@@ -68,28 +80,29 @@ MonoObject* CMonoClass::New( MonoClass* pMonoClass, MonoDomain* pMonoDomain, voi
 	return pObject;
 }
 
-const char* CMonoClass::GetName( MonoClass* pMonoClass )
+
+const char* CMonoClass::GetName( void )
 {
-	return mono_class_get_name( pMonoClass );
+	return mono_class_get_name( this->m_pClass );
 }
 
-const char* CMonoClass::GetNameSpace( MonoClass* pMonoClass )
+const char* CMonoClass::GetNameSpace( void )
 {
-	return mono_class_get_namespace( pMonoClass );
+	return mono_class_get_namespace( this->m_pClass );
 }
 
-MonoMethod* CMonoClass::GetMethod( MonoClass* pMonoClass, const char* szMethodName, int iParamCount )
+MonoMethod* CMonoClass::GetMethod( const char* szMethodName, int iParamCount )
 {
-	return mono_class_get_method_from_name( pMonoClass, szMethodName, iParamCount );
+	return mono_class_get_method_from_name( this->m_pClass, szMethodName, iParamCount );
 }
 
-MonoMethod* CMonoClass::GetMethod( MonoClass* pMonoClass, const char* szMethodName )
+MonoMethod* CMonoClass::GetMethod( const char* szMethodName )
 {
 	MonoMethodDesc* pMonoMethodDesc = mono_method_desc_new( szMethodName, false );
 
 	if( pMonoMethodDesc )
 	{
-		MonoMethod* pMethod = mono_method_desc_search_in_class( pMonoMethodDesc, pMonoClass );
+		MonoMethod* pMethod = mono_method_desc_search_in_class( pMonoMethodDesc, this->m_pClass );
 
 		mono_method_desc_free( pMonoMethodDesc );
 

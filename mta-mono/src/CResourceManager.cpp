@@ -10,15 +10,12 @@
 *
 *********************************************************/
 
+#include "StdInc.h"
 #include "CResourceManager.h"
 
-CResourceManager::CResourceManager( void )
+CResourceManager::CResourceManager( CMonoInterface* pMono )
 {
-	mono_set_dirs( "mods/deathmatch/mono/lib", "mods/deathmatch/mono/etc" );
-
-	this->m_pMonoDomain = mono_jit_init_version( "Mono Root", "v4.0.30319" );
-
-	CMonoFunctions::AddInternals();
+	this->m_pMono = pMono;
 }
 
 CResourceManager::~CResourceManager( void )
@@ -27,8 +24,6 @@ CResourceManager::~CResourceManager( void )
 	{
 		delete iter;
 	}
-
-	mono_jit_cleanup( this->m_pMonoDomain );
 }
 
 CResource* CResourceManager::Create( lua_State* luaVM, string strName )
@@ -44,7 +39,7 @@ CResource* CResourceManager::Create( lua_State* luaVM, string strName )
 			return nullptr;
 		}
 
-		CResource *pResource = new CResource( luaVM, strName );
+		CResource *pResource = new CResource( this->m_pMono, luaVM, strName );
 
 		this->AddToList( pResource );
 
@@ -63,7 +58,7 @@ CResource* CResourceManager::GetFromList( lua_State* pLuaVM )
 {
 	for( auto iter : this->m_List )
 	{
-		if( iter->m_pLuaVM == pLuaVM )
+		if( iter->GetLua() == pLuaVM )
 		{
 			return iter;
 		}
@@ -76,7 +71,7 @@ CResource* CResourceManager::GetFromList( MonoDomain* pDomain )
 {
 	for( auto iter : this->m_List )
 	{
-		if( iter->m_pMonoDomain == pDomain )
+		if( iter->GetDomain()->GetMonoPtr() == pDomain )
 		{
 			return iter;
 		}

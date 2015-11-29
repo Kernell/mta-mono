@@ -28,6 +28,7 @@ class CFunctions
 {
 public:
 		static int		monoInit			( lua_State *pLuaVM );
+		static int		monoEventHandler	( lua_State *pLuaVM );
 
 };
 #endif

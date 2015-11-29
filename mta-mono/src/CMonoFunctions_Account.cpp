@@ -32,7 +32,7 @@ MonoArray* CMonoFunctions::Account::GetAll( void )
 	{
 		CLuaArguments* pLuaTable = CLuaFunctionDefinitions::GetAccounts( RESOURCE->GetLua() );
 
-		return RESOURCE->NewArray<DWORD, LUA_TLIGHTUSERDATA>( mono_get_uint32_class(), pLuaTable );
+		return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TLIGHTUSERDATA>( mono_get_uint32_class(), pLuaTable );
 	}
 
 	return NULL;
@@ -71,7 +71,7 @@ MonoString* CMonoFunctions::Account::GetSerial( DWORD pAccount )
 
 		if( CLuaFunctionDefinitions::GetAccountSerial( RESOURCE->GetLua(), (void*)pAccount, strSerial ) )
 		{
-			return RESOURCE->NewString( strSerial );
+			return RESOURCE->GetDomain()->NewString( strSerial );
 		}
 	}
 

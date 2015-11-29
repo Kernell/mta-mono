@@ -200,6 +200,30 @@ bool CLuaFunctionDefinitions::SetPlayerAnnounceValue( lua_State* pLuaVM, void* p
 	return false;
 }
 
+bool CLuaFunctionDefinitions::AddEventHandler( lua_State* pLuaVM, const char* szName, void* pUserData, lua_CFunction iLuaFunction, bool bPropagated, const char* szEventPriority )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushString( szName );
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushFunction( iLuaFunction );
+	pLuaArguments.PushBoolean( bPropagated );
+	pLuaArguments.PushString( szEventPriority );
+
+	if( pLuaArguments.Call( pLuaVM, "addEventHandler", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		{
+			return pLuaArgument.GetBoolean();
+		}
+	}
+
+	return false;
+}
+
+
 // Element create/destroy
 
 void* CLuaFunctionDefinitions::CreateElement( lua_State* pLuaVM, const char* szTypeName, const char* szID )

@@ -59,7 +59,7 @@ MonoString* CMonoFunctions::Ban::GetIP( DWORD pBan )
 
 		if( CLuaFunctionDefinitions::GetBanIP( RESOURCE->GetLua(), (void*)pBan, strIP ) )
 		{
-			return RESOURCE->NewString( strIP );
+			return RESOURCE->GetDomain()->NewString( strIP );
 		}
 	}
 
@@ -74,7 +74,7 @@ MonoString* CMonoFunctions::Ban::GetSerial( DWORD pBan )
 
 		if( CLuaFunctionDefinitions::GetBanSerial( RESOURCE->GetLua(), (void*)pBan, strSerial ) )
 		{
-			return RESOURCE->NewString( strSerial );
+			return RESOURCE->GetDomain()->NewString( strSerial );
 		}
 	}
 
@@ -89,7 +89,7 @@ MonoString* CMonoFunctions::Ban::GetUsername( DWORD pBan )
 
 		if( CLuaFunctionDefinitions::GetBanUsername( RESOURCE->GetLua(), (void*)pBan, strUsername ) )
 		{
-			return RESOURCE->NewString( strUsername );
+			return RESOURCE->GetDomain()->NewString( strUsername );
 		}
 	}
 
@@ -104,7 +104,7 @@ MonoString* CMonoFunctions::Ban::GetNick( DWORD pBan )
 
 		if( CLuaFunctionDefinitions::GetBanNick( RESOURCE->GetLua(), (void*)pBan, strNick ) )
 		{
-			return RESOURCE->NewString( strNick );
+			return RESOURCE->GetDomain()->NewString( strNick );
 		}
 	}
 
@@ -119,7 +119,7 @@ MonoString* CMonoFunctions::Ban::GetReason( DWORD pBan )
 
 		if( CLuaFunctionDefinitions::GetBanReason( RESOURCE->GetLua(), (void*)pBan, strReason ) )
 		{
-			return RESOURCE->NewString( strReason );
+			return RESOURCE->GetDomain()->NewString( strReason );
 		}
 	}
 
@@ -134,7 +134,7 @@ MonoString* CMonoFunctions::Ban::GetAdmin( DWORD pBan )
 
 		if( CLuaFunctionDefinitions::GetBanAdmin( RESOURCE->GetLua(), (void*)pBan, strAdmin ) )
 		{
-			return RESOURCE->NewString( strAdmin );
+			return RESOURCE->GetDomain()->NewString( strAdmin );
 		}
 	}
 

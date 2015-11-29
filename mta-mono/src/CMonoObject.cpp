@@ -10,6 +10,7 @@
 *
 *********************************************************/
 
+#include "StdInc.h"
 #include "CMonoObject.h"
 
 MonoClass* CMonoObject::GetClass( MonoObject* pObject )

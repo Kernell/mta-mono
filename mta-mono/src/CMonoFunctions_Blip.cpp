@@ -79,7 +79,7 @@ MonoObject* CMonoFunctions::Blip::GetColor( DWORD pUserData )
 		
 		if( CLuaFunctionDefinitions::GetBlipColor( RESOURCE->GetLua(), (void*)pUserData, outColor ) )
 		{
-			return RESOURCE->NewObject( outColor );
+			return RESOURCE->GetDomain()->GetMTALib()->Color->New( outColor );
 		}
 	}
 

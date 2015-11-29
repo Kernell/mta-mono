@@ -37,7 +37,7 @@ MonoObject* CMonoFunctions::RadarArea::GetSize( DWORD pUserData )
 		
 		if( CLuaFunctionDefinitions::GetRadarAreaSize( RESOURCE->GetLua(), (void*)pUserData, vecSize ) )
 		{
-			return RESOURCE->NewObject( vecSize );
+			return RESOURCE->GetDomain()->GetMTALib()->Vector2->New( vecSize );
 		}
 	}
 
@@ -52,7 +52,7 @@ MonoObject* CMonoFunctions::RadarArea::GetColor( DWORD pUserData )
 		
 		if( CLuaFunctionDefinitions::GetRadarAreaColor( RESOURCE->GetLua(), (void*)pUserData, outColor ) )
 		{
-			return RESOURCE->NewObject( outColor );
+			return RESOURCE->GetDomain()->GetMTALib()->Color->New( outColor );
 		}
 	}
 

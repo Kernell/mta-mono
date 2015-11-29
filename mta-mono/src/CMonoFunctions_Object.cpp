@@ -36,7 +36,7 @@ MonoObject* CMonoFunctions::Object::GetScale( DWORD pUserData )
 		
 		if( CLuaFunctionDefinitions::GetObjectScale( RESOURCE->GetLua(), (void*)pUserData, vecScale ) )
 		{
-			return RESOURCE->NewObject( vecScale );
+			return RESOURCE->GetDomain()->GetMTALib()->Vector3->New( vecScale );
 		}
 	}
 

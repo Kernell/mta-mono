@@ -10,62 +10,121 @@
 *
 *********************************************************/
 
+#include "StdInc.h"
 #include "CResource.h"
 #include "CResourceManager.h"
+#include "CFunctions.h"
 #include "include/ILuaModuleManager.h"
 #include "lua/CLuaFunctionDefinitions.h"
 
 extern ILuaModuleManager10	*g_pModuleManager;
 extern CResourceManager	*g_pResourceManager;
 
-CResource::CResource( lua_State *pLuaVM, string sName )
+CResource::CResource( CMonoInterface* pMono, lua_State *pLuaVM, string sName )
 {
+	this->m_pMono				= pMono;
 	this->m_pLuaVM				= pLuaVM;
 	this->m_sName				= sName;
 
-	this->m_pMonoAssembly		= NULL;
-	this->m_pMonoAssemblyLib	= NULL;
-	this->m_pMonoGCHandle		= NULL;
-	this->m_pMonoDomain			= NULL;
-	this->m_pMonoImage			= NULL;
-	this->m_pMonoImageLib		= NULL;
-	this->m_pMonoClass			= NULL;
+	this->m_pMonoAssembly		= nullptr;
+	this->m_pMonoGCHandle		= 0;
+	this->m_pMonoDomain			= nullptr;
+	this->m_pMonoImage			= nullptr;
+	this->m_pMonoClass			= nullptr;
 }
 
 CResource::~CResource( void )
 {
+	this->GetMono()->GetGC()->Collect( this->GetMono()->GetGC()->GetMaxGeneration() );
+
 	mono_domain_set( mono_get_root_domain(), false );
 
 	if( this->m_pMonoDomain )
 	{
-		mono_domain_unload( this->m_pMonoDomain );
+		this->m_pMonoDomain->Unload();
+		this->m_pMonoDomain = nullptr;
 	}
-
-	mono_gc_collect( mono_gc_max_generation() );
 
 	g_pResourceManager->RemoveFromList( this );
 
-	this->m_pMonoAssembly		= NULL;
-	this->m_pMonoAssemblyLib	= NULL;
-	this->m_pMonoGCHandle		= NULL;
-	this->m_pMonoDomain			= NULL;
-	this->m_pMonoImage			= NULL;
-	this->m_pMonoImageLib		= NULL;
-	this->m_pMonoClass			= NULL;
+	this->m_pMonoAssembly		= nullptr;
+	this->m_pMonoGCHandle		= 0;
+	this->m_pMonoDomain			= nullptr;
+	this->m_pMonoImage			= nullptr;
+	this->m_pMonoClass			= nullptr;
 
-	this->m_pLuaVM				= NULL;
+	this->m_pMono				= nullptr;
+	this->m_pLuaVM				= nullptr;
+	this->m_sName				= nullptr;
+}
+
+bool CResource::CallEvent( string strEventName, void* pThis, void* pSource, void* pClient, void **args )
+{
+	MonoEvent* pEvent	= nullptr;
+	MonoMethod* method	= nullptr;
+	MonoClass* klass	= this->GetDomain()->GetMTALib()->GetClass( "Element" )->GetMonoPtr();
+
+	g_pModuleManager->DebugPrintf( this->GetLua(), "CResource::CallEvent::%s", strEventName.substr( 2 ).c_str() );
+
+	gpointer iter;
+
+	while( klass )
+	{
+		iter = nullptr;
+
+		while( pEvent = mono_class_get_events( klass, &iter ) )
+		{
+			if( !strcmp( strEventName.substr( 2 ).c_str(), mono_event_get_name( pEvent ) ) )
+			{
+				method = mono_event_get_raise_method( pEvent );
+
+				break;
+			}
+		}
+
+		klass = mono_class_get_parent( klass );
+	}
+
+	if( method )
+	{
+		mono_runtime_invoke( method, pThis, args, nullptr );
+		
+		return true;
+	}
+	else
+	{
+		g_pModuleManager->ErrorPrintf( "mono: method not found\n" );
+	}
+
+	return false;
+}
+
+void CResource::RegisterEvents( void )
+{
+	if( this->m_pLuaVM )
+	{
+		if( g_pModuleManager->RegisterFunction( this->m_pLuaVM, "mono_event_handler", CFunctions::monoEventHandler ) )
+		{
+			luaL_dostring( this->m_pLuaVM, "addEventHandler( 'onElementDestroy', root, \
+function( ... ) \
+	mono_event_handler( eventName, this, source, client, ... );\
+end \
+)"
+			);
+		}
+	}
 }
 
 bool CResource::Init( void )
 {
 	if( this->m_pLuaVM )
 	{
-		string sDirectory	( "mods/deathmatch/resources/[ire]/" + this->m_sName + "/" );
+		string sDirectory	( CMonoInterface::GetBinariesDirectory() + "/" + this->m_sName + "/" );
 		string sPath		( sDirectory + this->m_sName + ".dll" );
 		string sNamespace	( this->m_sName );
 		string sClass		( "Program" );
 
-		this->m_pMonoDomain = mono_domain_create_appdomain( const_cast< char* >( this->m_sName.c_str( ) ), NULL );
+		this->m_pMonoDomain = this->GetMono()->CreateAppdomain( this, const_cast< char* >( this->m_sName.c_str() ), nullptr );
 
 		if( !this->m_pMonoDomain )
 		{
@@ -74,16 +133,11 @@ bool CResource::Init( void )
 			return false;
 		}
 
-		mono_domain_set( this->m_pMonoDomain, false );
+		this->m_pMonoDomain->Set( false );
 
-		this->m_pMonoAssemblyLib	= mono_domain_assembly_open( this->m_pMonoDomain, ( sDirectory + "MultiTheftAuto.dll" ).c_str() );
+		this->m_pMonoDomain->Init();
 
-		if( this->m_pMonoAssemblyLib )
-		{
-			this->m_pMonoImageLib	= mono_assembly_get_image( this->m_pMonoAssemblyLib );
-		}
-
-		this->m_pMonoAssembly		= mono_domain_assembly_open( this->m_pMonoDomain, sPath.c_str() );
+		this->m_pMonoAssembly = this->m_pMonoDomain->OpenAssembly( sPath.c_str() );
 		
 		if( !this->m_pMonoAssembly )
 		{
@@ -92,10 +146,12 @@ bool CResource::Init( void )
 			return false;
 		}
 
+		this->RegisterEvents();
+
 		this->m_pMonoImage	= mono_assembly_get_image( this->m_pMonoAssembly );
 		this->m_pMonoClass	= mono_class_from_name( this->m_pMonoImage, sNamespace.c_str(), sClass.c_str() );
 
-		MonoObject *pMonoObject = mono_object_new( this->m_pMonoDomain, this->m_pMonoClass );
+		MonoObject *pMonoObject = this->m_pMonoDomain->CreateObject( this->m_pMonoClass );
 
 		mono_gchandle_new( pMonoObject, false );
 
@@ -127,139 +183,47 @@ bool CResource::RegisterFunction( const char *szFunctionName, lua_CFunction Func
 	return true;
 }
 
-MonoClass* CResource::GetClassFromName( const char* szNamespace, const char* szName )
+void CResource::Printf( const char* szFormat, ... )
 {
-	MonoClass* pMonoClass = mono_class_from_name( this->m_pMonoImage, szNamespace, szName );
+	va_list args;
 
-	if( !pMonoClass )
-	{
-		pMonoClass = mono_class_from_name( this->m_pMonoImageLib, szNamespace, szName );
-	}
+	va_start( args, szFormat );
 
-	return pMonoClass;
+	char szBuffer[ 255 ];
+
+	vsprintf( szBuffer, szFormat, args );
+
+	va_end( args ); 
+
+	g_pModuleManager->Printf( szBuffer );
 }
 
-MonoObject* CResource::NewObject( const char* szNamespace, const char* szName )
+void CResource::DebugPrintf( const char* szFormat, ... )
 {
-	MonoClass* pClass = this->GetClassFromName( szNamespace, szName );
-			
-	if( pClass )
-	{
-		MonoObject* pObject = CMonoClass::New( pClass, mono_domain_get() );
-				
-		if( pObject )
-		{
-			return pObject;
-		}
-		else
-		{
-			g_pModuleManager->ErrorPrintf( "%s:%d: failed to create instance of '%s::%s'\n", __FILE__, __LINE__, szNamespace, szName );
-		}
-	}
-	else
-	{
-		g_pModuleManager->ErrorPrintf( "%s:%d: class '%s::%s' not found\n", __FILE__, __LINE__, szNamespace, szName );
-	}
+	va_list args;
 
-	return nullptr;
+	va_start( args, szFormat );
+
+	char szBuffer[ 255 ];
+
+	vsprintf( szBuffer, szFormat, args );
+
+	va_end( args ); 
+
+	g_pModuleManager->DebugPrintf( this->m_pLuaVM, szBuffer );
 }
 
-MonoObject* CResource::NewObject( SColor& pColor )
+void CResource::ErrorPrintf( const char* szFormat, ... )
 {
-	MonoClass* pClass = this->GetClassFromName( "MultiTheftAuto", "Color" );
-			
-	if( pClass )
-	{
-		MonoObject* pObject = CMonoClass::New( pClass, mono_domain_get(), pColor );
-				
-		if( pObject )
-		{
-			return pObject;
-		}
-		else
-		{
-			g_pModuleManager->ErrorPrintf( "%s:%d: failed to create instance of 'MultiTheftAuto::Color'\n", __FILE__, __LINE__ );
-		}
-	}
-	else
-	{
-		g_pModuleManager->ErrorPrintf( "%s:%d: class 'MultiTheftAuto::Color' not found\n", __FILE__, __LINE__ );
-	}
+	va_list args;
 
-	return nullptr;
-}
+	va_start( args, szFormat );
 
-MonoObject* CResource::NewObject( Vector2& vecVector )
-{
-	MonoClass* pClass = this->GetClassFromName( "MultiTheftAuto", "Vector2" );
-			
-	if( pClass )
-	{
-		MonoObject* pObject = CMonoClass::New( pClass, mono_domain_get(), vecVector );
-				
-		if( pObject )
-		{
-			return pObject;
-		}
-		else
-		{
-			g_pModuleManager->ErrorPrintf( "%s:%d: failed to create instance of 'MultiTheftAuto::Vector2'\n", __FILE__, __LINE__ );
-		}
-	}
-	else
-	{
-		g_pModuleManager->ErrorPrintf( "%s:%d: class 'MultiTheftAuto::Vector2' not found\n", __FILE__, __LINE__ );
-	}
+	char szBuffer[ 255 ];
 
-	return nullptr;
-}
+	vsprintf( szBuffer, szFormat, args );
 
-MonoObject* CResource::NewObject( Vector3& vecVector )
-{
-	MonoClass* pClass = this->GetClassFromName( "MultiTheftAuto", "Vector3" );
-			
-	if( pClass )
-	{
-		MonoObject* pObject = CMonoClass::New( pClass, mono_domain_get(), vecVector );
-				
-		if( pObject )
-		{
-			return pObject;
-		}
-		else
-		{
-			g_pModuleManager->ErrorPrintf( "%s:%d: failed to create instance of 'MultiTheftAuto::Vector3'\n", __FILE__, __LINE__ );
-		}
-	}
-	else
-	{
-		g_pModuleManager->ErrorPrintf( "%s:%d: class 'MultiTheftAuto::Vector3' not found\n", __FILE__, __LINE__ );
-	}
+	va_end( args ); 
 
-	return nullptr;
-}
-
-MonoObject* CResource::NewObject( const char* szNamespace, const char* szName, void** args, int argc )
-{
-	MonoClass* pClass = this->GetClassFromName( szNamespace, szName );
-			
-	if( pClass )
-	{
-		MonoObject* pObject = CMonoClass::New( pClass, mono_domain_get(), args, argc );
-				
-		if( pObject )
-		{
-			return pObject;
-		}
-		else
-		{
-			g_pModuleManager->ErrorPrintf( "%s:%d: failed to create instance of '%s::%s'\n", __FILE__, __LINE__, szNamespace, szName );
-		}
-	}
-	else
-	{
-		g_pModuleManager->ErrorPrintf( "%s:%d: class '%s::%s' not found\n", __FILE__, __LINE__, szNamespace, szName );
-	}
-
-	return nullptr;
+	g_pModuleManager->ErrorPrintf( szBuffer );
 }

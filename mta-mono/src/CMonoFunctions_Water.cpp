@@ -76,7 +76,7 @@ MonoObject* CMonoFunctions::Water::GetVertexPosition( DWORD pUserData, int iVert
 
 		if( CLuaFunctionDefinitions::GetWaterVertexPosition( RESOURCE->GetLua(), (void*)pUserData, iVertexIndex, vecPosition ) )
 		{
-			return RESOURCE->NewObject( vecPosition );
+			return RESOURCE->GetDomain()->GetMTALib()->Vector3->New( vecPosition );
 		}
 	}
 
@@ -103,7 +103,7 @@ MonoObject* CMonoFunctions::Water::GetColor( void )
 
 		if( CLuaFunctionDefinitions::GetWaterColor( RESOURCE->GetLua(), pColor.R, pColor.G, pColor.B, pColor.A ) )
 		{
-			return RESOURCE->NewObject( pColor );
+			return RESOURCE->GetDomain()->GetMTALib()->Color->New( pColor );
 		}
 	}
 

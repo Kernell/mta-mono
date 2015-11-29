@@ -10,12 +10,24 @@
 *
 *********************************************************/
 
-#include "mta-mono.h"
+#define MODULE_NAME         "Mono 4.2.1"
+#define MODULE_AUTHOR       "Dmitry Korolev <kernell@mtaroleplay.ru>"
+#define MODULE_VERSION      0.1f
+
+#include "CFunctions.h"
+#include "CResource.h"
+#include "CResourceManager.h"
+#include "CMonoInterface.h"
+
+ILuaModuleManager10*	g_pModuleManager		= nullptr;
+CResourceManager*		g_pResourceManager		= nullptr;
+CMonoInterface*			g_pMonoInterface		= nullptr;
 
 MTAEXPORT bool InitModule( ILuaModuleManager10 *pManager, char *szModuleName, char *szAuthor, float *fVersion )
 {
     g_pModuleManager	= pManager;
-	g_pResourceManager	= new CResourceManager();
+	g_pMonoInterface	= new CMonoInterface();
+	g_pResourceManager	= new CResourceManager( g_pMonoInterface );
 
     strncpy( szModuleName, MODULE_NAME, MAX_INFO_LENGTH );
     strncpy( szAuthor, MODULE_AUTHOR, MAX_INFO_LENGTH );
@@ -29,10 +41,10 @@ MTAEXPORT void RegisterFunctions( lua_State *pLuaVM )
 {
     if( g_pModuleManager && pLuaVM && g_pResourceManager )
 	{
-		if( g_pModuleManager->RegisterFunction( pLuaVM, "monoInit", CFunctions::monoInit ) )
+		if( g_pModuleManager->RegisterFunction( pLuaVM, "mono_init", CFunctions::monoInit ) )
 		{
 			//luaL_dostring( pLuaVM, "addEventHandler( 'onResourceStart', resourceRoot, monoInit )" );
-			luaL_dostring( pLuaVM, "addEventHandler( 'onResourceStart', resourceRoot, function( res ) monoInit( getResourceName( res ) ) end )" );
+			luaL_dostring( pLuaVM, "addEventHandler( 'onResourceStart', resourceRoot, function( res ) mono_init( getResourceName( res ) ) end )" );
 		}
 	}
 }
@@ -52,6 +64,11 @@ MTAEXPORT bool ShutdownModule( void )
     if( g_pResourceManager )
 	{
 		delete g_pResourceManager;
+	}
+
+	if( g_pMonoInterface )
+	{
+		delete g_pMonoInterface;
 	}
 
     return true;

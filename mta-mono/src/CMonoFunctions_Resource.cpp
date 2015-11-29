@@ -105,7 +105,7 @@ MonoString* CMonoFunctions::Resource::GetInfo( DWORD pResource, MonoString* msAt
 
 		if( CLuaFunctionDefinitions::GetResourceInfo( RESOURCE->GetLua(), (void*)pResource, szAttribute, strOutInfo ) )
 		{
-			return RESOURCE->NewString( strOutInfo );
+			return RESOURCE->GetDomain()->NewString( strOutInfo );
 		}
 	}
 
@@ -135,7 +135,7 @@ MonoString* CMonoFunctions::Resource::GetLoadFailureReason( DWORD pResource )
 
 		if( CLuaFunctionDefinitions::GetResourceLoadFailureReason( RESOURCE->GetLua(), (void*)pResource, strOutReason ) )
 		{
-			return RESOURCE->NewString( strOutReason );
+			return RESOURCE->GetDomain()->NewString( strOutReason );
 		}
 	}
 
@@ -165,7 +165,7 @@ MonoString* CMonoFunctions::Resource::GetName( DWORD pResource )
 
 		if( CLuaFunctionDefinitions::GetResourceName( RESOURCE->GetLua(), (void*)pResource, strOut ) )
 		{
-			return RESOURCE->NewString( strOut );
+			return RESOURCE->GetDomain()->NewString( strOut );
 		}
 	}
 
@@ -178,7 +178,7 @@ MonoArray* CMonoFunctions::Resource::GetResources( void )
 	{
 		CLuaArguments* pLuaTable = CLuaFunctionDefinitions::GetResources( RESOURCE->GetLua() );
 
-		return RESOURCE->NewArray<DWORD, LUA_TLIGHTUSERDATA>( mono_get_uint32_class(), pLuaTable );
+		return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TLIGHTUSERDATA>( mono_get_uint32_class(), pLuaTable );
 	}
 
 	return NULL;
@@ -192,7 +192,7 @@ MonoString* CMonoFunctions::Resource::GetState( DWORD pResource )
 
 		if( CLuaFunctionDefinitions::GetResourceState( RESOURCE->GetLua(), (void*)pResource, strOut ) )
 		{
-			return RESOURCE->NewString( strOut );
+			return RESOURCE->GetDomain()->NewString( strOut );
 		}
 	}
 

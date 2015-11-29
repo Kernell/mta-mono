@@ -49,6 +49,16 @@ DWORD CMonoFunctions::Element::Clone( DWORD pUserData, MonoObject* vecPosition, 
 
 // Element get funcs
 
+DWORD CMonoFunctions::Element::GetRootElement( void )
+{
+	if( RESOURCE )
+	{
+		return (DWORD)CLuaFunctionDefinitions::GetRootElement( RESOURCE->GetLua() );
+	}
+
+	return NULL;
+}
+
 MonoArray* CMonoFunctions::Element::GetByType( MonoString* msType, DWORD pStartElement )
 {
 	if( RESOURCE )
@@ -57,7 +67,7 @@ MonoArray* CMonoFunctions::Element::GetByType( MonoString* msType, DWORD pStartE
 
 		CLuaArguments* pLuaArguments = CLuaFunctionDefinitions::GetElementsByType( RESOURCE->GetLua(), szType, (void*)pStartElement );
 		
-		return RESOURCE->NewArray<DWORD, LUA_TLIGHTUSERDATA>( mono_get_uint32_class(), pLuaArguments );
+		return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TLIGHTUSERDATA>( mono_get_uint32_class(), pLuaArguments );
 	}
 
 	return NULL;
@@ -157,7 +167,7 @@ MonoObject* CMonoFunctions::Element::GetPosition( DWORD pUserData )
 		
 		if( CLuaFunctionDefinitions::GetElementPosition( RESOURCE->GetLua(), (void*)pUserData, vecPosition ) )
 		{
-			return RESOURCE->NewObject( vecPosition );
+			return RESOURCE->GetDomain()->GetMTALib()->Vector3->New( vecPosition );
 		}
 	}
 
@@ -172,7 +182,7 @@ MonoObject* CMonoFunctions::Element::GetRotation( DWORD pUserData )
 		
 		if( CLuaFunctionDefinitions::GetElementRotation( RESOURCE->GetLua(), (void*)pUserData, vecPosition ) )
 		{
-			return RESOURCE->NewObject( vecPosition );
+			return RESOURCE->GetDomain()->GetMTALib()->Vector3->New( vecPosition );
 		}
 	}
 
@@ -187,7 +197,7 @@ MonoObject* CMonoFunctions::Element::GetVelocity( DWORD pUserData )
 		
 		if( CLuaFunctionDefinitions::GetElementVelocity( RESOURCE->GetLua(), (void*)pUserData, vecPosition ) )
 		{
-			return RESOURCE->NewObject( vecPosition );
+			return RESOURCE->GetDomain()->GetMTALib()->Vector3->New( vecPosition );
 		}
 	}
 
@@ -262,7 +272,7 @@ MonoString* CMonoFunctions::Element::GetZoneName( DWORD pUserData, bool bCitiesO
 
 		if( CLuaFunctionDefinitions::GetElementZoneName( RESOURCE->GetLua(), (void*)pUserData, strOutName, bCitiesOnly ) )
 		{
-			return RESOURCE->NewString( strOutName );
+			return RESOURCE->GetDomain()->NewString( strOutName );
 		}
 	}
 
@@ -382,7 +392,7 @@ MonoObject* CMonoFunctions::Element::GetAttachedOffsetPosition( DWORD pUserData 
 		
 		if( CLuaFunctionDefinitions::GetElementAttachedOffsets( RESOURCE->GetLua(), (void*)pUserData, vecPosition, vecRotation ) )
 		{
-			return RESOURCE->NewObject( vecPosition );
+			return RESOURCE->GetDomain()->GetMTALib()->Vector3->New( vecPosition );
 		}
 	}
 
@@ -397,7 +407,7 @@ MonoObject* CMonoFunctions::Element::GetAttachedOffsetRotation( DWORD pUserData 
 		
 		if( CLuaFunctionDefinitions::GetElementAttachedOffsets( RESOURCE->GetLua(), (void*)pUserData, vecPosition, vecRotation ) )
 		{
-			return RESOURCE->NewObject( vecRotation );
+			return RESOURCE->GetDomain()->GetMTALib()->Vector3->New( vecRotation );
 		}
 	}
 

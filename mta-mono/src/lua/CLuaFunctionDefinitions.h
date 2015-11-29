@@ -24,36 +24,37 @@ class CLuaFunctionDefinitions
 {
 public:
 	// All-Seeing Eye related Functions
-    static bool						SetGameType                     ( lua_State* pLuaVM, const char* szGameType );
-    static bool						SetMapName                      ( lua_State* pLuaVM, const char* szMapName );
-    static string					GetRuleValue                    ( lua_State* pLuaVM, const char* szKey );
-    static bool						SetRuleValue                    ( lua_State* pLuaVM, const char* szKey, const char* szValue );
-    static bool						RemoveRuleValue                 ( lua_State* pLuaVM, const char* szKey );
-    static string					GetPlayerAnnounceValue          ( lua_State* pLuaVM, void* pElement, const char* szKey );
-    static bool						SetPlayerAnnounceValue          ( lua_State* pLuaVM, void* pElement, const char* szKey, const char* szValue );
+    static bool					SetGameType							( lua_State* pLuaVM, const char* szGameType );
+    static bool					SetMapName							( lua_State* pLuaVM, const char* szMapName );
+    static string				GetRuleValue						( lua_State* pLuaVM, const char* szKey );
+    static bool					SetRuleValue						( lua_State* pLuaVM, const char* szKey, const char* szValue );
+    static bool					RemoveRuleValue						( lua_State* pLuaVM, const char* szKey );
+    static string				GetPlayerAnnounceValue				( lua_State* pLuaVM, void* pElement, const char* szKey );
+    static bool					SetPlayerAnnounceValue				( lua_State* pLuaVM, void* pElement, const char* szKey, const char* szValue );
 
-	static string					Get								( lua_State* pLuaVM, const char* szKey );
-	static bool						Set								( lua_State* pLuaVM, const char* szKey, const char* szValue );
-	static string					GetGameType                     ( lua_State* pLuaVM );
-	static string					GetMapName						( lua_State* pLuaVM );
+	static string				Get									( lua_State* pLuaVM, const char* szKey );
+	static bool					Set									( lua_State* pLuaVM, const char* szKey, const char* szValue );
+	static string				GetGameType							( lua_State* pLuaVM );
+	static string				GetMapName							( lua_State* pLuaVM );
 
- //   static int      CallRemote                          ( lua_State* luaVM );
- //   static int      FetchRemote                         ( lua_State* luaVM );
+//	static int					CallRemote                          ( lua_State* luaVM );
+//	static int					FetchRemote                         ( lua_State* luaVM );
 
- //   // Event functions
- //   static int      AddEvent                            ( lua_State* luaVM );
- //   static int      AddEventHandler                     ( lua_State* luaVM );
- //   static int      RemoveEventHandler                  ( lua_State* luaVM );
- //   static int      GetEventHandlers                    ( lua_State* luaVM );
- //   static int      TriggerEvent                        ( lua_State* luaVM );
- //   static int      TriggerClientEvent                  ( lua_State* luaVM );
- //   static int      CancelEvent                         ( lua_State* luaVM );
- //   static int      GetCancelReason                     ( lua_State* luaVM );
- //   static int      WasEventCancelled                   ( lua_State* luaVM );
- //   static int      TriggerLatentClientEvent            ( lua_State* luaVM );
- //   static int      GetLatentEventHandles               ( lua_State* luaVM );
- //   static int      GetLatentEventStatus                ( lua_State* luaVM );
- //   static int      CancelLatentEvent                   ( lua_State* luaVM );
+    // Event functions
+//	static bool					AddEvent							( lua_State* pLuaVM, const char* szName, bool bAllowRemoteTrigger );
+    static bool					AddEventHandler						( lua_State* pLuaVM, const char* szName, void* pUserData, lua_CFunction iLuaFunction, bool bPropagated, const char* szEventPriority );
+//	static bool					RemoveEventHandler					( lua_State* pLuaVM, const char* szName, void* pUserData, const CLuaFunctionRef& iLuaFunction );
+//	static bool					GetEventHandlers					( lua_State* pLuaVM, const char* szName );
+//	static bool					TriggerEvent						( lua_State* pLuaVM, const char* szName, void* pUserData, const CLuaArguments& Arguments, bool& bWasCancelled );
+//	static bool					CancelEvent							( lua_State* pLuaVM, bool bCancel );
+//	static bool					WasEventCancelled					( lua_State* pLuaVM );
+
+//	static int					TriggerClientEvent                  ( lua_State* luaVM );
+//	static int					GetCancelReason                     ( lua_State* luaVM );
+//	static int					TriggerLatentClientEvent            ( lua_State* luaVM );
+//	static int					GetLatentEventHandles               ( lua_State* luaVM );
+//	static int					GetLatentEventStatus                ( lua_State* luaVM );
+//	static int					CancelLatentEvent					( lua_State* luaVM );
 
 	// Element create/destroy
 	static void*				CreateElement						( lua_State* pLuaVM, const char* szTypeName, const char* szID );

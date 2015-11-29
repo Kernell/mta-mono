@@ -16,44 +16,6 @@
 *
 *********************************************************/
 
-extern "C"
-{
-    #include <lua.h>
-    #include <lualib.h>
-    #include <lauxlib.h>
-}
-
-#ifdef WIN32
-    #define MTAEXPORT extern "C" __declspec(dllexport)
-#else
-    #define MTAEXPORT extern "C"
-#endif
-
-#include <list>
-#include <vector>
-#include <map>
-#include <string.h>
-#include <sys/stat.h>
-#include <assert.h>
-
-#pragma warning( push )
-#pragma warning( disable: 4996 )
-#include <glib.h>
-#pragma warning( pop )
-
-#include <mono/jit/jit.h>
-#include <mono/metadata/assembly.h>
-#include <mono/metadata/mono-debug.h>
-#include <mono/metadata/debug-helpers.h>
-#include <mono/metadata/environment.h>
-#include <mono/metadata/threads.h>
-#include <mono/metadata/mono-gc.h>
-
-#include "include/ILuaModuleManager.h"
-
-#include "extra/Vector2.h"
-#include "extra/Vector3.h"
-
 using namespace std;
 
 #ifndef __COMMON_H

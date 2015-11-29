@@ -21,7 +21,7 @@ MonoArray* CMonoFunctions::World::GetTime( void )
 
 		if( CLuaFunctionDefinitions::GetTime( RESOURCE->GetLua(), ucHour, ucMinute ) )
 		{
-			MonoArray* pArray = mono_array_new( RESOURCE->m_pMonoDomain, mono_get_char_class(), 2 );
+			MonoArray* pArray = mono_array_new( RESOURCE->GetDomain()->GetMonoPtr(), mono_get_char_class(), 2 );
 
 			mono_array_set( pArray, unsigned char, 0, ucHour );
 			mono_array_set( pArray, unsigned char, 1, ucMinute );
@@ -41,7 +41,7 @@ MonoArray* CMonoFunctions::World::GetWeather( void )
 
 		if( CLuaFunctionDefinitions::GetWeather( RESOURCE->GetLua(), ucWeather, ucWeatherBlending ) )
 		{
-			MonoArray* pArray = mono_array_new( RESOURCE->m_pMonoDomain, mono_get_char_class(), 2 );
+			MonoArray* pArray = mono_array_new( RESOURCE->GetDomain()->GetMonoPtr(), mono_get_char_class(), 2 );
 
 			mono_array_set( pArray, unsigned char, 0, ucWeather );
 			mono_array_set( pArray, unsigned char, 1, ucWeatherBlending );
@@ -63,7 +63,7 @@ MonoString* CMonoFunctions::World::GetZoneName( MonoObject* mPosition, bool bCit
 
 		if( CLuaFunctionDefinitions::GetZoneName( RESOURCE->GetLua(), vecPosition, strOutName, bCitiesOnly ) )
 		{
-			return RESOURCE->NewString( strOutName );
+			return RESOURCE->GetDomain()->NewString( strOutName );
 		}
 	}
 
@@ -275,12 +275,12 @@ MonoArray* CMonoFunctions::World::GetSunColor( void )
 		{
 			pCore.A	= pCorona.A = 255;
 
-			MonoObject* pCoreObject		= RESOURCE->NewObject( pCore );
-			MonoObject* pCoronaObject	= RESOURCE->NewObject( pCorona );
+			MonoObject* pCoreObject		= RESOURCE->GetDomain()->GetMTALib()->Color->New( pCore );
+			MonoObject* pCoronaObject	= RESOURCE->GetDomain()->GetMTALib()->Color->New( pCorona );
 
 			if( pCoreObject && pCoronaObject )
 			{
-				MonoArray* pMonoArray = mono_array_new( RESOURCE->m_pMonoDomain, CMonoObject::GetClass( pCoreObject ), 2 );
+				MonoArray* pMonoArray = mono_array_new( RESOURCE->GetDomain()->GetMonoPtr(), CMonoObject::GetClass( pCoreObject ), 2 );
 
 				mono_array_set( pMonoArray, MonoObject*, 0, pCoreObject );
 				mono_array_set( pMonoArray, MonoObject*, 1, pCoronaObject );
@@ -301,7 +301,7 @@ MonoObject* CMonoFunctions::World::GetWindVelocity( void )
 
 		if( CLuaFunctionDefinitions::GetWindVelocity( RESOURCE->GetLua(), vecVelocity.fX, vecVelocity.fY, vecVelocity.fZ ) )
 		{
-			return RESOURCE->NewObject( vecVelocity );
+			return RESOURCE->GetDomain()->GetMTALib()->Vector3->New( vecVelocity );
 		}
 	}
 
@@ -393,12 +393,12 @@ MonoArray* CMonoFunctions::World::GetSkyGradient( void )
 		{
 			pCore.A	= pCorona.A = 255;
 
-			MonoObject* pCoreObject		= RESOURCE->NewObject( pCore );
-			MonoObject* pCoronaObject	= RESOURCE->NewObject( pCorona );
+			MonoObject* pCoreObject		= RESOURCE->GetDomain()->GetMTALib()->Color->New( pCore );
+			MonoObject* pCoronaObject	= RESOURCE->GetDomain()->GetMTALib()->Color->New( pCorona );
 
 			if( pCoreObject && pCoronaObject )
 			{
-				MonoArray* pMonoArray = mono_array_new( RESOURCE->m_pMonoDomain, CMonoObject::GetClass( pCoreObject ), 2 );
+				MonoArray* pMonoArray = mono_array_new( RESOURCE->GetDomain()->GetMonoPtr(), CMonoObject::GetClass( pCoreObject ), 2 );
 
 				mono_array_set( pMonoArray, MonoObject*, 0, pCoreObject );
 				mono_array_set( pMonoArray, MonoObject*, 1, pCoronaObject );
@@ -424,7 +424,7 @@ MonoObject* CMonoFunctions::World::GetHeatHaze( void )
 				&heatHazeSettings
 			};
 
-			return RESOURCE->NewObject( "MultiTheftAuto", "HeatHazeSettings", args, 1 );
+			return RESOURCE->GetDomain()->GetMTALib()->GetClass( "HeatHazeSettings" )->New( args, 1 );
 		}
 	}
 

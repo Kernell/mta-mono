@@ -15,19 +15,20 @@ class CResourceManager;
 #ifndef __CRESOURCEMANAGER_H
 #define __CRESOURCEMANAGER_H
 
-#include "CMonoFunctions.h"
+#include "CResource.h"
+#include "CMonoInterface.h"
 
 extern ILuaModuleManager10	*g_pModuleManager;
 
 class CResourceManager
 {
 private:
-	list< CResource* >       m_List;
+	CMonoInterface*			m_pMono;
 
-	MonoDomain		*m_pMonoDomain;
+	list< CResource* >		m_List;
 
 public:
-					CResourceManager	( void );
+					CResourceManager	( CMonoInterface* pMono );
 					~CResourceManager	( void );
 
 	CResource*		Create				( lua_State* luaVM, string strName );

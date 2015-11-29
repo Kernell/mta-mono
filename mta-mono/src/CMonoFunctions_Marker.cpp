@@ -50,7 +50,7 @@ MonoString* CMonoFunctions::Marker::GetType( DWORD pUserData )
 		
 		if( CLuaFunctionDefinitions::GetMarkerType( RESOURCE->GetLua(), (void*)pUserData, szType ) )
 		{
-			return RESOURCE->NewString( szType );
+			return RESOURCE->GetDomain()->NewString( szType );
 		}
 	}
 
@@ -80,7 +80,7 @@ MonoObject* CMonoFunctions::Marker::GetColor( DWORD pUserData )
 		
 		if( CLuaFunctionDefinitions::GetMarkerColor( RESOURCE->GetLua(), (void*)pUserData, outColor ) )
 		{
-			return RESOURCE->NewObject( outColor );
+			return RESOURCE->GetDomain()->GetMTALib()->Color->New( outColor );
 		}
 	}
 
@@ -95,7 +95,7 @@ MonoObject* CMonoFunctions::Marker::GetTarget( DWORD pUserData )
 		
 		if( CLuaFunctionDefinitions::GetMarkerTarget( RESOURCE->GetLua(), (void*)pUserData, vecPosition ) )
 		{
-			return RESOURCE->NewObject( vecPosition );
+			return RESOURCE->GetDomain()->GetMTALib()->Vector3->New( vecPosition );
 		}
 	}
 
@@ -110,7 +110,7 @@ MonoString* CMonoFunctions::Marker::GetIcon( DWORD pUserData )
 		
 		if( CLuaFunctionDefinitions::GetMarkerIcon( RESOURCE->GetLua(), (void*)pUserData, szIcon ) )
 		{
-			return RESOURCE->NewString( szIcon );
+			return RESOURCE->GetDomain()->NewString( szIcon );
 		}
 	}
 

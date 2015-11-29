@@ -1,3 +1,4 @@
+#include "StdInc.h"
 #include "Common.h"
 
 CVehicleColor::CVehicleColor( void )

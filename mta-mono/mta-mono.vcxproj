@@ -10,85 +10,6 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\CMonoClass.cpp" />
-    <ClCompile Include="src\CMonoFunctions.cpp" />
-    <ClCompile Include="src\CMonoFunctions_Account.cpp" />
-    <ClCompile Include="src\CMonoFunctions_Audio.cpp" />
-    <ClCompile Include="src\CMonoFunctions_Ban.cpp" />
-    <ClCompile Include="src\CMonoFunctions_Blip.cpp" />
-    <ClCompile Include="src\CMonoFunctions_Element.cpp" />
-    <ClCompile Include="src\CMonoFunctions_Explosion.cpp" />
-    <ClCompile Include="src\CMonoFunctions_Marker.cpp" />
-    <ClCompile Include="src\CMonoFunctions_Object.cpp" />
-    <ClCompile Include="src\CMonoFunctions_Ped.cpp" />
-    <ClCompile Include="src\CMonoFunctions_Pickup.cpp" />
-    <ClCompile Include="src\CMonoFunctions_Player.cpp" />
-    <ClCompile Include="src\CMonoFunctions_RadarArea.cpp" />
-    <ClCompile Include="src\CMonoFunctions_Resource.cpp" />
-    <ClCompile Include="src\CMonoFunctions_Shape.cpp" />
-    <ClCompile Include="src\CMonoFunctions_Team.cpp" />
-    <ClCompile Include="src\CMonoFunctions_Vehicle.cpp" />
-    <ClCompile Include="src\CMonoFunctions_Water.cpp" />
-    <ClCompile Include="src\CMonoFunctions_World.cpp" />
-    <ClCompile Include="src\CMonoObject.cpp" />
-    <ClCompile Include="src\Common.cpp" />
-    <ClCompile Include="src\CResource.cpp" />
-    <ClCompile Include="src\CResourceManager.cpp" />
-    <ClCompile Include="src\extra\Vector2.cpp" />
-    <ClCompile Include="src\extra\Vector3.cpp" />
-    <ClCompile Include="src\mta-mono.cpp" />
-    <ClCompile Include="src\CFunctions.cpp" />
-    <ClCompile Include="src\extra\CLuaArgument.cpp" />
-    <ClCompile Include="src\extra\CLuaArguments.cpp" />
-    <ClCompile Include="src\lua\CLuaFunctionDefinitions.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\CMonoClass.h" />
-    <ClInclude Include="src\CMonoFunctions.h" />
-    <ClInclude Include="src\CMonoObject.h" />
-    <ClInclude Include="src\CResource.h" />
-    <ClInclude Include="src\CResourceManager.h" />
-    <ClInclude Include="src\extra\Vector2.h" />
-    <ClInclude Include="src\extra\Vector3.h" />
-    <ClInclude Include="src\include\mono\jit\jit.h" />
-    <ClInclude Include="src\include\mono\metadata\appdomain.h" />
-    <ClInclude Include="src\include\mono\metadata\assembly.h" />
-    <ClInclude Include="src\include\mono\metadata\attrdefs.h" />
-    <ClInclude Include="src\include\mono\metadata\blob.h" />
-    <ClInclude Include="src\include\mono\metadata\class.h" />
-    <ClInclude Include="src\include\mono\metadata\debug-helpers.h" />
-    <ClInclude Include="src\include\mono\metadata\debug-mono-symfile.h" />
-    <ClInclude Include="src\include\mono\metadata\environment.h" />
-    <ClInclude Include="src\include\mono\metadata\exception.h" />
-    <ClInclude Include="src\include\mono\metadata\image.h" />
-    <ClInclude Include="src\include\mono\metadata\loader.h" />
-    <ClInclude Include="src\include\mono\metadata\metadata.h" />
-    <ClInclude Include="src\include\mono\metadata\mono-config.h" />
-    <ClInclude Include="src\include\mono\metadata\mono-debug.h" />
-    <ClInclude Include="src\include\mono\metadata\mono-gc.h" />
-    <ClInclude Include="src\include\mono\metadata\object.h" />
-    <ClInclude Include="src\include\mono\metadata\opcodes.h" />
-    <ClInclude Include="src\include\mono\metadata\profiler.h" />
-    <ClInclude Include="src\include\mono\metadata\reflection.h" />
-    <ClInclude Include="src\include\mono\metadata\row-indexes.h" />
-    <ClInclude Include="src\include\mono\metadata\sgen-bridge.h" />
-    <ClInclude Include="src\include\mono\metadata\threads.h" />
-    <ClInclude Include="src\include\mono\metadata\tokentype.h" />
-    <ClInclude Include="src\include\mono\metadata\verify.h" />
-    <ClInclude Include="src\include\mono\utils\mono-counters.h" />
-    <ClInclude Include="src\include\mono\utils\mono-dl-fallback.h" />
-    <ClInclude Include="src\include\mono\utils\mono-error.h" />
-    <ClInclude Include="src\include\mono\utils\mono-logger.h" />
-    <ClInclude Include="src\include\mono\utils\mono-publib.h" />
-    <ClInclude Include="src\mta-mono.h" />
-    <ClInclude Include="src\CFunctions.h" />
-    <ClInclude Include="src\Common.h" />
-    <ClInclude Include="src\extra\CLuaArgument.h" />
-    <ClInclude Include="src\extra\CLuaArguments.h" />
-    <ClInclude Include="src\include\ILuaModuleManager.h" />
-    <ClInclude Include="src\lua\CLuaFunctionDefinitions.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5E5C7A85-A869-4D86-88FF-05DCEFC07AC3}</ProjectGuid>
     <RootNamespace>mta-mono</RootNamespace>
@@ -131,7 +52,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>D:\Server\MTA\server\mods\deathmatch\modules</OutDir>
     <IntDir>bin\Release\</IntDir>
-    <LinkIncremental>false</LinkIncremental>
+    <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>
@@ -146,10 +67,11 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
-      <PrecompiledHeader />
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>false</SDLCheck>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <PrecompiledHeaderFile>StdInc.h</PrecompiledHeaderFile>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -178,18 +100,21 @@
       <MkTypLibCompatible>false</MkTypLibCompatible>
     </Midl>
     <ClCompile>
-      <AdditionalIncludeDirectories>.\include;.\src\include;.\vendor\lua51\src;.\vendor\mysql;.\vendor\eglib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\src;.\include;.\src\include;.\vendor\lua51\src;.\vendor\mysql;.\vendor\eglib</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_WINDOWS;NDEBUG;_USRDLL;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
-      <PrecompiledHeader />
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <SDLCheck>false</SDLCheck>
-      <Optimization>Full</Optimization>
-      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <IntrinsicFunctions>false</IntrinsicFunctions>
+      <FunctionLevelLinking>
+      </FunctionLevelLinking>
+      <PrecompiledHeaderFile>StdInc.h</PrecompiledHeaderFile>
+      <StringPooling>true</StringPooling>
+      <ForcedIncludeFiles>StdInc.h;%(ForcedIncludeFiles)</ForcedIncludeFiles>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -201,20 +126,117 @@
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <ModuleDefinitionFile />
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <SubSystem>Windows</SubSystem>
-      <OptimizeReferences>true</OptimizeReferences>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences>
+      </OptimizeReferences>
+      <EnableCOMDATFolding>
+      </EnableCOMDATFolding>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention />
-      <ImportLibrary>
-      </ImportLibrary>
+      <ImportLibrary>$(IntDir)$(TargetFileName).lib</ImportLibrary>
       <TargetMachine>MachineX86</TargetMachine>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
-      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <LinkTimeCodeGeneration>
+      </LinkTimeCodeGeneration>
       <AdditionalLibraryDirectories>lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\CMonoClass.cpp" />
+    <ClCompile Include="src\CMonoCorlib.cpp" />
+    <ClCompile Include="src\CMonoDomain.cpp" />
+    <ClCompile Include="src\CMonoFunctions.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Account.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Audio.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Ban.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Blip.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Element.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Event.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Explosion.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Marker.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Object.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Ped.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Pickup.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Player.cpp" />
+    <ClCompile Include="src\CMonoFunctions_RadarArea.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Resource.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Shape.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Team.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Vehicle.cpp" />
+    <ClCompile Include="src\CMonoFunctions_Water.cpp" />
+    <ClCompile Include="src\CMonoFunctions_World.cpp" />
+    <ClCompile Include="src\CMonoGC.cpp" />
+    <ClCompile Include="src\CMonoInterface.cpp" />
+    <ClCompile Include="src\CMonoMTALib.cpp" />
+    <ClCompile Include="src\CMonoObject.cpp" />
+    <ClCompile Include="src\Common.cpp" />
+    <ClCompile Include="src\CResource.cpp" />
+    <ClCompile Include="src\CResourceManager.cpp" />
+    <ClCompile Include="src\extra\Vector2.cpp" />
+    <ClCompile Include="src\extra\Vector3.cpp" />
+    <ClCompile Include="src\mta-mono.cpp" />
+    <ClCompile Include="src\CFunctions.cpp" />
+    <ClCompile Include="src\extra\CLuaArgument.cpp" />
+    <ClCompile Include="src\extra\CLuaArguments.cpp" />
+    <ClCompile Include="src\lua\CLuaFunctionDefinitions.cpp" />
+    <ClCompile Include="src\StdInc.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\CMonoClass.h" />
+    <ClInclude Include="src\CMonoCorlib.h" />
+    <ClInclude Include="src\CMonoDomain.h" />
+    <ClInclude Include="src\CMonoFunctions.h" />
+    <ClInclude Include="src\CMonoGC.h" />
+    <ClInclude Include="src\CMonoInterface.h" />
+    <ClInclude Include="src\CMonoMTALib.h" />
+    <ClInclude Include="src\CMonoObject.h" />
+    <ClInclude Include="src\CResource.h" />
+    <ClInclude Include="src\CResourceManager.h" />
+    <ClInclude Include="src\extra\Vector2.h" />
+    <ClInclude Include="src\extra\Vector3.h" />
+    <ClInclude Include="src\include\mono\jit\jit.h" />
+    <ClInclude Include="src\include\mono\metadata\appdomain.h" />
+    <ClInclude Include="src\include\mono\metadata\assembly.h" />
+    <ClInclude Include="src\include\mono\metadata\attrdefs.h" />
+    <ClInclude Include="src\include\mono\metadata\blob.h" />
+    <ClInclude Include="src\include\mono\metadata\class.h" />
+    <ClInclude Include="src\include\mono\metadata\debug-helpers.h" />
+    <ClInclude Include="src\include\mono\metadata\debug-mono-symfile.h" />
+    <ClInclude Include="src\include\mono\metadata\environment.h" />
+    <ClInclude Include="src\include\mono\metadata\exception.h" />
+    <ClInclude Include="src\include\mono\metadata\image.h" />
+    <ClInclude Include="src\include\mono\metadata\loader.h" />
+    <ClInclude Include="src\include\mono\metadata\metadata.h" />
+    <ClInclude Include="src\include\mono\metadata\mono-config.h" />
+    <ClInclude Include="src\include\mono\metadata\mono-debug.h" />
+    <ClInclude Include="src\include\mono\metadata\mono-gc.h" />
+    <ClInclude Include="src\include\mono\metadata\object.h" />
+    <ClInclude Include="src\include\mono\metadata\opcodes.h" />
+    <ClInclude Include="src\include\mono\metadata\profiler.h" />
+    <ClInclude Include="src\include\mono\metadata\reflection.h" />
+    <ClInclude Include="src\include\mono\metadata\row-indexes.h" />
+    <ClInclude Include="src\include\mono\metadata\sgen-bridge.h" />
+    <ClInclude Include="src\include\mono\metadata\threads.h" />
+    <ClInclude Include="src\include\mono\metadata\tokentype.h" />
+    <ClInclude Include="src\include\mono\metadata\verify.h" />
+    <ClInclude Include="src\include\mono\utils\mono-counters.h" />
+    <ClInclude Include="src\include\mono\utils\mono-dl-fallback.h" />
+    <ClInclude Include="src\include\mono\utils\mono-error.h" />
+    <ClInclude Include="src\include\mono\utils\mono-logger.h" />
+    <ClInclude Include="src\include\mono\utils\mono-publib.h" />
+    <ClInclude Include="src\CFunctions.h" />
+    <ClInclude Include="src\Common.h" />
+    <ClInclude Include="src\extra\CLuaArgument.h" />
+    <ClInclude Include="src\extra\CLuaArguments.h" />
+    <ClInclude Include="src\include\ILuaModuleManager.h" />
+    <ClInclude Include="src\lua\CLuaFunctionDefinitions.h" />
+    <ClInclude Include="src\StdInc.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

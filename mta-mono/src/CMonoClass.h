@@ -1,28 +1,47 @@
+/*********************************************************
+*
+*  Copyright © 2013, Innovation Roleplay Engine. 
+*
+*  All Rights Reserved.
+*
+*  Redistribution and use in source and binary forms,
+*  with or without modification,
+*  is permitted only for authors.
+*
+*********************************************************/
+
 class CMonoClass;
 
-#ifndef _C_MONO_CLASS
-#define _C_MONO_CLASS
+#ifndef _C_MONOCLASS_H
+#define _C_MONOCLASS_H
 
-#include "Common.h"
-
-extern ILuaModuleManager10 *g_pModuleManager;
+#include "CMonoDomain.h"
 
 class CMonoClass
 {
+private:
+	MonoClass*			m_pClass;
+
+	CMonoDomain*		m_pDomain;
+
 public:
-	static MonoObject* New( MonoClass* pMonoClass, MonoDomain* pMonoDomain );
-	static MonoObject* New( MonoClass* pMonoClass, MonoDomain* pMonoDomain, SColor& pColor );
-	static MonoObject* New( MonoClass* pMonoClass, MonoDomain* pMonoDomain, Vector2& vecVector );
-	static MonoObject* New( MonoClass* pMonoClass, MonoDomain* pMonoDomain, Vector3& vecVector );
-	static MonoObject* New( MonoClass* pMonoClass, MonoDomain* pMonoDomain, void** args, int argc );
+						CMonoClass						( MonoClass* pMonoClass, CMonoDomain* pDomain );
+						~CMonoClass						( void );
 
-	static const char* GetName( MonoClass* pMonoClass );
-	static const char* GetNameSpace( MonoClass* pMonoClass );
+	MonoObject*			New								( void );
+	MonoObject*			New								( SColor& pColor );
+	MonoObject*			New								( Vector2& vecVector );
+	MonoObject*			New								( Vector3& vecVector );
+	MonoObject*			New								( void** args, int argc );
 
-	static MonoMethod* GetMethod( MonoClass* pMonoClass, const char* szMethodName, int iParamCount );
-	static MonoMethod* GetMethod( MonoClass* pMonoClass, const char* szMethodName );
+	const char*			GetName							( void );
+	const char*			GetNameSpace					( void );
 
-	static MonoClass* GetClass( MonoClass* pMonoClass );
+	MonoMethod*			GetMethod						( const char* szMethodName, int iParamCount );
+	MonoMethod*			GetMethod						( const char* szMethodName );
+
+	MonoClass*			GetMonoPtr						( void )	{ return this->m_pClass; }
+	CMonoDomain*		GetDomain						( void )	{ return this->m_pDomain; }
 };
 
 #endif

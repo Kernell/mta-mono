@@ -37,12 +37,16 @@ void CMonoFunctions::AddInternals( void )
 	MONO_DECLARE( Server, SetRuleValue );
 	MONO_DECLARE( Server, RemoveRuleValue );
 
+	MONO_DECLARE( Event, AddHandler );
+
 	// Element create/destroy
 	MONO_DECLARE( Element, Create );
 	MONO_DECLARE( Element, Destroy );
 	MONO_DECLARE( Element, Clone );
 
 	// Element get funcs
+	MONO_DECLARE( Element, GetRootElement );
+
 	MONO_DECLARE( Element, GetByType );
 	MONO_DECLARE( Element, IsElement );
 	MONO_DECLARE( Element, GetType );
@@ -746,7 +750,7 @@ MonoObject* CMonoFunctions::Server::GetVersion( void )
 				&szSortable
 			};
 
-			return RESOURCE->NewObject( "MultiTheftAuto", "ServerVersion", args, 8 );
+			return RESOURCE->GetDomain()->GetMTALib()->GetClass( "ServerVersion" )->New( args, 8 );
 		}
 	}
 
@@ -757,7 +761,7 @@ MonoString* CMonoFunctions::Server::GetGameType( void )
 {
 	if( RESOURCE )
 	{
-		return RESOURCE->NewString( CLuaFunctionDefinitions::GetGameType( RESOURCE->GetLua() ) );
+		return RESOURCE->GetDomain()->NewString( CLuaFunctionDefinitions::GetGameType( RESOURCE->GetLua() ) );
 	}
 
 	return NULL;
@@ -767,7 +771,7 @@ MonoString* CMonoFunctions::Server::GetMapName( void )
 {
 	if( RESOURCE )
 	{
-		return RESOURCE->NewString( CLuaFunctionDefinitions::GetMapName( RESOURCE->GetLua() ) );
+		return RESOURCE->GetDomain()->NewString( CLuaFunctionDefinitions::GetMapName( RESOURCE->GetLua() ) );
 	}
 
 	return NULL;
@@ -803,7 +807,7 @@ MonoString* CMonoFunctions::Server::GetRuleValue( MonoString* msKey )
 	{
 		const char* szKey	= mono_string_to_utf8( msKey );
 
-		return RESOURCE->NewString( CLuaFunctionDefinitions::GetRuleValue( RESOURCE->GetLua(), szKey ) );
+		return RESOURCE->GetDomain()->NewString( CLuaFunctionDefinitions::GetRuleValue( RESOURCE->GetLua(), szKey ) );
 	}
 
 	return false;

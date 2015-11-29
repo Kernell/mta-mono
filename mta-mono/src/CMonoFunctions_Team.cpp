@@ -46,7 +46,7 @@ MonoString* CMonoFunctions::Team::GetName( DWORD pUserData )
 
 		if( CLuaFunctionDefinitions::GetTeamName( RESOURCE->GetLua(), (void*)pUserData, strOutName ) )
 		{
-			return RESOURCE->NewString( strOutName );
+			return RESOURCE->GetDomain()->NewString( strOutName );
 		}
 	}
 
@@ -61,7 +61,7 @@ MonoObject* CMonoFunctions::Team::GetColor( DWORD pUserData )
 
 		if( CLuaFunctionDefinitions::GetTeamColor( RESOURCE->GetLua(), (void*)pUserData, pColor.R, pColor.G, pColor.B ) )
 		{
-			return RESOURCE->NewObject( pColor );
+			return RESOURCE->GetDomain()->GetMTALib()->Color->New( pColor );
 		}
 	}
 
