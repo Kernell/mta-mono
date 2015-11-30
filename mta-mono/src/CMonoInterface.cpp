@@ -43,7 +43,7 @@ CMonoDomain* CMonoInterface::CreateAppdomain( CResource* pResource, char* szName
 
 	if( pMonoDomain )
 	{
-		return new CMonoDomain( pResource, pMonoDomain );
+		return new CMonoDomain( this, pMonoDomain, pResource );
 	}
 
 	return nullptr;

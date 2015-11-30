@@ -12,8 +12,9 @@
 
 #include "CMonoDomain.h"
 
-CMonoDomain::CMonoDomain( CResource* pResource, MonoDomain* pDomain )
+CMonoDomain::CMonoDomain( CMonoInterface* pMono, MonoDomain* pDomain, CResource* pResource )
 {
+	this->m_pMono		= pMono;
 	this->m_pDomain		= pDomain;
 	this->m_pResource	= pResource;
 
@@ -61,6 +62,14 @@ CMonoClass* CMonoDomain::FindOrAdd( MonoClass* klass )
 	}
 
 	return nullptr;
+}
+
+void CMonoDomain::ReleaseClass( CMonoClass* pClass )
+{
+	if( !this->m_ClassPool.empty() )
+	{
+		this->m_ClassPool.remove( pClass );
+	}
 }
 
 void CMonoDomain::Init( void )

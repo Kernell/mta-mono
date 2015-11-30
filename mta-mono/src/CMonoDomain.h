@@ -15,6 +15,7 @@ class CMonoDomain;
 #ifndef __CMONODOMAIN_H
 #define __CMONODOMAIN_H
 
+#include "CMonoInterface.h"
 #include "CMonoCorlib.h"
 #include "CMonoMTALib.h"
 #include "CMonoClass.h"
@@ -27,17 +28,19 @@ class CMonoDomain
 private:
 	MonoDomain*							m_pDomain;
 	CResource*							m_pResource;
+	CMonoInterface*						m_pMono;
 
 	CMonoCorlib*						m_pCorlib;
 	CMonoMTALib*						m_pMTALib;
 
-	vector< CMonoClass* >				m_ClassPool;
+	list< CMonoClass* >					m_ClassPool;
 
 public:
-					CMonoDomain			( CResource* pResource, MonoDomain* pDomain );
+					CMonoDomain			( CMonoInterface* pMono, MonoDomain* pDomain, CResource* pResource );
 					~CMonoDomain		( void );
 
 	CMonoClass*		FindOrAdd			( MonoClass* klass );
+	void			ReleaseClass		( CMonoClass* pClass );
 
 	void			Init				( void );
 
@@ -88,6 +91,7 @@ public:
 
 	MonoDomain*		GetMonoPtr			( void )	{ return this->m_pDomain; }
 
+	CMonoInterface*	GetMono				( void )	{ return this->m_pMono; }
 	CResource*		GetResource			( void )	{ return this->m_pResource; }
 
 	CMonoCorlib*	GetCorlib			( void )	{ return this->m_pCorlib; }
