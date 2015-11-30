@@ -28,7 +28,8 @@ private:
 	MonoAssembly*				m_pMonoAssembly;
 	MonoImage*					m_pMonoImage;
 	MonoClass*					m_pMonoClass;
-	uint32_t					m_pMonoGCHandle;
+
+	uint32_t					m_uiGCHandle;
 
 	lua_State*					m_pLuaVM;
 

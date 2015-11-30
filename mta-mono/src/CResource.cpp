@@ -27,44 +27,45 @@ CResource::CResource( CMonoInterface* pMono, lua_State *pLuaVM, string sName )
 	this->m_sName				= sName;
 
 	this->m_pMonoAssembly		= nullptr;
-	this->m_pMonoGCHandle		= 0;
 	this->m_pMonoDomain			= nullptr;
 	this->m_pMonoImage			= nullptr;
 	this->m_pMonoClass			= nullptr;
+
+	this->m_uiGCHandle			= 0;
 }
 
 CResource::~CResource( void )
 {
+	if( this->m_uiGCHandle )
+	{
+		mono_gchandle_free( this->m_uiGCHandle );
+
+		this->m_uiGCHandle = 0;
+	}
+
 	this->GetMono()->GetGC()->Collect( this->GetMono()->GetGC()->GetMaxGeneration() );
 
-	mono_domain_set( mono_get_root_domain(), false );
-
-	if( this->m_pMonoDomain )
-	{
-		this->m_pMonoDomain->Unload();
-		this->m_pMonoDomain = nullptr;
-	}
+	mono_domain_set( mono_get_root_domain(), true );
 
 	g_pResourceManager->RemoveFromList( this );
 
 	this->m_pMonoAssembly		= nullptr;
-	this->m_pMonoGCHandle		= 0;
 	this->m_pMonoDomain			= nullptr;
 	this->m_pMonoImage			= nullptr;
 	this->m_pMonoClass			= nullptr;
 
 	this->m_pMono				= nullptr;
 	this->m_pLuaVM				= nullptr;
-	this->m_sName				= nullptr;
 }
 
 bool CResource::CallEvent( string strEventName, void* pThis, void* pSource, void* pClient, void **args )
 {
 	MonoEvent* pEvent	= nullptr;
 	MonoMethod* method	= nullptr;
-	MonoClass* klass	= this->GetDomain()->GetMTALib()->GetClass( "Element" )->GetMonoPtr();
+	CMonoClass* pClass	= this->GetDomain()->GetMTALib()->GetClass( "Element" );
+	MonoClass* klass	= pClass->GetMonoPtr();
 
-	g_pModuleManager->DebugPrintf( this->GetLua(), "CResource::CallEvent::%s", strEventName.substr( 2 ).c_str() );
+	g_pModuleManager->DebugPrintf( this->GetLua(), "[%s] CResource::CallEvent::%s", this->m_sName.c_str(), strEventName.substr( 2 ).c_str() );
 
 	gpointer iter;
 
@@ -105,7 +106,7 @@ void CResource::RegisterEvents( void )
 	{
 		if( g_pModuleManager->RegisterFunction( this->m_pLuaVM, "mono_event_handler", CFunctions::monoEventHandler ) )
 		{
-			luaL_dostring( this->m_pLuaVM, "addEventHandler( 'onElementDestroy', root, \
+			luaL_dostring( this->m_pLuaVM, "addEventHandler( 'onElementDestroy', resourceRoot, \
 function( ... ) \
 	mono_event_handler( eventName, this, source, client, ... );\
 end \
@@ -153,9 +154,9 @@ bool CResource::Init( void )
 
 		MonoObject *pMonoObject = this->m_pMonoDomain->CreateObject( this->m_pMonoClass );
 
-		mono_gchandle_new( pMonoObject, false );
-
 		mono_runtime_object_init( pMonoObject );
+
+		this->m_uiGCHandle = mono_gchandle_new( pMonoObject, true );
 
 		return true;
 	}
