@@ -153,14 +153,14 @@ const char* CMonoClass::GetNameSpace( void )
 	return mono_class_get_namespace( this->m_pClass );
 }
 
-MonoMethod* CMonoClass::GetMethod( const char* szMethodName, int iParamCount )
+MonoMethod* CMonoClass::GetMethodFromName( string strMethodName, int iParamCount )
 {
-	return mono_class_get_method_from_name( this->m_pClass, szMethodName, iParamCount );
+	return mono_class_get_method_from_name( this->m_pClass, strMethodName.c_str(), iParamCount );
 }
 
-MonoMethod* CMonoClass::GetMethod( const char* szMethodName )
+MonoMethod* CMonoClass::GetMethod( string strMethodName )
 {
-	MonoMethodDesc* pMonoMethodDesc = mono_method_desc_new( szMethodName, false );
+	MonoMethodDesc* pMonoMethodDesc = mono_method_desc_new( strMethodName.c_str(), false );
 
 	if( pMonoMethodDesc )
 	{
@@ -174,12 +174,30 @@ MonoMethod* CMonoClass::GetMethod( const char* szMethodName )
 	return nullptr;
 }
 
-MonoEvent* CMonoClass::GetEvent( const char* szEventName )
+MonoMethod* CMonoClass::GetMethod( string strMethodName, uint uiIndex )
 {
-	return this->m_Events.count( szEventName ) > 0 ? this->m_Events[ szEventName ] : nullptr;
+	if( this->m_Methods[ strMethodName ].size() > 0 )
+	{
+		uint i = 0;
+
+		for( auto ptr : this->m_Methods[ strMethodName ] )
+		{
+			if( i++ == uiIndex )
+			{
+				return ptr;
+			}
+		}
+	}
+
+	return nullptr;
 }
 
-MonoClassField* CMonoClass::GetField( const char* szFieldName )
+MonoEvent* CMonoClass::GetEvent( string strEventName )
 {
-	return this->m_Fields.count( szFieldName ) > 0 ? this->m_Fields[ szFieldName ] : nullptr;
+	return this->m_Events[ strEventName ];
+}
+
+MonoClassField* CMonoClass::GetField( string strFieldName )
+{
+	return this->m_Fields[ strFieldName ];
 }
