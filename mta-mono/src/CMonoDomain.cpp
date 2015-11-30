@@ -85,7 +85,7 @@ void CMonoDomain::Unload( void )
 
 bool CMonoDomain::Set( bool bForce )
 {
-	return mono_domain_set( this->m_pDomain, bForce );
+	return mono_domain_set( this->m_pDomain, static_cast<mono_bool>( bForce ) ) == 1;
 }
 
 MonoAssembly* CMonoDomain::OpenAssembly( const char *szName )
