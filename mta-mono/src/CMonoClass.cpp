@@ -16,12 +16,74 @@ CMonoClass::CMonoClass( MonoClass* pMonoClass, CMonoDomain* pDomain )
 {
 	this->m_pClass		= pMonoClass;
 	this->m_pDomain		= pDomain;
+
+	MonoClass *pMonoBaseClass = pMonoClass;
+
+	while( pMonoBaseClass )
+	{
+		gpointer iter = nullptr;
+
+		while( MonoMethod* pMonoMethod = mono_class_get_methods( pMonoBaseClass, &iter ) )
+		{
+			const char* szName = mono_method_get_name( pMonoMethod );
+
+			this->m_Methods[ szName ].push_back( pMonoMethod );
+		}
+
+		iter = nullptr;
+
+		while( MonoProperty* pMonoProperty = mono_class_get_properties( pMonoBaseClass, &iter ) )
+		{
+			const char* szName = mono_property_get_name( pMonoProperty );
+
+			this->m_Properties[ szName ].push_back( pMonoProperty );
+		}
+		
+		iter = nullptr;
+
+		while( MonoEvent* pMonoEvent = mono_class_get_events( pMonoBaseClass, &iter ) )
+		{
+			const char* szName = mono_event_get_name( pMonoEvent );
+
+			this->m_Events[ szName ] = pMonoEvent;
+		}
+
+		iter = nullptr;
+
+		while( MonoClassField* pMonoField = mono_class_get_fields( pMonoBaseClass, &iter ) )
+		{
+			const char* szName = mono_field_get_name( pMonoField );
+
+			this->m_Fields[ szName ] = pMonoField;
+		}
+
+		pMonoBaseClass = mono_class_get_parent( pMonoBaseClass );
+	}
 }
 
 CMonoClass::~CMonoClass( void )
 {
+	this->m_pDomain->ReleaseClass( this );
+
 	this->m_pDomain		= nullptr;
 	this->m_pClass		= nullptr;
+
+	this->m_Fields.clear();
+	this->m_Events.clear();
+
+	for( auto iter : this->m_Properties )
+	{
+		iter.second.clear();
+	}
+
+	this->m_Properties.clear();
+
+	for( auto iter : this->m_Methods )
+	{
+		iter.second.clear();
+	}
+
+	this->m_Methods.clear();
 }
 
 MonoObject* CMonoClass::New( void )
@@ -110,4 +172,14 @@ MonoMethod* CMonoClass::GetMethod( const char* szMethodName )
 	}
 
 	return nullptr;
+}
+
+MonoEvent* CMonoClass::GetEvent( const char* szEventName )
+{
+	return this->m_Events.count( szEventName ) > 0 ? this->m_Events[ szEventName ] : nullptr;
+}
+
+MonoClassField* CMonoClass::GetField( const char* szFieldName )
+{
+	return this->m_Fields.count( szFieldName ) > 0 ? this->m_Fields[ szFieldName ] : nullptr;
 }
