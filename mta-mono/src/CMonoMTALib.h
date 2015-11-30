@@ -23,7 +23,11 @@ class CMonoMTALib
 private:
 	MonoAssembly*		m_pAssembly;
 	MonoImage*			m_pImage;
+	MonoObject*			m_pObject;
+	CMonoClass*			m_pClass;
 	CMonoDomain*		m_pDomain;
+
+	uint32_t			m_uiGCHandle;
 
 public:
 	CMonoClass*			Color;

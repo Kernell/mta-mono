@@ -14,9 +14,14 @@
 
 CMonoMTALib::CMonoMTALib( CMonoDomain* pDomain )
 {
+	this->m_pClass		= nullptr;
+	this->m_pObject		= nullptr;
+
 	this->m_pAssembly	= nullptr;
 	this->m_pImage		= nullptr;
 	this->m_pDomain		= pDomain;
+
+	this->m_uiGCHandle	= 0;
 
 	string strPath( CMonoInterface::GetBinariesDirectory() + "/" + pDomain->GetResource()->GetName() + "/MultiTheftAuto.dll" );
 
@@ -32,15 +37,13 @@ CMonoMTALib::CMonoMTALib( CMonoDomain* pDomain )
 			this->Vector2		= this->GetClass( "Vector2" );
 			this->Vector3		= this->GetClass( "Vector3" );
 
-			MonoClass* pMonoClass = mono_class_from_name( this->m_pImage, "MultiTheftAuto", "MultiTheftAuto" );
+			this->m_pClass		= this->GetClass( "MultiTheftAuto" );
 			
-			if( pMonoClass )
+			if( this->m_pClass )
 			{
-				MonoObject* pMonoObject = this->m_pDomain->CreateObject( pMonoClass );
-			
-				mono_gchandle_new( pMonoObject, false );
-				
-				mono_runtime_object_init( pMonoObject );
+				this->m_pObject = this->m_pClass->New();
+
+				//this->m_uiGCHandle = mono_gchandle_new( this->m_pObject, true );
 			}
 		}
 	}
@@ -48,9 +51,22 @@ CMonoMTALib::CMonoMTALib( CMonoDomain* pDomain )
 
 CMonoMTALib::~CMonoMTALib( void )
 {
+	if( this->m_uiGCHandle )
+	{
+		mono_gchandle_free( this->m_uiGCHandle );
+
+		this->m_uiGCHandle = 0;
+	}
+
+	SAFE_DELETE( this->Color );
+	SAFE_DELETE( this->Vector2 );
+	SAFE_DELETE( this->Vector3 );
+	SAFE_DELETE( this->m_pClass );
+
 	this->m_pDomain		= nullptr;
 	this->m_pAssembly	= nullptr;
 	this->m_pImage		= nullptr;
+	this->m_pObject		= nullptr;
 }
 
 CMonoClass* CMonoMTALib::GetClass( const char* szName )
