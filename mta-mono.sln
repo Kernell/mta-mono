@@ -5,9 +5,6 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{AC4FC54A-60A7-4EB0-A40D-14768DD633F1}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mta-mono", "mta-mono\mta-mono.vcxproj", "{5E5C7A85-A869-4D86-88FF-05DCEFC07AC3}"
-	ProjectSection(ProjectDependencies) = postProject
-		{E2629417-52DF-854E-B510-C15A87AB4BE3} = {E2629417-52DF-854E-B510-C15A87AB4BE3}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lua51", "mta-mono\vendor\lua51\lua51.vcxproj", "{E2629417-52DF-854E-B510-C15A87AB4BE3}"
 EndProject
@@ -296,9 +293,9 @@ Global
 		{EB56000B-C80B-4E8B-908D-D84D31B517D3} = {AC4FC54A-60A7-4EB0-A40D-14768DD633F1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		AMDCaPersistentConfig = Debug|Win32
-		AMDCaPersistentStartup = mono
 		AMDCaProjectFile = C:\Users\Owner\Development\monogit\mono\msvc\CodeAnalyst\mono.caw
+		AMDCaPersistentStartup = mono
+		AMDCaPersistentConfig = Debug|Win32
 	EndGlobalSection
 	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
 		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
