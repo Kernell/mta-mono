@@ -25,7 +25,7 @@ private:
 	MonoImage*			m_pImage;
 	CMonoDomain*		m_pDomain;
 
-protected:
+public:
 	map< const char*, CMonoClass* >		Class;
 
 public:

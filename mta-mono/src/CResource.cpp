@@ -10,15 +10,7 @@
 *
 *********************************************************/
 
-#include "StdInc.h"
 #include "CResource.h"
-#include "CResourceManager.h"
-#include "CFunctions.h"
-#include "include/ILuaModuleManager.h"
-#include "lua/CLuaFunctionDefinitions.h"
-
-extern ILuaModuleManager10	*g_pModuleManager;
-extern CResourceManager	*g_pResourceManager;
 
 CResource::CResource( CMonoInterface* pMono, lua_State *pLuaVM, string sName )
 {
@@ -36,6 +28,8 @@ CResource::CResource( CMonoInterface* pMono, lua_State *pLuaVM, string sName )
 
 CResource::~CResource( void )
 {
+	this->RemoveEvents();
+
 	if( this->m_uiGCHandle )
 	{
 		mono_gchandle_free( this->m_uiGCHandle );
@@ -58,43 +52,62 @@ CResource::~CResource( void )
 	this->m_pLuaVM				= nullptr;
 }
 
-bool CResource::CallEvent( string strEventName, void* pThis, void* pSource, void* pClient, void **args )
+bool CResource::CallEvent( string strEventName, void* pThis, list< CLuaArgument* > argv )
 {
-	MonoEvent* pEvent	= nullptr;
-	MonoMethod* method	= nullptr;
-	CMonoClass* pClass	= this->GetDomain()->GetMTALib()->GetClass( "Element" );
-	MonoClass* klass	= pClass->GetMonoPtr();
-
-	g_pModuleManager->DebugPrintf( this->GetLua(), "[%s] CResource::CallEvent::%s", this->m_sName.c_str(), strEventName.substr( 2 ).c_str() );
-
-	gpointer iter;
-
-	while( klass )
+	if( !pThis )
 	{
-		iter = nullptr;
-
-		while( pEvent = mono_class_get_events( klass, &iter ) )
-		{
-			if( !strcmp( strEventName.substr( 2 ).c_str(), mono_event_get_name( pEvent ) ) )
-			{
-				method = mono_event_get_raise_method( pEvent );
-
-				break;
-			}
-		}
-
-		klass = mono_class_get_parent( klass );
+		return false;
 	}
 
-	if( method )
+	CMonoMTALib* pMTALib	= this->GetDomain()->GetMTALib();
+
+	CMonoClass* pClass		= pMTALib->GetClass( "Element" );
+	CMonoEvent* pEvent		= pClass->GetEvent( strEventName );
+
+	if( !pEvent )
 	{
-		mono_runtime_invoke( method, pThis, args, nullptr );
-		
+		g_pModuleManager->ErrorPrintf( "[%s] event '%s' is class '%s' not found", this->m_sName.c_str(), strEventName.c_str(), pClass->GetName() );
+
+		return false;
+	}
+
+	MonoObject* pThisObj	= pMTALib->RegisterElement( pThis );
+
+	if( !pThisObj )
+	{
+		return false;
+	}
+
+	return pEvent->Call( pThisObj, argv );
+}
+
+bool CResource::AddEvent( const char* szName, const char* szHandleElement )
+{
+	if( this->m_pLuaVM )
+	{
+		char szBuffer[ 128 ];
+
+		sprintf( szBuffer, "addEventHandler( '%s', %s, _mono_event_handler, true, 'normal' );", szName, szHandleElement );
+
+		luaL_dostring( this->m_pLuaVM, szBuffer );
+
 		return true;
 	}
-	else
+
+	return false;
+}
+
+bool CResource::RemoveEvent( const char* szName, const char* szHandleElement )
+{
+	if( this->m_pLuaVM )
 	{
-		g_pModuleManager->ErrorPrintf( "mono: method not found\n" );
+		char szBuffer[ 128 ];
+
+		sprintf( szBuffer, "removeEventHandler( '%s', %s, _mono_event_handler );", szName, szHandleElement );
+
+		luaL_dostring( this->m_pLuaVM, szBuffer );
+
+		return true;
 	}
 
 	return false;
@@ -106,12 +119,41 @@ void CResource::RegisterEvents( void )
 	{
 		if( g_pModuleManager->RegisterFunction( this->m_pLuaVM, "mono_event_handler", CFunctions::monoEventHandler ) )
 		{
-			luaL_dostring( this->m_pLuaVM, "addEventHandler( 'onElementDestroy', resourceRoot, \
-function( ... ) \
-	mono_event_handler( eventName, this, source, client, ... );\
-end \
-)"
-			);
+			luaL_dostring( this->m_pLuaVM, "function _mono_event_handler( ... ) mono_event_handler( eventName, source, this, client, ... ); end" );
+
+			CMonoClass* pClass = this->GetDomain()->GetMTALib()->GetClass( "Element" );
+
+			if( pClass )
+			{
+				for( auto iter : pClass->GetAllEvents() )
+				{
+					string strEventName = iter.second->GetName();
+
+					strEventName[ 0 ] = tolower( strEventName[ 0 ] );
+
+					this->AddEvent( strEventName.c_str(), "root" );
+				}
+			}
+		}
+	}
+}
+
+void CResource::RemoveEvents( void )
+{
+	if( this->m_pLuaVM )
+	{
+		CMonoClass* pClass = this->GetDomain()->GetMTALib()->GetClass( "Element" );
+
+		if( pClass )
+		{
+			for( auto iter : pClass->GetAllEvents() )
+			{
+				string strEventName = iter.second->GetName();
+
+				strEventName[ 0 ] = tolower( strEventName[ 0 ] );
+
+				this->RemoveEvent( strEventName.c_str(), "root" );
+			}
 		}
 	}
 }
@@ -166,6 +208,7 @@ bool CResource::Init( void )
 
 void CResource::OnStopping( void )
 {
+	
 }
 
 void CResource::DoPulse( void )

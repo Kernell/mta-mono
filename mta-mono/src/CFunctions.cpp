@@ -10,7 +10,6 @@
 *
 *********************************************************/
 
-#include "StdInc.h"
 #include "CFunctions.h"
 #include "extra/CLuaArguments.h"
 
@@ -53,20 +52,66 @@ int CFunctions::monoEventHandler( lua_State *pLuaVM )
 
 		if( pResource )
 		{
-			// eventName, this, source, client, ...
+			string	strEventName;
+			void*	pThis			= nullptr;
 
-			string	strEventName		= CLuaArgument( pLuaVM, -4 ).GetString();
-			void*	pThis				= CLuaArgument( pLuaVM, -3 ).GetLightUserData();
-			void*	pSource				= CLuaArgument( pLuaVM, -2 ).GetLightUserData();
-			void*	pClient				= CLuaArgument( pLuaVM, -1 ).GetLightUserData();
+			CLuaArguments pLuaArgs;
 
-			//void *args[] = { &vecVector.fX, &vecVector.fY };
+			pLuaArgs.ReadArguments( pLuaVM );
+			
+			if( pLuaArgs.Count() == 0 )
+			{
+				return 0;
+			}
 
-			g_pModuleManager->DebugPrintf( pLuaVM, "event: %s", strEventName.c_str() );
+			uint i = 0;
 
-			pResource->CallEvent( strEventName, pThis, pSource, pClient, nullptr );
+			list< CLuaArgument* > argv;
 
-			return 1;
+			for( auto iter : pLuaArgs.GetArguments() )
+			{
+				int iLuaType = iter->GetType();
+
+				switch( i )
+				{
+					case 0:
+					{
+						strEventName = iter->GetString();
+
+						strEventName[ 0 ] = toupper( strEventName[ 0 ] );
+
+						break;
+					}
+					case 2:
+					{
+						pThis = iter->GetLightUserData();
+
+						break;
+					}
+					case 3:
+					{
+						if( iLuaType == LUA_TNIL )
+						{
+							break;
+						}
+
+						// dot not break
+					}
+					default:
+					{
+						argv.push_back( iter );
+
+						break;
+					}
+				}
+
+				i++;
+			}
+			
+			if( pResource->CallEvent( strEventName, pThis, argv ) )
+			{
+				return 1;
+			}
 		}
 	}
 

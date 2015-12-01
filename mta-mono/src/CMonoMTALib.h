@@ -27,8 +27,6 @@ private:
 	CMonoClass*			m_pClass;
 	CMonoDomain*		m_pDomain;
 
-	uint32_t			m_uiGCHandle;
-
 public:
 	CMonoClass*			Color;
 	CMonoClass*			Vector2;
@@ -40,6 +38,8 @@ public:
 
 	CMonoClass*			GetClass			( const char* szName );
 	CMonoClass*			GetClass			( const char* szNameSpace, const char* szName );
+
+	MonoObject*			RegisterElement		( void* pUserData );
 
 	CMonoDomain*		GetDomain			( void )	{ return this->m_pDomain; }
 };

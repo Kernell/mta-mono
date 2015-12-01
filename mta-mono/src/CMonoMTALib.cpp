@@ -21,8 +21,6 @@ CMonoMTALib::CMonoMTALib( CMonoDomain* pDomain )
 	this->m_pImage		= nullptr;
 	this->m_pDomain		= pDomain;
 
-	this->m_uiGCHandle	= 0;
-
 	string strPath( CMonoInterface::GetBinariesDirectory() + "/" + pDomain->GetResource()->GetName() + "/MultiTheftAuto.dll" );
 
 	this->m_pAssembly	= pDomain->OpenAssembly( strPath.c_str() );
@@ -42,8 +40,6 @@ CMonoMTALib::CMonoMTALib( CMonoDomain* pDomain )
 			if( this->m_pClass )
 			{
 				this->m_pObject = this->m_pClass->New();
-
-				//this->m_uiGCHandle = mono_gchandle_new( this->m_pObject, true );
 			}
 		}
 	}
@@ -51,13 +47,6 @@ CMonoMTALib::CMonoMTALib( CMonoDomain* pDomain )
 
 CMonoMTALib::~CMonoMTALib( void )
 {
-	if( this->m_uiGCHandle )
-	{
-		mono_gchandle_free( this->m_uiGCHandle );
-
-		this->m_uiGCHandle = 0;
-	}
-
 	SAFE_DELETE( this->Color );
 	SAFE_DELETE( this->Vector2 );
 	SAFE_DELETE( this->Vector3 );
@@ -81,4 +70,36 @@ CMonoClass* CMonoMTALib::GetClass( const char* szNameSpace, const char* szName )
 	sprintf( szBuffer, "MultiTheftAuto.%s", szNameSpace );
 
 	return this->GetDomain()->FindOrAdd( mono_class_from_name( this->m_pImage, szBuffer, szName ) );
+}
+
+MonoObject* CMonoMTALib::RegisterElement( void* pUseData )
+{
+	CMonoClass* pClass	= this->GetClass( "Element" );
+
+	if( !pClass )
+	{
+		return false;
+	}
+
+	CMonoMethod* pMethod = pClass->GetMethod( "FindOrCreate", 0 );
+
+	if( !pMethod )
+	{
+		return nullptr;
+	}
+
+	void *Args[] = { &pUseData };
+
+	MonoObject* pException = nullptr;
+
+	MonoObject* pObject = pMethod->Invoke( nullptr, Args, pException );
+
+	if( pException )
+	{
+		this->GetDomain()->GetResource()->ErrorPrintf( "%s\n", mono_string_to_utf8( mono_object_to_string( pException, nullptr ) ) );
+
+		return nullptr;
+	}
+
+	return pObject;
 }

@@ -25,9 +25,9 @@ CMonoClass::CMonoClass( MonoClass* pMonoClass, CMonoDomain* pDomain )
 
 		while( MonoMethod* pMonoMethod = mono_class_get_methods( pMonoBaseClass, &iter ) )
 		{
-			const char* szName = mono_method_get_name( pMonoMethod );
+			CMonoMethod* pMethod = new CMonoMethod( this, pMonoMethod );
 
-			this->m_Methods[ szName ].push_back( pMonoMethod );
+			this->m_Methods[ pMethod->GetName() ].push_back( pMethod );
 		}
 
 		iter = nullptr;
@@ -45,7 +45,7 @@ CMonoClass::CMonoClass( MonoClass* pMonoClass, CMonoDomain* pDomain )
 		{
 			const char* szName = mono_event_get_name( pMonoEvent );
 
-			this->m_Events[ szName ] = pMonoEvent;
+			this->m_Events[ szName ] = new CMonoEvent( this, pMonoEvent );
 		}
 
 		iter = nullptr;
@@ -69,6 +69,12 @@ CMonoClass::~CMonoClass( void )
 	this->m_pClass		= nullptr;
 
 	this->m_Fields.clear();
+	
+	for( auto iter : this->m_Events )
+	{
+		delete iter.second;
+	}
+
 	this->m_Events.clear();
 
 	for( auto iter : this->m_Properties )
@@ -80,6 +86,11 @@ CMonoClass::~CMonoClass( void )
 
 	for( auto iter : this->m_Methods )
 	{
+		for( auto method : iter.second )
+		{
+			delete method;
+		}
+
 		iter.second.clear();
 	}
 
@@ -130,18 +141,22 @@ MonoObject* CMonoClass::New( void** args, int argc )
 		return nullptr;
 	}
 
-	MonoMethod* pMonoMethod = this->GetMethod( ".ctor", argc );
+	CMonoMethod* pMethod = this->GetMethod( ".ctor", argc );
 
-	if( !pMonoMethod )
+	if( !pMethod )
 	{
 		return nullptr;
 	}
 
-	mono_runtime_invoke( pMonoMethod, pObject, args, nullptr );
+	pMethod->Invoke( pObject, args, nullptr );
 
 	return pObject;
 }
 
+MonoObject* CMonoClass::Box( void* value )
+{
+	return mono_value_box( this->m_pDomain->GetMonoPtr(), this->m_pClass, value );
+}
 
 const char* CMonoClass::GetName( void )
 {
@@ -174,7 +189,7 @@ MonoMethod* CMonoClass::GetMethod( string strMethodName )
 	return nullptr;
 }
 
-MonoMethod* CMonoClass::GetMethod( string strMethodName, uint uiIndex )
+CMonoMethod* CMonoClass::GetMethod( string strMethodName, uint uiIndex )
 {
 	if( this->m_Methods[ strMethodName ].size() > 0 )
 	{
@@ -192,7 +207,12 @@ MonoMethod* CMonoClass::GetMethod( string strMethodName, uint uiIndex )
 	return nullptr;
 }
 
-MonoEvent* CMonoClass::GetEvent( string strEventName )
+list< CMonoMethod* > CMonoClass::GetMethods( string strMethodName )
+{
+	return this->m_Methods[ strMethodName ];
+}
+
+CMonoEvent* CMonoClass::GetEvent( string strEventName )
 {
 	return this->m_Events[ strEventName ];
 }

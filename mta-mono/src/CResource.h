@@ -17,8 +17,19 @@ class CResource;
 
 #include "Common.h"
 #include "CMonoClass.h"
+#include "CMonoEvent.h"
 #include "CMonoInterface.h"
+
+#include "CResourceManager.h"
+#include "CFunctions.h"
+
+#include "extra/CLuaArgument.h"
 #include "extra/CLuaArguments.h"
+
+#include "include/ILuaModuleManager.h"
+#include "lua/CLuaFunctionDefinitions.h"
+
+extern ILuaModuleManager10	*g_pModuleManager;
 
 class CResource
 {
@@ -40,9 +51,12 @@ public:
 								CResource					( CMonoInterface* m_pMono, lua_State *pLuaVM, string sName );
 								~CResource					( void );
 
-	bool						CallEvent					( string strEventName, void* pThis, void* pSource, void* pClient, void **args );
+	bool						CallEvent					( string strEventName, void* pThis, list< CLuaArgument* > argv );
+	bool						AddEvent					( const char* szName, const char* szHandleElement );
+	bool						RemoveEvent					( const char* szName, const char* szHandleElement );
 
 	void						RegisterEvents				( void );
+	void						RemoveEvents				( void );
 	bool						Init						( void );
 	void						OnStopping					( void );
 	void						DoPulse						( void );
@@ -56,6 +70,9 @@ public:
 	lua_State*					GetLua						( void )		{ return this->m_pLuaVM; }
 	CMonoInterface*				GetMono						( void )		{ return this->m_pMono; }
 	CMonoDomain*				GetDomain					( void )		{ return this->m_pMonoDomain; }
+
+private:
+	
 };
 
 #endif

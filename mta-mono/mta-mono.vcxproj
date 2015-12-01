@@ -145,6 +145,7 @@
     <ClCompile Include="src\CMonoClass.cpp" />
     <ClCompile Include="src\CMonoCorlib.cpp" />
     <ClCompile Include="src\CMonoDomain.cpp" />
+    <ClCompile Include="src\CMonoEvent.cpp" />
     <ClCompile Include="src\CMonoFunctions.cpp" />
     <ClCompile Include="src\CMonoFunctions_Account.cpp" />
     <ClCompile Include="src\CMonoFunctions_Audio.cpp" />
@@ -167,6 +168,7 @@
     <ClCompile Include="src\CMonoFunctions_World.cpp" />
     <ClCompile Include="src\CMonoGC.cpp" />
     <ClCompile Include="src\CMonoInterface.cpp" />
+    <ClCompile Include="src\CMonoMethod.cpp" />
     <ClCompile Include="src\CMonoMTALib.cpp" />
     <ClCompile Include="src\CMonoObject.cpp" />
     <ClCompile Include="src\Common.cpp" />
@@ -188,9 +190,11 @@
     <ClInclude Include="src\CMonoClass.h" />
     <ClInclude Include="src\CMonoCorlib.h" />
     <ClInclude Include="src\CMonoDomain.h" />
+    <ClInclude Include="src\CMonoEvent.h" />
     <ClInclude Include="src\CMonoFunctions.h" />
     <ClInclude Include="src\CMonoGC.h" />
     <ClInclude Include="src\CMonoInterface.h" />
+    <ClInclude Include="src\CMonoMethod.h" />
     <ClInclude Include="src\CMonoMTALib.h" />
     <ClInclude Include="src\CMonoObject.h" />
     <ClInclude Include="src\CResource.h" />
