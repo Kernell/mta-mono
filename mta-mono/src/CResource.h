@@ -36,12 +36,6 @@ class CResource
 private:
 	string						m_sName;
 
-	MonoAssembly*				m_pMonoAssembly;
-	MonoImage*					m_pMonoImage;
-	MonoClass*					m_pMonoClass;
-
-	uint32_t					m_uiGCHandle;
-
 	lua_State*					m_pLuaVM;
 
 	CMonoInterface*				m_pMono;

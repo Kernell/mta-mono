@@ -30,20 +30,27 @@ private:
 	CResource*							m_pResource;
 	CMonoInterface*						m_pMono;
 
+	MonoAssembly*						m_pMonoAssembly;
+	MonoImage*							m_pMonoImage;
+	CMonoClass*							m_pMonoClass;
+
 	CMonoCorlib*						m_pCorlib;
 	CMonoMTALib*						m_pMTALib;
 
-	list< CMonoClass* >					m_ClassPool;
+	vector< CMonoClass* >				m_ClassPool;
+
+	string								m_strName;
 
 public:
-					CMonoDomain			( CMonoInterface* pMono, MonoDomain* pDomain, CResource* pResource );
+					CMonoDomain			( CMonoInterface* pMono, MonoDomain* pDomain, CResource* pResource, char* szName );
 					~CMonoDomain		( void );
 
+	void			HandleException		( MonoObject* pException );
+
 	CMonoClass*		FindOrAdd			( MonoClass* klass );
-	void			ReleaseClass		( CMonoClass* pClass );
 
 	void			Init				( void );
-
+	bool			Start				( void );
 	void			Unload				( void );
 	bool			Set					( bool bForce );
 	MonoAssembly*	OpenAssembly		( const char *szName );
@@ -96,6 +103,8 @@ public:
 
 	CMonoCorlib*	GetCorlib			( void )	{ return this->m_pCorlib; }
 	CMonoMTALib*	GetMTALib			( void )	{ return this->m_pMTALib; }
+
+	string			GetName				( void )	{ return this->m_strName; }
 };
 
 #endif

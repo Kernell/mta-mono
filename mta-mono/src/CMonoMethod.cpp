@@ -24,6 +24,8 @@ CMonoMethod::CMonoMethod( CMonoClass* pClass, MonoMethod* pMethod )
 
 CMonoMethod::~CMonoMethod( void )
 {
+	this->m_ArgList.clear();
+
 	this->m_pClass		= nullptr;
 	this->m_pMethod		= nullptr;
 }

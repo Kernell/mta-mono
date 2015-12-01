@@ -47,10 +47,10 @@ CMonoMTALib::CMonoMTALib( CMonoDomain* pDomain )
 
 CMonoMTALib::~CMonoMTALib( void )
 {
-	SAFE_DELETE( this->Color );
-	SAFE_DELETE( this->Vector2 );
-	SAFE_DELETE( this->Vector3 );
-	SAFE_DELETE( this->m_pClass );
+	this->Color			= nullptr;
+	this->Vector2		= nullptr;
+	this->Vector3		= nullptr;
+	this->m_pClass		= nullptr;
 
 	this->m_pDomain		= nullptr;
 	this->m_pAssembly	= nullptr;

@@ -63,8 +63,6 @@ CMonoClass::CMonoClass( MonoClass* pMonoClass, CMonoDomain* pDomain )
 
 CMonoClass::~CMonoClass( void )
 {
-	this->m_pDomain->ReleaseClass( this );
-
 	this->m_pDomain		= nullptr;
 	this->m_pClass		= nullptr;
 
@@ -84,14 +82,16 @@ CMonoClass::~CMonoClass( void )
 
 	this->m_Properties.clear();
 
-	for( auto iter : this->m_Methods )
+	auto iter = this->m_Methods.begin();
+
+	for( ; iter != this->m_Methods.end(); iter++ )
 	{
-		for( auto method : iter.second )
+		for( CMonoMethod* method : iter->second )
 		{
 			delete method;
 		}
 
-		iter.second.clear();
+		iter->second.clear();
 	}
 
 	this->m_Methods.clear();

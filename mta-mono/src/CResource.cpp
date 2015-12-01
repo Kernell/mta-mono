@@ -18,24 +18,12 @@ CResource::CResource( CMonoInterface* pMono, lua_State *pLuaVM, string sName )
 	this->m_pLuaVM				= pLuaVM;
 	this->m_sName				= sName;
 
-	this->m_pMonoAssembly		= nullptr;
 	this->m_pMonoDomain			= nullptr;
-	this->m_pMonoImage			= nullptr;
-	this->m_pMonoClass			= nullptr;
-
-	this->m_uiGCHandle			= 0;
 }
 
 CResource::~CResource( void )
 {
 	this->RemoveEvents();
-
-	if( this->m_uiGCHandle )
-	{
-		mono_gchandle_free( this->m_uiGCHandle );
-
-		this->m_uiGCHandle = 0;
-	}
 
 	this->GetMono()->GetGC()->Collect( this->GetMono()->GetGC()->GetMaxGeneration() );
 
@@ -43,10 +31,7 @@ CResource::~CResource( void )
 
 	g_pResourceManager->RemoveFromList( this );
 
-	this->m_pMonoAssembly		= nullptr;
-	this->m_pMonoDomain			= nullptr;
-	this->m_pMonoImage			= nullptr;
-	this->m_pMonoClass			= nullptr;
+	SAFE_DELETE( this->m_pMonoDomain );
 
 	this->m_pMono				= nullptr;
 	this->m_pLuaVM				= nullptr;
@@ -162,11 +147,6 @@ bool CResource::Init( void )
 {
 	if( this->m_pLuaVM )
 	{
-		string sDirectory	( CMonoInterface::GetBinariesDirectory() + "/" + this->m_sName + "/" );
-		string sPath		( sDirectory + this->m_sName + ".dll" );
-		string sNamespace	( this->m_sName );
-		string sClass		( "Program" );
-
 		this->m_pMonoDomain = this->GetMono()->CreateAppdomain( this, const_cast< char* >( this->m_sName.c_str() ), nullptr );
 
 		if( !this->m_pMonoDomain )
@@ -180,25 +160,7 @@ bool CResource::Init( void )
 
 		this->m_pMonoDomain->Init();
 
-		this->m_pMonoAssembly = this->m_pMonoDomain->OpenAssembly( sPath.c_str() );
-		
-		if( !this->m_pMonoAssembly )
-		{
-			g_pModuleManager->ErrorPrintf( "failed to open assembly '%s.dll'\n", this->m_sName.c_str() );
-
-			return false;
-		}
-
-		this->RegisterEvents();
-
-		this->m_pMonoImage	= mono_assembly_get_image( this->m_pMonoAssembly );
-		this->m_pMonoClass	= mono_class_from_name( this->m_pMonoImage, sNamespace.c_str(), sClass.c_str() );
-
-		MonoObject *pMonoObject = this->m_pMonoDomain->CreateObject( this->m_pMonoClass );
-
-		mono_runtime_object_init( pMonoObject );
-
-		this->m_uiGCHandle = mono_gchandle_new( pMonoObject, true );
+		this->m_pMonoDomain->Start();
 
 		return true;
 	}
