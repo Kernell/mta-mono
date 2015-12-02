@@ -175,6 +175,11 @@ MonoObject* CMonoDomain::CreateObject( MonoClass* klass )
 	return mono_object_new( this->m_pDomain, klass );
 }
 
+void CMonoDomain::SetConfig( const char *szBaseDir, const char *szConfigFileName )
+{
+	mono_domain_set_config( this->m_pDomain, szBaseDir, szConfigFileName );
+}
+
 MonoString* CMonoDomain::NewString( const char* szText )
 {
 	return mono_string_new( this->m_pDomain, szText );

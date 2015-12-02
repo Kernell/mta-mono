@@ -156,6 +156,8 @@ bool CResource::Init( void )
 			return false;
 		}
 
+		this->m_pMonoDomain->SetConfig( "mods/deathmatch/", "mods/deathmatch/mono/etc/mono/4.5/machine.config" );
+
 		this->m_pMonoDomain->Set( false );
 
 		this->m_pMonoDomain->Init();

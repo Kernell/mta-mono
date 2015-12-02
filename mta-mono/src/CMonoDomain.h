@@ -55,6 +55,7 @@ public:
 	bool			Set					( bool bForce );
 	MonoAssembly*	OpenAssembly		( const char *szName );
 	MonoObject*		CreateObject		( MonoClass* klass );
+	void			SetConfig			( const char *szBaseDir, const char *szConfigFileName );
 
 	MonoString*		NewString			( const char* szText );
 	MonoString*		NewString			( string strText );
