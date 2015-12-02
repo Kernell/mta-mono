@@ -27,7 +27,7 @@ CResource::~CResource( void )
 
 	this->GetMono()->GetGC()->Collect( this->GetMono()->GetGC()->GetMaxGeneration() );
 
-	mono_domain_set( mono_get_root_domain(), true );
+	this->GetMono()->SetDomain( nullptr, true );
 
 	g_pResourceManager->RemoveFromList( this );
 

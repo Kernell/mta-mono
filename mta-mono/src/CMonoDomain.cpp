@@ -40,6 +40,11 @@ CMonoDomain::~CMonoDomain( void )
 
 	this->m_ClassPool.clear();
 
+	if( this->m_pDomain )
+	{
+		mono_domain_finalize( this->m_pDomain, 2000 );
+	}
+
 	this->m_pDomain = nullptr;
 
 	this->m_pMonoAssembly	= nullptr;
@@ -96,7 +101,7 @@ bool CMonoDomain::Start( void )
 	string sClass		( "Program" );
 
 	this->m_pMonoAssembly = this->OpenAssembly( sPath.c_str() );
-		
+
 	if( !this->m_pMonoAssembly )
 	{
 		g_pModuleManager->ErrorPrintf( "failed to open assembly '%s.dll'\n", this->m_strName.c_str() );

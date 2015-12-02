@@ -23,8 +23,6 @@ CMonoInterface::CMonoInterface( void )
 
 	this->m_pMonoDomain = mono_jit_init_version( "Mono Root", "v4.0.30319" );
 
-	mono_domain_set_config( this->m_pMonoDomain, "mods/deathmatch/", "mods/deathmatch/mono/etc/mono/4.5/machine.config" );
-
 	CMonoFunctions::AddInternals();
 
 	this->m_pGC	= new CMonoGC;
@@ -47,4 +45,11 @@ CMonoDomain* CMonoInterface::CreateAppdomain( CResource* pResource, char* szName
 	}
 
 	return nullptr;
+}
+
+void CMonoInterface::SetDomain( MonoDomain* pDomain, bool bForce )
+{
+	mono_domain_set( pDomain != nullptr ? pDomain : this->m_pMonoDomain, bForce );
+
+	mono_domain_set_config( pDomain != nullptr ? pDomain : this->m_pMonoDomain, "mods/deathmatch/", "mods/deathmatch/mono/etc/mono/4.5/machine.config" );
 }

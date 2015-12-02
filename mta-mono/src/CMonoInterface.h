@@ -32,6 +32,8 @@ public:
 
 	CMonoDomain*		CreateAppdomain		( CResource* pResource, char* szName, char* szConfig );
 
+	void				SetDomain			( MonoDomain* pDomain = nullptr, bool bForce = false );
+
 	CMonoGC*			GetGC				( void )	{ return this->m_pGC; }
 
 #pragma region Static methods
