@@ -28,14 +28,14 @@ void CMonoFunctions::AddInternals( void )
 	MONO_DECLARE( Server, SetPassword );
 	MONO_DECLARE( Server, GetVersion );
 
-	MONO_DECLARE( Server, GetGameType );
-	MONO_DECLARE( Server, GetMapName );
+	MONO_DECLARE( Game, GetType );
+	MONO_DECLARE( Game, GetMapName );
 
-	MONO_DECLARE( Server, SetGameType );
-	MONO_DECLARE( Server, SetMapName );
-	MONO_DECLARE( Server, GetRuleValue );
-	MONO_DECLARE( Server, SetRuleValue );
-	MONO_DECLARE( Server, RemoveRuleValue );
+	MONO_DECLARE( Game, SetType );
+	MONO_DECLARE( Game, SetMapName );
+	MONO_DECLARE( Game, GetRuleValue );
+	MONO_DECLARE( Game, SetRuleValue );
+	MONO_DECLARE( Game, RemoveRuleValue );
 
 	MONO_DECLARE( Event, AddHandler );
 
@@ -738,17 +738,27 @@ MonoObject* CMonoFunctions::Server::GetVersion( void )
 			const char*		szBuildTag	= pLuaTable[ "tag" ]->GetString();
 			const char*		szSortable	= pLuaTable[ "sortable" ]->GetString();
 
-			void *args[] =
-			{
-				&ulNumber,
-				&szString,
-				&szName,
-				&szBuildType,
-				&ulNetcode,
-				&szOS,
-				&szBuildTag,
-				&szSortable
-			};
+			CMonoCorlib* pLib = RESOURCE->GetDomain()->GetCorlib();
+
+			void** args = new gpointer[ 8 ];
+
+			MonoObject* pNumber			= pLib->Class[ "uint64" ]->Box( &ulNumber );
+			MonoString* pString			= RESOURCE->GetDomain()->NewString( szString );
+			MonoString* pName			= RESOURCE->GetDomain()->NewString( szName );
+			MonoString* pBuildType		= RESOURCE->GetDomain()->NewString( szBuildType );
+			MonoObject* pNetcode		= pLib->Class[ "uint64" ]->Box( &ulNetcode );
+			MonoString* pOS				= RESOURCE->GetDomain()->NewString( szOS );
+			MonoString* pBuildTag		= RESOURCE->GetDomain()->NewString( szBuildTag );
+			MonoString* pSortable		= RESOURCE->GetDomain()->NewString( szSortable );
+
+			args[ 0 ] = pNumber;
+			args[ 1 ] = pString;
+			args[ 2 ] = pName;
+			args[ 3 ] = pBuildType;
+			args[ 4 ] = pNetcode;
+			args[ 5 ] = pOS;
+			args[ 6 ] = pBuildTag;
+			args[ 7 ] = pSortable;
 
 			return RESOURCE->GetDomain()->GetMTALib()->GetClass( "ServerVersion" )->New( args, 8 );
 		}
@@ -757,7 +767,7 @@ MonoObject* CMonoFunctions::Server::GetVersion( void )
 	return NULL;
 }
 
-MonoString* CMonoFunctions::Server::GetGameType( void )
+MonoString* CMonoFunctions::Game::GetType( void )
 {
 	if( RESOURCE )
 	{
@@ -767,7 +777,7 @@ MonoString* CMonoFunctions::Server::GetGameType( void )
 	return NULL;
 }
 
-MonoString* CMonoFunctions::Server::GetMapName( void )
+MonoString* CMonoFunctions::Game::GetMapName( void )
 {
 	if( RESOURCE )
 	{
@@ -777,7 +787,7 @@ MonoString* CMonoFunctions::Server::GetMapName( void )
 	return NULL;
 }
 
-bool CMonoFunctions::Server::SetGameType( MonoString* msGameType )
+bool CMonoFunctions::Game::SetType( MonoString* msGameType )
 {
 	if( RESOURCE )
 	{
@@ -789,7 +799,7 @@ bool CMonoFunctions::Server::SetGameType( MonoString* msGameType )
 	return false;
 }
 
-bool CMonoFunctions::Server::SetMapName( MonoString* msMapName )
+bool CMonoFunctions::Game::SetMapName( MonoString* msMapName )
 {
 	if( RESOURCE )
 	{
@@ -801,7 +811,7 @@ bool CMonoFunctions::Server::SetMapName( MonoString* msMapName )
 	return false;
 }
 
-MonoString* CMonoFunctions::Server::GetRuleValue( MonoString* msKey )
+MonoString* CMonoFunctions::Game::GetRuleValue( MonoString* msKey )
 {
 	if( RESOURCE )
 	{
@@ -813,7 +823,7 @@ MonoString* CMonoFunctions::Server::GetRuleValue( MonoString* msKey )
 	return false;
 }
 
-bool CMonoFunctions::Server::SetRuleValue( MonoString* msKey, MonoString* msValue )
+bool CMonoFunctions::Game::SetRuleValue( MonoString* msKey, MonoString* msValue )
 {
 	if( RESOURCE )
 	{
@@ -826,7 +836,7 @@ bool CMonoFunctions::Server::SetRuleValue( MonoString* msKey, MonoString* msValu
 	return false;
 }
 
-bool CMonoFunctions::Server::RemoveRuleValue( MonoString* msKey )
+bool CMonoFunctions::Game::RemoveRuleValue( MonoString* msKey )
 {
 	if( RESOURCE )
 	{

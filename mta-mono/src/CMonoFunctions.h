@@ -62,11 +62,15 @@ public:
 		static bool						OutputConsole			( MonoString* szText, DWORD pElement );
 		static bool						SetPassword				( MonoString* msPassword, bool bSave );
 		static MonoObject*				GetVersion				( void );
+	};
 
-		static MonoString*				GetGameType             ( void );
+	class Game
+	{
+	public:
+		static MonoString*				GetType					( void );
 		static MonoString*				GetMapName				( void );
 
-		static bool						SetGameType             ( MonoString* msGameType );
+		static bool						SetType					( MonoString* msGameType );
 		static bool						SetMapName              ( MonoString* msMapName );
 		static MonoString*				GetRuleValue            ( MonoString* msKey );
 		static bool						SetRuleValue            ( MonoString* msKey, MonoString* msValue );

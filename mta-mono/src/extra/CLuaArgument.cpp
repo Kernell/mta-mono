@@ -279,11 +279,11 @@ void CLuaArgument::Read ( lua_State* luaVM, signed int uiArgument )
 				while( lua_next( luaVM, uiArgument ) != 0 )
 				{
 					CLuaArgument pKey( luaVM, -2 );
-					CLuaArgument pValue( luaVM, -1 );
+					CLuaArgument* pValue = new CLuaArgument( luaVM, -1 );
 					
 					if( pKey.GetType() == LUA_TSTRING )
 					{
-						m_pTable[ string( pKey.GetString() ) ] = &pValue;
+						m_pTable[ string( pKey.GetString() ) ] = pValue;
 					}
 
 					m_pArray->PushArgument( pValue );
