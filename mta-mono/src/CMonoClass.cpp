@@ -141,14 +141,21 @@ MonoObject* CMonoClass::New( void** args, int argc )
 		return nullptr;
 	}
 
-	CMonoMethod* pMethod = this->GetMethod( ".ctor", argc );
+	MonoMethod* pMethod = this->GetMethodFromName( ".ctor", argc );
 
 	if( !pMethod )
 	{
 		return nullptr;
 	}
 
-	pMethod->Invoke( pObject, args, nullptr );
+	MonoObject* pException = nullptr;
+
+	mono_runtime_invoke( pMethod, pObject, args, &pException );
+
+	if( pException )
+	{
+		this->GetDomain()->HandleException( pException );
+	}
 
 	return pObject;
 }
