@@ -27,11 +27,13 @@ CResource::~CResource( void )
 
 	this->GetMono()->GetGC()->Collect( this->GetMono()->GetGC()->GetMaxGeneration() );
 
-	this->GetMono()->SetDomain( nullptr, true );
+	//this->GetMono()->SetDomain( nullptr, true );
 
 	g_pResourceManager->RemoveFromList( this );
 
 	SAFE_DELETE( this->m_pMonoDomain );
+
+	this->GetMono()->SetDomain( nullptr, true );
 
 	this->m_pMono				= nullptr;
 	this->m_pLuaVM				= nullptr;
@@ -147,7 +149,7 @@ bool CResource::Init( void )
 {
 	if( this->m_pLuaVM )
 	{
-		this->m_pMonoDomain = this->GetMono()->CreateAppdomain( this, const_cast< char* >( this->m_sName.c_str() ), nullptr );
+		this->m_pMonoDomain = this->GetMono()->CreateAppdomain( this, this->m_sName.c_str(), nullptr );
 
 		if( !this->m_pMonoDomain )
 		{
@@ -160,11 +162,19 @@ bool CResource::Init( void )
 
 		this->m_pMonoDomain->Set( false );
 
-		this->m_pMonoDomain->Init();
+		if( this->m_pMonoDomain->Init() )
+		{
+			this->RegisterEvents();
 
-		this->m_pMonoDomain->Start();
+			if( this->m_pMonoDomain->Start() )
+			{
+				return true;
+			}
+		}
 
-		return true;
+		CLuaArguments pLuaArguments; 
+			
+		pLuaArguments.Call( this->m_pLuaVM, "cancelEvent" );
 	}
 
 	return false;

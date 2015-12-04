@@ -30,7 +30,7 @@ public:
 						CMonoInterface		( void );
 						~CMonoInterface		( void );
 
-	CMonoDomain*		CreateAppdomain		( CResource* pResource, char* szName, char* szConfig );
+	CMonoDomain*		CreateAppdomain		( CResource* pResource, const char* szName, char* szConfig );
 
 	void				SetDomain			( MonoDomain* pDomain = nullptr, bool bForce = false );
 

@@ -42,6 +42,7 @@ extern "C"
 #include <mono/metadata/environment.h>
 #include <mono/metadata/threads.h>
 #include <mono/metadata/mono-gc.h>
+#include <mono/utils/mono-logger.h>
 
 #include "Common.h"
 

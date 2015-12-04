@@ -21,6 +21,8 @@ CMonoInterface::CMonoInterface( void )
 
 	mono_debug_init( MONO_DEBUG_FORMAT_MONO );
 
+	mono_trace_set_level_string( "error" );
+
 	this->m_pMonoDomain = mono_jit_init_version( "Mono Root", "v4.0.30319" );
 
 	CMonoFunctions::AddInternals();
@@ -35,9 +37,9 @@ CMonoInterface::~CMonoInterface( void )
 	SAFE_DELETE( this->m_pGC );
 }
 
-CMonoDomain* CMonoInterface::CreateAppdomain( CResource* pResource, char* szName, char* szConfig )
+CMonoDomain* CMonoInterface::CreateAppdomain( CResource* pResource, const char* szName, char* szConfig )
 {
-	MonoDomain* pMonoDomain = mono_domain_create_appdomain( szName, szConfig );
+	MonoDomain* pMonoDomain = mono_domain_create_appdomain( const_cast< char* >( szName ), szConfig );
 
 	if( pMonoDomain )
 	{
@@ -50,6 +52,4 @@ CMonoDomain* CMonoInterface::CreateAppdomain( CResource* pResource, char* szName
 void CMonoInterface::SetDomain( MonoDomain* pDomain, bool bForce )
 {
 	mono_domain_set( pDomain != nullptr ? pDomain : this->m_pMonoDomain, bForce );
-
-	mono_domain_set_config( pDomain != nullptr ? pDomain : this->m_pMonoDomain, "mods/deathmatch/", "mods/deathmatch/mono/etc/mono/4.5/machine.config" );
 }

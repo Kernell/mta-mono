@@ -42,14 +42,14 @@ private:
 	string								m_strName;
 
 public:
-					CMonoDomain			( CMonoInterface* pMono, MonoDomain* pDomain, CResource* pResource, char* szName );
+					CMonoDomain			( CMonoInterface* pMono, MonoDomain* pDomain, CResource* pResource, const char* szName );
 					~CMonoDomain		( void );
 
 	void			HandleException		( MonoObject* pException );
 
 	CMonoClass*		FindOrAdd			( MonoClass* klass );
 
-	void			Init				( void );
+	bool			Init				( void );
 	bool			Start				( void );
 	void			Unload				( void );
 	bool			Set					( bool bForce );

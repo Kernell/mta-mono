@@ -12,7 +12,7 @@
 
 #include "CMonoDomain.h"
 
-CMonoDomain::CMonoDomain( CMonoInterface* pMono, MonoDomain* pDomain, CResource* pResource, char* szName )
+CMonoDomain::CMonoDomain( CMonoInterface* pMono, MonoDomain* pDomain, CResource* pResource, const char* szName )
 {
 	this->m_pMono		= pMono;
 	this->m_pDomain		= pDomain;
@@ -43,9 +43,15 @@ CMonoDomain::~CMonoDomain( void )
 	if( this->m_pDomain )
 	{
 		mono_domain_finalize( this->m_pDomain, 2000 );
+
+		MonoObject *pException = nullptr;
+
+		//mono_domain_try_unload( this->m_pDomain, &pException );
+
+		this->HandleException( pException );
 	}
 
-	this->m_pDomain = nullptr;
+	this->m_pDomain			= nullptr;
 
 	this->m_pMonoAssembly	= nullptr;
 	this->m_pMonoImage		= nullptr;
@@ -87,13 +93,7 @@ CMonoClass* CMonoDomain::FindOrAdd( MonoClass* klass )
 	return nullptr;
 }
 
-void CMonoDomain::Init( void )
-{
-	this->m_pCorlib = new CMonoCorlib( this );
-	this->m_pMTALib = new CMonoMTALib( this );
-}
-
-bool CMonoDomain::Start( void )
+bool CMonoDomain::Init( void )
 {
 	string sDirectory	( CMonoInterface::GetBinariesDirectory() + "/" + this->m_strName + "/" );
 	string sPath		( sDirectory + this->m_strName + ".dll" );
@@ -108,8 +108,6 @@ bool CMonoDomain::Start( void )
 
 		return false;
 	}
-
-	this->GetResource()->RegisterEvents();
 
 	this->m_pMonoImage	= mono_assembly_get_image( this->m_pMonoAssembly );
 
@@ -129,11 +127,19 @@ bool CMonoDomain::Start( void )
 		return false;
 	}
 
+	this->m_pCorlib = new CMonoCorlib( this );
+	this->m_pMTALib = new CMonoMTALib( this );
+
+	return true;
+}
+
+bool CMonoDomain::Start( void )
+{
 	CMonoMethod* pMethod = this->m_pMonoClass->GetMethod( "Main", 0 );
 
 	if( !pMethod )
 	{
-		g_pModuleManager->ErrorPrintf( "static method '%s::Main' not found in '%s.dll'\n", sClass.c_str(), this->m_strName.c_str() );
+		g_pModuleManager->ErrorPrintf( "Assembly '%s.dll' doesn't have an entry point.\n", this->m_strName.c_str() );
 
 		return false;
 	}
