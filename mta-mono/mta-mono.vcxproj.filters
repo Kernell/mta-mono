@@ -1,0 +1,302 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="src\lua\CLuaFunctionDefinitions.cpp">
+      <Filter>Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="src\extra\CLuaArgument.cpp">
+      <Filter>extra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\extra\CLuaArguments.cpp">
+      <Filter>extra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMonoFunctions_Account.cpp">
+      <Filter>MonoInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMonoFunctions_Audio.cpp">
+      <Filter>MonoInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMonoFunctions_Ban.cpp">
+      <Filter>MonoInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMonoFunctions_Blip.cpp">
+      <Filter>MonoInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMonoFunctions_Element.cpp">
+      <Filter>MonoInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMonoFunctions_Explosion.cpp">
+      <Filter>MonoInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMonoFunctions_Marker.cpp">
+      <Filter>MonoInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMonoFunctions_Object.cpp">
+      <Filter>MonoInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMonoFunctions_Ped.cpp">
+      <Filter>MonoInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMonoFunctions_Pickup.cpp">
+      <Filter>MonoInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMonoFunctions_Player.cpp">
+      <Filter>MonoInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMonoFunctions_RadarArea.cpp">
+      <Filter>MonoInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMonoFunctions_Resource.cpp">
+      <Filter>MonoInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMonoFunctions_Shape.cpp">
+      <Filter>MonoInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMonoFunctions_Team.cpp">
+      <Filter>MonoInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMonoFunctions_Vehicle.cpp">
+      <Filter>MonoInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMonoFunctions_Water.cpp">
+      <Filter>MonoInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMonoFunctions_World.cpp">
+      <Filter>MonoInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="src\extra\Vector2.cpp">
+      <Filter>extra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\extra\Vector3.cpp">
+      <Filter>extra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMonoFunctions_Event.cpp">
+      <Filter>MonoInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMonoObject.cpp">
+      <Filter>MonoInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMonoClass.cpp">
+      <Filter>MonoInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMonoCorlib.cpp">
+      <Filter>MonoInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMonoDomain.cpp">
+      <Filter>MonoInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMonoEvent.cpp">
+      <Filter>MonoInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMonoGC.cpp">
+      <Filter>MonoInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMonoInterface.cpp">
+      <Filter>MonoInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMonoMethod.cpp">
+      <Filter>MonoInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMonoMTALib.cpp">
+      <Filter>MonoInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CMonoFunctions.cpp">
+      <Filter>MonoInternals</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Common.cpp" />
+    <ClCompile Include="src\mta-mono.cpp" />
+    <ClCompile Include="src\StdInc.cpp" />
+    <ClCompile Include="src\CResource.cpp">
+      <Filter>ResourceInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CResourceManager.cpp">
+      <Filter>ResourceInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CFunctions.cpp">
+      <Filter>Lua</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\include\ILuaModuleManager.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mono\jit\jit.h">
+      <Filter>include\mono\jit</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mono\metadata\appdomain.h">
+      <Filter>include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mono\metadata\assembly.h">
+      <Filter>include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mono\metadata\attrdefs.h">
+      <Filter>include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mono\metadata\blob.h">
+      <Filter>include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mono\metadata\class.h">
+      <Filter>include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mono\metadata\debug-helpers.h">
+      <Filter>include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mono\metadata\debug-mono-symfile.h">
+      <Filter>include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mono\metadata\environment.h">
+      <Filter>include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mono\metadata\exception.h">
+      <Filter>include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mono\metadata\image.h">
+      <Filter>include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mono\metadata\loader.h">
+      <Filter>include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mono\metadata\metadata.h">
+      <Filter>include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mono\metadata\mono-config.h">
+      <Filter>include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mono\metadata\mono-debug.h">
+      <Filter>include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mono\metadata\mono-gc.h">
+      <Filter>include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mono\metadata\object.h">
+      <Filter>include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mono\metadata\opcodes.h">
+      <Filter>include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mono\metadata\profiler.h">
+      <Filter>include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mono\metadata\reflection.h">
+      <Filter>include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mono\metadata\row-indexes.h">
+      <Filter>include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mono\metadata\sgen-bridge.h">
+      <Filter>include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mono\metadata\threads.h">
+      <Filter>include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mono\metadata\tokentype.h">
+      <Filter>include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mono\metadata\verify.h">
+      <Filter>include\mono\metadata</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mono\utils\mono-counters.h">
+      <Filter>include\mono\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mono\utils\mono-dl-fallback.h">
+      <Filter>include\mono\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mono\utils\mono-error.h">
+      <Filter>include\mono\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mono\utils\mono-logger.h">
+      <Filter>include\mono\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\include\mono\utils\mono-publib.h">
+      <Filter>include\mono\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CMonoClass.h">
+      <Filter>MonoInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CMonoCorlib.h">
+      <Filter>MonoInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CMonoDomain.h">
+      <Filter>MonoInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CMonoEvent.h">
+      <Filter>MonoInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CMonoGC.h">
+      <Filter>MonoInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CMonoInterface.h">
+      <Filter>MonoInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CMonoMethod.h">
+      <Filter>MonoInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CMonoMTALib.h">
+      <Filter>MonoInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CMonoObject.h">
+      <Filter>MonoInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CMonoFunctions.h">
+      <Filter>MonoInternals</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lua\CLuaFunctionDefinitions.h">
+      <Filter>Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="src\extra\CLuaArgument.h">
+      <Filter>extra</Filter>
+    </ClInclude>
+    <ClInclude Include="src\extra\CLuaArguments.h">
+      <Filter>extra</Filter>
+    </ClInclude>
+    <ClInclude Include="src\extra\Vector2.h">
+      <Filter>extra</Filter>
+    </ClInclude>
+    <ClInclude Include="src\extra\Vector3.h">
+      <Filter>extra</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Common.h" />
+    <ClInclude Include="src\StdInc.h" />
+    <ClInclude Include="src\CResourceManager.h">
+      <Filter>ResourceInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CResource.h">
+      <Filter>ResourceInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CFunctions.h">
+      <Filter>Lua</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="MonoInterface">
+      <UniqueIdentifier>{d7dbf9a8-0b72-4436-9b3b-e950e7defec2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="extra">
+      <UniqueIdentifier>{b59d5660-482b-44c4-ae35-b4eb6e448c29}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include">
+      <UniqueIdentifier>{4536c3cc-126b-4b16-996a-840a937bf436}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\mono">
+      <UniqueIdentifier>{104fb2c1-c08c-4013-8c35-d6eab5317c64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\mono\jit">
+      <UniqueIdentifier>{e5fa6b5a-85cd-4803-8403-a95def8c3d5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\mono\metadata">
+      <UniqueIdentifier>{2ea51f6a-b0f9-4699-a76a-dbd7d6038b3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="include\mono\utils">
+      <UniqueIdentifier>{cc4b0739-1d06-4b1c-9009-a932ac734ed8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ResourceInterface">
+      <UniqueIdentifier>{5e6dac69-e4ed-417a-9f2b-bca3c4a8c72f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lua">
+      <UniqueIdentifier>{06bcf973-0962-4a68-b28c-379922547a80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MonoInternals">
+      <UniqueIdentifier>{bf9a17ba-d06a-45ef-a342-7297bfd9a22e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
