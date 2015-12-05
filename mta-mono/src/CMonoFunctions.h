@@ -80,7 +80,15 @@ public:
 	class Event
 	{
 	public:
-		static bool				AddHandler							( MonoString* msName, DWORD pUserData, lua_CFunction iLuaFunction, bool bPropagated, MonoString* msEventPriority );
+		static bool				Add									( MonoString* msName, bool bAllowRemoteTrigger );
+		static bool				AddHandler							( MonoString* msName, DWORD pUserData, MonoObject* pDelegate, bool bPropagated, MonoString* msEventPriority );
+		static bool				RemoveHandler						( MonoString* msName, DWORD pUserData, MonoObject* pDelegate );
+		static bool				Trigger								( MonoString* msName, DWORD pUserData, MonoArray* mpArguments );
+		static bool				Cancel								( bool bCancel, MonoString* msReason );
+		static bool				WasCancelled						( void );
+		static string			GetCancelReason						( void );
+
+		static bool				TriggerClient						( DWORD pSendTo, MonoString* msName, DWORD pSource, MonoArray* mpArguments );
 	};
 
 	class Element

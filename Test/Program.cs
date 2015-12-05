@@ -9,18 +9,32 @@ namespace Test
 	{
 		static void Main( string[] args )
 		{
-			Element.Root.OnElementDestroy += Root_ElementDestroy;
+			Element.Root.OnElementDestroy += ( Element sender, ElementEventArgs e ) =>
+			{
+				Debug.Info( "lambda " + sender.GetType() + " " + e.This.GetType() );
+			};
 
 			Vehicle vehicle = new Vehicle( VehicleModel.ADMIRAL, Vector3.Zero, Vector3.Zero );
 
 			vehicle.OnElementDestroy += Root_ElementDestroy;
 
-			vehicle.Destroy();
+			Event.Add( "onTest", true );
+
+			Event.AddHandler( "onTest", vehicle, new Action<Element, string, char, bool>( testEvent_OnTrigger ) );
+
+			Event.Trigger( "onTest", vehicle, "test", 'a', true, false, 123, 456.7f, 1337.01d, null, vehicle );
+
+			//vehicle.Destroy();
 		}
 
-		public static void Root_ElementDestroy( Element sender, ElementEventArgs e )
+		static void testEvent_OnTrigger( Element sender, string a, char b, bool c )
 		{
-			Debug.Info( "Root_ElementDestroy {0} {1}", sender.GetType(), e.This.GetType() );
+			Debug.Info( "testEvent_OnTrigger " + sender.GetType() + " " + a + " " + b + " " + c );
+		}
+
+		static void Root_ElementDestroy( Element sender, ElementEventArgs e )
+		{
+			Debug.Info( "Root_ElementDestroy " + sender.GetType() + " " + e.This.GetType() );
 		}
 	}
 }

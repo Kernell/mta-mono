@@ -37,7 +37,14 @@ void CMonoFunctions::AddInternals( void )
 	MONO_DECLARE( Game, SetRuleValue );
 	MONO_DECLARE( Game, RemoveRuleValue );
 
+	MONO_DECLARE( Event, Add );
 	MONO_DECLARE( Event, AddHandler );
+	MONO_DECLARE( Event, RemoveHandler );
+	MONO_DECLARE( Event, Trigger );
+	MONO_DECLARE( Event, Cancel );
+	MONO_DECLARE( Event, WasCancelled );
+	MONO_DECLARE( Event, GetCancelReason );
+	MONO_DECLARE( Event, TriggerClient );
 
 	// Element create/destroy
 	MONO_DECLARE( Element, Create );

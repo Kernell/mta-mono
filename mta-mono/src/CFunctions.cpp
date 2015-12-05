@@ -21,8 +21,6 @@ int CFunctions::monoInit( lua_State *pLuaVM )
 
 		if( pResource == nullptr )
 		{
-			//if( g_pModuleManager->GetResourceName( luaVM, strName ) )
-
 			CLuaArgument pLuaArgument( pLuaVM, -1 );
 
 			string strName = pLuaArgument.GetString();
@@ -77,8 +75,6 @@ int CFunctions::monoEventHandler( lua_State *pLuaVM )
 					case 0:
 					{
 						strEventName = iter->GetString();
-
-						strEventName[ 0 ] = toupper( strEventName[ 0 ] );
 
 						break;
 					}

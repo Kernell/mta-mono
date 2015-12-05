@@ -19,6 +19,8 @@ class CMonoInterface;
 #include "CMonoDomain.h"
 #include "CResource.h"
 
+#include "extra/CLuaArguments.h"
+
 class CMonoInterface
 {
 private:
@@ -38,10 +40,12 @@ public:
 
 #pragma region Static methods
 
-	static string	GetBinariesDirectory( void )
+	static string		GetBinariesDirectory( void )
 	{
 		return "mods/deathmatch/resources/[ire]";
 	}
+
+	static CLuaArguments	MonoArrayToLuaArguments( MonoArray* pArray );
 
 #pragma endregion
 };

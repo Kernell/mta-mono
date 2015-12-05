@@ -19,6 +19,8 @@ CResource::CResource( CMonoInterface* pMono, lua_State *pLuaVM, string sName )
 	this->m_sName				= sName;
 
 	this->m_pMonoDomain			= nullptr;
+
+	this->m_pEventManager		= new CEventManager( this );
 }
 
 CResource::~CResource( void )
@@ -27,10 +29,9 @@ CResource::~CResource( void )
 
 	this->GetMono()->GetGC()->Collect( this->GetMono()->GetGC()->GetMaxGeneration() );
 
-	//this->GetMono()->SetDomain( nullptr, true );
-
 	g_pResourceManager->RemoveFromList( this );
 
+	SAFE_DELETE( this->m_pEventManager );
 	SAFE_DELETE( this->m_pMonoDomain );
 
 	this->GetMono()->SetDomain( nullptr, true );
@@ -46,26 +47,7 @@ bool CResource::CallEvent( string strEventName, void* pThis, list< CLuaArgument*
 		return false;
 	}
 
-	CMonoMTALib* pMTALib	= this->GetDomain()->GetMTALib();
-
-	CMonoClass* pClass		= pMTALib->GetClass( "Element" );
-	CMonoEvent* pEvent		= pClass->GetEvent( strEventName );
-
-	if( !pEvent )
-	{
-		g_pModuleManager->ErrorPrintf( "[%s] event '%s' is class '%s' not found", this->m_sName.c_str(), strEventName.c_str(), pClass->GetName() );
-
-		return false;
-	}
-
-	MonoObject* pThisObj	= pMTALib->RegisterElement( pThis );
-
-	if( !pThisObj )
-	{
-		return false;
-	}
-
-	return pEvent->Call( pThisObj, argv );
+	return this->m_pEventManager->Call( strEventName, pThis, argv );
 }
 
 bool CResource::AddEvent( const char* szName, const char* szHandleElement )

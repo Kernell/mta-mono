@@ -200,6 +200,26 @@ bool CLuaFunctionDefinitions::SetPlayerAnnounceValue( lua_State* pLuaVM, void* p
 	return false;
 }
 
+bool CLuaFunctionDefinitions::AddEvent( lua_State* pLuaVM, const char* szName, bool bAllowRemoteTrigger )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushString( szName );
+	pLuaArguments.PushBoolean( bAllowRemoteTrigger );
+
+	if( pLuaArguments.Call( pLuaVM, "addEvent", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		{
+			return pLuaArgument.GetBoolean();
+		}
+	}
+
+	return false;
+}
+
 bool CLuaFunctionDefinitions::AddEventHandler( lua_State* pLuaVM, const char* szName, void* pUserData, lua_CFunction iLuaFunction, bool bPropagated, const char* szEventPriority )
 {
 	CLuaArguments pLuaArguments;
@@ -223,6 +243,127 @@ bool CLuaFunctionDefinitions::AddEventHandler( lua_State* pLuaVM, const char* sz
 	return false;
 }
 
+bool CLuaFunctionDefinitions::RemoveEventHandler( lua_State* pLuaVM, const char* szName, void* pUserData, lua_CFunction iLuaFunction )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushString( szName );
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushFunction( iLuaFunction );
+
+	if( pLuaArguments.Call( pLuaVM, "removeEventHandler", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		{
+			return pLuaArgument.GetBoolean();
+		}
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::TriggerEvent( lua_State* pLuaVM, const char* szName, void* pUserData, CLuaArguments& Arguments )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushString( szName );
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushArguments( Arguments );
+
+	if( pLuaArguments.Call( pLuaVM, "triggerEvent", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		{
+			return pLuaArgument.GetBoolean();
+		}
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::CancelEvent( lua_State* pLuaVM, bool bCancel, const char* szReason )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushBoolean( bCancel );
+	pLuaArguments.PushString( szReason );
+
+	if( pLuaArguments.Call( pLuaVM, "cancelEvent", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		{
+			return pLuaArgument.GetBoolean();
+		}
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::WasEventCancelled( lua_State* pLuaVM )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "wasEventCancelled", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		{
+			return pLuaArgument.GetBoolean();
+		}
+	}
+
+	return false;
+}
+
+string CLuaFunctionDefinitions::GetCancelReason( lua_State* pLuaVM )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getCancelReason", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		if( pLuaArgument.GetType() == LUA_TSTRING )
+		{
+			return pLuaArgument.GetString();
+		}
+	}
+
+	return string();
+}
+
+bool CLuaFunctionDefinitions::TriggerClientEvent( lua_State* pLuaVM, void* pSendTo, const char* szName, void* pSource, CLuaArguments& Arguments )
+{
+	CLuaArguments pLuaArguments;
+
+	if( pSendTo )
+	{
+		pLuaArguments.PushUserData( pSendTo );
+	}
+
+	pLuaArguments.PushString( szName );
+	pLuaArguments.PushUserData( pSource );
+	pLuaArguments.PushArguments( Arguments );
+
+	if( pLuaArguments.Call( pLuaVM, "triggerClientEvent", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		{
+			return pLuaArgument.GetBoolean();
+		}
+	}
+
+	return false;
+}
 
 // Element create/destroy
 

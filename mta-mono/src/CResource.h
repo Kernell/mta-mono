@@ -21,6 +21,7 @@ class CResource;
 #include "CMonoInterface.h"
 
 #include "CResourceManager.h"
+#include "CEventManager.h"
 #include "CFunctions.h"
 
 #include "extra/CLuaArgument.h"
@@ -40,6 +41,8 @@ private:
 
 	CMonoInterface*				m_pMono;
 	CMonoDomain*				m_pMonoDomain;
+
+	CEventManager*				m_pEventManager;
 
 public:
 								CResource					( CMonoInterface* m_pMono, lua_State *pLuaVM, string sName );
@@ -64,6 +67,7 @@ public:
 	lua_State*					GetLua						( void )		{ return this->m_pLuaVM; }
 	CMonoInterface*				GetMono						( void )		{ return this->m_pMono; }
 	CMonoDomain*				GetDomain					( void )		{ return this->m_pMonoDomain; }
+	CEventManager*				GetEventManager				( void )		{ return this->m_pEventManager; }
 
 private:
 	

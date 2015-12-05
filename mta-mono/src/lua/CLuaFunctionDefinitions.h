@@ -41,20 +41,20 @@ public:
 //	static int					FetchRemote                         ( lua_State* luaVM );
 
     // Event functions
-//	static bool					AddEvent							( lua_State* pLuaVM, const char* szName, bool bAllowRemoteTrigger );
+	static bool					AddEvent							( lua_State* pLuaVM, const char* szName, bool bAllowRemoteTrigger );
     static bool					AddEventHandler						( lua_State* pLuaVM, const char* szName, void* pUserData, lua_CFunction iLuaFunction, bool bPropagated, const char* szEventPriority );
-//	static bool					RemoveEventHandler					( lua_State* pLuaVM, const char* szName, void* pUserData, const CLuaFunctionRef& iLuaFunction );
+	static bool					RemoveEventHandler					( lua_State* pLuaVM, const char* szName, void* pUserData, lua_CFunction iLuaFunction );
 //	static bool					GetEventHandlers					( lua_State* pLuaVM, const char* szName );
-//	static bool					TriggerEvent						( lua_State* pLuaVM, const char* szName, void* pUserData, const CLuaArguments& Arguments, bool& bWasCancelled );
-//	static bool					CancelEvent							( lua_State* pLuaVM, bool bCancel );
-//	static bool					WasEventCancelled					( lua_State* pLuaVM );
+	static bool					TriggerEvent						( lua_State* pLuaVM, const char* szName, void* pUserData, CLuaArguments& Arguments );
+	static bool					CancelEvent							( lua_State* pLuaVM, bool bCancel, const char* szReason );
+	static bool					WasEventCancelled					( lua_State* pLuaVM );
+	static string				GetCancelReason						( lua_State* pLuaVM );
 
-//	static int					TriggerClientEvent                  ( lua_State* luaVM );
-//	static int					GetCancelReason                     ( lua_State* luaVM );
-//	static int					TriggerLatentClientEvent            ( lua_State* luaVM );
-//	static int					GetLatentEventHandles               ( lua_State* luaVM );
-//	static int					GetLatentEventStatus                ( lua_State* luaVM );
-//	static int					CancelLatentEvent					( lua_State* luaVM );
+	static bool					TriggerClientEvent					( lua_State* pLuaVM, void* pSendTo, const char* szName, void* pSource, CLuaArguments& Arguments );
+//	static int					TriggerLatentClientEvent			( lua_State* pLuaVM );
+//	static int					GetLatentEventHandles				( lua_State* pLuaVM );
+//	static int					GetLatentEventStatus				( lua_State* pLuaVM );
+//	static int					CancelLatentEvent					( lua_State* pLuaVM );
 
 	// Element create/destroy
 	static void*				CreateElement						( lua_State* pLuaVM, const char* szTypeName, const char* szID );

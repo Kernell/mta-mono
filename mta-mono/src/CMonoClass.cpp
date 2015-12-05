@@ -221,10 +221,10 @@ list< CMonoMethod* > CMonoClass::GetMethods( string strMethodName )
 
 CMonoEvent* CMonoClass::GetEvent( string strEventName )
 {
-	return this->m_Events[ strEventName ];
+	return this->m_Events.count( strEventName ) ? this->m_Events[ strEventName ] : nullptr;
 }
 
 MonoClassField* CMonoClass::GetField( string strFieldName )
 {
-	return this->m_Fields[ strFieldName ];
+	return this->m_Fields.count( strFieldName ) ? this->m_Fields[ strFieldName ] : nullptr;
 }

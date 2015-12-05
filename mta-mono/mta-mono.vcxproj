@@ -142,6 +142,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\CEvent.cpp" />
+    <ClCompile Include="src\CEventManager.cpp" />
     <ClCompile Include="src\CMonoClass.cpp" />
     <ClCompile Include="src\CMonoCorlib.cpp" />
     <ClCompile Include="src\CMonoDomain.cpp" />
@@ -187,6 +189,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\CEvent.h" />
+    <ClInclude Include="src\CEventManager.h" />
     <ClInclude Include="src\CMonoClass.h" />
     <ClInclude Include="src\CMonoCorlib.h" />
     <ClInclude Include="src\CMonoDomain.h" />
