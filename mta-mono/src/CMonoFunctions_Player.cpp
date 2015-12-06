@@ -823,17 +823,13 @@ bool CMonoFunctions::Player::SetCameraMatrix( DWORD pPlayer, MonoObject* pCamera
 {
 	if( RESOURCE )
 	{
-		float fX = CMonoObject::GetPropertyValue< float >( pCameraMatrix, "X" );
-		float fY = CMonoObject::GetPropertyValue< float >( pCameraMatrix, "Y" );
-		float fZ = CMonoObject::GetPropertyValue< float >( pCameraMatrix, "Z" );
+		MonoObject* msPosition = CMonoObject::GetPropertyValue< MonoObject* >( pCameraMatrix, "Position" );
 
-		Vector3 vecPosition( fX, fY, fZ );
+		Vector3 vecPosition( msPosition );
 		
-		float fLookAtX = CMonoObject::GetPropertyValue< float >( pCameraMatrix, "LookAtX" );
-		float fLookAtY = CMonoObject::GetPropertyValue< float >( pCameraMatrix, "LookAtY" );
-		float fLookAtZ = CMonoObject::GetPropertyValue< float >( pCameraMatrix, "LookAtZ" );
+		MonoObject* msLookAt = CMonoObject::GetPropertyValue< MonoObject* >( pCameraMatrix, "LookAt" );
 
-		Vector3 vecLookAt( fLookAtX, fLookAtY, fLookAtZ );
+		Vector3 vecLookAt( msLookAt );
 
 		float fRoll = CMonoObject::GetPropertyValue< float >( pCameraMatrix, "Roll" );
 		float fFOV	= CMonoObject::GetPropertyValue< float >( pCameraMatrix, "FOV" );
