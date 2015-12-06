@@ -39,6 +39,8 @@ public:
 	CMonoClass*			GetClass			( const char* szName );
 	CMonoClass*			GetClass			( const char* szNameSpace, const char* szName );
 
+	string				GetElementType		( void* pUserData );
+
 	MonoObject*			RegisterElement		( void* pUserData );
 
 	CMonoDomain*		GetDomain			( void )	{ return this->m_pDomain; }

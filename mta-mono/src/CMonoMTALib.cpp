@@ -70,16 +70,48 @@ CMonoClass* CMonoMTALib::GetClass( const char* szNameSpace, const char* szName )
 	return this->GetDomain()->FindOrAdd( mono_class_from_name( this->m_pImage, szBuffer, szName ) );
 }
 
+string CMonoMTALib::GetElementType( void* pUseData )
+{
+	CResource* pResource = this->GetDomain()->GetResource();
+
+	assert( pResource );
+
+	string strTypeName;
+
+	if( CLuaFunctionDefinitions::IsElement( pResource->GetLua(), pUseData ) )
+	{
+		strTypeName = CLuaFunctionDefinitions::GetElementType( pResource->GetLua(), pUseData );
+
+		strTypeName[ 0 ] = toupper( strTypeName[ 0 ] );
+
+		if( strTypeName == "Root" )
+		{
+			strTypeName = "Element";
+		}
+	}
+
+	return strTypeName;
+}
+
 MonoObject* CMonoMTALib::RegisterElement( void* pUseData )
 {
-	CMonoClass* pClass	= this->GetClass( "Element" );
+	string strType = this->GetElementType( pUseData );
+
+	if( strType.length() == 0 )
+	{
+		return nullptr;
+	}
+
+	CMonoClass* pClass	= this->GetClass( strType.c_str() );
 
 	if( !pClass )
 	{
-		return false;
+		this->GetDomain()->GetResource()->ErrorPrintf( "[mono] Could not find the 'MultiTheftAuto.%s' class\n", strType.c_str() );
+
+		return nullptr;
 	}
 
-	CMonoMethod* pMethod = pClass->GetMethod( "FindOrCreate", 0 );
+	CMonoMethod* pMethod = pClass->GetMethod( "Find", 0 );
 
 	if( !pMethod )
 	{
@@ -97,6 +129,11 @@ MonoObject* CMonoMTALib::RegisterElement( void* pUseData )
 		this->GetDomain()->GetResource()->ErrorPrintf( "%s\n", mono_string_to_utf8( mono_object_to_string( pException, nullptr ) ) );
 
 		return nullptr;
+	}
+
+	if( !pObject )
+	{
+		pObject = pClass->New( Args, 1 );
 	}
 
 	return pObject;
