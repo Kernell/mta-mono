@@ -46,7 +46,7 @@ CMonoDomain::~CMonoDomain( void )
 
 		MonoObject *pException = nullptr;
 
-		//mono_domain_try_unload( this->m_pDomain, &pException );
+		mono_domain_try_unload( this->m_pDomain, &pException );
 
 		this->HandleException( pException );
 	}

@@ -21,9 +21,7 @@ CMonoMTALib::CMonoMTALib( CMonoDomain* pDomain )
 	this->m_pImage		= nullptr;
 	this->m_pDomain		= pDomain;
 
-	string strPath( CMonoInterface::GetBinariesDirectory() + "/" + pDomain->GetResource()->GetName() + "/MultiTheftAuto.dll" );
-
-	this->m_pAssembly	= pDomain->OpenAssembly( strPath.c_str() );
+	this->m_pAssembly	= CMonoInterface::GetMTALib();
 
 	if( this->m_pAssembly )
 	{

@@ -13,6 +13,8 @@
 #include "CMonoInterface.h"
 #include "CMonoFunctions.h"
 
+MonoAssembly* CMonoInterface::m_pMTALib = nullptr;
+
 CMonoInterface::CMonoInterface( void )
 {
 	mono_set_dirs( "mods/deathmatch/mono/lib", "mods/deathmatch/mono/etc" );
@@ -21,9 +23,18 @@ CMonoInterface::CMonoInterface( void )
 
 	mono_debug_init( MONO_DEBUG_FORMAT_MONO );
 
-	mono_trace_set_level_string( "error" );
+#if _DEBUG
+	mono_trace_set_level_string( "debug" );
+#else
+	mono_trace_set_level_string( "critical" );
+#endif
+
+	mono_trace_set_print_handler( CMonoInterface::MonoPrintCallbackHandler );
+	mono_trace_set_printerr_handler( CMonoInterface::MonoPrintErrorCallbackHandler );
 
 	this->m_pMonoDomain = mono_jit_init_version( "Mono Root", "v4.0.30319" );
+
+	CMonoInterface::m_pMTALib	= mono_assembly_open_full( "mods/deathmatch/mono/lib/MultiTheftAuto.dll", nullptr, FALSE );
 
 	CMonoFunctions::AddInternals();
 
@@ -223,4 +234,19 @@ CLuaArguments CMonoInterface::MonoArrayToLuaArguments( MonoArray* pArray )
 	}
 
 	return pLuaArguments;
+}
+
+MonoAssembly* CMonoInterface::GetMTALib( void )
+{
+	return CMonoInterface::m_pMTALib;
+}
+
+void CMonoInterface::MonoPrintCallbackHandler( const char *string, mono_bool is_stdout )
+{
+	g_pModuleManager->Printf( string );
+}
+
+void CMonoInterface::MonoPrintErrorCallbackHandler( const char *string, mono_bool is_stdout )
+{
+	g_pModuleManager->ErrorPrintf( string );
 }

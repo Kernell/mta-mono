@@ -32,12 +32,14 @@ CResource::~CResource( void )
 	g_pResourceManager->RemoveFromList( this );
 
 	SAFE_DELETE( this->m_pEventManager );
-	SAFE_DELETE( this->m_pMonoDomain );
 
 	this->GetMono()->SetDomain( nullptr, true );
 
+	SAFE_DELETE( this->m_pMonoDomain );
+
 	this->m_pMono				= nullptr;
 	this->m_pLuaVM				= nullptr;
+
 }
 
 bool CResource::CallEvent( string strEventName, void* pThis, list< CLuaArgument* > argv )
