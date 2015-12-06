@@ -12,7 +12,7 @@
 
 #define MODULE_NAME         "Mono 4.2.1"
 #define MODULE_AUTHOR       "Dmitry Korolev <kernell@mtaroleplay.ru>"
-#define MODULE_VERSION      0.2f
+#define MODULE_VERSION      0.22f
 
 #include "CFunctions.h"
 #include "CResource.h"
