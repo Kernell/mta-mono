@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{2E5D4B1E-405E-453F-BEED-25735E25ACD8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MultiTheftAuto</RootNamespace>
+    <AssemblyName>MultiTheftAuto</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\builds\server\mods\deathmatch\mono\lib\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\builds\server\mods\deathmatch\mono\lib\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Account.cs" />
+    <Compile Include="Ban.cs" />
+    <Compile Include="Blowfish.cs" />
+    <Compile Include="CameraMatrix.cs" />
+    <Compile Include="Color.cs" />
+    <Compile Include="ColShape.cs" />
+    <Compile Include="Element.cs" />
+    <Compile Include="Event.cs" />
+    <Compile Include="EventArgs\BanEventArgs.cs" />
+    <Compile Include="EventArgs\CancelEventArgs.cs" />
+    <Compile Include="EventArgs\ChatMessageEventArgs.cs" />
+    <Compile Include="EventArgs\ColShapeEventArgs.cs" />
+    <Compile Include="EventArgs\ConsoleEventArgs.cs" />
+    <Compile Include="EventArgs\DebugMessageEventArgs.cs" />
+    <Compile Include="EventArgs\ElementClickedEventArgs.cs" />
+    <Compile Include="EventArgs\ElementColShapeEventArgs.cs" />
+    <Compile Include="EventArgs\ElementDataChangeEventArgs.cs" />
+    <Compile Include="EventArgs\ElementEventArgs.cs" />
+    <Compile Include="EventArgs\ElementModelChangeEventArgs.cs" />
+    <Compile Include="EventArgs\MarkerEventArgs.cs" />
+    <Compile Include="EventArgs\AccountDataChangeEventArgs.cs" />
+    <Compile Include="EventArgs\PedCancelEventArgs.cs" />
+    <Compile Include="EventArgs\PedEventArgs.cs" />
+    <Compile Include="EventArgs\PlayerBanEventArgs.cs" />
+    <Compile Include="EventArgs\PlayerCancelEventArgs.cs" />
+    <Compile Include="EventArgs\PlayerChangeNickEventArgs.cs" />
+    <Compile Include="EventArgs\PlayerChatEventArgs.cs" />
+    <Compile Include="EventArgs\PlayerClickEventArgs.cs" />
+    <Compile Include="EventArgs\PlayerCommandEventArgs.cs" />
+    <Compile Include="EventArgs\PlayerConnectEventArgs.cs" />
+    <Compile Include="EventArgs\PlayerContactEventArgs.cs" />
+    <Compile Include="EventArgs\PlayerDamageEvetArgs.cs" />
+    <Compile Include="EventArgs\PlayerEventArgs.cs" />
+    <Compile Include="EventArgs\PlayerLoginEventArgs.cs" />
+    <Compile Include="EventArgs\PlayerLogoutEventArgs.cs" />
+    <Compile Include="EventArgs\PlayerMarkerEventArgs.cs" />
+    <Compile Include="EventArgs\PlayerModInfoEventArgs.cs" />
+    <Compile Include="EventArgs\PlayerPickupHitEventArgs.cs" />
+    <Compile Include="EventArgs\PlayerPickupUseEventArgs.cs" />
+    <Compile Include="EventArgs\PlayerPrivateMessageEventArgs.cs" />
+    <Compile Include="EventArgs\PlayerQuitEventArgs.cs" />
+    <Compile Include="EventArgs\PlayerScreenShotEventArgs.cs" />
+    <Compile Include="EventArgs\PlayerSpawnEventArgs.cs" />
+    <Compile Include="EventArgs\PlayerTargetEventArgs.cs" />
+    <Compile Include="EventArgs\PlayerVehicleEnterEventArgs.cs" />
+    <Compile Include="EventArgs\PedWastedEventArgs.cs" />
+    <Compile Include="EventArgs\PedWeaponSwitchEventArgs.cs" />
+    <Compile Include="EventArgs\ResourceEventArgs.cs" />
+    <Compile Include="EventArgs\SettingChangeEventArgs.cs" />
+    <Compile Include="EventArgs\UnbanEventArgs.cs" />
+    <Compile Include="EventArgs\VehicleDamageEventArgs.cs" />
+    <Compile Include="EventArgs\VehicleEnterEventArgs.cs" />
+    <Compile Include="EventArgs\VehicleEventArgs.cs" />
+    <Compile Include="EventArgs\VehicleRespawnEventArgs.cs" />
+    <Compile Include="EventArgs\VehicleStartEnterEventArgs.cs" />
+    <Compile Include="HeatHazeSettings.cs" />
+    <Compile Include="Marker.cs" />
+    <Compile Include="MultiTheftAuto.cs" />
+    <Compile Include="Native\Account.cs" />
+    <Compile Include="Native\Blip.cs" />
+    <Compile Include="Native\ColShape.cs" />
+    <Compile Include="Config.cs" />
+    <Compile Include="Debug.cs" />
+    <Compile Include="Native\Element.cs" />
+    <Compile Include="Native\Event.cs" />
+    <Compile Include="Native\Explosion.cs" />
+    <Compile Include="Native\Fire.cs" />
+    <Compile Include="Native\Game.cs" />
+    <Compile Include="Native\Marker.cs" />
+    <Compile Include="Native\Object.cs" />
+    <Compile Include="Native\Ped.cs" />
+    <Compile Include="Native\Player.cs" />
+    <Compile Include="Native\RadarArea.cs" />
+    <Compile Include="Native\Resource.cs" />
+    <Compile Include="Native\Server.cs" />
+    <Compile Include="Native\Team.cs" />
+    <Compile Include="Native\Vehicle.cs" />
+    <Compile Include="Native\Water.cs" />
+    <Compile Include="Ped.cs" />
+    <Compile Include="Pickup.cs" />
+    <Compile Include="Player.cs" />
+    <Compile Include="PlayerACInfo.cs" />
+    <Compile Include="PlayerModInfo.cs" />
+    <Compile Include="Pools\IdentifiedPool.cs" />
+    <Compile Include="Pools\Pool.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resource.cs" />
+    <Compile Include="Server.cs" />
+    <Compile Include="ServerVersion.cs" />
+    <Compile Include="Team.cs" />
+    <Compile Include="Utils\Disposable.cs" />
+    <Compile Include="Utils\IIdentifyable.cs" />
+    <Compile Include="Vector2.cs" />
+    <Compile Include="Vector3.cs" />
+    <Compile Include="Vehicle.cs" />
+    <Compile Include="VehicleColor.cs" />
+    <Compile Include="VehicleWheelsState.cs" />
+    <Compile Include="Weapon.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>pdb2mdb $(TargetPath)</PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

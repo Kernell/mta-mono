@@ -9,25 +9,43 @@ namespace Test
 	{
 		static void Main( string[] args )
 		{
-			Element.Root.OnElementDestroy += ( Element sender, ElementEventArgs e ) =>
-			{
-				Debug.Info( "lambda " + sender.GetType() + " " + e.This.GetType() );
-			};
+			Element.Root.OnPlayerJoin += Root_OnPlayerJoin;
 
-			Vehicle vehicle = new Vehicle( VehicleModel.ADMIRAL, Vector3.Zero, Vector3.Zero );
+			//Element.Root.OnElementDestroy += ( Element sender, ElementEventArgs e ) =>
+			//{
+			//	Debug.Info( "lambda " + sender.GetType() + " " + e.This.GetType() );
+			//};
+
+			Element vehicle = new Vehicle( VehicleModel.ADMIRAL, Vector3.Zero, Vector3.Zero );
+
+			Debug.Info( vehicle.GetType().ToString() );
 
 			vehicle.OnElementDestroy += Root_ElementDestroy;
 
-			Event.Add( "onTest", true );
+			//Event.Add( "onTest", true );
 
-			Event.AddHandler( "onTest", vehicle, new Action<Element, string, char, bool>( testEvent_OnTrigger ) );
+			//Event.AddHandler( "onTest", vehicle, new Action<Element, string, bool, bool>( testEvent_OnTrigger ) );
 
-			Event.Trigger( "onTest", vehicle, "test", 'a', true, false, 123, 456.7f, 1337.01d, null, vehicle );
+			//Event.Trigger( "onTest", vehicle, "test", true, false, 123, 456.7f, 1337.01d, null, vehicle );
 
-			//vehicle.Destroy();
+			vehicle.Destroy();
 		}
 
-		static void testEvent_OnTrigger( Element sender, string a, char b, bool c )
+		static void Root_OnPlayerJoin( Element sender, ElementEventArgs e )
+		{
+			Player player = sender as Player;
+
+			Debug.Info( "Player '" + player.GetName() + "' joined" );
+		}
+
+		static void Root_OnPlayerConnect( Element sender, PlayerConnectEventArgs e )
+		{
+			//Player player = sender as Player;
+
+			Debug.Info( "Player '" + sender.GetType() + "' connected" );
+		}
+
+		static void testEvent_OnTrigger( Element sender, string a, bool b, bool c )
 		{
 			Debug.Info( "testEvent_OnTrigger " + sender.GetType() + " " + a + " " + b + " " + c );
 		}
