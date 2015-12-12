@@ -50,6 +50,7 @@
     <Compile Include="CameraMatrix.cs" />
     <Compile Include="Color.cs" />
     <Compile Include="ColShape.cs" />
+    <Compile Include="Console.cs" />
     <Compile Include="Element.cs" />
     <Compile Include="Event.cs" />
     <Compile Include="EventArgs\BanEventArgs.cs" />
