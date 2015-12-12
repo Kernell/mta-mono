@@ -200,6 +200,69 @@ bool CLuaFunctionDefinitions::SetPlayerAnnounceValue( lua_State* pLuaVM, void* p
 	return false;
 }
 
+bool CLuaFunctionDefinitions::AddCommandHandler( lua_State* pLuaVM, const char* szCommand, lua_CFunction iLuaFunction, bool bRestricted, bool bCaseSensitive )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushString( szCommand );
+	pLuaArguments.PushFunction( iLuaFunction );
+	pLuaArguments.PushBoolean( bRestricted );
+	pLuaArguments.PushBoolean( bCaseSensitive );
+
+	if( pLuaArguments.Call( pLuaVM, "addCommandHandler", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		{
+			return pLuaArgument.GetBoolean();
+		}
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::ExecuteCommandHandler( lua_State* pLuaVM, const char* szCommand, void* pUserData, const char* szArgs )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushString( szCommand );
+	pLuaArguments.PushUserData( pUserData );
+	pLuaArguments.PushString( szArgs );
+
+	if( pLuaArguments.Call( pLuaVM, "executeCommandHandler", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		{
+			return pLuaArgument.GetBoolean();
+		}
+	}
+
+	return false;
+}
+
+bool CLuaFunctionDefinitions::RemoveCommandHandler( lua_State* pLuaVM, const char* szCommand, lua_CFunction iLuaFunction )
+{
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushString( szCommand );
+	pLuaArguments.PushFunction( iLuaFunction );
+
+	if( pLuaArguments.Call( pLuaVM, "removeCommandHandler", 1 ) )
+	{
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		{
+			return pLuaArgument.GetBoolean();
+		}
+	}
+
+	return false;
+}
+
 bool CLuaFunctionDefinitions::AddEvent( lua_State* pLuaVM, const char* szName, bool bAllowRemoteTrigger )
 {
 	CLuaArguments pLuaArguments;

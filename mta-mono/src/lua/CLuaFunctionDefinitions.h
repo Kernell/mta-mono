@@ -37,6 +37,10 @@ public:
 	static string				GetGameType							( lua_State* pLuaVM );
 	static string				GetMapName							( lua_State* pLuaVM );
 
+	static bool					AddCommandHandler					( lua_State* pLuaVM, const char* szCommand, lua_CFunction iLuaFunction, bool bRestricted = false, bool bCaseSensitive = true );
+	static bool					ExecuteCommandHandler				( lua_State* pLuaVM, const char* szCommand, void* pUserData, const char* szArgs );
+	static bool					RemoveCommandHandler				( lua_State* pLuaVM, const char* szCommand, lua_CFunction iLuaFunction );
+
 //	static int					CallRemote                          ( lua_State* luaVM );
 //	static int					FetchRemote                         ( lua_State* luaVM );
 

@@ -21,6 +21,7 @@ CResource::CResource( CMonoInterface* pMono, lua_State *pLuaVM, string sName )
 	this->m_pMonoDomain			= nullptr;
 
 	this->m_pEventManager		= new CEventManager( this );
+	this->m_pRegisteredCommands	= new CRegisteredCommands( this );
 }
 
 CResource::~CResource( void )
@@ -31,6 +32,7 @@ CResource::~CResource( void )
 
 	g_pResourceManager->RemoveFromList( this );
 
+	SAFE_DELETE( this->m_pRegisteredCommands );
 	SAFE_DELETE( this->m_pEventManager );
 
 	this->GetMono()->SetDomain( nullptr, true );
@@ -82,6 +84,16 @@ bool CResource::RemoveEvent( const char* szName, const char* szHandleElement )
 	}
 
 	return false;
+}
+
+bool CResource::ExecuteCommand( void* pPlayer, string strCommandName, list< string > argv )
+{
+	if( !pPlayer )
+	{
+		return false;
+	}
+
+	return this->m_pRegisteredCommands->Execute( pPlayer, strCommandName, argv );
 }
 
 void CResource::RegisterEvents( void )

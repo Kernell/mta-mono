@@ -171,6 +171,7 @@
     <ClCompile Include="src\CMonoMTALib.cpp" />
     <ClCompile Include="src\CMonoObject.cpp" />
     <ClCompile Include="src\Common.cpp" />
+    <ClCompile Include="src\CRegisteredCommands.cpp" />
     <ClCompile Include="src\CResource.cpp" />
     <ClCompile Include="src\CResourceManager.cpp" />
     <ClCompile Include="src\extra\Vector2.cpp" />
@@ -198,6 +199,7 @@
     <ClInclude Include="src\CMonoMethod.h" />
     <ClInclude Include="src\CMonoMTALib.h" />
     <ClInclude Include="src\CMonoObject.h" />
+    <ClInclude Include="src\CRegisteredCommands.h" />
     <ClInclude Include="src\CResource.h" />
     <ClInclude Include="src\CResourceManager.h" />
     <ClInclude Include="src\extra\Vector2.h" />

@@ -51,7 +51,7 @@ int CFunctions::monoEventHandler( lua_State *pLuaVM )
 		if( pResource )
 		{
 			string	strEventName;
-			void*	pThis			= nullptr;
+			void*	pThis = nullptr;
 
 			CLuaArguments pLuaArgs;
 
@@ -105,6 +105,72 @@ int CFunctions::monoEventHandler( lua_State *pLuaVM )
 			}
 			
 			if( pResource->CallEvent( strEventName, pThis, argv ) )
+			{
+				return 1;
+			}
+		}
+	}
+
+	return 0;
+}
+
+int CFunctions::monoCommandHandler( lua_State* pLuaVM )
+{
+	if( pLuaVM )
+	{
+		CResource *pResource = g_pResourceManager->GetFromList( pLuaVM );
+
+		if( pResource )
+		{
+			CLuaArguments pLuaArgs;
+
+			pLuaArgs.ReadArguments( pLuaVM );
+			
+			if( pLuaArgs.Count() == 0 )
+			{
+				return 0;
+			}
+
+			void* pPlayerSource;
+			string strCommandName;
+
+			uint i = 0;
+
+			list< string > argv;
+
+			for( auto iter : pLuaArgs.GetArguments() )
+			{
+				int iLuaType = iter->GetType();
+
+				switch( i )
+				{
+					case 0:
+					{
+						pPlayerSource = iter->GetLightUserData();
+
+						break;
+					}
+					case 1:
+					{
+						strCommandName = iter->GetString();
+
+						break;
+					}
+					default:
+					{
+						if( iter->GetType() == LUA_TSTRING )
+						{
+							argv.push_back( iter->GetString() );
+						}
+
+						break;
+					}
+				}
+
+				i++;
+			}
+			
+			if( pResource->ExecuteCommand( pPlayerSource, strCommandName, argv ) )
 			{
 				return 1;
 			}

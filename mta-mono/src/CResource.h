@@ -22,6 +22,7 @@ class CResource;
 
 #include "CResourceManager.h"
 #include "CEventManager.h"
+#include "CRegisteredCommands.h"
 #include "CFunctions.h"
 
 #include "extra/CLuaArgument.h"
@@ -43,6 +44,7 @@ private:
 	CMonoDomain*				m_pMonoDomain;
 
 	CEventManager*				m_pEventManager;
+	CRegisteredCommands*		m_pRegisteredCommands;
 
 public:
 								CResource					( CMonoInterface* m_pMono, lua_State *pLuaVM, string sName );
@@ -51,6 +53,8 @@ public:
 	bool						CallEvent					( string strEventName, void* pThis, list< CLuaArgument* > argv );
 	bool						AddEvent					( const char* szName, const char* szHandleElement );
 	bool						RemoveEvent					( const char* szName, const char* szHandleElement );
+
+	bool						ExecuteCommand				( void* pPlayer, string strCommandName, list< string > argv );
 
 	void						RegisterEvents				( void );
 	void						RemoveEvents				( void );
@@ -68,6 +72,7 @@ public:
 	CMonoInterface*				GetMono						( void )		{ return this->m_pMono; }
 	CMonoDomain*				GetDomain					( void )		{ return this->m_pMonoDomain; }
 	CEventManager*				GetEventManager				( void )		{ return this->m_pEventManager; }
+	CRegisteredCommands*		GetCommandManager			( void )		{ return this->m_pRegisteredCommands; }
 
 private:
 	

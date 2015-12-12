@@ -62,6 +62,10 @@ public:
 		static bool						OutputConsole			( MonoString* szText, DWORD pElement );
 		static bool						SetPassword				( MonoString* msPassword, bool bSave );
 		static MonoObject*				GetVersion				( void );
+
+		static bool						AddCommandHandler		( MonoString* msCommand, MonoObject* pDelegate, bool bRestricted = false, bool bCaseSensitive = true );
+		static bool						ExecuteCommandHandler	( MonoString* msCommand, DWORD pUserData, MonoString* msArgs );
+		static bool						RemoveCommandHandler	( MonoString* msCommand, MonoObject* pDelegate = nullptr );
 	};
 
 	class Game

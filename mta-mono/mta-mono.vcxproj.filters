@@ -121,6 +121,9 @@
     <ClCompile Include="src\CEvent.cpp">
       <Filter>ResourceInterface</Filter>
     </ClCompile>
+    <ClCompile Include="src\CRegisteredCommands.cpp">
+      <Filter>ResourceInterface</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\include\ILuaModuleManager.h">
@@ -276,6 +279,9 @@
       <Filter>ResourceInterface</Filter>
     </ClInclude>
     <ClInclude Include="src\CEvent.h">
+      <Filter>ResourceInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CRegisteredCommands.h">
       <Filter>ResourceInterface</Filter>
     </ClInclude>
   </ItemGroup>

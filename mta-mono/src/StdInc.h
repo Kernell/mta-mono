@@ -46,6 +46,14 @@ extern "C"
 
 #include "Common.h"
 
+#ifndef stricmp
+#ifdef _MSC_VER
+#define stricmp _stricmp
+#else
+#define stricmp strcasecmp
+#endif
+#endif
+
 #define SAFE_DELETE(p)	{ if(p) { delete (p); (p)=nullptr; } }
 #define SAFE_RELEASE(p)	{ if(p) { (p)->Release(); (p)=nullptr; } }
 

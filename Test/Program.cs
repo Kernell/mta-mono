@@ -7,8 +7,15 @@ namespace Test
 {
 	public class Program
 	{
+		static void MonoCommandHandler( Player player, string command, string[] args )
+		{
+			Debug.Info( player.GetName() + " executed command '" + command + "' with args: " + string.Join( " ", args ) );
+		}
+
 		static void Main( string[] args )
 		{
+			Server.AddCommandHandler( "mono", new CommandHandler( MonoCommandHandler ) );
+
 			Element.Root.OnPlayerJoin += Root_OnPlayerJoin;
 
 			//Element.Root.OnElementDestroy += ( Element sender, ElementEventArgs e ) =>

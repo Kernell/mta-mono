@@ -28,6 +28,10 @@ void CMonoFunctions::AddInternals( void )
 	MONO_DECLARE( Server, SetPassword );
 	MONO_DECLARE( Server, GetVersion );
 
+	MONO_DECLARE( Server, AddCommandHandler );
+	MONO_DECLARE( Server, ExecuteCommandHandler );
+	MONO_DECLARE( Server, RemoveCommandHandler );
+
 	MONO_DECLARE( Game, GetType );
 	MONO_DECLARE( Game, GetMapName );
 
@@ -728,6 +732,84 @@ bool CMonoFunctions::Server::SetPassword( MonoString* msPassword, bool bSave )
 	return false;
 }
 
+bool CMonoFunctions::Server::AddCommandHandler( MonoString* msCommand, MonoObject* pDelegate, bool bRestricted, bool bCaseSensitive )
+{
+	if( RESOURCE )
+	{
+		if( !pDelegate )
+		{
+			g_pModuleManager->ErrorPrintf( "Invalid argument #1 in method 'Server::AddCommandHandler'\n" );
+
+			return false;
+		}
+
+		string strCommandName = mono_string_to_utf8( msCommand );
+
+		if( strCommandName.length() == 0 )
+		{
+			g_pModuleManager->ErrorPrintf( "Invalid argument #2 in method 'Server::AddCommandHandler'\n" );
+
+			return false;
+		}
+		
+		if( RESOURCE->GetCommandManager()->Add( strCommandName, pDelegate, bRestricted, bCaseSensitive ) )
+		{
+			CLuaFunctionDefinitions::AddCommandHandler( RESOURCE->GetLua(), strCommandName.c_str(), CFunctions::monoCommandHandler, bRestricted, bCaseSensitive );
+			
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool CMonoFunctions::Server::ExecuteCommandHandler( MonoString* msCommand, DWORD pUserData, MonoString* msArgs )
+{
+	if( RESOURCE )
+	{
+		string strCommandName = mono_string_to_utf8( msCommand );
+
+		if( strCommandName.length() == 0 )
+		{
+			g_pModuleManager->ErrorPrintf( "Invalid argument #1 in method 'Server::ExecuteCommandHandler'\n" );
+
+			return false;
+		}
+
+		if( !pUserData )
+		{
+			g_pModuleManager->ErrorPrintf( "Invalid argument #2 in method 'Server::ExecuteCommandHandler'\n" );
+
+			return false;
+		}
+
+		string strArguments = mono_string_to_utf8( msArgs );
+
+		return CLuaFunctionDefinitions::ExecuteCommandHandler( RESOURCE->GetLua(), strCommandName.c_str(), (void*)pUserData, strArguments.c_str() );
+	}
+
+	return false;
+}
+
+bool CMonoFunctions::Server::RemoveCommandHandler( MonoString* msCommand, MonoObject* pDelegate )
+{
+	if( RESOURCE )
+	{
+		string strCommandName = mono_string_to_utf8( msCommand );
+
+		if( strCommandName.length() == 0 )
+		{
+			g_pModuleManager->ErrorPrintf( "Invalid argument #1 in method 'Server::RemoveCommandHandler'\n" );
+
+			return false;
+		}
+
+		return RESOURCE->GetCommandManager()->Remove( strCommandName.c_str(), pDelegate );
+	}
+
+	return false;
+}
+
 MonoObject* CMonoFunctions::Server::GetVersion( void )
 {
 	if( RESOURCE )
@@ -854,4 +936,3 @@ bool CMonoFunctions::Game::RemoveRuleValue( MonoString* msKey )
 
 	return false;
 }
-

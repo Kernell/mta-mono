@@ -27,8 +27,9 @@ extern ILuaModuleManager10 *g_pModuleManager;
 class CFunctions
 {
 public:
-		static int		monoInit				( lua_State *pLuaVM );
-		static int		monoEventHandler		( lua_State *pLuaVM );
+		static int		monoInit				( lua_State* pLuaVM );
+		static int		monoEventHandler		( lua_State* pLuaVM );
+		static int		monoCommandHandler		( lua_State* pLuaVM );
 
 };
 #endif
