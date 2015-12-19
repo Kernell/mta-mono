@@ -40,8 +40,6 @@ public:
 
 	CMonoGC*				GetGC				( void )	{ return this->m_pGC; }
 
-#pragma region Static methods
-
 	static string			GetBinariesDirectory( void )
 	{
 		return "mods/deathmatch/resources/[ire]";
@@ -53,8 +51,6 @@ public:
 
 	static void				MonoPrintCallbackHandler( const char *string, mono_bool is_stdout );
 	static void				MonoPrintErrorCallbackHandler( const char *string, mono_bool is_stdout );
-
-#pragma endregion
 };
 
 #endif

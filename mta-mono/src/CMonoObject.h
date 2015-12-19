@@ -41,7 +41,7 @@ public:
 		return pColor;
 	}
 	
-	template <class T> static T GetPropertyValue( MonoObject* pMonoObject, char* szPropertyName )
+	template <class T> static T GetPropertyValue( MonoObject* pMonoObject, const char* szPropertyName )
 	{
 		return *( reinterpret_cast<T*>( mono_object_unbox( GetPropertyValue( pMonoObject, szPropertyName ) ) ) );
 	}
