@@ -64,7 +64,7 @@ MonoString* CMonoFunctions::Ban::GetIP( DWORD pBan )
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 MonoString* CMonoFunctions::Ban::GetSerial( DWORD pBan )
@@ -79,7 +79,7 @@ MonoString* CMonoFunctions::Ban::GetSerial( DWORD pBan )
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 MonoString* CMonoFunctions::Ban::GetUsername( DWORD pBan )
@@ -94,7 +94,7 @@ MonoString* CMonoFunctions::Ban::GetUsername( DWORD pBan )
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 MonoString* CMonoFunctions::Ban::GetNick( DWORD pBan )
@@ -109,7 +109,7 @@ MonoString* CMonoFunctions::Ban::GetNick( DWORD pBan )
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 MonoString* CMonoFunctions::Ban::GetReason( DWORD pBan )
@@ -124,7 +124,7 @@ MonoString* CMonoFunctions::Ban::GetReason( DWORD pBan )
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 MonoString* CMonoFunctions::Ban::GetAdmin( DWORD pBan )
@@ -139,7 +139,7 @@ MonoString* CMonoFunctions::Ban::GetAdmin( DWORD pBan )
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 

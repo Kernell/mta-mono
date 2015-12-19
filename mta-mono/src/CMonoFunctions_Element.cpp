@@ -71,7 +71,7 @@ MonoArray* CMonoFunctions::Element::GetByType( MonoString* msType, DWORD pStartE
 		return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TLIGHTUSERDATA>( mono_get_uint32_class(), pLuaArguments );
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 bool CMonoFunctions::Element::IsElement( DWORD pUserData )
@@ -150,11 +150,11 @@ MonoString* CMonoFunctions::Element::GetID( DWORD pUserData )
 	return mono_string_new( mono_domain_get(), "" );
 }
 
-unsigned int CMonoFunctions::Element::GetParent( DWORD pUserData )
+DWORD CMonoFunctions::Element::GetParent( DWORD pUserData )
 {
 	if( RESOURCE )
 	{
-		return (unsigned int)CLuaFunctionDefinitions::GetElementParent( RESOURCE->GetLua(), (void*)pUserData );
+		return (DWORD)CLuaFunctionDefinitions::GetElementParent( RESOURCE->GetLua(), (void*)pUserData );
 	}
 
 	return NULL;
@@ -172,7 +172,7 @@ MonoObject* CMonoFunctions::Element::GetPosition( DWORD pUserData )
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 MonoObject* CMonoFunctions::Element::GetRotation( DWORD pUserData )
@@ -187,7 +187,7 @@ MonoObject* CMonoFunctions::Element::GetRotation( DWORD pUserData )
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 MonoObject* CMonoFunctions::Element::GetVelocity( DWORD pUserData )
@@ -202,7 +202,7 @@ MonoObject* CMonoFunctions::Element::GetVelocity( DWORD pUserData )
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 unsigned char CMonoFunctions::Element::GetInterior( DWORD pUserData )

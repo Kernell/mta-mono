@@ -309,7 +309,7 @@ MonoArray* CMonoFunctions::Vehicle::GetUpgrades( DWORD pUserData )
 	{
 		CLuaArguments* pLuaArguments = CLuaFunctionDefinitions::GetVehicleUpgrades( RESOURCE->GetLua(), (void*)pUserData );
 
-		return RESOURCE->GetDomain()->NewArray<uint, LUA_TNUMBER>( mono_get_uint32_class(), pLuaArguments );
+		return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TNUMBER>( mono_get_uint32_class(), pLuaArguments );
 	}
 
 	return NULL;
@@ -336,7 +336,7 @@ MonoArray* CMonoFunctions::Vehicle::GetCompatibleUpgrades( DWORD pUserData )
 	{
 		CLuaArguments* pLuaArguments = CLuaFunctionDefinitions::GetVehicleCompatibleUpgrades( RESOURCE->GetLua(), (void*)pUserData );
 
-		return RESOURCE->GetDomain()->NewArray<uint, LUA_TNUMBER>( mono_get_uint32_class(), pLuaArguments );
+		return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TNUMBER>( mono_get_uint32_class(), pLuaArguments );
 	}
 
 	return NULL;

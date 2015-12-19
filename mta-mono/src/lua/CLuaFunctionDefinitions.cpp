@@ -165,7 +165,7 @@ bool CLuaFunctionDefinitions::SetRuleValue( lua_State *pLuaVM, const char* szKey
 	return false;
 }
 
-string CLuaFunctionDefinitions::GetPlayerAnnounceValue( lua_State* pLuaVM, void* pElement, const char* szKey )
+string CLuaFunctionDefinitions::GetPlayerAnnounceValue( lua_State* pLuaVM, PVOID pElement, const char* szKey )
 {
 	CLuaArguments pLuaArguments; 
 	
@@ -183,7 +183,7 @@ string CLuaFunctionDefinitions::GetPlayerAnnounceValue( lua_State* pLuaVM, void*
 	return string();
 }
 
-bool CLuaFunctionDefinitions::SetPlayerAnnounceValue( lua_State* pLuaVM, void* pElement, const char* szKey, const char* szValue )
+bool CLuaFunctionDefinitions::SetPlayerAnnounceValue( lua_State* pLuaVM, PVOID pElement, const char* szKey, const char* szValue )
 {
 	CLuaArguments pLuaArguments; 
 	
@@ -223,7 +223,7 @@ bool CLuaFunctionDefinitions::AddCommandHandler( lua_State* pLuaVM, const char* 
 	return false;
 }
 
-bool CLuaFunctionDefinitions::ExecuteCommandHandler( lua_State* pLuaVM, const char* szCommand, void* pUserData, const char* szArgs )
+bool CLuaFunctionDefinitions::ExecuteCommandHandler( lua_State* pLuaVM, const char* szCommand, PVOID pUserData, const char* szArgs )
 {
 	CLuaArguments pLuaArguments;
 
@@ -284,7 +284,7 @@ bool CLuaFunctionDefinitions::AddEvent( lua_State* pLuaVM, const char* szName, b
 	return false;
 }
 
-bool CLuaFunctionDefinitions::AddEventHandler( lua_State* pLuaVM, const char* szName, void* pUserData, lua_CFunction iLuaFunction, bool bPropagated, const char* szEventPriority )
+bool CLuaFunctionDefinitions::AddEventHandler( lua_State* pLuaVM, const char* szName, PVOID pUserData, lua_CFunction iLuaFunction, bool bPropagated, const char* szEventPriority )
 {
 	CLuaArguments pLuaArguments;
 
@@ -307,7 +307,7 @@ bool CLuaFunctionDefinitions::AddEventHandler( lua_State* pLuaVM, const char* sz
 	return false;
 }
 
-bool CLuaFunctionDefinitions::RemoveEventHandler( lua_State* pLuaVM, const char* szName, void* pUserData, lua_CFunction iLuaFunction )
+bool CLuaFunctionDefinitions::RemoveEventHandler( lua_State* pLuaVM, const char* szName, PVOID pUserData, lua_CFunction iLuaFunction )
 {
 	CLuaArguments pLuaArguments;
 
@@ -328,7 +328,7 @@ bool CLuaFunctionDefinitions::RemoveEventHandler( lua_State* pLuaVM, const char*
 	return false;
 }
 
-bool CLuaFunctionDefinitions::TriggerEvent( lua_State* pLuaVM, const char* szName, void* pUserData, CLuaArguments& Arguments )
+bool CLuaFunctionDefinitions::TriggerEvent( lua_State* pLuaVM, const char* szName, PVOID pUserData, CLuaArguments& Arguments )
 {
 	CLuaArguments pLuaArguments;
 
@@ -403,7 +403,7 @@ string CLuaFunctionDefinitions::GetCancelReason( lua_State* pLuaVM )
 	return string();
 }
 
-bool CLuaFunctionDefinitions::TriggerClientEvent( lua_State* pLuaVM, void* pSendTo, const char* szName, void* pSource, CLuaArguments& Arguments )
+bool CLuaFunctionDefinitions::TriggerClientEvent( lua_State* pLuaVM, PVOID pSendTo, const char* szName, PVOID pSource, CLuaArguments& Arguments )
 {
 	CLuaArguments pLuaArguments;
 
@@ -431,7 +431,7 @@ bool CLuaFunctionDefinitions::TriggerClientEvent( lua_State* pLuaVM, void* pSend
 
 // Element create/destroy
 
-void* CLuaFunctionDefinitions::CreateElement( lua_State* pLuaVM, const char* szTypeName, const char* szID )
+PVOID CLuaFunctionDefinitions::CreateElement( lua_State* pLuaVM, const char* szTypeName, const char* szID )
 {
 	CLuaArguments pLuaArguments;
 
@@ -452,10 +452,10 @@ void* CLuaFunctionDefinitions::CreateElement( lua_State* pLuaVM, const char* szT
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-bool CLuaFunctionDefinitions::DestroyElement( lua_State* pLuaVM, void* pUserData )
+bool CLuaFunctionDefinitions::DestroyElement( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -471,7 +471,7 @@ bool CLuaFunctionDefinitions::DestroyElement( lua_State* pLuaVM, void* pUserData
 	return false;
 }
 
-void* CLuaFunctionDefinitions::CloneElement( lua_State* pLuaVM, void* pUserData, const Vector3& vecPosition, bool bCloneElement )
+PVOID CLuaFunctionDefinitions::CloneElement( lua_State* pLuaVM, PVOID pUserData, const Vector3& vecPosition, bool bCloneElement )
 {
 	CLuaArguments pLuaArguments;
 
@@ -491,12 +491,12 @@ void* CLuaFunctionDefinitions::CloneElement( lua_State* pLuaVM, void* pUserData,
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // Element get funcs
 
-CLuaArguments* CLuaFunctionDefinitions::GetElementsByType( lua_State* pLuaVM, const char* szTypeName, void* pUserData )
+CLuaArguments* CLuaFunctionDefinitions::GetElementsByType( lua_State* pLuaVM, const char* szTypeName, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -514,10 +514,10 @@ CLuaArguments* CLuaFunctionDefinitions::GetElementsByType( lua_State* pLuaVM, co
 		return pLuaArgument.GetArray();
 	}
 	
-	return NULL;
+	return nullptr;
 }
 
-bool CLuaFunctionDefinitions::IsElement( lua_State* pLuaVM, void* pUserData )
+bool CLuaFunctionDefinitions::IsElement( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -533,7 +533,7 @@ bool CLuaFunctionDefinitions::IsElement( lua_State* pLuaVM, void* pUserData )
 	return false;
 }
 
-string CLuaFunctionDefinitions::GetElementType( lua_State* pLuaVM, void* pUserData )
+string CLuaFunctionDefinitions::GetElementType( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -552,7 +552,7 @@ string CLuaFunctionDefinitions::GetElementType( lua_State* pLuaVM, void* pUserDa
 	return string();
 }
 
-void* CLuaFunctionDefinitions::GetElementByID( lua_State* pLuaVM, const char* szID, unsigned int uiIndex )
+PVOID CLuaFunctionDefinitions::GetElementByID( lua_State* pLuaVM, const char* szID, unsigned int uiIndex )
 {
 	CLuaArguments pLuaArguments;
 
@@ -573,10 +573,10 @@ void* CLuaFunctionDefinitions::GetElementByID( lua_State* pLuaVM, const char* sz
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-void* CLuaFunctionDefinitions::GetElementByIndex( lua_State* pLuaVM, int iIndex )
+PVOID CLuaFunctionDefinitions::GetElementByIndex( lua_State* pLuaVM, int iIndex )
 {
 	CLuaArguments pLuaArguments;
 
@@ -592,10 +592,10 @@ void* CLuaFunctionDefinitions::GetElementByIndex( lua_State* pLuaVM, int iIndex 
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-void* CLuaFunctionDefinitions::GetElementChild( lua_State* pLuaVM, void* pUserData, int iIndex )
+PVOID CLuaFunctionDefinitions::GetElementChild( lua_State* pLuaVM, PVOID pUserData, int iIndex )
 {
 	CLuaArguments pLuaArguments;
 
@@ -612,10 +612,10 @@ void* CLuaFunctionDefinitions::GetElementChild( lua_State* pLuaVM, void* pUserDa
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-int CLuaFunctionDefinitions::GetElementChildrenCount( lua_State* pLuaVM, void* pUserData )
+int CLuaFunctionDefinitions::GetElementChildrenCount( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -628,10 +628,10 @@ int CLuaFunctionDefinitions::GetElementChildrenCount( lua_State* pLuaVM, void* p
 		return static_cast< int >( pLuaArgument.GetNumber() );
 	}
 
-	return NULL;
+	return 0;
 }
 
-string CLuaFunctionDefinitions::GetElementID( lua_State* pLuaVM, void* pUserData )
+string CLuaFunctionDefinitions::GetElementID( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -647,7 +647,7 @@ string CLuaFunctionDefinitions::GetElementID( lua_State* pLuaVM, void* pUserData
 	return string();
 }
 
-CLuaArgument* CLuaFunctionDefinitions::GetElementData( lua_State* pLuaVM, void* pUserData, string sKey, bool bInherit )
+CLuaArgument* CLuaFunctionDefinitions::GetElementData( lua_State* pLuaVM, PVOID pUserData, string sKey, bool bInherit )
 {
 	CLuaArguments pLuaArguments;
 
@@ -660,10 +660,10 @@ CLuaArgument* CLuaFunctionDefinitions::GetElementData( lua_State* pLuaVM, void* 
 		return new CLuaArgument( pLuaVM, -1 );
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-CLuaArguments* CLuaFunctionDefinitions::GetAllElementData( lua_State* pLuaVM, void* pUserData )
+CLuaArguments* CLuaFunctionDefinitions::GetAllElementData( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -678,10 +678,10 @@ CLuaArguments* CLuaFunctionDefinitions::GetAllElementData( lua_State* pLuaVM, vo
 		return pLuaArguments;
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-void* CLuaFunctionDefinitions::GetElementParent( lua_State* pLuaVM, void* pUserData )
+PVOID CLuaFunctionDefinitions::GetElementParent( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -697,10 +697,10 @@ void* CLuaFunctionDefinitions::GetElementParent( lua_State* pLuaVM, void* pUserD
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-bool CLuaFunctionDefinitions::GetElementPosition( lua_State* pLuaVM, void* pUserData, Vector3& vecPosition )
+bool CLuaFunctionDefinitions::GetElementPosition( lua_State* pLuaVM, PVOID pUserData, Vector3& vecPosition )
 {
 	CLuaArguments pLuaArguments;
 
@@ -718,7 +718,7 @@ bool CLuaFunctionDefinitions::GetElementPosition( lua_State* pLuaVM, void* pUser
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetElementRotation( lua_State* pLuaVM, void* pUserData, Vector3& vecRotation )
+bool CLuaFunctionDefinitions::GetElementRotation( lua_State* pLuaVM, PVOID pUserData, Vector3& vecRotation )
 {
 	CLuaArguments pLuaArguments;
 
@@ -737,7 +737,7 @@ bool CLuaFunctionDefinitions::GetElementRotation( lua_State* pLuaVM, void* pUser
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetElementVelocity( lua_State* pLuaVM, void* pUserData, Vector3& vecVelocity )
+bool CLuaFunctionDefinitions::GetElementVelocity( lua_State* pLuaVM, PVOID pUserData, Vector3& vecVelocity )
 {
 	CLuaArguments pLuaArguments;
 
@@ -756,7 +756,7 @@ bool CLuaFunctionDefinitions::GetElementVelocity( lua_State* pLuaVM, void* pUser
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetElementInterior( lua_State* pLuaVM, void* pUserData, unsigned char& ucInterior )
+bool CLuaFunctionDefinitions::GetElementInterior( lua_State* pLuaVM, PVOID pUserData, unsigned char& ucInterior )
 {
 	CLuaArguments pLuaArguments;
 
@@ -774,7 +774,7 @@ bool CLuaFunctionDefinitions::GetElementInterior( lua_State* pLuaVM, void* pUser
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsElementWithinColShape( lua_State* pLuaVM, void* pUserData, bool& bWithin )
+bool CLuaFunctionDefinitions::IsElementWithinColShape( lua_State* pLuaVM, PVOID pUserData, bool& bWithin )
 {
 	CLuaArguments pLuaArguments;
 
@@ -792,7 +792,7 @@ bool CLuaFunctionDefinitions::IsElementWithinColShape( lua_State* pLuaVM, void* 
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsElementWithinMarker( lua_State* pLuaVM, void* pUserData, bool& bWithin )
+bool CLuaFunctionDefinitions::IsElementWithinMarker( lua_State* pLuaVM, PVOID pUserData, bool& bWithin )
 {
 	CLuaArguments pLuaArguments;
 
@@ -810,7 +810,7 @@ bool CLuaFunctionDefinitions::IsElementWithinMarker( lua_State* pLuaVM, void* pU
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetElementDimension( lua_State* pLuaVM, void* pUserData, unsigned short& usDimension )
+bool CLuaFunctionDefinitions::GetElementDimension( lua_State* pLuaVM, PVOID pUserData, unsigned short& usDimension )
 {
 	CLuaArguments pLuaArguments;
 
@@ -828,7 +828,7 @@ bool CLuaFunctionDefinitions::GetElementDimension( lua_State* pLuaVM, void* pUse
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetElementZoneName( lua_State* pLuaVM, void* pUserData, string& strOutName, bool bCitiesOnly )
+bool CLuaFunctionDefinitions::GetElementZoneName( lua_State* pLuaVM, PVOID pUserData, string& strOutName, bool bCitiesOnly )
 {
 	CLuaArguments pLuaArguments;
 
@@ -847,7 +847,7 @@ bool CLuaFunctionDefinitions::GetElementZoneName( lua_State* pLuaVM, void* pUser
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsElementAttached( lua_State* pLuaVM, void* pUserData )
+bool CLuaFunctionDefinitions::IsElementAttached( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -863,7 +863,7 @@ bool CLuaFunctionDefinitions::IsElementAttached( lua_State* pLuaVM, void* pUserD
 	return false;
 }
 
-void* CLuaFunctionDefinitions::GetElementAttachedTo( lua_State* pLuaVM, void* pUserData )
+PVOID CLuaFunctionDefinitions::GetElementAttachedTo( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -879,10 +879,10 @@ void* CLuaFunctionDefinitions::GetElementAttachedTo( lua_State* pLuaVM, void* pU
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-void* CLuaFunctionDefinitions::GetElementColShape( lua_State* pLuaVM, void* pUserData )
+PVOID CLuaFunctionDefinitions::GetElementColShape( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -898,10 +898,10 @@ void* CLuaFunctionDefinitions::GetElementColShape( lua_State* pLuaVM, void* pUse
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-bool CLuaFunctionDefinitions::GetElementAlpha( lua_State* pLuaVM, void* pUserData, unsigned char& ucAlpha )
+bool CLuaFunctionDefinitions::GetElementAlpha( lua_State* pLuaVM, PVOID pUserData, unsigned char& ucAlpha )
 {
 	CLuaArguments pLuaArguments;
 
@@ -917,7 +917,7 @@ bool CLuaFunctionDefinitions::GetElementAlpha( lua_State* pLuaVM, void* pUserDat
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsElementDoubleSided( lua_State* pLuaVM, void* pUserData, bool& bDoubleSided )
+bool CLuaFunctionDefinitions::IsElementDoubleSided( lua_State* pLuaVM, PVOID pUserData, bool& bDoubleSided )
 {
 	CLuaArguments pLuaArguments;
 
@@ -935,7 +935,7 @@ bool CLuaFunctionDefinitions::IsElementDoubleSided( lua_State* pLuaVM, void* pUs
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetElementHealth( lua_State* pLuaVM, void* pUserData, float& fHealth )
+bool CLuaFunctionDefinitions::GetElementHealth( lua_State* pLuaVM, PVOID pUserData, float& fHealth )
 {
 	CLuaArguments pLuaArguments;
 
@@ -953,7 +953,7 @@ bool CLuaFunctionDefinitions::GetElementHealth( lua_State* pLuaVM, void* pUserDa
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetElementModel( lua_State* pLuaVM, void* pUserData, unsigned short& usModel )
+bool CLuaFunctionDefinitions::GetElementModel( lua_State* pLuaVM, PVOID pUserData, unsigned short& usModel )
 {
 	CLuaArguments pLuaArguments;
 
@@ -971,7 +971,7 @@ bool CLuaFunctionDefinitions::GetElementModel( lua_State* pLuaVM, void* pUserDat
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsElementInWater( lua_State* pLuaVM, void* pUserData, bool& bInWater )
+bool CLuaFunctionDefinitions::IsElementInWater( lua_State* pLuaVM, PVOID pUserData, bool& bInWater )
 {
 	CLuaArguments pLuaArguments;
 
@@ -989,7 +989,7 @@ bool CLuaFunctionDefinitions::IsElementInWater( lua_State* pLuaVM, void* pUserDa
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetElementAttachedOffsets( lua_State* pLuaVM, void* pUserData, Vector3& vecPosition, Vector3& vecRotation )
+bool CLuaFunctionDefinitions::GetElementAttachedOffsets( lua_State* pLuaVM, PVOID pUserData, Vector3& vecPosition, Vector3& vecRotation )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1010,7 +1010,7 @@ bool CLuaFunctionDefinitions::GetElementAttachedOffsets( lua_State* pLuaVM, void
 	return false;
 }
 
-void* CLuaFunctionDefinitions::GetElementSyncer( lua_State* pLuaVM, void* pUserData )
+PVOID CLuaFunctionDefinitions::GetElementSyncer( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1026,10 +1026,10 @@ void* CLuaFunctionDefinitions::GetElementSyncer( lua_State* pLuaVM, void* pUserD
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-bool CLuaFunctionDefinitions::GetElementCollisionsEnabled( lua_State* pLuaVM, void* pUserData )
+bool CLuaFunctionDefinitions::GetElementCollisionsEnabled( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1045,7 +1045,7 @@ bool CLuaFunctionDefinitions::GetElementCollisionsEnabled( lua_State* pLuaVM, vo
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsElementFrozen( lua_State* pLuaVM, void* pUserData, bool& bFrozen )
+bool CLuaFunctionDefinitions::IsElementFrozen( lua_State* pLuaVM, PVOID pUserData, bool& bFrozen )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1063,7 +1063,7 @@ bool CLuaFunctionDefinitions::IsElementFrozen( lua_State* pLuaVM, void* pUserDat
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetLowLodElement( lua_State* pLuaVM, void* pUserData, void*& pOutLowLodElement )
+bool CLuaFunctionDefinitions::GetLowLodElement( lua_State* pLuaVM, PVOID pUserData, PVOID& pOutLowLodElement )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1079,7 +1079,7 @@ bool CLuaFunctionDefinitions::GetLowLodElement( lua_State* pLuaVM, void* pUserDa
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsElementLowLod( lua_State* pLuaVM, void* pUserData, bool& bOutLowLod )
+bool CLuaFunctionDefinitions::IsElementLowLod( lua_State* pLuaVM, PVOID pUserData, bool& bOutLowLod )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1097,7 +1097,7 @@ bool CLuaFunctionDefinitions::IsElementLowLod( lua_State* pLuaVM, void* pUserDat
 
 // Element set funcs
 
-bool CLuaFunctionDefinitions::ClearElementVisibleTo( lua_State* pLuaVM, void* pUserData )
+bool CLuaFunctionDefinitions::ClearElementVisibleTo( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1113,7 +1113,7 @@ bool CLuaFunctionDefinitions::ClearElementVisibleTo( lua_State* pLuaVM, void* pU
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetElementID( lua_State* pLuaVM, void* pUserData, string sID )
+bool CLuaFunctionDefinitions::SetElementID( lua_State* pLuaVM, PVOID pUserData, string sID )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1130,7 +1130,7 @@ bool CLuaFunctionDefinitions::SetElementID( lua_State* pLuaVM, void* pUserData, 
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetElementData( lua_State* pLuaVM, void* pUserData, string sKey, const CLuaArgument& Variable )
+bool CLuaFunctionDefinitions::SetElementData( lua_State* pLuaVM, PVOID pUserData, string sKey, const CLuaArgument& Variable )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1148,7 +1148,7 @@ bool CLuaFunctionDefinitions::SetElementData( lua_State* pLuaVM, void* pUserData
 	return false;
 }
 
-bool CLuaFunctionDefinitions::RemoveElementData( lua_State* pLuaVM, void* pUserData, string sKey )
+bool CLuaFunctionDefinitions::RemoveElementData( lua_State* pLuaVM, PVOID pUserData, string sKey )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1165,7 +1165,7 @@ bool CLuaFunctionDefinitions::RemoveElementData( lua_State* pLuaVM, void* pUserD
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetElementParent( lua_State* pLuaVM, void* pUserData, void* pTarget )
+bool CLuaFunctionDefinitions::SetElementParent( lua_State* pLuaVM, PVOID pUserData, PVOID pTarget )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1182,7 +1182,7 @@ bool CLuaFunctionDefinitions::SetElementParent( lua_State* pLuaVM, void* pUserDa
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetElementPosition( lua_State* pLuaVM, void* pUserData, const Vector3& vecPosition, bool bWarp )
+bool CLuaFunctionDefinitions::SetElementPosition( lua_State* pLuaVM, PVOID pUserData, const Vector3& vecPosition, bool bWarp )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1202,7 +1202,7 @@ bool CLuaFunctionDefinitions::SetElementPosition( lua_State* pLuaVM, void* pUser
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetElementRotation( lua_State* pLuaVM, void* pUserData, const Vector3& vecRotation, const char* szRotationOrder, bool bNewWay )
+bool CLuaFunctionDefinitions::SetElementRotation( lua_State* pLuaVM, PVOID pUserData, const Vector3& vecRotation, const char* szRotationOrder, bool bNewWay )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1223,7 +1223,7 @@ bool CLuaFunctionDefinitions::SetElementRotation( lua_State* pLuaVM, void* pUser
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetElementVelocity( lua_State* pLuaVM, void* pUserData, const Vector3& vecVelocity )
+bool CLuaFunctionDefinitions::SetElementVelocity( lua_State* pLuaVM, PVOID pUserData, const Vector3& vecVelocity )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1242,7 +1242,7 @@ bool CLuaFunctionDefinitions::SetElementVelocity( lua_State* pLuaVM, void* pUser
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetElementVisibleTo( lua_State* pLuaVM, void* pUserData, void* pTarget, bool bVisible )
+bool CLuaFunctionDefinitions::SetElementVisibleTo( lua_State* pLuaVM, PVOID pUserData, PVOID pTarget, bool bVisible )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1260,7 +1260,7 @@ bool CLuaFunctionDefinitions::SetElementVisibleTo( lua_State* pLuaVM, void* pUse
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetElementInterior( lua_State* pLuaVM, void* pUserData, int iInterior )
+bool CLuaFunctionDefinitions::SetElementInterior( lua_State* pLuaVM, PVOID pUserData, int iInterior )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1277,7 +1277,7 @@ bool CLuaFunctionDefinitions::SetElementInterior( lua_State* pLuaVM, void* pUser
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetElementDimension( lua_State* pLuaVM, void* pUserData, int iDimension )
+bool CLuaFunctionDefinitions::SetElementDimension( lua_State* pLuaVM, PVOID pUserData, int iDimension )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1294,7 +1294,7 @@ bool CLuaFunctionDefinitions::SetElementDimension( lua_State* pLuaVM, void* pUse
 	return false;
 }
 
-bool CLuaFunctionDefinitions::AttachElements( lua_State* pLuaVM, void* pUserData, void* pTarget, Vector3& vecPosition, Vector3& vecRotation )
+bool CLuaFunctionDefinitions::AttachElements( lua_State* pLuaVM, PVOID pUserData, PVOID pTarget, Vector3& vecPosition, Vector3& vecRotation )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1318,7 +1318,7 @@ bool CLuaFunctionDefinitions::AttachElements( lua_State* pLuaVM, void* pUserData
 	return false;
 }
 
-bool CLuaFunctionDefinitions::DetachElements( lua_State* pLuaVM, void* pUserData, void* pTarget )
+bool CLuaFunctionDefinitions::DetachElements( lua_State* pLuaVM, PVOID pUserData, PVOID pTarget )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1339,7 +1339,7 @@ bool CLuaFunctionDefinitions::DetachElements( lua_State* pLuaVM, void* pUserData
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetElementAlpha( lua_State* pLuaVM, void* pUserData, int iAlpha )
+bool CLuaFunctionDefinitions::SetElementAlpha( lua_State* pLuaVM, PVOID pUserData, int iAlpha )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1356,7 +1356,7 @@ bool CLuaFunctionDefinitions::SetElementAlpha( lua_State* pLuaVM, void* pUserDat
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetElementDoubleSided( lua_State* pLuaVM, void* pUserData, bool bDoubleSided )
+bool CLuaFunctionDefinitions::SetElementDoubleSided( lua_State* pLuaVM, PVOID pUserData, bool bDoubleSided )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1373,7 +1373,7 @@ bool CLuaFunctionDefinitions::SetElementDoubleSided( lua_State* pLuaVM, void* pU
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetElementHealth( lua_State* pLuaVM, void* pUserData, float fHealth )
+bool CLuaFunctionDefinitions::SetElementHealth( lua_State* pLuaVM, PVOID pUserData, float fHealth )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1390,7 +1390,7 @@ bool CLuaFunctionDefinitions::SetElementHealth( lua_State* pLuaVM, void* pUserDa
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetElementModel( lua_State* pLuaVM, void* pUserData, int iModel )
+bool CLuaFunctionDefinitions::SetElementModel( lua_State* pLuaVM, PVOID pUserData, int iModel )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1407,7 +1407,7 @@ bool CLuaFunctionDefinitions::SetElementModel( lua_State* pLuaVM, void* pUserDat
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetElementAttachedOffsets( lua_State* pLuaVM, void* pUserData, Vector3& vecPosition, Vector3& vecRotation )
+bool CLuaFunctionDefinitions::SetElementAttachedOffsets( lua_State* pLuaVM, PVOID pUserData, Vector3& vecPosition, Vector3& vecRotation )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1431,7 +1431,7 @@ bool CLuaFunctionDefinitions::SetElementAttachedOffsets( lua_State* pLuaVM, void
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetElementSyncer( lua_State* pLuaVM, void* pUserData, void* pPlayer )
+bool CLuaFunctionDefinitions::SetElementSyncer( lua_State* pLuaVM, PVOID pUserData, PVOID pPlayer )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1448,7 +1448,7 @@ bool CLuaFunctionDefinitions::SetElementSyncer( lua_State* pLuaVM, void* pUserDa
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetElementCollisionsEnabled( lua_State* pLuaVM, void* pUserData, bool bEnabled )
+bool CLuaFunctionDefinitions::SetElementCollisionsEnabled( lua_State* pLuaVM, PVOID pUserData, bool bEnabled )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1465,7 +1465,7 @@ bool CLuaFunctionDefinitions::SetElementCollisionsEnabled( lua_State* pLuaVM, vo
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetElementFrozen( lua_State* pLuaVM, void* pUserData, bool bFrozen )
+bool CLuaFunctionDefinitions::SetElementFrozen( lua_State* pLuaVM, PVOID pUserData, bool bFrozen )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1482,7 +1482,7 @@ bool CLuaFunctionDefinitions::SetElementFrozen( lua_State* pLuaVM, void* pUserDa
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetLowLodElement( lua_State* pLuaVM, void* pUserData, bool bEnabled )
+bool CLuaFunctionDefinitions::SetLowLodElement( lua_State* pLuaVM, PVOID pUserData, bool bEnabled )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1515,7 +1515,7 @@ unsigned int CLuaFunctionDefinitions::GetPlayerCount( lua_State* pLuaVM )
 	return 0;
 }
 
-void* CLuaFunctionDefinitions::GetPlayerFromName( lua_State* pLuaVM, const char* szNick )
+PVOID CLuaFunctionDefinitions::GetPlayerFromName( lua_State* pLuaVM, const char* szNick )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1531,10 +1531,10 @@ void* CLuaFunctionDefinitions::GetPlayerFromName( lua_State* pLuaVM, const char*
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-bool CLuaFunctionDefinitions::GetPlayerPing( lua_State* pLuaVM, void* pUserData, unsigned int& uiPing )
+bool CLuaFunctionDefinitions::GetPlayerPing( lua_State* pLuaVM, PVOID pUserData, unsigned int& uiPing )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1550,7 +1550,7 @@ bool CLuaFunctionDefinitions::GetPlayerPing( lua_State* pLuaVM, void* pUserData,
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetPlayerMoney( lua_State* pLuaVM, void* pUserData, long& lMoney )
+bool CLuaFunctionDefinitions::GetPlayerMoney( lua_State* pLuaVM, PVOID pUserData, long& lMoney )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1566,7 +1566,7 @@ bool CLuaFunctionDefinitions::GetPlayerMoney( lua_State* pLuaVM, void* pUserData
 	return false;
 }
 
-void* CLuaFunctionDefinitions::GetRandomPlayer( lua_State* pLuaVM )
+PVOID CLuaFunctionDefinitions::GetRandomPlayer( lua_State* pLuaVM )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1583,7 +1583,7 @@ void* CLuaFunctionDefinitions::GetRandomPlayer( lua_State* pLuaVM )
 	return 0;
 }
 
-bool CLuaFunctionDefinitions::IsPlayerMuted( lua_State* pLuaVM, void* pUserData, bool& bMuted )
+bool CLuaFunctionDefinitions::IsPlayerMuted( lua_State* pLuaVM, PVOID pUserData, bool& bMuted )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1599,7 +1599,7 @@ bool CLuaFunctionDefinitions::IsPlayerMuted( lua_State* pLuaVM, void* pUserData,
 	return false;
 }
 
-void* CLuaFunctionDefinitions::GetPlayerTeam( lua_State* pLuaVM, void* pUserData )
+PVOID CLuaFunctionDefinitions::GetPlayerTeam( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1615,10 +1615,10 @@ void* CLuaFunctionDefinitions::GetPlayerTeam( lua_State* pLuaVM, void* pUserData
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-bool CLuaFunctionDefinitions::GetPlayerWantedLevel( lua_State* pLuaVM, void* pUserData, unsigned int& uiWantedLevel )
+bool CLuaFunctionDefinitions::GetPlayerWantedLevel( lua_State* pLuaVM, PVOID pUserData, unsigned int& uiWantedLevel )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1643,7 +1643,7 @@ CLuaArguments* CLuaFunctionDefinitions::GetAlivePlayers( lua_State* pLuaVM )
 		return CLuaArgument( pLuaVM, -1 ).GetArray();
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 CLuaArguments* CLuaFunctionDefinitions::GetDeadPlayers( lua_State* pLuaVM )
@@ -1655,10 +1655,10 @@ CLuaArguments* CLuaFunctionDefinitions::GetDeadPlayers( lua_State* pLuaVM )
 		return CLuaArgument( pLuaVM, -1 ).GetArray();
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-bool CLuaFunctionDefinitions::GetPlayerIdleTime( lua_State* pLuaVM, void* pUserData, unsigned int& uiIdleTime )
+bool CLuaFunctionDefinitions::GetPlayerIdleTime( lua_State* pLuaVM, PVOID pUserData, unsigned int& uiIdleTime )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1674,7 +1674,7 @@ bool CLuaFunctionDefinitions::GetPlayerIdleTime( lua_State* pLuaVM, void* pUserD
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsPlayerMapForced( lua_State* pLuaVM, void* pUserData, bool& bForced )
+bool CLuaFunctionDefinitions::IsPlayerMapForced( lua_State* pLuaVM, PVOID pUserData, bool& bForced )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1690,7 +1690,7 @@ bool CLuaFunctionDefinitions::IsPlayerMapForced( lua_State* pLuaVM, void* pUserD
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetPlayerNametagText( lua_State* pLuaVM, void* pUserData, string& strOutText )
+bool CLuaFunctionDefinitions::GetPlayerNametagText( lua_State* pLuaVM, PVOID pUserData, string& strOutText )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1706,7 +1706,7 @@ bool CLuaFunctionDefinitions::GetPlayerNametagText( lua_State* pLuaVM, void* pUs
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetPlayerNametagColor( lua_State* pLuaVM, void* pUserData, unsigned char& ucR, unsigned char& ucG, unsigned char& ucB )
+bool CLuaFunctionDefinitions::GetPlayerNametagColor( lua_State* pLuaVM, PVOID pUserData, unsigned char& ucR, unsigned char& ucG, unsigned char& ucB )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1724,7 +1724,7 @@ bool CLuaFunctionDefinitions::GetPlayerNametagColor( lua_State* pLuaVM, void* pU
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsPlayerNametagShowing( lua_State* pLuaVM, void* pUserData, bool& bShowing )
+bool CLuaFunctionDefinitions::IsPlayerNametagShowing( lua_State* pLuaVM, PVOID pUserData, bool& bShowing )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1740,7 +1740,7 @@ bool CLuaFunctionDefinitions::IsPlayerNametagShowing( lua_State* pLuaVM, void* p
 	return false;
 }
 
-string CLuaFunctionDefinitions::GetPlayerSerial( lua_State* pLuaVM, void* pUserData )
+string CLuaFunctionDefinitions::GetPlayerSerial( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1756,7 +1756,7 @@ string CLuaFunctionDefinitions::GetPlayerSerial( lua_State* pLuaVM, void* pUserD
 	return string();
 }
 
-string CLuaFunctionDefinitions::GetPlayerUserName( lua_State* pLuaVM, void* pUserData )
+string CLuaFunctionDefinitions::GetPlayerUserName( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1772,7 +1772,7 @@ string CLuaFunctionDefinitions::GetPlayerUserName( lua_State* pLuaVM, void* pUse
 	return string();
 }
 
-bool CLuaFunctionDefinitions::GetPlayerBlurLevel( lua_State* pLuaVM, void* pUserData, unsigned char& ucLevel )
+bool CLuaFunctionDefinitions::GetPlayerBlurLevel( lua_State* pLuaVM, PVOID pUserData, unsigned char& ucLevel )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1786,7 +1786,7 @@ bool CLuaFunctionDefinitions::GetPlayerBlurLevel( lua_State* pLuaVM, void* pUser
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetPlayerName( lua_State* pLuaVM, void* pUserData, string& strOutName )
+bool CLuaFunctionDefinitions::GetPlayerName( lua_State* pLuaVM, PVOID pUserData, string& strOutName )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1802,7 +1802,7 @@ bool CLuaFunctionDefinitions::GetPlayerName( lua_State* pLuaVM, void* pUserData,
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetPlayerIP( lua_State* pLuaVM, void* pUserData, string& strOutIP )
+bool CLuaFunctionDefinitions::GetPlayerIP( lua_State* pLuaVM, PVOID pUserData, string& strOutIP )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1818,7 +1818,7 @@ bool CLuaFunctionDefinitions::GetPlayerIP( lua_State* pLuaVM, void* pUserData, s
 	return false;
 }
 
-void* CLuaFunctionDefinitions::GetPlayerAccount( lua_State* pLuaVM, void* pUserData )
+PVOID CLuaFunctionDefinitions::GetPlayerAccount( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1834,10 +1834,10 @@ void* CLuaFunctionDefinitions::GetPlayerAccount( lua_State* pLuaVM, void* pUserD
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-string CLuaFunctionDefinitions::GetPlayerVersion( lua_State* pLuaVM, void* pUserData )
+string CLuaFunctionDefinitions::GetPlayerVersion( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1853,7 +1853,7 @@ string CLuaFunctionDefinitions::GetPlayerVersion( lua_State* pLuaVM, void* pUser
 	return string();
 }
 
-LuaTable CLuaFunctionDefinitions::GetPlayerACInfo( lua_State* pLuaVM, void* pUserData )
+LuaTable CLuaFunctionDefinitions::GetPlayerACInfo( lua_State* pLuaVM, PVOID pUserData )
 {
 	map<string, CLuaArgument*> pLuaTable;
 
@@ -1871,7 +1871,7 @@ LuaTable CLuaFunctionDefinitions::GetPlayerACInfo( lua_State* pLuaVM, void* pUse
 
 // Player set functions
 
-bool CLuaFunctionDefinitions::SetPlayerMoney( lua_State* pLuaVM, void* pUserData, int iAmount, bool bInstant )
+bool CLuaFunctionDefinitions::SetPlayerMoney( lua_State* pLuaVM, PVOID pUserData, int iAmount, bool bInstant )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1889,7 +1889,7 @@ bool CLuaFunctionDefinitions::SetPlayerMoney( lua_State* pLuaVM, void* pUserData
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GivePlayerMoney( lua_State* pLuaVM, void* pUserData, int iAmount )
+bool CLuaFunctionDefinitions::GivePlayerMoney( lua_State* pLuaVM, PVOID pUserData, int iAmount )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1906,7 +1906,7 @@ bool CLuaFunctionDefinitions::GivePlayerMoney( lua_State* pLuaVM, void* pUserDat
 	return false;
 }
 
-bool CLuaFunctionDefinitions::TakePlayerMoney( lua_State* pLuaVM, void* pUserData, int iAmount )
+bool CLuaFunctionDefinitions::TakePlayerMoney( lua_State* pLuaVM, PVOID pUserData, int iAmount )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1923,7 +1923,7 @@ bool CLuaFunctionDefinitions::TakePlayerMoney( lua_State* pLuaVM, void* pUserDat
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SpawnPlayer( lua_State* pLuaVM, void* pUserData, Vector3& vecPosition, int iRotation, int iSkinID, int iInterior, int iDimension, void* pTeam )
+bool CLuaFunctionDefinitions::SpawnPlayer( lua_State* pLuaVM, PVOID pUserData, Vector3& vecPosition, int iRotation, int iSkinID, int iInterior, int iDimension, PVOID pTeam )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1951,7 +1951,7 @@ bool CLuaFunctionDefinitions::SpawnPlayer( lua_State* pLuaVM, void* pUserData, V
 	return false;
 }
 
-bool CLuaFunctionDefinitions::ShowPlayerHudComponent( lua_State* pLuaVM, void* pUserData, string sComponent, bool bShow )
+bool CLuaFunctionDefinitions::ShowPlayerHudComponent( lua_State* pLuaVM, PVOID pUserData, string sComponent, bool bShow )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1969,7 +1969,7 @@ bool CLuaFunctionDefinitions::ShowPlayerHudComponent( lua_State* pLuaVM, void* p
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetPlayerWantedLevel( lua_State* pLuaVM, void* pUserData, int iLevel )
+bool CLuaFunctionDefinitions::SetPlayerWantedLevel( lua_State* pLuaVM, PVOID pUserData, int iLevel )
 {
 	CLuaArguments pLuaArguments;
 
@@ -1986,7 +1986,7 @@ bool CLuaFunctionDefinitions::SetPlayerWantedLevel( lua_State* pLuaVM, void* pUs
 	return false;
 }
 
-bool CLuaFunctionDefinitions::ForcePlayerMap( lua_State* pLuaVM, void* pUserData, bool bForceOn )
+bool CLuaFunctionDefinitions::ForcePlayerMap( lua_State* pLuaVM, PVOID pUserData, bool bForceOn )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2003,7 +2003,7 @@ bool CLuaFunctionDefinitions::ForcePlayerMap( lua_State* pLuaVM, void* pUserData
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetPlayerNametagText( lua_State* pLuaVM, void* pUserData, string sText )
+bool CLuaFunctionDefinitions::SetPlayerNametagText( lua_State* pLuaVM, PVOID pUserData, string sText )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2020,7 +2020,7 @@ bool CLuaFunctionDefinitions::SetPlayerNametagText( lua_State* pLuaVM, void* pUs
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetPlayerNametagColor( lua_State* pLuaVM, void* pUserData, int iRed, int iGreen, int iBlue )
+bool CLuaFunctionDefinitions::SetPlayerNametagColor( lua_State* pLuaVM, PVOID pUserData, int iRed, int iGreen, int iBlue )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2039,7 +2039,7 @@ bool CLuaFunctionDefinitions::SetPlayerNametagColor( lua_State* pLuaVM, void* pU
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetPlayerNametagShowing( lua_State* pLuaVM, void* pUserData, bool bShowing )
+bool CLuaFunctionDefinitions::SetPlayerNametagShowing( lua_State* pLuaVM, PVOID pUserData, bool bShowing )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2056,7 +2056,7 @@ bool CLuaFunctionDefinitions::SetPlayerNametagShowing( lua_State* pLuaVM, void* 
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetPlayerMuted( lua_State* pLuaVM, void* pUserData, bool bMuted )
+bool CLuaFunctionDefinitions::SetPlayerMuted( lua_State* pLuaVM, PVOID pUserData, bool bMuted )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2073,7 +2073,7 @@ bool CLuaFunctionDefinitions::SetPlayerMuted( lua_State* pLuaVM, void* pUserData
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetPlayerBlurLevel( lua_State* pLuaVM, void* pUserData, int iLevel )
+bool CLuaFunctionDefinitions::SetPlayerBlurLevel( lua_State* pLuaVM, PVOID pUserData, int iLevel )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2090,7 +2090,7 @@ bool CLuaFunctionDefinitions::SetPlayerBlurLevel( lua_State* pLuaVM, void* pUser
 	return false;
 }
 
-bool CLuaFunctionDefinitions::RedirectPlayer( lua_State* pLuaVM, void* pUserData, const char* szServerIP, int iServerPort, const char* szServerPassword )
+bool CLuaFunctionDefinitions::RedirectPlayer( lua_State* pLuaVM, PVOID pUserData, const char* szServerIP, int iServerPort, const char* szServerPassword )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2109,7 +2109,7 @@ bool CLuaFunctionDefinitions::RedirectPlayer( lua_State* pLuaVM, void* pUserData
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetPlayerName( lua_State* pLuaVM, void* pUserData, string sName )
+bool CLuaFunctionDefinitions::SetPlayerName( lua_State* pLuaVM, PVOID pUserData, string sName )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2126,7 +2126,7 @@ bool CLuaFunctionDefinitions::SetPlayerName( lua_State* pLuaVM, void* pUserData,
 	return false;
 }
 
-bool CLuaFunctionDefinitions::DetonateSatchels( lua_State* pLuaVM, void* pUserData )
+bool CLuaFunctionDefinitions::DetonateSatchels( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2142,7 +2142,7 @@ bool CLuaFunctionDefinitions::DetonateSatchels( lua_State* pLuaVM, void* pUserDa
 	return false;
 }
 
-bool CLuaFunctionDefinitions::TakePlayerScreenShot( lua_State* pLuaVM, void* pUserData, int iWidth, int iHeight, string sTag, int iQuality, int iMaxBandwith )
+bool CLuaFunctionDefinitions::TakePlayerScreenShot( lua_State* pLuaVM, PVOID pUserData, int iWidth, int iHeight, string sTag, int iQuality, int iMaxBandwith )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2165,7 +2165,7 @@ bool CLuaFunctionDefinitions::TakePlayerScreenShot( lua_State* pLuaVM, void* pUs
 
 // Ped get functions
 
-void* CLuaFunctionDefinitions::CreatePed( lua_State* pLuaVM, int iModelid, const Vector3& vecPosition, float fRot, bool bSynced )
+PVOID CLuaFunctionDefinitions::CreatePed( lua_State* pLuaVM, int iModelid, const Vector3& vecPosition, float fRot, bool bSynced )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2186,10 +2186,10 @@ void* CLuaFunctionDefinitions::CreatePed( lua_State* pLuaVM, int iModelid, const
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-bool CLuaFunctionDefinitions::GetPedArmor( lua_State* pLuaVM, void* pUserData, float& fArmor )
+bool CLuaFunctionDefinitions::GetPedArmor( lua_State* pLuaVM, PVOID pUserData, float& fArmor )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2205,7 +2205,7 @@ bool CLuaFunctionDefinitions::GetPedArmor( lua_State* pLuaVM, void* pUserData, f
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsPedChoking( lua_State* pLuaVM, void* pUserData, bool& bIsChoking )
+bool CLuaFunctionDefinitions::IsPedChoking( lua_State* pLuaVM, PVOID pUserData, bool& bIsChoking )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2221,7 +2221,7 @@ bool CLuaFunctionDefinitions::IsPedChoking( lua_State* pLuaVM, void* pUserData, 
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsPedDead( lua_State* pLuaVM, void* pUserData, bool& bDead )
+bool CLuaFunctionDefinitions::IsPedDead( lua_State* pLuaVM, PVOID pUserData, bool& bDead )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2237,7 +2237,7 @@ bool CLuaFunctionDefinitions::IsPedDead( lua_State* pLuaVM, void* pUserData, boo
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsPedDucked( lua_State* pLuaVM, void* pUserData, bool& bDucked )
+bool CLuaFunctionDefinitions::IsPedDucked( lua_State* pLuaVM, PVOID pUserData, bool& bDucked )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2253,7 +2253,7 @@ bool CLuaFunctionDefinitions::IsPedDucked( lua_State* pLuaVM, void* pUserData, b
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetPedStat( lua_State* pLuaVM, void* pUserData, unsigned short usStat, float& fValue )
+bool CLuaFunctionDefinitions::GetPedStat( lua_State* pLuaVM, PVOID pUserData, unsigned short usStat, float& fValue )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2270,7 +2270,7 @@ bool CLuaFunctionDefinitions::GetPedStat( lua_State* pLuaVM, void* pUserData, un
 	return false;
 }
 
-void* CLuaFunctionDefinitions::GetPedTarget( lua_State* pLuaVM, void* pUserData )
+PVOID CLuaFunctionDefinitions::GetPedTarget( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2286,10 +2286,10 @@ void* CLuaFunctionDefinitions::GetPedTarget( lua_State* pLuaVM, void* pUserData 
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-int CLuaFunctionDefinitions::GetPedWeapon( lua_State* pLuaVM, void* pUserData, int iWeaponSlot )
+int CLuaFunctionDefinitions::GetPedWeapon( lua_State* pLuaVM, PVOID pUserData, int iWeaponSlot )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2304,7 +2304,7 @@ int CLuaFunctionDefinitions::GetPedWeapon( lua_State* pLuaVM, void* pUserData, i
 	return 0;
 }
 
-bool CLuaFunctionDefinitions::GetPedClothes( lua_State* pLuaVM, void* pUserData, unsigned char ucType, string& strOutTexture, string& strOutModel )
+bool CLuaFunctionDefinitions::GetPedClothes( lua_State* pLuaVM, PVOID pUserData, unsigned char ucType, string& strOutTexture, string& strOutModel )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2322,7 +2322,7 @@ bool CLuaFunctionDefinitions::GetPedClothes( lua_State* pLuaVM, void* pUserData,
 	return false;
 }
 
-bool CLuaFunctionDefinitions::DoesPedHaveJetPack( lua_State* pLuaVM, void* pUserData, bool& bHasJetPack )
+bool CLuaFunctionDefinitions::DoesPedHaveJetPack( lua_State* pLuaVM, PVOID pUserData, bool& bHasJetPack )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2338,7 +2338,7 @@ bool CLuaFunctionDefinitions::DoesPedHaveJetPack( lua_State* pLuaVM, void* pUser
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsPedOnGround( lua_State* pLuaVM, void* pUserData, bool& bOnGround )
+bool CLuaFunctionDefinitions::IsPedOnGround( lua_State* pLuaVM, PVOID pUserData, bool& bOnGround )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2354,7 +2354,7 @@ bool CLuaFunctionDefinitions::IsPedOnGround( lua_State* pLuaVM, void* pUserData,
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetPedFightingStyle( lua_State* pLuaVM, void* pUserData, unsigned char& ucStyle )
+bool CLuaFunctionDefinitions::GetPedFightingStyle( lua_State* pLuaVM, PVOID pUserData, unsigned char& ucStyle )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2370,7 +2370,7 @@ bool CLuaFunctionDefinitions::GetPedFightingStyle( lua_State* pLuaVM, void* pUse
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetPedMoveAnim( lua_State* pLuaVM, void* pUserData, unsigned int& iMoveAnim )
+bool CLuaFunctionDefinitions::GetPedMoveAnim( lua_State* pLuaVM, PVOID pUserData, unsigned int& iMoveAnim )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2386,7 +2386,7 @@ bool CLuaFunctionDefinitions::GetPedMoveAnim( lua_State* pLuaVM, void* pUserData
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetPedGravity( lua_State* pLuaVM, void* pUserData, float& fGravity )
+bool CLuaFunctionDefinitions::GetPedGravity( lua_State* pLuaVM, PVOID pUserData, float& fGravity )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2402,7 +2402,7 @@ bool CLuaFunctionDefinitions::GetPedGravity( lua_State* pLuaVM, void* pUserData,
 	return false;
 }
 
-void* CLuaFunctionDefinitions::GetPedContactElement( lua_State* pLuaVM, void* pUserData )
+PVOID CLuaFunctionDefinitions::GetPedContactElement( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2418,10 +2418,10 @@ void* CLuaFunctionDefinitions::GetPedContactElement( lua_State* pLuaVM, void* pU
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-bool CLuaFunctionDefinitions::GetPedWeaponSlot( lua_State* pLuaVM, void* pUserData, unsigned char& ucWeaponSlot )
+bool CLuaFunctionDefinitions::GetPedWeaponSlot( lua_State* pLuaVM, PVOID pUserData, unsigned char& ucWeaponSlot )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2437,7 +2437,7 @@ bool CLuaFunctionDefinitions::GetPedWeaponSlot( lua_State* pLuaVM, void* pUserDa
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsPedDoingGangDriveby( lua_State* pLuaVM, void* pUserData, bool & bDoingGangDriveby )
+bool CLuaFunctionDefinitions::IsPedDoingGangDriveby( lua_State* pLuaVM, PVOID pUserData, bool & bDoingGangDriveby )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2453,7 +2453,7 @@ bool CLuaFunctionDefinitions::IsPedDoingGangDriveby( lua_State* pLuaVM, void* pU
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsPedOnFire( lua_State* pLuaVM, void* pUserData, bool & bIsOnFire )
+bool CLuaFunctionDefinitions::IsPedOnFire( lua_State* pLuaVM, PVOID pUserData, bool & bIsOnFire )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2469,7 +2469,7 @@ bool CLuaFunctionDefinitions::IsPedOnFire( lua_State* pLuaVM, void* pUserData, b
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsPedHeadless( lua_State* pLuaVM, void* pUserData, bool & bIsHeadless )
+bool CLuaFunctionDefinitions::IsPedHeadless( lua_State* pLuaVM, PVOID pUserData, bool & bIsHeadless )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2485,7 +2485,7 @@ bool CLuaFunctionDefinitions::IsPedHeadless( lua_State* pLuaVM, void* pUserData,
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsPedFrozen( lua_State* pLuaVM, void* pUserData, bool & bIsFrozen )
+bool CLuaFunctionDefinitions::IsPedFrozen( lua_State* pLuaVM, PVOID pUserData, bool & bIsFrozen )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2501,7 +2501,7 @@ bool CLuaFunctionDefinitions::IsPedFrozen( lua_State* pLuaVM, void* pUserData, b
 	return false;
 }
 
-void* CLuaFunctionDefinitions::GetPedOccupiedVehicle( lua_State* pLuaVM, void* pUserData )
+PVOID CLuaFunctionDefinitions::GetPedOccupiedVehicle( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2517,10 +2517,10 @@ void* CLuaFunctionDefinitions::GetPedOccupiedVehicle( lua_State* pLuaVM, void* p
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-bool CLuaFunctionDefinitions::GetPedOccupiedVehicleSeat( lua_State* pLuaVM, void* pUserData, unsigned int& uiSeat )
+bool CLuaFunctionDefinitions::GetPedOccupiedVehicleSeat( lua_State* pLuaVM, PVOID pUserData, unsigned int& uiSeat )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2536,7 +2536,7 @@ bool CLuaFunctionDefinitions::GetPedOccupiedVehicleSeat( lua_State* pLuaVM, void
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsPedInVehicle( lua_State* pLuaVM, void* pUserData, bool & bIsInVehicle )
+bool CLuaFunctionDefinitions::IsPedInVehicle( lua_State* pLuaVM, PVOID pUserData, bool & bIsInVehicle )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2590,7 +2590,7 @@ bool CLuaFunctionDefinitions::GetOriginalWeaponProperty( lua_State* pLuaVM, unsi
 
 // Ped set functions
 
-bool CLuaFunctionDefinitions::SetPedArmor( lua_State* pLuaVM, void* pUserData, float fArmor )
+bool CLuaFunctionDefinitions::SetPedArmor( lua_State* pLuaVM, PVOID pUserData, float fArmor )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2607,7 +2607,7 @@ bool CLuaFunctionDefinitions::SetPedArmor( lua_State* pLuaVM, void* pUserData, f
 	return false;
 }
 
-bool CLuaFunctionDefinitions::KillPed( lua_State* pLuaVM, void* pUserData, void* pKiller, unsigned char ucKillerWeapon, unsigned char ucBodyPart, bool bStealth )
+bool CLuaFunctionDefinitions::KillPed( lua_State* pLuaVM, PVOID pUserData, PVOID pKiller, unsigned char ucKillerWeapon, unsigned char ucBodyPart, bool bStealth )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2627,7 +2627,7 @@ bool CLuaFunctionDefinitions::KillPed( lua_State* pLuaVM, void* pUserData, void*
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetPedStat( lua_State* pLuaVM, void* pUserData, unsigned short usStat, float fValue )
+bool CLuaFunctionDefinitions::SetPedStat( lua_State* pLuaVM, PVOID pUserData, unsigned short usStat, float fValue )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2645,7 +2645,7 @@ bool CLuaFunctionDefinitions::SetPedStat( lua_State* pLuaVM, void* pUserData, un
 	return false;
 }
 
-bool CLuaFunctionDefinitions::AddPedClothes( lua_State* pLuaVM, void* pUserData, const char* szTexture, const char* szModel, unsigned char ucType )
+bool CLuaFunctionDefinitions::AddPedClothes( lua_State* pLuaVM, PVOID pUserData, const char* szTexture, const char* szModel, unsigned char ucType )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2664,7 +2664,7 @@ bool CLuaFunctionDefinitions::AddPedClothes( lua_State* pLuaVM, void* pUserData,
 	return false;
 }
 
-bool CLuaFunctionDefinitions::RemovePedClothes( lua_State* pLuaVM, void* pUserData, unsigned char ucType, const char* szTexture, const char* szModel )
+bool CLuaFunctionDefinitions::RemovePedClothes( lua_State* pLuaVM, PVOID pUserData, unsigned char ucType, const char* szTexture, const char* szModel )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2683,7 +2683,7 @@ bool CLuaFunctionDefinitions::RemovePedClothes( lua_State* pLuaVM, void* pUserDa
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GivePedJetPack( lua_State* pLuaVM, void* pUserData )
+bool CLuaFunctionDefinitions::GivePedJetPack( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2699,7 +2699,7 @@ bool CLuaFunctionDefinitions::GivePedJetPack( lua_State* pLuaVM, void* pUserData
 	return false;
 }
 
-bool CLuaFunctionDefinitions::RemovePedJetPack( lua_State* pLuaVM, void* pUserData )
+bool CLuaFunctionDefinitions::RemovePedJetPack( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2715,7 +2715,7 @@ bool CLuaFunctionDefinitions::RemovePedJetPack( lua_State* pLuaVM, void* pUserDa
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetPedFightingStyle( lua_State* pLuaVM, void* pUserData, unsigned char ucStyle )
+bool CLuaFunctionDefinitions::SetPedFightingStyle( lua_State* pLuaVM, PVOID pUserData, unsigned char ucStyle )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2732,7 +2732,7 @@ bool CLuaFunctionDefinitions::SetPedFightingStyle( lua_State* pLuaVM, void* pUse
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetPedMoveAnim( lua_State* pLuaVM, void* pUserData, unsigned int iMoveAnim )
+bool CLuaFunctionDefinitions::SetPedMoveAnim( lua_State* pLuaVM, PVOID pUserData, unsigned int iMoveAnim )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2749,7 +2749,7 @@ bool CLuaFunctionDefinitions::SetPedMoveAnim( lua_State* pLuaVM, void* pUserData
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetPedGravity( lua_State* pLuaVM, void* pUserData, float fGravity )
+bool CLuaFunctionDefinitions::SetPedGravity( lua_State* pLuaVM, PVOID pUserData, float fGravity )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2766,7 +2766,7 @@ bool CLuaFunctionDefinitions::SetPedGravity( lua_State* pLuaVM, void* pUserData,
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetPedChoking( lua_State* pLuaVM, void* pUserData, bool bChoking )
+bool CLuaFunctionDefinitions::SetPedChoking( lua_State* pLuaVM, PVOID pUserData, bool bChoking )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2783,7 +2783,7 @@ bool CLuaFunctionDefinitions::SetPedChoking( lua_State* pLuaVM, void* pUserData,
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetPedWeaponSlot( lua_State* pLuaVM, void* pUserData, unsigned char ucWeaponSlot )
+bool CLuaFunctionDefinitions::SetPedWeaponSlot( lua_State* pLuaVM, PVOID pUserData, unsigned char ucWeaponSlot )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2800,7 +2800,7 @@ bool CLuaFunctionDefinitions::SetPedWeaponSlot( lua_State* pLuaVM, void* pUserDa
 	return false;
 }
 
-bool CLuaFunctionDefinitions::WarpPedIntoVehicle( lua_State* pLuaVM, void* pUserData, void* pVehicle, unsigned int uiSeat )
+bool CLuaFunctionDefinitions::WarpPedIntoVehicle( lua_State* pLuaVM, PVOID pUserData, PVOID pVehicle, unsigned int uiSeat )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2818,7 +2818,7 @@ bool CLuaFunctionDefinitions::WarpPedIntoVehicle( lua_State* pLuaVM, void* pUser
 	return false;
 }
 
-bool CLuaFunctionDefinitions::RemovePedFromVehicle( lua_State* pLuaVM, void* pUserData )
+bool CLuaFunctionDefinitions::RemovePedFromVehicle( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2834,7 +2834,7 @@ bool CLuaFunctionDefinitions::RemovePedFromVehicle( lua_State* pLuaVM, void* pUs
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetPedDoingGangDriveby( lua_State* pLuaVM, void* pUserData, bool bGangDriveby )
+bool CLuaFunctionDefinitions::SetPedDoingGangDriveby( lua_State* pLuaVM, PVOID pUserData, bool bGangDriveby )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2851,7 +2851,7 @@ bool CLuaFunctionDefinitions::SetPedDoingGangDriveby( lua_State* pLuaVM, void* p
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetPedAnimation( lua_State* pLuaVM, void* pUserData, const char * szBlockName, const char * szAnimName, int iTime, bool bLoop, bool bUpdatePosition, bool bInterruptable, bool bFreezeLastFrame )
+bool CLuaFunctionDefinitions::SetPedAnimation( lua_State* pLuaVM, PVOID pUserData, const char * szBlockName, const char * szAnimName, int iTime, bool bLoop, bool bUpdatePosition, bool bInterruptable, bool bFreezeLastFrame )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2874,7 +2874,7 @@ bool CLuaFunctionDefinitions::SetPedAnimation( lua_State* pLuaVM, void* pUserDat
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetPedAnimationProgress( lua_State* pLuaVM, void* pUserData, const char * szAnimName, float fProgress )
+bool CLuaFunctionDefinitions::SetPedAnimationProgress( lua_State* pLuaVM, PVOID pUserData, const char * szAnimName, float fProgress )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2892,7 +2892,7 @@ bool CLuaFunctionDefinitions::SetPedAnimationProgress( lua_State* pLuaVM, void* 
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetPedOnFire( lua_State* pLuaVM, void* pUserData, bool bIsOnFire )
+bool CLuaFunctionDefinitions::SetPedOnFire( lua_State* pLuaVM, PVOID pUserData, bool bIsOnFire )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2909,7 +2909,7 @@ bool CLuaFunctionDefinitions::SetPedOnFire( lua_State* pLuaVM, void* pUserData, 
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetPedHeadless( lua_State* pLuaVM, void* pUserData, bool bIsHeadless )
+bool CLuaFunctionDefinitions::SetPedHeadless( lua_State* pLuaVM, PVOID pUserData, bool bIsHeadless )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2926,7 +2926,7 @@ bool CLuaFunctionDefinitions::SetPedHeadless( lua_State* pLuaVM, void* pUserData
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetPedFrozen( lua_State* pLuaVM, void* pUserData, bool bIsFrozen )
+bool CLuaFunctionDefinitions::SetPedFrozen( lua_State* pLuaVM, PVOID pUserData, bool bIsFrozen )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2943,7 +2943,7 @@ bool CLuaFunctionDefinitions::SetPedFrozen( lua_State* pLuaVM, void* pUserData, 
 	return false;
 }
 
-bool CLuaFunctionDefinitions::ReloadPedWeapon( lua_State* pLuaVM, void* pUserData )
+bool CLuaFunctionDefinitions::ReloadPedWeapon( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -2978,7 +2978,7 @@ bool CLuaFunctionDefinitions::SetWeaponProperty( lua_State* pLuaVM, unsigned cha
 
 // Vehicle create/destroy functions
 
-void* CLuaFunctionDefinitions::CreateVehicle( lua_State* pLuaVM, int model, float fX, float fY, float fZ, float fRX, float fRY, float fRZ, string numberplate, bool direction, int variant1, int variant2 )
+PVOID CLuaFunctionDefinitions::CreateVehicle( lua_State* pLuaVM, int model, float fX, float fY, float fZ, float fRX, float fRY, float fRZ, string numberplate, bool direction, int variant1, int variant2 )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3008,12 +3008,12 @@ void* CLuaFunctionDefinitions::CreateVehicle( lua_State* pLuaVM, int model, floa
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // Vehicle get functions
 
-bool CLuaFunctionDefinitions::GetVehicleType( lua_State* pLuaVM, void* pUserData, string& strType )
+bool CLuaFunctionDefinitions::GetVehicleType( lua_State* pLuaVM, PVOID pUserData, string& strType )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3029,7 +3029,7 @@ bool CLuaFunctionDefinitions::GetVehicleType( lua_State* pLuaVM, void* pUserData
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetVehicleVariant( lua_State* pLuaVM, void* pUserData, unsigned char& ucVariant, unsigned char& ucVariant2 )
+bool CLuaFunctionDefinitions::GetVehicleVariant( lua_State* pLuaVM, PVOID pUserData, unsigned char& ucVariant, unsigned char& ucVariant2 )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3046,7 +3046,7 @@ bool CLuaFunctionDefinitions::GetVehicleVariant( lua_State* pLuaVM, void* pUserD
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetVehicleColor( lua_State* pLuaVM, void* pUserData, CVehicleColor& color )
+bool CLuaFunctionDefinitions::GetVehicleColor( lua_State* pLuaVM, PVOID pUserData, CVehicleColor& color )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3098,7 +3098,7 @@ bool CLuaFunctionDefinitions::GetVehicleModelFromName( lua_State* pLuaVM, const 
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetVehicleLandingGearDown( lua_State* pLuaVM, void* pUserData, bool& bGearDown )
+bool CLuaFunctionDefinitions::GetVehicleLandingGearDown( lua_State* pLuaVM, PVOID pUserData, bool& bGearDown )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3114,7 +3114,7 @@ bool CLuaFunctionDefinitions::GetVehicleLandingGearDown( lua_State* pLuaVM, void
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetVehicleMaxPassengers( lua_State* pLuaVM, void* pUserData, unsigned char& ucMaxPassengers )
+bool CLuaFunctionDefinitions::GetVehicleMaxPassengers( lua_State* pLuaVM, PVOID pUserData, unsigned char& ucMaxPassengers )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3130,7 +3130,7 @@ bool CLuaFunctionDefinitions::GetVehicleMaxPassengers( lua_State* pLuaVM, void* 
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetVehicleName( lua_State* pLuaVM, void* pUserData, string& strOutName )
+bool CLuaFunctionDefinitions::GetVehicleName( lua_State* pLuaVM, PVOID pUserData, string& strOutName )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3162,7 +3162,7 @@ bool CLuaFunctionDefinitions::GetVehicleNameFromModel( lua_State* pLuaVM, unsign
 	return false;
 }
 
-void* CLuaFunctionDefinitions::GetVehicleOccupant( lua_State* pLuaVM, void* pUserData, unsigned int uiSeat )
+PVOID CLuaFunctionDefinitions::GetVehicleOccupant( lua_State* pLuaVM, PVOID pUserData, unsigned int uiSeat )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3179,10 +3179,10 @@ void* CLuaFunctionDefinitions::GetVehicleOccupant( lua_State* pLuaVM, void* pUse
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-CLuaArguments* CLuaFunctionDefinitions::GetVehicleOccupants( lua_State* pLuaVM, void* pUserData )
+CLuaArguments* CLuaFunctionDefinitions::GetVehicleOccupants( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3193,10 +3193,10 @@ CLuaArguments* CLuaFunctionDefinitions::GetVehicleOccupants( lua_State* pLuaVM, 
 		return CLuaArgument( pLuaVM, -1 ).GetArray();
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-void* CLuaFunctionDefinitions::GetVehicleController( lua_State* pLuaVM, void* pUserData )
+PVOID CLuaFunctionDefinitions::GetVehicleController( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3212,10 +3212,10 @@ void* CLuaFunctionDefinitions::GetVehicleController( lua_State* pLuaVM, void* pU
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-bool CLuaFunctionDefinitions::GetVehicleSirensOn( lua_State* pLuaVM, void* pUserData, bool& bSirensOn )
+bool CLuaFunctionDefinitions::GetVehicleSirensOn( lua_State* pLuaVM, PVOID pUserData, bool& bSirensOn )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3231,7 +3231,7 @@ bool CLuaFunctionDefinitions::GetVehicleSirensOn( lua_State* pLuaVM, void* pUser
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetVehicleTurnVelocity( lua_State* pLuaVM, void* pUserData, Vector3& vecTurnVelocity )
+bool CLuaFunctionDefinitions::GetVehicleTurnVelocity( lua_State* pLuaVM, PVOID pUserData, Vector3& vecTurnVelocity )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3249,7 +3249,7 @@ bool CLuaFunctionDefinitions::GetVehicleTurnVelocity( lua_State* pLuaVM, void* p
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetVehicleTurretPosition( lua_State* pLuaVM, void* pUserData, Vector2& vecPosition )
+bool CLuaFunctionDefinitions::GetVehicleTurretPosition( lua_State* pLuaVM, PVOID pUserData, Vector2& vecPosition )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3266,7 +3266,7 @@ bool CLuaFunctionDefinitions::GetVehicleTurretPosition( lua_State* pLuaVM, void*
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsVehicleLocked( lua_State* pLuaVM, void* pUserData, bool& bLocked )
+bool CLuaFunctionDefinitions::IsVehicleLocked( lua_State* pLuaVM, PVOID pUserData, bool& bLocked )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3293,10 +3293,10 @@ CLuaArguments* CLuaFunctionDefinitions::GetVehiclesOfType( lua_State* pLuaVM, un
 		return CLuaArgument( pLuaVM, -1 ).GetArray();
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-bool CLuaFunctionDefinitions::GetVehicleUpgradeOnSlot( lua_State* pLuaVM, void* pUserData, unsigned char ucSlot, unsigned short& usUpgrade )
+bool CLuaFunctionDefinitions::GetVehicleUpgradeOnSlot( lua_State* pLuaVM, PVOID pUserData, unsigned char ucSlot, unsigned short& usUpgrade )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3313,7 +3313,7 @@ bool CLuaFunctionDefinitions::GetVehicleUpgradeOnSlot( lua_State* pLuaVM, void* 
 	return false;
 }
 
-CLuaArguments* CLuaFunctionDefinitions::GetVehicleUpgrades( lua_State* pLuaVM, void* pUserData )
+CLuaArguments* CLuaFunctionDefinitions::GetVehicleUpgrades( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3324,7 +3324,7 @@ CLuaArguments* CLuaFunctionDefinitions::GetVehicleUpgrades( lua_State* pLuaVM, v
 		return CLuaArgument( pLuaVM, -1 ).GetArray();
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 bool CLuaFunctionDefinitions::GetVehicleUpgradeSlotName( lua_State* pLuaVM, unsigned char ucSlot, string& strOutName )
@@ -3359,7 +3359,7 @@ bool CLuaFunctionDefinitions::GetVehicleUpgradeSlotName( lua_State* pLuaVM, unsi
 	return false;
 }
 
-CLuaArguments* CLuaFunctionDefinitions::GetVehicleCompatibleUpgrades( lua_State* pLuaVM, void* pUserData )
+CLuaArguments* CLuaFunctionDefinitions::GetVehicleCompatibleUpgrades( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3370,10 +3370,10 @@ CLuaArguments* CLuaFunctionDefinitions::GetVehicleCompatibleUpgrades( lua_State*
 		return CLuaArgument( pLuaVM, -1 ).GetArray();
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-bool CLuaFunctionDefinitions::GetVehicleDoorState( lua_State* pLuaVM, void* pUserData, unsigned char ucDoor, unsigned char& ucState )
+bool CLuaFunctionDefinitions::GetVehicleDoorState( lua_State* pLuaVM, PVOID pUserData, unsigned char ucDoor, unsigned char& ucState )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3390,7 +3390,7 @@ bool CLuaFunctionDefinitions::GetVehicleDoorState( lua_State* pLuaVM, void* pUse
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetVehicleWheelStates( lua_State* pLuaVM, void* pUserData, unsigned char& ucFrontLeft, unsigned char& ucRearLeft, unsigned char& ucFrontRight, unsigned char& ucRearRight )
+bool CLuaFunctionDefinitions::GetVehicleWheelStates( lua_State* pLuaVM, PVOID pUserData, unsigned char& ucFrontLeft, unsigned char& ucRearLeft, unsigned char& ucFrontRight, unsigned char& ucRearRight )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3409,7 +3409,7 @@ bool CLuaFunctionDefinitions::GetVehicleWheelStates( lua_State* pLuaVM, void* pU
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetVehicleLightState( lua_State* pLuaVM, void* pUserData, unsigned char ucLight, unsigned char& ucState )
+bool CLuaFunctionDefinitions::GetVehicleLightState( lua_State* pLuaVM, PVOID pUserData, unsigned char ucLight, unsigned char& ucState )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3426,7 +3426,7 @@ bool CLuaFunctionDefinitions::GetVehicleLightState( lua_State* pLuaVM, void* pUs
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetVehiclePanelState( lua_State* pLuaVM, void* pUserData, unsigned char ucPanel, unsigned char& ucState )
+bool CLuaFunctionDefinitions::GetVehiclePanelState( lua_State* pLuaVM, PVOID pUserData, unsigned char ucPanel, unsigned char& ucState )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3443,7 +3443,7 @@ bool CLuaFunctionDefinitions::GetVehiclePanelState( lua_State* pLuaVM, void* pUs
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetVehicleOverrideLights( lua_State* pLuaVM, void* pUserData, unsigned char& ucLights )
+bool CLuaFunctionDefinitions::GetVehicleOverrideLights( lua_State* pLuaVM, PVOID pUserData, unsigned char& ucLights )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3459,7 +3459,7 @@ bool CLuaFunctionDefinitions::GetVehicleOverrideLights( lua_State* pLuaVM, void*
 	return false;
 }
 
-void* CLuaFunctionDefinitions::GetVehicleTowedByVehicle( lua_State* pLuaVM, void* pUserData )
+PVOID CLuaFunctionDefinitions::GetVehicleTowedByVehicle( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3475,10 +3475,10 @@ void* CLuaFunctionDefinitions::GetVehicleTowedByVehicle( lua_State* pLuaVM, void
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-void* CLuaFunctionDefinitions::GetVehicleTowingVehicle( lua_State* pLuaVM, void* pUserData )
+PVOID CLuaFunctionDefinitions::GetVehicleTowingVehicle( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3494,10 +3494,10 @@ void* CLuaFunctionDefinitions::GetVehicleTowingVehicle( lua_State* pLuaVM, void*
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-bool CLuaFunctionDefinitions::GetVehiclePaintjob( lua_State* pLuaVM, void* pUserData, unsigned char& ucPaintjob )
+bool CLuaFunctionDefinitions::GetVehiclePaintjob( lua_State* pLuaVM, PVOID pUserData, unsigned char& ucPaintjob )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3513,7 +3513,7 @@ bool CLuaFunctionDefinitions::GetVehiclePaintjob( lua_State* pLuaVM, void* pUser
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetVehiclePlateText( lua_State* pLuaVM, void* pUserData, char* szPlateText )
+bool CLuaFunctionDefinitions::GetVehiclePlateText( lua_State* pLuaVM, PVOID pUserData, char* szPlateText )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3531,7 +3531,7 @@ bool CLuaFunctionDefinitions::GetVehiclePlateText( lua_State* pLuaVM, void* pUse
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsVehicleDamageProof( lua_State* pLuaVM, void* pUserData, bool& bDamageProof )
+bool CLuaFunctionDefinitions::IsVehicleDamageProof( lua_State* pLuaVM, PVOID pUserData, bool& bDamageProof )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3547,7 +3547,7 @@ bool CLuaFunctionDefinitions::IsVehicleDamageProof( lua_State* pLuaVM, void* pUs
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsVehicleFuelTankExplodable( lua_State* pLuaVM, void* pUserData, bool& bExplodable )
+bool CLuaFunctionDefinitions::IsVehicleFuelTankExplodable( lua_State* pLuaVM, PVOID pUserData, bool& bExplodable )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3565,7 +3565,7 @@ bool CLuaFunctionDefinitions::IsVehicleFuelTankExplodable( lua_State* pLuaVM, vo
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsVehicleFrozen( lua_State* pLuaVM, void* pUserData, bool& bFrozen )
+bool CLuaFunctionDefinitions::IsVehicleFrozen( lua_State* pLuaVM, PVOID pUserData, bool& bFrozen )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3583,7 +3583,7 @@ bool CLuaFunctionDefinitions::IsVehicleFrozen( lua_State* pLuaVM, void* pUserDat
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsVehicleOnGround( lua_State* pLuaVM, void* pUserData, bool& bOnGround )
+bool CLuaFunctionDefinitions::IsVehicleOnGround( lua_State* pLuaVM, PVOID pUserData, bool& bOnGround )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3601,7 +3601,7 @@ bool CLuaFunctionDefinitions::IsVehicleOnGround( lua_State* pLuaVM, void* pUserD
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetVehicleEngineState( lua_State* pLuaVM, void* pUserData, bool& bState )
+bool CLuaFunctionDefinitions::GetVehicleEngineState( lua_State* pLuaVM, PVOID pUserData, bool& bState )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3619,7 +3619,7 @@ bool CLuaFunctionDefinitions::GetVehicleEngineState( lua_State* pLuaVM, void* pU
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsTrainDerailed( lua_State* pLuaVM, void* pUserData, bool& bDerailed )
+bool CLuaFunctionDefinitions::IsTrainDerailed( lua_State* pLuaVM, PVOID pUserData, bool& bDerailed )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3637,7 +3637,7 @@ bool CLuaFunctionDefinitions::IsTrainDerailed( lua_State* pLuaVM, void* pUserDat
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsTrainDerailable( lua_State* pLuaVM, void* pUserData, bool& bDerailable )
+bool CLuaFunctionDefinitions::IsTrainDerailable( lua_State* pLuaVM, PVOID pUserData, bool& bDerailable )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3655,7 +3655,7 @@ bool CLuaFunctionDefinitions::IsTrainDerailable( lua_State* pLuaVM, void* pUserD
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetTrainDirection( lua_State* pLuaVM, void* pUserData, bool& bDirection )
+bool CLuaFunctionDefinitions::GetTrainDirection( lua_State* pLuaVM, PVOID pUserData, bool& bDirection )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3673,7 +3673,7 @@ bool CLuaFunctionDefinitions::GetTrainDirection( lua_State* pLuaVM, void* pUserD
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetTrainSpeed( lua_State* pLuaVM, void* pUserData, float& fSpeed )
+bool CLuaFunctionDefinitions::GetTrainSpeed( lua_State* pLuaVM, PVOID pUserData, float& fSpeed )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3691,7 +3691,7 @@ bool CLuaFunctionDefinitions::GetTrainSpeed( lua_State* pLuaVM, void* pUserData,
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsVehicleBlown( lua_State* pLuaVM, void* pUserData )
+bool CLuaFunctionDefinitions::IsVehicleBlown( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3707,7 +3707,7 @@ bool CLuaFunctionDefinitions::IsVehicleBlown( lua_State* pLuaVM, void* pUserData
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetVehicleHeadLightColor( lua_State* pLuaVM, void* pUserData, SColor& outColor )
+bool CLuaFunctionDefinitions::GetVehicleHeadLightColor( lua_State* pLuaVM, PVOID pUserData, SColor& outColor )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3725,7 +3725,7 @@ bool CLuaFunctionDefinitions::GetVehicleHeadLightColor( lua_State* pLuaVM, void*
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetVehicleDoorOpenRatio( lua_State* pLuaVM, void* pUserData, unsigned char ucDoor, float& fRatio )
+bool CLuaFunctionDefinitions::GetVehicleDoorOpenRatio( lua_State* pLuaVM, PVOID pUserData, unsigned char ucDoor, float& fRatio )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3744,7 +3744,7 @@ bool CLuaFunctionDefinitions::GetVehicleDoorOpenRatio( lua_State* pLuaVM, void* 
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsVehicleTaxiLightOn( lua_State* pLuaVM, void* pUserData, bool& bLightOn )
+bool CLuaFunctionDefinitions::IsVehicleTaxiLightOn( lua_State* pLuaVM, PVOID pUserData, bool& bLightOn )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3764,7 +3764,7 @@ bool CLuaFunctionDefinitions::IsVehicleTaxiLightOn( lua_State* pLuaVM, void* pUs
 
 // Vehicle set functions
 
-bool CLuaFunctionDefinitions::FixVehicle( lua_State* pLuaVM, void* pUserData )
+bool CLuaFunctionDefinitions::FixVehicle( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3780,7 +3780,7 @@ bool CLuaFunctionDefinitions::FixVehicle( lua_State* pLuaVM, void* pUserData )
 	return false;
 }
 
-bool CLuaFunctionDefinitions::BlowVehicle( lua_State* pLuaVM, void* pUserData, bool bExplode )
+bool CLuaFunctionDefinitions::BlowVehicle( lua_State* pLuaVM, PVOID pUserData, bool bExplode )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3797,7 +3797,7 @@ bool CLuaFunctionDefinitions::BlowVehicle( lua_State* pLuaVM, void* pUserData, b
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetVehicleTurnVelocity( lua_State* pLuaVM, void* pUserData, float fX, float fY, float fZ )
+bool CLuaFunctionDefinitions::SetVehicleTurnVelocity( lua_State* pLuaVM, PVOID pUserData, float fX, float fY, float fZ )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3816,7 +3816,7 @@ bool CLuaFunctionDefinitions::SetVehicleTurnVelocity( lua_State* pLuaVM, void* p
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetVehicleColor( lua_State* pLuaVM, void* pUserData, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue, unsigned char ucRed2, unsigned char ucGreen2, unsigned char ucBlue2, unsigned char ucRed3, unsigned char ucGreen3, unsigned char ucBlue3, unsigned char ucRed4, unsigned char ucGreen4, unsigned char ucBlue4 )
+bool CLuaFunctionDefinitions::SetVehicleColor( lua_State* pLuaVM, PVOID pUserData, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue, unsigned char ucRed2, unsigned char ucGreen2, unsigned char ucBlue2, unsigned char ucRed3, unsigned char ucGreen3, unsigned char ucBlue3, unsigned char ucRed4, unsigned char ucGreen4, unsigned char ucBlue4 )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3848,7 +3848,7 @@ bool CLuaFunctionDefinitions::SetVehicleColor( lua_State* pLuaVM, void* pUserDat
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetVehicleLandingGearDown( lua_State* pLuaVM, void* pUserData, bool bLandingGearDown )
+bool CLuaFunctionDefinitions::SetVehicleLandingGearDown( lua_State* pLuaVM, PVOID pUserData, bool bLandingGearDown )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3865,7 +3865,7 @@ bool CLuaFunctionDefinitions::SetVehicleLandingGearDown( lua_State* pLuaVM, void
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetVehicleLocked( lua_State* pLuaVM, void* pUserData, bool bLocked )
+bool CLuaFunctionDefinitions::SetVehicleLocked( lua_State* pLuaVM, PVOID pUserData, bool bLocked )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3882,7 +3882,7 @@ bool CLuaFunctionDefinitions::SetVehicleLocked( lua_State* pLuaVM, void* pUserDa
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetVehicleDoorsUndamageable( lua_State* pLuaVM, void* pUserData, bool bDoorsUndamageable )
+bool CLuaFunctionDefinitions::SetVehicleDoorsUndamageable( lua_State* pLuaVM, PVOID pUserData, bool bDoorsUndamageable )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3899,7 +3899,7 @@ bool CLuaFunctionDefinitions::SetVehicleDoorsUndamageable( lua_State* pLuaVM, vo
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetVehicleSirensOn( lua_State* pLuaVM, void* pUserData, bool bSirensOn )
+bool CLuaFunctionDefinitions::SetVehicleSirensOn( lua_State* pLuaVM, PVOID pUserData, bool bSirensOn )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3916,7 +3916,7 @@ bool CLuaFunctionDefinitions::SetVehicleSirensOn( lua_State* pLuaVM, void* pUser
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetVehicleTaxiLightOn( lua_State* pLuaVM, void* pUserData, bool bTaxiLightState )
+bool CLuaFunctionDefinitions::SetVehicleTaxiLightOn( lua_State* pLuaVM, PVOID pUserData, bool bTaxiLightState )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3933,7 +3933,7 @@ bool CLuaFunctionDefinitions::SetVehicleTaxiLightOn( lua_State* pLuaVM, void* pU
 	return false;
 }
 
-bool CLuaFunctionDefinitions::AddVehicleUpgrade( lua_State* pLuaVM, void* pUserData, unsigned short usUpgrade )
+bool CLuaFunctionDefinitions::AddVehicleUpgrade( lua_State* pLuaVM, PVOID pUserData, unsigned short usUpgrade )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3950,7 +3950,7 @@ bool CLuaFunctionDefinitions::AddVehicleUpgrade( lua_State* pLuaVM, void* pUserD
 	return false;
 }
 
-bool CLuaFunctionDefinitions::RemoveVehicleUpgrade( lua_State* pLuaVM, void* pUserData, unsigned short usUpgrade )
+bool CLuaFunctionDefinitions::RemoveVehicleUpgrade( lua_State* pLuaVM, PVOID pUserData, unsigned short usUpgrade )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3967,7 +3967,7 @@ bool CLuaFunctionDefinitions::RemoveVehicleUpgrade( lua_State* pLuaVM, void* pUs
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetVehicleDoorState( lua_State* pLuaVM, void* pUserData, unsigned char ucDoor, unsigned char ucState )
+bool CLuaFunctionDefinitions::SetVehicleDoorState( lua_State* pLuaVM, PVOID pUserData, unsigned char ucDoor, unsigned char ucState )
 {
 	CLuaArguments pLuaArguments;
 
@@ -3985,7 +3985,7 @@ bool CLuaFunctionDefinitions::SetVehicleDoorState( lua_State* pLuaVM, void* pUse
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetVehicleWheelStates( lua_State* pLuaVM, void* pUserData, int iFrontLeft, int iRearLeft, int iFrontRight, int iRearRight )
+bool CLuaFunctionDefinitions::SetVehicleWheelStates( lua_State* pLuaVM, PVOID pUserData, int iFrontLeft, int iRearLeft, int iFrontRight, int iRearRight )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4005,7 +4005,7 @@ bool CLuaFunctionDefinitions::SetVehicleWheelStates( lua_State* pLuaVM, void* pU
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetVehicleLightState( lua_State* pLuaVM, void* pUserData, unsigned char ucLight, unsigned char ucState )
+bool CLuaFunctionDefinitions::SetVehicleLightState( lua_State* pLuaVM, PVOID pUserData, unsigned char ucLight, unsigned char ucState )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4023,7 +4023,7 @@ bool CLuaFunctionDefinitions::SetVehicleLightState( lua_State* pLuaVM, void* pUs
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetVehiclePanelState( lua_State* pLuaVM, void* pUserData, unsigned char ucPanel, unsigned char ucState )
+bool CLuaFunctionDefinitions::SetVehiclePanelState( lua_State* pLuaVM, PVOID pUserData, unsigned char ucPanel, unsigned char ucState )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4041,7 +4041,7 @@ bool CLuaFunctionDefinitions::SetVehiclePanelState( lua_State* pLuaVM, void* pUs
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetVehicleIdleRespawnDelay( lua_State* pLuaVM, void* pUserData, unsigned long ulTime )
+bool CLuaFunctionDefinitions::SetVehicleIdleRespawnDelay( lua_State* pLuaVM, PVOID pUserData, unsigned long ulTime )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4058,7 +4058,7 @@ bool CLuaFunctionDefinitions::SetVehicleIdleRespawnDelay( lua_State* pLuaVM, voi
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetVehicleRespawnDelay( lua_State* pLuaVM, void* pUserData, unsigned long ulTime )
+bool CLuaFunctionDefinitions::SetVehicleRespawnDelay( lua_State* pLuaVM, PVOID pUserData, unsigned long ulTime )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4075,7 +4075,7 @@ bool CLuaFunctionDefinitions::SetVehicleRespawnDelay( lua_State* pLuaVM, void* p
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetVehicleRespawnPosition( lua_State* pLuaVM, void* pUserData, float fX, float fY, float fZ, float fRX, float fRY, float fRZ )
+bool CLuaFunctionDefinitions::SetVehicleRespawnPosition( lua_State* pLuaVM, PVOID pUserData, float fX, float fY, float fZ, float fRX, float fRY, float fRZ )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4097,7 +4097,7 @@ bool CLuaFunctionDefinitions::SetVehicleRespawnPosition( lua_State* pLuaVM, void
 	return false;
 }
 
-bool CLuaFunctionDefinitions::ToggleVehicleRespawn( lua_State* pLuaVM, void* pUserData, bool bRespawn )
+bool CLuaFunctionDefinitions::ToggleVehicleRespawn( lua_State* pLuaVM, PVOID pUserData, bool bRespawn )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4114,7 +4114,7 @@ bool CLuaFunctionDefinitions::ToggleVehicleRespawn( lua_State* pLuaVM, void* pUs
 	return false;
 }
 
-bool CLuaFunctionDefinitions::ResetVehicleExplosionTime( lua_State* pLuaVM, void* pUserData )
+bool CLuaFunctionDefinitions::ResetVehicleExplosionTime( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4130,7 +4130,7 @@ bool CLuaFunctionDefinitions::ResetVehicleExplosionTime( lua_State* pLuaVM, void
 	return false;
 }
 
-bool CLuaFunctionDefinitions::ResetVehicleIdleTime( lua_State* pLuaVM, void* pUserData )
+bool CLuaFunctionDefinitions::ResetVehicleIdleTime( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4146,7 +4146,7 @@ bool CLuaFunctionDefinitions::ResetVehicleIdleTime( lua_State* pLuaVM, void* pUs
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SpawnVehicle( lua_State* pLuaVM, void* pUserData, float fX, float fY, float fZ, float fRX, float fRY, float fRZ )
+bool CLuaFunctionDefinitions::SpawnVehicle( lua_State* pLuaVM, PVOID pUserData, float fX, float fY, float fZ, float fRX, float fRY, float fRZ )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4168,7 +4168,7 @@ bool CLuaFunctionDefinitions::SpawnVehicle( lua_State* pLuaVM, void* pUserData, 
 	return false;
 }
 
-bool CLuaFunctionDefinitions::RespawnVehicle( lua_State* pLuaVM, void* pUserData )
+bool CLuaFunctionDefinitions::RespawnVehicle( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4184,7 +4184,7 @@ bool CLuaFunctionDefinitions::RespawnVehicle( lua_State* pLuaVM, void* pUserData
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetVehicleOverrideLights( lua_State* pLuaVM, void* pUserData, unsigned char ucLights )
+bool CLuaFunctionDefinitions::SetVehicleOverrideLights( lua_State* pLuaVM, PVOID pUserData, unsigned char ucLights )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4201,7 +4201,7 @@ bool CLuaFunctionDefinitions::SetVehicleOverrideLights( lua_State* pLuaVM, void*
 	return false;
 }
 
-bool CLuaFunctionDefinitions::AttachTrailerToVehicle( lua_State* pLuaVM, void* pUserData, void* pTrailer )
+bool CLuaFunctionDefinitions::AttachTrailerToVehicle( lua_State* pLuaVM, PVOID pUserData, PVOID pTrailer )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4218,7 +4218,7 @@ bool CLuaFunctionDefinitions::AttachTrailerToVehicle( lua_State* pLuaVM, void* p
 	return false;
 }
 
-bool CLuaFunctionDefinitions::DetachTrailerFromVehicle( lua_State* pLuaVM, void* pUserData, void* pTrailer )
+bool CLuaFunctionDefinitions::DetachTrailerFromVehicle( lua_State* pLuaVM, PVOID pUserData, PVOID pTrailer )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4239,7 +4239,7 @@ bool CLuaFunctionDefinitions::DetachTrailerFromVehicle( lua_State* pLuaVM, void*
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetVehicleEngineState( lua_State* pLuaVM, void* pUserData, bool bState )
+bool CLuaFunctionDefinitions::SetVehicleEngineState( lua_State* pLuaVM, PVOID pUserData, bool bState )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4256,7 +4256,7 @@ bool CLuaFunctionDefinitions::SetVehicleEngineState( lua_State* pLuaVM, void* pU
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetVehicleDirtLevel( lua_State* pLuaVM, void* pUserData, float fDirtLevel )
+bool CLuaFunctionDefinitions::SetVehicleDirtLevel( lua_State* pLuaVM, PVOID pUserData, float fDirtLevel )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4273,7 +4273,7 @@ bool CLuaFunctionDefinitions::SetVehicleDirtLevel( lua_State* pLuaVM, void* pUse
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetVehicleDamageProof( lua_State* pLuaVM, void* pUserData, bool bDamageProof )
+bool CLuaFunctionDefinitions::SetVehicleDamageProof( lua_State* pLuaVM, PVOID pUserData, bool bDamageProof )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4290,7 +4290,7 @@ bool CLuaFunctionDefinitions::SetVehicleDamageProof( lua_State* pLuaVM, void* pU
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetVehiclePaintjob( lua_State* pLuaVM, void* pUserData, unsigned char ucPaintjob )
+bool CLuaFunctionDefinitions::SetVehiclePaintjob( lua_State* pLuaVM, PVOID pUserData, unsigned char ucPaintjob )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4307,7 +4307,7 @@ bool CLuaFunctionDefinitions::SetVehiclePaintjob( lua_State* pLuaVM, void* pUser
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetVehicleFuelTankExplodable( lua_State* pLuaVM, void* pUserData, bool bExplodable )
+bool CLuaFunctionDefinitions::SetVehicleFuelTankExplodable( lua_State* pLuaVM, PVOID pUserData, bool bExplodable )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4324,7 +4324,7 @@ bool CLuaFunctionDefinitions::SetVehicleFuelTankExplodable( lua_State* pLuaVM, v
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetVehicleFrozen( lua_State* pLuaVM, void* pUserData, bool bFrozen )
+bool CLuaFunctionDefinitions::SetVehicleFrozen( lua_State* pLuaVM, PVOID pUserData, bool bFrozen )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4341,7 +4341,7 @@ bool CLuaFunctionDefinitions::SetVehicleFrozen( lua_State* pLuaVM, void* pUserDa
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetTrainDerailed( lua_State* pLuaVM, void* pUserData, bool bDerailed )
+bool CLuaFunctionDefinitions::SetTrainDerailed( lua_State* pLuaVM, PVOID pUserData, bool bDerailed )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4358,7 +4358,7 @@ bool CLuaFunctionDefinitions::SetTrainDerailed( lua_State* pLuaVM, void* pUserDa
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetTrainDerailable( lua_State* pLuaVM, void* pUserData, bool bDerailable )
+bool CLuaFunctionDefinitions::SetTrainDerailable( lua_State* pLuaVM, PVOID pUserData, bool bDerailable )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4375,7 +4375,7 @@ bool CLuaFunctionDefinitions::SetTrainDerailable( lua_State* pLuaVM, void* pUser
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetTrainDirection( lua_State* pLuaVM, void* pUserData, bool bDireciton )
+bool CLuaFunctionDefinitions::SetTrainDirection( lua_State* pLuaVM, PVOID pUserData, bool bDireciton )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4392,7 +4392,7 @@ bool CLuaFunctionDefinitions::SetTrainDirection( lua_State* pLuaVM, void* pUserD
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetTrainSpeed( lua_State* pLuaVM, void* pUserData, float fSpeed )
+bool CLuaFunctionDefinitions::SetTrainSpeed( lua_State* pLuaVM, PVOID pUserData, float fSpeed )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4409,7 +4409,7 @@ bool CLuaFunctionDefinitions::SetTrainSpeed( lua_State* pLuaVM, void* pUserData,
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetVehicleHeadLightColor( lua_State* pLuaVM, void* pUserData, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue )
+bool CLuaFunctionDefinitions::SetVehicleHeadLightColor( lua_State* pLuaVM, PVOID pUserData, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4428,7 +4428,7 @@ bool CLuaFunctionDefinitions::SetVehicleHeadLightColor( lua_State* pLuaVM, void*
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetVehicleTurretPosition( lua_State* pLuaVM, void* pUserData, float fHorizontal, float fVertical )
+bool CLuaFunctionDefinitions::SetVehicleTurretPosition( lua_State* pLuaVM, PVOID pUserData, float fHorizontal, float fVertical )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4446,7 +4446,7 @@ bool CLuaFunctionDefinitions::SetVehicleTurretPosition( lua_State* pLuaVM, void*
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetVehicleDoorOpenRatio( lua_State* pLuaVM, void* pUserData, unsigned char ucDoor, float fRatio, unsigned long ulTime )
+bool CLuaFunctionDefinitions::SetVehicleDoorOpenRatio( lua_State* pLuaVM, PVOID pUserData, unsigned char ucDoor, float fRatio, unsigned long ulTime )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4465,7 +4465,7 @@ bool CLuaFunctionDefinitions::SetVehicleDoorOpenRatio( lua_State* pLuaVM, void* 
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetVehicleVariant( lua_State* pLuaVM, void* pUserData, unsigned char ucVariant, unsigned char ucVariant2 )
+bool CLuaFunctionDefinitions::SetVehicleVariant( lua_State* pLuaVM, PVOID pUserData, unsigned char ucVariant, unsigned char ucVariant2 )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4483,7 +4483,7 @@ bool CLuaFunctionDefinitions::SetVehicleVariant( lua_State* pLuaVM, void* pUserD
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GiveVehicleSirens( lua_State* pLuaVM, void* pUserData, unsigned char ucSirenType, unsigned char ucSirenCount, bool bFlag360, bool bCheckLosFlag, bool bUseRandomiserFlag, bool bSilentFlag )
+bool CLuaFunctionDefinitions::GiveVehicleSirens( lua_State* pLuaVM, PVOID pUserData, unsigned char ucSirenType, unsigned char ucSirenCount, bool bFlag360, bool bCheckLosFlag, bool bUseRandomiserFlag, bool bSilentFlag )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4505,7 +4505,7 @@ bool CLuaFunctionDefinitions::GiveVehicleSirens( lua_State* pLuaVM, void* pUserD
 	return false;
 }
 
-bool CLuaFunctionDefinitions::RemoveVehicleSirens( lua_State* pLuaVM, void* pUserData )
+bool CLuaFunctionDefinitions::RemoveVehicleSirens( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4521,7 +4521,7 @@ bool CLuaFunctionDefinitions::RemoveVehicleSirens( lua_State* pLuaVM, void* pUse
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetVehicleSirens( lua_State* pLuaVM, void* pUserData, unsigned char ucSirenID, float fX, float fY, float fZ, float fRed, float fGreen, float fBlue, float fAlpha, float fMinAlpha )
+bool CLuaFunctionDefinitions::SetVehicleSirens( lua_State* pLuaVM, PVOID pUserData, unsigned char ucSirenID, float fX, float fY, float fZ, float fRed, float fGreen, float fBlue, float fAlpha, float fMinAlpha )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4546,7 +4546,7 @@ bool CLuaFunctionDefinitions::SetVehicleSirens( lua_State* pLuaVM, void* pUserDa
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetVehiclePlateText( lua_State* pLuaVM, void* pUserData, const char* szName )
+bool CLuaFunctionDefinitions::SetVehiclePlateText( lua_State* pLuaVM, PVOID pUserData, const char* szName )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4565,7 +4565,7 @@ bool CLuaFunctionDefinitions::SetVehiclePlateText( lua_State* pLuaVM, void* pUse
 
 // Marker create/destroy functions
 
-void* CLuaFunctionDefinitions::CreateMarker( lua_State* pLuaVM, const Vector3& vecPosition, const char* szType, float fSize, const SColor color, void* pVisibleTo )
+PVOID CLuaFunctionDefinitions::CreateMarker( lua_State* pLuaVM, const Vector3& vecPosition, const char* szType, float fSize, const SColor color, PVOID pVisibleTo )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4590,7 +4590,7 @@ void* CLuaFunctionDefinitions::CreateMarker( lua_State* pLuaVM, const Vector3& v
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // Marker get functions
@@ -4611,7 +4611,7 @@ bool CLuaFunctionDefinitions::GetMarkerCount( lua_State* pLuaVM, unsigned int& u
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetMarkerType( lua_State* pLuaVM, void* pUserData, char* szType )
+bool CLuaFunctionDefinitions::GetMarkerType( lua_State* pLuaVM, PVOID pUserData, char* szType )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4629,7 +4629,7 @@ bool CLuaFunctionDefinitions::GetMarkerType( lua_State* pLuaVM, void* pUserData,
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetMarkerSize( lua_State* pLuaVM, void* pUserData, float& fSize )
+bool CLuaFunctionDefinitions::GetMarkerSize( lua_State* pLuaVM, PVOID pUserData, float& fSize )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4647,7 +4647,7 @@ bool CLuaFunctionDefinitions::GetMarkerSize( lua_State* pLuaVM, void* pUserData,
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetMarkerColor( lua_State* pLuaVM, void* pUserData, SColor& outColor )
+bool CLuaFunctionDefinitions::GetMarkerColor( lua_State* pLuaVM, PVOID pUserData, SColor& outColor )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4666,7 +4666,7 @@ bool CLuaFunctionDefinitions::GetMarkerColor( lua_State* pLuaVM, void* pUserData
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetMarkerTarget( lua_State* pLuaVM, void* pUserData, Vector3& vecTarget )
+bool CLuaFunctionDefinitions::GetMarkerTarget( lua_State* pLuaVM, PVOID pUserData, Vector3& vecTarget )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4684,7 +4684,7 @@ bool CLuaFunctionDefinitions::GetMarkerTarget( lua_State* pLuaVM, void* pUserDat
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetMarkerIcon( lua_State* pLuaVM, void* pUserData, char* szIcon )
+bool CLuaFunctionDefinitions::GetMarkerIcon( lua_State* pLuaVM, PVOID pUserData, char* szIcon )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4704,7 +4704,7 @@ bool CLuaFunctionDefinitions::GetMarkerIcon( lua_State* pLuaVM, void* pUserData,
 
 // Marker set functions
 
-bool CLuaFunctionDefinitions::SetMarkerType( lua_State* pLuaVM, void* pUserData, const char* szType )
+bool CLuaFunctionDefinitions::SetMarkerType( lua_State* pLuaVM, PVOID pUserData, const char* szType )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4721,7 +4721,7 @@ bool CLuaFunctionDefinitions::SetMarkerType( lua_State* pLuaVM, void* pUserData,
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetMarkerSize( lua_State* pLuaVM, void* pUserData, float fSize )
+bool CLuaFunctionDefinitions::SetMarkerSize( lua_State* pLuaVM, PVOID pUserData, float fSize )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4738,7 +4738,7 @@ bool CLuaFunctionDefinitions::SetMarkerSize( lua_State* pLuaVM, void* pUserData,
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetMarkerColor( lua_State* pLuaVM, void* pUserData, const SColor color )
+bool CLuaFunctionDefinitions::SetMarkerColor( lua_State* pLuaVM, PVOID pUserData, const SColor color )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4758,7 +4758,7 @@ bool CLuaFunctionDefinitions::SetMarkerColor( lua_State* pLuaVM, void* pUserData
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetMarkerTarget( lua_State* pLuaVM, void* pUserData, const Vector3& pTarget )
+bool CLuaFunctionDefinitions::SetMarkerTarget( lua_State* pLuaVM, PVOID pUserData, const Vector3& pTarget )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4777,7 +4777,7 @@ bool CLuaFunctionDefinitions::SetMarkerTarget( lua_State* pLuaVM, void* pUserDat
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetMarkerIcon( lua_State* pLuaVM, void* pUserData, const char* szIcon )
+bool CLuaFunctionDefinitions::SetMarkerIcon( lua_State* pLuaVM, PVOID pUserData, const char* szIcon )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4796,7 +4796,7 @@ bool CLuaFunctionDefinitions::SetMarkerIcon( lua_State* pLuaVM, void* pUserData,
 
 // Blip create/destroy functions
 
-void* CLuaFunctionDefinitions::CreateBlip( lua_State* pLuaVM, const Vector3& vecPosition, unsigned char ucIcon, unsigned char ucSize, const SColor color, short sOrdering, unsigned short usVisibleDistance, void* pVisibleTo )
+PVOID CLuaFunctionDefinitions::CreateBlip( lua_State* pLuaVM, const Vector3& vecPosition, unsigned char ucIcon, unsigned char ucSize, const SColor color, short sOrdering, unsigned short usVisibleDistance, PVOID pVisibleTo )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4827,10 +4827,10 @@ void* CLuaFunctionDefinitions::CreateBlip( lua_State* pLuaVM, const Vector3& vec
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-void* CLuaFunctionDefinitions::CreateBlipAttachedTo( lua_State* pLuaVM, void* pTarget, unsigned char ucIcon, unsigned char ucSize, const SColor color, short sOrdering, unsigned short usVisibleDistance, void* pVisibleTo )
+PVOID CLuaFunctionDefinitions::CreateBlipAttachedTo( lua_State* pLuaVM, PVOID pTarget, unsigned char ucIcon, unsigned char ucSize, const SColor color, short sOrdering, unsigned short usVisibleDistance, PVOID pVisibleTo )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4859,12 +4859,12 @@ void* CLuaFunctionDefinitions::CreateBlipAttachedTo( lua_State* pLuaVM, void* pT
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // Blip get functions
 
-bool CLuaFunctionDefinitions::GetBlipIcon( lua_State* pLuaVM, void* pUserData, unsigned char& ucIcon )
+bool CLuaFunctionDefinitions::GetBlipIcon( lua_State* pLuaVM, PVOID pUserData, unsigned char& ucIcon )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4882,7 +4882,7 @@ bool CLuaFunctionDefinitions::GetBlipIcon( lua_State* pLuaVM, void* pUserData, u
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetBlipSize( lua_State* pLuaVM, void* pUserData, unsigned char& ucSize )
+bool CLuaFunctionDefinitions::GetBlipSize( lua_State* pLuaVM, PVOID pUserData, unsigned char& ucSize )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4900,7 +4900,7 @@ bool CLuaFunctionDefinitions::GetBlipSize( lua_State* pLuaVM, void* pUserData, u
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetBlipColor( lua_State* pLuaVM, void* pUserData, SColor& outColor )
+bool CLuaFunctionDefinitions::GetBlipColor( lua_State* pLuaVM, PVOID pUserData, SColor& outColor )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4919,7 +4919,7 @@ bool CLuaFunctionDefinitions::GetBlipColor( lua_State* pLuaVM, void* pUserData, 
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetBlipOrdering( lua_State* pLuaVM, void* pUserData, short& sOrdering )
+bool CLuaFunctionDefinitions::GetBlipOrdering( lua_State* pLuaVM, PVOID pUserData, short& sOrdering )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4937,7 +4937,7 @@ bool CLuaFunctionDefinitions::GetBlipOrdering( lua_State* pLuaVM, void* pUserDat
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetBlipVisibleDistance( lua_State* pLuaVM, void* pUserData, unsigned short& usVisibleDistance )
+bool CLuaFunctionDefinitions::GetBlipVisibleDistance( lua_State* pLuaVM, PVOID pUserData, unsigned short& usVisibleDistance )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4957,7 +4957,7 @@ bool CLuaFunctionDefinitions::GetBlipVisibleDistance( lua_State* pLuaVM, void* p
 
 // Blip set functions
 
-bool CLuaFunctionDefinitions::SetBlipIcon( lua_State* pLuaVM, void* pUserData, unsigned char ucIcon )
+bool CLuaFunctionDefinitions::SetBlipIcon( lua_State* pLuaVM, PVOID pUserData, unsigned char ucIcon )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4974,7 +4974,7 @@ bool CLuaFunctionDefinitions::SetBlipIcon( lua_State* pLuaVM, void* pUserData, u
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetBlipSize( lua_State* pLuaVM, void* pUserData, unsigned char ucSize )
+bool CLuaFunctionDefinitions::SetBlipSize( lua_State* pLuaVM, PVOID pUserData, unsigned char ucSize )
 {
 	CLuaArguments pLuaArguments;
 
@@ -4991,7 +4991,7 @@ bool CLuaFunctionDefinitions::SetBlipSize( lua_State* pLuaVM, void* pUserData, u
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetBlipColor( lua_State* pLuaVM, void* pUserData, const SColor color )
+bool CLuaFunctionDefinitions::SetBlipColor( lua_State* pLuaVM, PVOID pUserData, const SColor color )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5011,7 +5011,7 @@ bool CLuaFunctionDefinitions::SetBlipColor( lua_State* pLuaVM, void* pUserData, 
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetBlipOrdering( lua_State* pLuaVM, void* pUserData, short sOrdering )
+bool CLuaFunctionDefinitions::SetBlipOrdering( lua_State* pLuaVM, PVOID pUserData, short sOrdering )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5028,7 +5028,7 @@ bool CLuaFunctionDefinitions::SetBlipOrdering( lua_State* pLuaVM, void* pUserDat
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetBlipVisibleDistance( lua_State* pLuaVM, void* pUserData, unsigned short usVisibleDistance )
+bool CLuaFunctionDefinitions::SetBlipVisibleDistance( lua_State* pLuaVM, PVOID pUserData, unsigned short usVisibleDistance )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5047,7 +5047,7 @@ bool CLuaFunctionDefinitions::SetBlipVisibleDistance( lua_State* pLuaVM, void* p
 
 // Object create/destroy functions
 
-void* CLuaFunctionDefinitions::CreateObject( lua_State* pLuaVM, unsigned short usModelID, const Vector3& vecPosition, const Vector3& vecRotation, bool bIsLowLod )
+PVOID CLuaFunctionDefinitions::CreateObject( lua_State* pLuaVM, unsigned short usModelID, const Vector3& vecPosition, const Vector3& vecRotation, bool bIsLowLod )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5071,12 +5071,12 @@ void* CLuaFunctionDefinitions::CreateObject( lua_State* pLuaVM, unsigned short u
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // Object get functions
 
-bool CLuaFunctionDefinitions::GetObjectScale( lua_State* pLuaVM, void* pUserData, Vector3& vecScale )
+bool CLuaFunctionDefinitions::GetObjectScale( lua_State* pLuaVM, PVOID pUserData, Vector3& vecScale )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5096,7 +5096,7 @@ bool CLuaFunctionDefinitions::GetObjectScale( lua_State* pLuaVM, void* pUserData
 
 // Object set functions
 
-bool CLuaFunctionDefinitions::SetObjectScale( lua_State* pLuaVM, void* pUserData, const Vector3& vecScale )
+bool CLuaFunctionDefinitions::SetObjectScale( lua_State* pLuaVM, PVOID pUserData, const Vector3& vecScale )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5116,7 +5116,7 @@ bool CLuaFunctionDefinitions::SetObjectScale( lua_State* pLuaVM, void* pUserData
 	return false;
 }
 
-bool CLuaFunctionDefinitions::MoveObject( lua_State* pLuaVM, void* pUserData, unsigned long ulTime, const Vector3& vecPosition, const Vector3& vecRotation, const char* szEasingType, float fEasingPeriod, float fEasingAmplitude, float fEasingOvershoot )
+bool CLuaFunctionDefinitions::MoveObject( lua_State* pLuaVM, PVOID pUserData, unsigned long ulTime, const Vector3& vecPosition, const Vector3& vecRotation, const char* szEasingType, float fEasingPeriod, float fEasingAmplitude, float fEasingOvershoot )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5143,7 +5143,7 @@ bool CLuaFunctionDefinitions::MoveObject( lua_State* pLuaVM, void* pUserData, un
 	return false;
 }
 
-bool CLuaFunctionDefinitions::StopObject( lua_State* pLuaVM, void* pUserData )
+bool CLuaFunctionDefinitions::StopObject( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5161,7 +5161,7 @@ bool CLuaFunctionDefinitions::StopObject( lua_State* pLuaVM, void* pUserData )
 
 // Radar area create/destroy funcs
 
-void* CLuaFunctionDefinitions::CreateRadarArea( lua_State* pLuaVM, const Vector2& vecPosition, const Vector2& vecSize, const SColor color, void* pVisibleTo )
+PVOID CLuaFunctionDefinitions::CreateRadarArea( lua_State* pLuaVM, const Vector2& vecPosition, const Vector2& vecSize, const SColor color, PVOID pVisibleTo )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5191,12 +5191,12 @@ void* CLuaFunctionDefinitions::CreateRadarArea( lua_State* pLuaVM, const Vector2
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // Radar area get funcs
 
-bool CLuaFunctionDefinitions::GetRadarAreaSize( lua_State* pLuaVM, void* pUserData, Vector2& vecSize )
+bool CLuaFunctionDefinitions::GetRadarAreaSize( lua_State* pLuaVM, PVOID pUserData, Vector2& vecSize )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5213,7 +5213,7 @@ bool CLuaFunctionDefinitions::GetRadarAreaSize( lua_State* pLuaVM, void* pUserDa
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetRadarAreaColor( lua_State* pLuaVM, void* pUserData, SColor& outColor )
+bool CLuaFunctionDefinitions::GetRadarAreaColor( lua_State* pLuaVM, PVOID pUserData, SColor& outColor )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5232,7 +5232,7 @@ bool CLuaFunctionDefinitions::GetRadarAreaColor( lua_State* pLuaVM, void* pUserD
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsRadarAreaFlashing( lua_State* pLuaVM, void* pUserData )
+bool CLuaFunctionDefinitions::IsRadarAreaFlashing( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5248,7 +5248,7 @@ bool CLuaFunctionDefinitions::IsRadarAreaFlashing( lua_State* pLuaVM, void* pUse
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsInsideRadarArea( lua_State* pLuaVM, void* pUserData, const Vector2& vecPosition, bool& bInside )
+bool CLuaFunctionDefinitions::IsInsideRadarArea( lua_State* pLuaVM, PVOID pUserData, const Vector2& vecPosition, bool& bInside )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5266,7 +5266,7 @@ bool CLuaFunctionDefinitions::IsInsideRadarArea( lua_State* pLuaVM, void* pUserD
 
 // Radar area set funcs
 
-bool CLuaFunctionDefinitions::SetRadarAreaSize( lua_State* pLuaVM, void* pUserData, const Vector2& vecSize )
+bool CLuaFunctionDefinitions::SetRadarAreaSize( lua_State* pLuaVM, PVOID pUserData, const Vector2& vecSize )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5284,7 +5284,7 @@ bool CLuaFunctionDefinitions::SetRadarAreaSize( lua_State* pLuaVM, void* pUserDa
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetRadarAreaColor( lua_State* pLuaVM, void* pUserData, const SColor color )
+bool CLuaFunctionDefinitions::SetRadarAreaColor( lua_State* pLuaVM, PVOID pUserData, const SColor color )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5304,7 +5304,7 @@ bool CLuaFunctionDefinitions::SetRadarAreaColor( lua_State* pLuaVM, void* pUserD
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetRadarAreaFlashing( lua_State* pLuaVM, void* pUserData, bool bFlashing )
+bool CLuaFunctionDefinitions::SetRadarAreaFlashing( lua_State* pLuaVM, PVOID pUserData, bool bFlashing )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5323,7 +5323,7 @@ bool CLuaFunctionDefinitions::SetRadarAreaFlashing( lua_State* pLuaVM, void* pUs
 
 // Pickup create/destroy funcs
 
-void* CLuaFunctionDefinitions::CreatePickup( lua_State* pLuaVM, const Vector3& vecPosition, unsigned char ucType, double dFive, unsigned long ulRespawnInterval, double dSix )
+PVOID CLuaFunctionDefinitions::CreatePickup( lua_State* pLuaVM, const Vector3& vecPosition, unsigned char ucType, double dFive, unsigned long ulRespawnInterval, double dSix )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5347,12 +5347,12 @@ void* CLuaFunctionDefinitions::CreatePickup( lua_State* pLuaVM, const Vector3& v
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // Pickup get funcs
 
-bool CLuaFunctionDefinitions::GetPickupType( lua_State* pLuaVM, void* pUserData, unsigned char& ucType )
+bool CLuaFunctionDefinitions::GetPickupType( lua_State* pLuaVM, PVOID pUserData, unsigned char& ucType )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5370,7 +5370,7 @@ bool CLuaFunctionDefinitions::GetPickupType( lua_State* pLuaVM, void* pUserData,
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetPickupWeapon( lua_State* pLuaVM, void* pUserData, unsigned char& ucWeapon )
+bool CLuaFunctionDefinitions::GetPickupWeapon( lua_State* pLuaVM, PVOID pUserData, unsigned char& ucWeapon )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5388,7 +5388,7 @@ bool CLuaFunctionDefinitions::GetPickupWeapon( lua_State* pLuaVM, void* pUserDat
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetPickupAmount( lua_State* pLuaVM, void* pUserData, float& fAmount )
+bool CLuaFunctionDefinitions::GetPickupAmount( lua_State* pLuaVM, PVOID pUserData, float& fAmount )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5406,7 +5406,7 @@ bool CLuaFunctionDefinitions::GetPickupAmount( lua_State* pLuaVM, void* pUserDat
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetPickupAmmo( lua_State* pLuaVM, void* pUserData, unsigned short& ucAmmo )
+bool CLuaFunctionDefinitions::GetPickupAmmo( lua_State* pLuaVM, PVOID pUserData, unsigned short& ucAmmo )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5424,7 +5424,7 @@ bool CLuaFunctionDefinitions::GetPickupAmmo( lua_State* pLuaVM, void* pUserData,
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetPickupRespawnInterval( lua_State* pLuaVM, void* pUserData, unsigned long& ulInterval )
+bool CLuaFunctionDefinitions::GetPickupRespawnInterval( lua_State* pLuaVM, PVOID pUserData, unsigned long& ulInterval )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5442,7 +5442,7 @@ bool CLuaFunctionDefinitions::GetPickupRespawnInterval( lua_State* pLuaVM, void*
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsPickupSpawned( lua_State* pLuaVM, void* pUserData, bool& bSpawned )
+bool CLuaFunctionDefinitions::IsPickupSpawned( lua_State* pLuaVM, PVOID pUserData, bool& bSpawned )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5462,7 +5462,7 @@ bool CLuaFunctionDefinitions::IsPickupSpawned( lua_State* pLuaVM, void* pUserDat
 
 // Pickup set funcs
 
-bool CLuaFunctionDefinitions::SetPickupType( lua_State* pLuaVM, void* pUserData, unsigned char ucType, double dThree, double dFour )
+bool CLuaFunctionDefinitions::SetPickupType( lua_State* pLuaVM, PVOID pUserData, unsigned char ucType, double dThree, double dFour )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5481,7 +5481,7 @@ bool CLuaFunctionDefinitions::SetPickupType( lua_State* pLuaVM, void* pUserData,
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetPickupRespawnInterval( lua_State* pLuaVM, void* pUserData, unsigned long ulInterval )
+bool CLuaFunctionDefinitions::SetPickupRespawnInterval( lua_State* pLuaVM, PVOID pUserData, unsigned long ulInterval )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5498,7 +5498,7 @@ bool CLuaFunctionDefinitions::SetPickupRespawnInterval( lua_State* pLuaVM, void*
 	return false;
 }
 
-bool CLuaFunctionDefinitions::UsePickup( lua_State* pLuaVM, void* pUserData, void* pPlayer )
+bool CLuaFunctionDefinitions::UsePickup( lua_State* pLuaVM, PVOID pUserData, PVOID pPlayer )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5517,7 +5517,7 @@ bool CLuaFunctionDefinitions::UsePickup( lua_State* pLuaVM, void* pUserData, voi
 
 // Shape create funcs
 
-void* CLuaFunctionDefinitions::CreateColCircle( lua_State* pLuaVM, const Vector2& vecPosition, float fRadius )
+PVOID CLuaFunctionDefinitions::CreateColCircle( lua_State* pLuaVM, const Vector2& vecPosition, float fRadius )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5535,10 +5535,10 @@ void* CLuaFunctionDefinitions::CreateColCircle( lua_State* pLuaVM, const Vector2
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-void* CLuaFunctionDefinitions::CreateColCuboid( lua_State* pLuaVM, const Vector3& vecPosition, const Vector3& vecSize )
+PVOID CLuaFunctionDefinitions::CreateColCuboid( lua_State* pLuaVM, const Vector3& vecPosition, const Vector3& vecSize )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5560,10 +5560,10 @@ void* CLuaFunctionDefinitions::CreateColCuboid( lua_State* pLuaVM, const Vector3
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-void* CLuaFunctionDefinitions::CreateColSphere( lua_State* pLuaVM, const Vector3& vecPosition, float fRadius )
+PVOID CLuaFunctionDefinitions::CreateColSphere( lua_State* pLuaVM, const Vector3& vecPosition, float fRadius )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5583,10 +5583,10 @@ void* CLuaFunctionDefinitions::CreateColSphere( lua_State* pLuaVM, const Vector3
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-void* CLuaFunctionDefinitions::CreateColRectangle( lua_State* pLuaVM, const Vector2& vecPosition, const Vector2& vecSize )
+PVOID CLuaFunctionDefinitions::CreateColRectangle( lua_State* pLuaVM, const Vector2& vecPosition, const Vector2& vecSize )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5606,14 +5606,14 @@ void* CLuaFunctionDefinitions::CreateColRectangle( lua_State* pLuaVM, const Vect
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-void* CLuaFunctionDefinitions::CreateColPolygon( lua_State* pLuaVM, const vector< Vector2 >& vecPointList )
+PVOID CLuaFunctionDefinitions::CreateColPolygon( lua_State* pLuaVM, const vector< Vector2 >& vecPointList )
 {
 	if( vecPointList.size() < 4 )
 	{
-		return NULL;
+		return nullptr;
 	}
 
 	CLuaArguments pLuaArguments;
@@ -5634,10 +5634,10 @@ void* CLuaFunctionDefinitions::CreateColPolygon( lua_State* pLuaVM, const vector
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-void* CLuaFunctionDefinitions::CreateColTube( lua_State* pLuaVM, const Vector3& vecPosition, float fRadius, float fHeight )
+PVOID CLuaFunctionDefinitions::CreateColTube( lua_State* pLuaVM, const Vector3& vecPosition, float fRadius, float fHeight )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5658,12 +5658,12 @@ void* CLuaFunctionDefinitions::CreateColTube( lua_State* pLuaVM, const Vector3& 
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // Explosion funcs
 
-bool CLuaFunctionDefinitions::CreateExplosion( lua_State* pLuaVM, const Vector3& vecPosition, unsigned char ucType, void* pCreator )
+bool CLuaFunctionDefinitions::CreateExplosion( lua_State* pLuaVM, const Vector3& vecPosition, unsigned char ucType, PVOID pCreator )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5690,7 +5690,7 @@ bool CLuaFunctionDefinitions::CreateExplosion( lua_State* pLuaVM, const Vector3&
 
 // Audio funcs
 
-bool CLuaFunctionDefinitions::PlaySoundFrontEnd( lua_State* pLuaVM, void* pElement, unsigned char ucSound )
+bool CLuaFunctionDefinitions::PlaySoundFrontEnd( lua_State* pLuaVM, PVOID pElement, unsigned char ucSound )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5707,7 +5707,7 @@ bool CLuaFunctionDefinitions::PlaySoundFrontEnd( lua_State* pLuaVM, void* pEleme
 	return false;
 }
 
-bool CLuaFunctionDefinitions::PlayMissionAudio( lua_State* pLuaVM, void* pElement, Vector3& vecPosition, unsigned short usSlot )
+bool CLuaFunctionDefinitions::PlayMissionAudio( lua_State* pLuaVM, PVOID pElement, Vector3& vecPosition, unsigned short usSlot )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5810,7 +5810,7 @@ bool CLuaFunctionDefinitions::GetClothesTypeName( lua_State* pLuaVM, unsigned ch
 
 // Input funcs
 
-bool CLuaFunctionDefinitions::BindKey( lua_State* pLuaVM, void* pPlayer, const char* szKey, const char* szHitState, const char* szCommandName, const char* szArguments )
+bool CLuaFunctionDefinitions::BindKey( lua_State* pLuaVM, PVOID pPlayer, const char* szKey, const char* szHitState, const char* szCommandName, const char* szArguments )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5834,7 +5834,7 @@ bool CLuaFunctionDefinitions::BindKey( lua_State* pLuaVM, void* pPlayer, const c
 	return false;
 }
 
-bool CLuaFunctionDefinitions::UnbindKey( lua_State* pLuaVM, void* pPlayer, const char* szKey, const char* szHitState, const char* szCommandName )
+bool CLuaFunctionDefinitions::UnbindKey( lua_State* pLuaVM, PVOID pPlayer, const char* szKey, const char* szHitState, const char* szCommandName )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5853,7 +5853,7 @@ bool CLuaFunctionDefinitions::UnbindKey( lua_State* pLuaVM, void* pPlayer, const
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetControlState( lua_State* pLuaVM, void* pPlayer, const char* szControl, bool& bState )
+bool CLuaFunctionDefinitions::GetControlState( lua_State* pLuaVM, PVOID pPlayer, const char* szControl, bool& bState )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5872,7 +5872,7 @@ bool CLuaFunctionDefinitions::GetControlState( lua_State* pLuaVM, void* pPlayer,
 	return false;
 }
 
-bool CLuaFunctionDefinitions::IsControlEnabled( lua_State* pLuaVM, void* pPlayer, const char* szControl, bool& bEnabled )
+bool CLuaFunctionDefinitions::IsControlEnabled( lua_State* pLuaVM, PVOID pPlayer, const char* szControl, bool& bEnabled )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5891,7 +5891,7 @@ bool CLuaFunctionDefinitions::IsControlEnabled( lua_State* pLuaVM, void* pPlayer
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetControlState( lua_State* pLuaVM, void* pPlayer, const char* szControl, bool bState )
+bool CLuaFunctionDefinitions::SetControlState( lua_State* pLuaVM, PVOID pPlayer, const char* szControl, bool bState )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5909,7 +5909,7 @@ bool CLuaFunctionDefinitions::SetControlState( lua_State* pLuaVM, void* pPlayer,
 	return false;
 }
 
-bool CLuaFunctionDefinitions::ToggleControl( lua_State* pLuaVM, void* pPlayer, const char* szControl, bool bEnabled )
+bool CLuaFunctionDefinitions::ToggleControl( lua_State* pLuaVM, PVOID pPlayer, const char* szControl, bool bEnabled )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5927,7 +5927,7 @@ bool CLuaFunctionDefinitions::ToggleControl( lua_State* pLuaVM, void* pPlayer, c
 	return false;
 }
 
-bool CLuaFunctionDefinitions::ToggleAllControls( lua_State* pLuaVM, void* pPlayer, bool bGTAControls, bool bMTAControls, bool bEnabled )
+bool CLuaFunctionDefinitions::ToggleAllControls( lua_State* pLuaVM, PVOID pPlayer, bool bGTAControls, bool bMTAControls, bool bEnabled )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5948,7 +5948,7 @@ bool CLuaFunctionDefinitions::ToggleAllControls( lua_State* pLuaVM, void* pPlaye
 
 // Team get funcs
 
-void* CLuaFunctionDefinitions::CreateTeam( lua_State* pLuaVM, const char* szTeamName, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue )
+PVOID CLuaFunctionDefinitions::CreateTeam( lua_State* pLuaVM, const char* szTeamName, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5967,10 +5967,10 @@ void* CLuaFunctionDefinitions::CreateTeam( lua_State* pLuaVM, const char* szTeam
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-void* CLuaFunctionDefinitions::GetTeamFromName( lua_State* pLuaVM, const char* szTeamName )
+PVOID CLuaFunctionDefinitions::GetTeamFromName( lua_State* pLuaVM, const char* szTeamName )
 {
 	CLuaArguments pLuaArguments;
 
@@ -5986,10 +5986,10 @@ void* CLuaFunctionDefinitions::GetTeamFromName( lua_State* pLuaVM, const char* s
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-bool CLuaFunctionDefinitions::GetTeamName( lua_State* pLuaVM, void* pTeam, string& strOutName )
+bool CLuaFunctionDefinitions::GetTeamName( lua_State* pLuaVM, PVOID pTeam, string& strOutName )
 {
 	CLuaArguments pLuaArguments;
 
@@ -6007,7 +6007,7 @@ bool CLuaFunctionDefinitions::GetTeamName( lua_State* pLuaVM, void* pTeam, strin
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetTeamColor( lua_State* pLuaVM, void* pTeam, unsigned char& ucRed, unsigned char& ucGreen, unsigned char& ucBlue )
+bool CLuaFunctionDefinitions::GetTeamColor( lua_State* pLuaVM, PVOID pTeam, unsigned char& ucRed, unsigned char& ucGreen, unsigned char& ucBlue )
 {
 	CLuaArguments pLuaArguments;
 
@@ -6025,7 +6025,7 @@ bool CLuaFunctionDefinitions::GetTeamColor( lua_State* pLuaVM, void* pTeam, unsi
 	return false;
 }
 
-bool CLuaFunctionDefinitions::CountPlayersInTeam( lua_State* pLuaVM, void* pTeam, unsigned int& uiCount )
+bool CLuaFunctionDefinitions::CountPlayersInTeam( lua_State* pLuaVM, PVOID pTeam, unsigned int& uiCount )
 {
 	CLuaArguments pLuaArguments;
 
@@ -6043,7 +6043,7 @@ bool CLuaFunctionDefinitions::CountPlayersInTeam( lua_State* pLuaVM, void* pTeam
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetTeamFriendlyFire( lua_State* pLuaVM, void* pTeam, bool& bFriendlyFire )
+bool CLuaFunctionDefinitions::GetTeamFriendlyFire( lua_State* pLuaVM, PVOID pTeam, bool& bFriendlyFire )
 {
 	CLuaArguments pLuaArguments;
 
@@ -6063,7 +6063,7 @@ bool CLuaFunctionDefinitions::GetTeamFriendlyFire( lua_State* pLuaVM, void* pTea
 
 // Team set funcs
 
-bool CLuaFunctionDefinitions::SetTeamName( lua_State* pLuaVM, void* pTeam, const char* szTeamName )
+bool CLuaFunctionDefinitions::SetTeamName( lua_State* pLuaVM, PVOID pTeam, const char* szTeamName )
 {
 	CLuaArguments pLuaArguments;
 
@@ -6080,7 +6080,7 @@ bool CLuaFunctionDefinitions::SetTeamName( lua_State* pLuaVM, void* pTeam, const
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetTeamColor( lua_State* pLuaVM, void* pTeam, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue )
+bool CLuaFunctionDefinitions::SetTeamColor( lua_State* pLuaVM, PVOID pTeam, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue )
 {
 	CLuaArguments pLuaArguments;
 
@@ -6099,7 +6099,7 @@ bool CLuaFunctionDefinitions::SetTeamColor( lua_State* pLuaVM, void* pTeam, unsi
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetPlayerTeam( lua_State* pLuaVM, void* pPlayer, void* pTeam )
+bool CLuaFunctionDefinitions::SetPlayerTeam( lua_State* pLuaVM, PVOID pPlayer, PVOID pTeam )
 {
 	CLuaArguments pLuaArguments;
 
@@ -6116,7 +6116,7 @@ bool CLuaFunctionDefinitions::SetPlayerTeam( lua_State* pLuaVM, void* pPlayer, v
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetTeamFriendlyFire( lua_State* pLuaVM, void* pTeam, bool bFriendlyFire )
+bool CLuaFunctionDefinitions::SetTeamFriendlyFire( lua_State* pLuaVM, PVOID pTeam, bool bFriendlyFire )
 {
 	CLuaArguments pLuaArguments;
 
@@ -6135,7 +6135,7 @@ bool CLuaFunctionDefinitions::SetTeamFriendlyFire( lua_State* pLuaVM, void* pTea
 
 // Water funcs
 
-void* CLuaFunctionDefinitions::CreateWater( lua_State* pLuaVM, Vector3* pV1, Vector3* pV2, Vector3* pV3, Vector3* pV4, bool bShallow )
+PVOID CLuaFunctionDefinitions::CreateWater( lua_State* pLuaVM, Vector3* pV1, Vector3* pV2, Vector3* pV3, Vector3* pV4, bool bShallow )
 {
 	CLuaArguments pLuaArguments;
 
@@ -6170,10 +6170,10 @@ void* CLuaFunctionDefinitions::CreateWater( lua_State* pLuaVM, Vector3* pV1, Vec
 		}
 	}
 
-	return false;
+	return nullptr;
 }
 
-bool CLuaFunctionDefinitions::SetElementWaterLevel( lua_State* pLuaVM, void* pWater, float fLevel )
+bool CLuaFunctionDefinitions::SetElementWaterLevel( lua_State* pLuaVM, PVOID pWater, float fLevel )
 {
 	CLuaArguments pLuaArguments;
 
@@ -6237,7 +6237,7 @@ bool CLuaFunctionDefinitions::ResetWorldWaterLevel( lua_State* pLuaVM )
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetWaterVertexPosition( lua_State* pLuaVM, void* pWater, int iVertexIndex, Vector3& vecPosition )
+bool CLuaFunctionDefinitions::GetWaterVertexPosition( lua_State* pLuaVM, PVOID pWater, int iVertexIndex, Vector3& vecPosition )
 {
 	CLuaArguments pLuaArguments;
 
@@ -6256,7 +6256,7 @@ bool CLuaFunctionDefinitions::GetWaterVertexPosition( lua_State* pLuaVM, void* p
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetWaterVertexPosition( lua_State* pLuaVM, void* pWater, int iVertexIndex, Vector3& vecPosition )
+bool CLuaFunctionDefinitions::SetWaterVertexPosition( lua_State* pLuaVM, PVOID pWater, int iVertexIndex, Vector3& vecPosition )
 {
 	CLuaArguments pLuaArguments;
 
@@ -6357,7 +6357,7 @@ bool CLuaFunctionDefinitions::SetMaxPlayers( lua_State* pLuaVM, unsigned int uiM
 	return false;
 }
 
-bool CLuaFunctionDefinitions::OutputChatBox( lua_State* pLuaVM, const char* szText, void* pElement, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue, bool bColorCoded )
+bool CLuaFunctionDefinitions::OutputChatBox( lua_State* pLuaVM, const char* szText, PVOID pElement, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue, bool bColorCoded )
 {
 	CLuaArguments pLuaArguments;
 
@@ -6387,7 +6387,7 @@ bool CLuaFunctionDefinitions::OutputChatBox( lua_State* pLuaVM, const char* szTe
 	return false;
 }
 
-bool CLuaFunctionDefinitions::OutputConsole( lua_State* pLuaVM, const char* szText, void* pElement )
+bool CLuaFunctionDefinitions::OutputConsole( lua_State* pLuaVM, const char* szText, PVOID pElement )
 {
 	CLuaArguments pLuaArguments;
 
@@ -7517,7 +7517,7 @@ bool CLuaFunctionDefinitions::RestoreAllWorldModels( lua_State* pLuaVM )
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SendSyncIntervals( lua_State* pLuaVM, void* pPlayer )
+bool CLuaFunctionDefinitions::SendSyncIntervals( lua_State* pLuaVM, PVOID pPlayer )
 {
 	CLuaArguments pLuaArguments;
 
@@ -7598,7 +7598,7 @@ bool CLuaFunctionDefinitions::ResetMoonSize( lua_State* pLuaVM )
 
 // Loaded Map Functions
 
-void* CLuaFunctionDefinitions::GetRootElement( lua_State* pLuaVM )
+PVOID CLuaFunctionDefinitions::GetRootElement( lua_State* pLuaVM )
 {
 	CLuaArguments pLuaArguments;
 
@@ -7612,15 +7612,15 @@ void* CLuaFunctionDefinitions::GetRootElement( lua_State* pLuaVM )
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-//void* CLuaFunctionDefinitions::LoadMapData( lua_State* pLuaVM, void* pParent, CXMLNode* pNode )
-//void* CLuaFunctionDefinitions::SaveMapData( lua_State* pLuaVM, void* pElement, CXMLNode* pNode, bool bChildren )
+//PVOID CLuaFunctionDefinitions::LoadMapData( lua_State* pLuaVM, PVOID pParent, CXMLNode* pNode )
+//PVOID CLuaFunctionDefinitions::SaveMapData( lua_State* pLuaVM, PVOID pElement, CXMLNode* pNode, bool bChildren )
 	
 // Account get funcs
 
-void* CLuaFunctionDefinitions::GetAccount( lua_State* pLuaVM, const char* szName, const char* szPassword )
+PVOID CLuaFunctionDefinitions::GetAccount( lua_State* pLuaVM, const char* szName, const char* szPassword )
 {
 	CLuaArguments pLuaArguments;
 
@@ -7637,7 +7637,7 @@ void* CLuaFunctionDefinitions::GetAccount( lua_State* pLuaVM, const char* szName
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 CLuaArguments* CLuaFunctionDefinitions::GetAccounts( lua_State* pLuaVM )
@@ -7651,10 +7651,10 @@ CLuaArguments* CLuaFunctionDefinitions::GetAccounts( lua_State* pLuaVM )
 		return pLuaArgument.GetArray();
 	}
 
-	return false;
+	return nullptr;
 }
 
-void* CLuaFunctionDefinitions::GetAccountPlayer( lua_State* pLuaVM, void* pAccount )
+PVOID CLuaFunctionDefinitions::GetAccountPlayer( lua_State* pLuaVM, PVOID pAccount )
 {
 	CLuaArguments pLuaArguments;
 
@@ -7670,10 +7670,10 @@ void* CLuaFunctionDefinitions::GetAccountPlayer( lua_State* pLuaVM, void* pAccou
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-bool CLuaFunctionDefinitions::IsGuestAccount( lua_State* pLuaVM, void* pAccount, bool& bGuest )
+bool CLuaFunctionDefinitions::IsGuestAccount( lua_State* pLuaVM, PVOID pAccount, bool& bGuest )
 {
 	CLuaArguments pLuaArguments;
 
@@ -7691,7 +7691,7 @@ bool CLuaFunctionDefinitions::IsGuestAccount( lua_State* pLuaVM, void* pAccount,
 	return false;
 }
 
-CLuaArgument* CLuaFunctionDefinitions::GetAccountData( lua_State* pLuaVM, void* pAccount, const char* szKey )
+CLuaArgument* CLuaFunctionDefinitions::GetAccountData( lua_State* pLuaVM, PVOID pAccount, const char* szKey )
 {
 	CLuaArguments pLuaArguments;
 
@@ -7703,15 +7703,15 @@ CLuaArgument* CLuaFunctionDefinitions::GetAccountData( lua_State* pLuaVM, void* 
 		return new CLuaArgument( pLuaVM, -1 );
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-bool CLuaFunctionDefinitions::GetAllAccountData( lua_State* pLuaVM, void* pAccount )
+bool CLuaFunctionDefinitions::GetAllAccountData( lua_State* pLuaVM, PVOID pAccount )
 {
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetAccountSerial( lua_State* pLuaVM, void* pAccount, string& strSerial )
+bool CLuaFunctionDefinitions::GetAccountSerial( lua_State* pLuaVM, PVOID pAccount, string& strSerial )
 {
 	CLuaArguments pLuaArguments;
 
@@ -7729,14 +7729,14 @@ bool CLuaFunctionDefinitions::GetAccountSerial( lua_State* pLuaVM, void* pAccoun
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetAccountsBySerial( lua_State* pLuaVM, const string& strSerial, vector<void*>& outAccounts )
+bool CLuaFunctionDefinitions::GetAccountsBySerial( lua_State* pLuaVM, const string& strSerial, vector<PVOID>& outAccounts )
 {
 	return false;
 }
 
 // Account set funcs
 
-void* CLuaFunctionDefinitions::AddAccount( lua_State* pLuaVM, const char* szName, const char* szPassword )
+PVOID CLuaFunctionDefinitions::AddAccount( lua_State* pLuaVM, const char* szName, const char* szPassword )
 {
 	CLuaArguments pLuaArguments;
 
@@ -7753,10 +7753,10 @@ void* CLuaFunctionDefinitions::AddAccount( lua_State* pLuaVM, const char* szName
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-bool CLuaFunctionDefinitions::RemoveAccount( lua_State* pLuaVM, void* pAccount )
+bool CLuaFunctionDefinitions::RemoveAccount( lua_State* pLuaVM, PVOID pAccount )
 {
 	CLuaArguments pLuaArguments;
 
@@ -7772,7 +7772,7 @@ bool CLuaFunctionDefinitions::RemoveAccount( lua_State* pLuaVM, void* pAccount )
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetAccountPassword( lua_State* pLuaVM, void* pAccount, const char* szPassword )
+bool CLuaFunctionDefinitions::SetAccountPassword( lua_State* pLuaVM, PVOID pAccount, const char* szPassword )
 {
 	CLuaArguments pLuaArguments;
 
@@ -7789,7 +7789,7 @@ bool CLuaFunctionDefinitions::SetAccountPassword( lua_State* pLuaVM, void* pAcco
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetAccountData( lua_State* pLuaVM, void* pAccount, const char* szKey, CLuaArgument* pArgument )
+bool CLuaFunctionDefinitions::SetAccountData( lua_State* pLuaVM, PVOID pAccount, const char* szKey, CLuaArgument* pArgument )
 {
 	CLuaArguments pLuaArguments;
 
@@ -7807,7 +7807,7 @@ bool CLuaFunctionDefinitions::SetAccountData( lua_State* pLuaVM, void* pAccount,
 	return false;
 }
 
-bool CLuaFunctionDefinitions::CopyAccountData( lua_State* pLuaVM, void* pAccount, void* pFromAccount )
+bool CLuaFunctionDefinitions::CopyAccountData( lua_State* pLuaVM, PVOID pAccount, PVOID pFromAccount )
 {
 	CLuaArguments pLuaArguments;
 
@@ -7826,7 +7826,7 @@ bool CLuaFunctionDefinitions::CopyAccountData( lua_State* pLuaVM, void* pAccount
 
 // Log in/out funcs
 
-bool CLuaFunctionDefinitions::LogIn( lua_State* pLuaVM, void* pPlayer, void* pAccount, const char* szPassword )
+bool CLuaFunctionDefinitions::LogIn( lua_State* pLuaVM, PVOID pPlayer, PVOID pAccount, const char* szPassword )
 {
 	CLuaArguments pLuaArguments;
 
@@ -7844,7 +7844,7 @@ bool CLuaFunctionDefinitions::LogIn( lua_State* pLuaVM, void* pPlayer, void* pAc
 	return false;
 }
 
-bool CLuaFunctionDefinitions::LogOut( lua_State* pLuaVM, void* pPlayer )
+bool CLuaFunctionDefinitions::LogOut( lua_State* pLuaVM, PVOID pPlayer )
 {
 	CLuaArguments pLuaArguments;
 
@@ -7862,7 +7862,7 @@ bool CLuaFunctionDefinitions::LogOut( lua_State* pLuaVM, void* pPlayer )
 
 // Admin funcs
 
-bool CLuaFunctionDefinitions::KickPlayer( lua_State* pLuaVM, void* pPlayer, string strResponsible, string strReason )
+bool CLuaFunctionDefinitions::KickPlayer( lua_State* pLuaVM, PVOID pPlayer, string strResponsible, string strReason )
 {
 	CLuaArguments pLuaArguments;
 
@@ -7880,7 +7880,7 @@ bool CLuaFunctionDefinitions::KickPlayer( lua_State* pLuaVM, void* pPlayer, stri
 	return false;
 }
 
-void* CLuaFunctionDefinitions::BanPlayer( lua_State* pLuaVM, void* pPlayer, bool bIP, bool bUsername, bool bSerial, void* pResponsible, string strResponsible, string strReason, time_t tUnban )
+PVOID CLuaFunctionDefinitions::BanPlayer( lua_State* pLuaVM, PVOID pPlayer, bool bIP, bool bUsername, bool bSerial, PVOID pResponsible, string strResponsible, string strReason, time_t tUnban )
 {
 	CLuaArguments pLuaArguments;
 
@@ -7907,10 +7907,10 @@ void* CLuaFunctionDefinitions::BanPlayer( lua_State* pLuaVM, void* pPlayer, bool
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-void* CLuaFunctionDefinitions::AddBan( lua_State* pLuaVM, string strIP, string strUsername, string strSerial, void* pResponsible, string strResponsible, string strReason, time_t tUnban )
+PVOID CLuaFunctionDefinitions::AddBan( lua_State* pLuaVM, string strIP, string strUsername, string strSerial, PVOID pResponsible, string strResponsible, string strReason, time_t tUnban )
 {
 	CLuaArguments pLuaArguments;
 
@@ -7936,10 +7936,10 @@ void* CLuaFunctionDefinitions::AddBan( lua_State* pLuaVM, string strIP, string s
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-bool CLuaFunctionDefinitions::RemoveBan( lua_State* pLuaVM, void* pBan, void* pResponsible )
+bool CLuaFunctionDefinitions::RemoveBan( lua_State* pLuaVM, PVOID pBan, PVOID pResponsible )
 {
 	CLuaArguments pLuaArguments;
 
@@ -7979,7 +7979,7 @@ bool CLuaFunctionDefinitions::ReloadBanList( lua_State* pLuaVM )
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetBanIP( lua_State* pLuaVM, void* pBan, string& strOutIP )
+bool CLuaFunctionDefinitions::GetBanIP( lua_State* pLuaVM, PVOID pBan, string& strOutIP )
 {
 	CLuaArguments pLuaArguments;
 
@@ -7997,7 +7997,7 @@ bool CLuaFunctionDefinitions::GetBanIP( lua_State* pLuaVM, void* pBan, string& s
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetBanSerial( lua_State* pLuaVM, void* pBan, string& strOutSerial )
+bool CLuaFunctionDefinitions::GetBanSerial( lua_State* pLuaVM, PVOID pBan, string& strOutSerial )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8015,7 +8015,7 @@ bool CLuaFunctionDefinitions::GetBanSerial( lua_State* pLuaVM, void* pBan, strin
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetBanUsername( lua_State* pLuaVM, void* pBan, string& strOutUsername )
+bool CLuaFunctionDefinitions::GetBanUsername( lua_State* pLuaVM, PVOID pBan, string& strOutUsername )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8033,7 +8033,7 @@ bool CLuaFunctionDefinitions::GetBanUsername( lua_State* pLuaVM, void* pBan, str
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetBanNick( lua_State* pLuaVM, void* pBan, string& strOutNick )
+bool CLuaFunctionDefinitions::GetBanNick( lua_State* pLuaVM, PVOID pBan, string& strOutNick )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8051,7 +8051,7 @@ bool CLuaFunctionDefinitions::GetBanNick( lua_State* pLuaVM, void* pBan, string&
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetBanReason( lua_State* pLuaVM, void* pBan, string& strOutReason )
+bool CLuaFunctionDefinitions::GetBanReason( lua_State* pLuaVM, PVOID pBan, string& strOutReason )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8069,7 +8069,7 @@ bool CLuaFunctionDefinitions::GetBanReason( lua_State* pLuaVM, void* pBan, strin
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetBanAdmin( lua_State* pLuaVM, void* pBan, string& strOutAdmin )
+bool CLuaFunctionDefinitions::GetBanAdmin( lua_State* pLuaVM, PVOID pBan, string& strOutAdmin )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8087,7 +8087,7 @@ bool CLuaFunctionDefinitions::GetBanAdmin( lua_State* pLuaVM, void* pBan, string
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetBanTime( lua_State* pLuaVM, void* pBan, time_t& time )
+bool CLuaFunctionDefinitions::GetBanTime( lua_State* pLuaVM, PVOID pBan, time_t& time )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8105,7 +8105,7 @@ bool CLuaFunctionDefinitions::GetBanTime( lua_State* pLuaVM, void* pBan, time_t&
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetUnbanTime( lua_State* pLuaVM, void* pBan, time_t& time )
+bool CLuaFunctionDefinitions::GetUnbanTime( lua_State* pLuaVM, PVOID pBan, time_t& time )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8123,7 +8123,7 @@ bool CLuaFunctionDefinitions::GetUnbanTime( lua_State* pLuaVM, void* pBan, time_
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetUnbanTime( lua_State* pLuaVM, void* pBan, time_t time )
+bool CLuaFunctionDefinitions::SetUnbanTime( lua_State* pLuaVM, PVOID pBan, time_t time )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8140,7 +8140,7 @@ bool CLuaFunctionDefinitions::SetUnbanTime( lua_State* pLuaVM, void* pBan, time_
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetBanReason( lua_State* pLuaVM, void* pBan, const string& strReason )
+bool CLuaFunctionDefinitions::SetBanReason( lua_State* pLuaVM, PVOID pBan, const string& strReason )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8157,7 +8157,7 @@ bool CLuaFunctionDefinitions::SetBanReason( lua_State* pLuaVM, void* pBan, const
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetBanAdmin( lua_State* pLuaVM, void* pBan, const string& strAdminName )
+bool CLuaFunctionDefinitions::SetBanAdmin( lua_State* pLuaVM, PVOID pBan, const string& strAdminName )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8176,7 +8176,7 @@ bool CLuaFunctionDefinitions::SetBanAdmin( lua_State* pLuaVM, void* pBan, const 
 
 // Cursor get funcs
 
-bool CLuaFunctionDefinitions::IsCursorShowing( lua_State* pLuaVM, void* pPlayer, bool& bShowing )
+bool CLuaFunctionDefinitions::IsCursorShowing( lua_State* pLuaVM, PVOID pPlayer, bool& bShowing )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8194,7 +8194,7 @@ bool CLuaFunctionDefinitions::IsCursorShowing( lua_State* pLuaVM, void* pPlayer,
 
 // Cursor set funcs
 
-bool CLuaFunctionDefinitions::ShowCursor( lua_State* pLuaVM, void* pElement, bool bShow, bool bToggleControls )
+bool CLuaFunctionDefinitions::ShowCursor( lua_State* pLuaVM, PVOID pElement, bool bShow, bool bToggleControls )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8214,7 +8214,7 @@ bool CLuaFunctionDefinitions::ShowCursor( lua_State* pLuaVM, void* pElement, boo
 
 // Chat funcs
 
-bool CLuaFunctionDefinitions::ShowChat( lua_State* pLuaVM, void* pElement, bool bShow )
+bool CLuaFunctionDefinitions::ShowChat( lua_State* pLuaVM, PVOID pElement, bool bShow )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8233,7 +8233,7 @@ bool CLuaFunctionDefinitions::ShowChat( lua_State* pLuaVM, void* pElement, bool 
 
 // Misc funcs
 
-bool CLuaFunctionDefinitions::ResetMapInfo( lua_State* pLuaVM, void* pElement )
+bool CLuaFunctionDefinitions::ResetMapInfo( lua_State* pLuaVM, PVOID pElement )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8251,7 +8251,7 @@ bool CLuaFunctionDefinitions::ResetMapInfo( lua_State* pLuaVM, void* pElement )
 
 // Resource funcs
 
-void* CLuaFunctionDefinitions::CreateResource( lua_State* pLuaVM, const char* szResourceName, const char* szOrganizationalDir )
+PVOID CLuaFunctionDefinitions::CreateResource( lua_State* pLuaVM, const char* szResourceName, const char* szOrganizationalDir )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8268,10 +8268,10 @@ void* CLuaFunctionDefinitions::CreateResource( lua_State* pLuaVM, const char* sz
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-void* CLuaFunctionDefinitions::CopyResource( lua_State* pLuaVM, void* pResource, const char* szNewResourceName, const char* szOrganizationalDir )
+PVOID CLuaFunctionDefinitions::CopyResource( lua_State* pLuaVM, PVOID pResource, const char* szNewResourceName, const char* szOrganizationalDir )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8289,10 +8289,10 @@ void* CLuaFunctionDefinitions::CopyResource( lua_State* pLuaVM, void* pResource,
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-void* CLuaFunctionDefinitions::GetResourceRootElement( lua_State* pLuaVM, void* pResource )
+PVOID CLuaFunctionDefinitions::GetResourceRootElement( lua_State* pLuaVM, PVOID pResource )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8311,10 +8311,10 @@ void* CLuaFunctionDefinitions::GetResourceRootElement( lua_State* pLuaVM, void* 
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-void* CLuaFunctionDefinitions::GetResourceMapRootElement( lua_State* pLuaVM, void* pResource, const char* szMap )
+PVOID CLuaFunctionDefinitions::GetResourceMapRootElement( lua_State* pLuaVM, PVOID pResource, const char* szMap )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8331,10 +8331,10 @@ void* CLuaFunctionDefinitions::GetResourceMapRootElement( lua_State* pLuaVM, voi
 		}
 	}
 
-	return false;
+	return nullptr;
 }
 
-void* CLuaFunctionDefinitions::GetResourceDynamicElementRoot( lua_State* pLuaVM, void* pResource )
+PVOID CLuaFunctionDefinitions::GetResourceDynamicElementRoot( lua_State* pLuaVM, PVOID pResource )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8350,10 +8350,10 @@ void* CLuaFunctionDefinitions::GetResourceDynamicElementRoot( lua_State* pLuaVM,
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-bool CLuaFunctionDefinitions::RemoveResourceFile( lua_State* pLuaVM, void* pResource, const char* szFilename )
+bool CLuaFunctionDefinitions::RemoveResourceFile( lua_State* pLuaVM, PVOID pResource, const char* szFilename )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8370,7 +8370,7 @@ bool CLuaFunctionDefinitions::RemoveResourceFile( lua_State* pLuaVM, void* pReso
 	return false;
 }
 
-CLuaArguments* CLuaFunctionDefinitions::GetResourceExportedFunctions( lua_State* pLuaVM, void* pResource )
+CLuaArguments* CLuaFunctionDefinitions::GetResourceExportedFunctions( lua_State* pLuaVM, PVOID pResource )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8383,10 +8383,10 @@ CLuaArguments* CLuaFunctionDefinitions::GetResourceExportedFunctions( lua_State*
 		return pLuaArgument.GetArray();
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-void* CLuaFunctionDefinitions::GetResourceFromName( lua_State* pLuaVM, const char* szResourceName )
+PVOID CLuaFunctionDefinitions::GetResourceFromName( lua_State* pLuaVM, const char* szResourceName )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8402,10 +8402,10 @@ void* CLuaFunctionDefinitions::GetResourceFromName( lua_State* pLuaVM, const cha
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-bool CLuaFunctionDefinitions::GetResourceInfo( lua_State* pLuaVM, void* pResource, const char* szAttribute, string& strInfo )
+bool CLuaFunctionDefinitions::GetResourceInfo( lua_State* pLuaVM, PVOID pResource, const char* szAttribute, string& strInfo )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8424,7 +8424,7 @@ bool CLuaFunctionDefinitions::GetResourceInfo( lua_State* pLuaVM, void* pResourc
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetResourceLastStartTime( lua_State* pLuaVM, void* pResource, unsigned int& uiTime )
+bool CLuaFunctionDefinitions::GetResourceLastStartTime( lua_State* pLuaVM, PVOID pResource, unsigned int& uiTime )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8442,7 +8442,7 @@ bool CLuaFunctionDefinitions::GetResourceLastStartTime( lua_State* pLuaVM, void*
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetResourceLoadFailureReason( lua_State* pLuaVM, void* pResource, string& strReason )
+bool CLuaFunctionDefinitions::GetResourceLoadFailureReason( lua_State* pLuaVM, PVOID pResource, string& strReason )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8460,7 +8460,7 @@ bool CLuaFunctionDefinitions::GetResourceLoadFailureReason( lua_State* pLuaVM, v
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetResourceLoadTime( lua_State* pLuaVM, void* pResource, unsigned int& uiTime )
+bool CLuaFunctionDefinitions::GetResourceLoadTime( lua_State* pLuaVM, PVOID pResource, unsigned int& uiTime )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8478,7 +8478,7 @@ bool CLuaFunctionDefinitions::GetResourceLoadTime( lua_State* pLuaVM, void* pRes
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetResourceName( lua_State* pLuaVM, void* pResource, string& strName )
+bool CLuaFunctionDefinitions::GetResourceName( lua_State* pLuaVM, PVOID pResource, string& strName )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8507,10 +8507,10 @@ CLuaArguments* CLuaFunctionDefinitions::GetResources( lua_State* pLuaVM )
 		return pLuaArgument.GetArray();
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-bool CLuaFunctionDefinitions::GetResourceState( lua_State* pLuaVM, void* pResource, string& strState )
+bool CLuaFunctionDefinitions::GetResourceState( lua_State* pLuaVM, PVOID pResource, string& strState )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8528,7 +8528,7 @@ bool CLuaFunctionDefinitions::GetResourceState( lua_State* pLuaVM, void* pResour
 	return false;
 }
 
-void* CLuaFunctionDefinitions::GetThisResource( lua_State* pLuaVM )
+PVOID CLuaFunctionDefinitions::GetThisResource( lua_State* pLuaVM )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8542,7 +8542,7 @@ void* CLuaFunctionDefinitions::GetThisResource( lua_State* pLuaVM )
 		}
 	}
 
-	return false;
+	return nullptr;
 }
 
 bool CLuaFunctionDefinitions::RefreshResources( lua_State* pLuaVM, bool refreshAll )
@@ -8561,7 +8561,7 @@ bool CLuaFunctionDefinitions::RefreshResources( lua_State* pLuaVM, bool refreshA
 	return false;
 }
 
-bool CLuaFunctionDefinitions::RemoveResourceDefaultSetting( lua_State* pLuaVM, void* pResource, const char* szSettingName )
+bool CLuaFunctionDefinitions::RemoveResourceDefaultSetting( lua_State* pLuaVM, PVOID pResource, const char* szSettingName )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8578,7 +8578,7 @@ bool CLuaFunctionDefinitions::RemoveResourceDefaultSetting( lua_State* pLuaVM, v
 	return false;
 }
 
-bool CLuaFunctionDefinitions::StartResource( lua_State* pLuaVM, void* pResource, bool persistent, bool startIncludedResources, bool loadServerConfigs, bool loadMaps, bool loadServerScripts, bool loadHTML, bool loadClientConfigs, bool loadClientScripts, bool loadFiles )
+bool CLuaFunctionDefinitions::StartResource( lua_State* pLuaVM, PVOID pResource, bool persistent, bool startIncludedResources, bool loadServerConfigs, bool loadMaps, bool loadServerScripts, bool loadHTML, bool loadClientConfigs, bool loadClientScripts, bool loadFiles )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8603,7 +8603,7 @@ bool CLuaFunctionDefinitions::StartResource( lua_State* pLuaVM, void* pResource,
 	return false;
 }
 
-bool CLuaFunctionDefinitions::RestartResource( lua_State* pLuaVM, void* pResource )
+bool CLuaFunctionDefinitions::RestartResource( lua_State* pLuaVM, PVOID pResource )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8619,7 +8619,7 @@ bool CLuaFunctionDefinitions::RestartResource( lua_State* pLuaVM, void* pResourc
 	return false;
 }
 
-bool CLuaFunctionDefinitions::StopResource( lua_State* pLuaVM, void* pResource )
+bool CLuaFunctionDefinitions::StopResource( lua_State* pLuaVM, PVOID pResource )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8635,7 +8635,7 @@ bool CLuaFunctionDefinitions::StopResource( lua_State* pLuaVM, void* pResource )
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetResourceDefaultSetting( lua_State* pLuaVM, void* pResource, const char* szSettingName, const char* szSettingValue )
+bool CLuaFunctionDefinitions::SetResourceDefaultSetting( lua_State* pLuaVM, PVOID pResource, const char* szSettingName, const char* szSettingValue )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8653,7 +8653,7 @@ bool CLuaFunctionDefinitions::SetResourceDefaultSetting( lua_State* pLuaVM, void
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetResourceDefaultSetting( lua_State* pLuaVM, void* pResource, const char* szSettingName, int iSettingValue )
+bool CLuaFunctionDefinitions::SetResourceDefaultSetting( lua_State* pLuaVM, PVOID pResource, const char* szSettingName, int iSettingValue )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8671,7 +8671,7 @@ bool CLuaFunctionDefinitions::SetResourceDefaultSetting( lua_State* pLuaVM, void
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetResourceDefaultSetting( lua_State* pLuaVM, void* pResource, const char* szSettingName, float fSettingValue )
+bool CLuaFunctionDefinitions::SetResourceDefaultSetting( lua_State* pLuaVM, PVOID pResource, const char* szSettingName, float fSettingValue )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8689,7 +8689,7 @@ bool CLuaFunctionDefinitions::SetResourceDefaultSetting( lua_State* pLuaVM, void
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetResourceInfo( lua_State* pLuaVM, void* pResource, const char* szAttribute, const char* szValue )
+bool CLuaFunctionDefinitions::SetResourceInfo( lua_State* pLuaVM, PVOID pResource, const char* szAttribute, const char* szValue )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8741,7 +8741,7 @@ bool CLuaFunctionDefinitions::DeleteResource( lua_State* pLuaVM, const char* szR
 	return false;
 }
 
-bool CLuaFunctionDefinitions::UpdateResourceACLRequest( lua_State* pLuaVM, void* pResource, const char* szRightName, bool bAccess, const char* szByWho )
+bool CLuaFunctionDefinitions::UpdateResourceACLRequest( lua_State* pLuaVM, PVOID pResource, const char* szRightName, bool bAccess, const char* szByWho )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8775,7 +8775,7 @@ LuaTable CLuaFunctionDefinitions::GetVersion( lua_State* pLuaVM )
 }
 
 // Camera get functions
-bool CLuaFunctionDefinitions::GetCameraMatrix( lua_State* pLuaVM, void* pPlayer, Vector3& vecPosition, Vector3& vecLookAt, float& fRoll, float& fFOV )
+bool CLuaFunctionDefinitions::GetCameraMatrix( lua_State* pLuaVM, PVOID pPlayer, Vector3& vecPosition, Vector3& vecLookAt, float& fRoll, float& fFOV )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8802,7 +8802,7 @@ bool CLuaFunctionDefinitions::GetCameraMatrix( lua_State* pLuaVM, void* pPlayer,
 	return false;
 }
 
-void* CLuaFunctionDefinitions::GetCameraTarget( lua_State* pLuaVM, void* pPlayer )
+PVOID CLuaFunctionDefinitions::GetCameraTarget( lua_State* pLuaVM, PVOID pPlayer )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8818,10 +8818,10 @@ void* CLuaFunctionDefinitions::GetCameraTarget( lua_State* pLuaVM, void* pPlayer
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-bool CLuaFunctionDefinitions::GetCameraInterior( lua_State* pLuaVM, void* pPlayer, unsigned char& ucInterior )
+bool CLuaFunctionDefinitions::GetCameraInterior( lua_State* pLuaVM, PVOID pPlayer, unsigned char& ucInterior )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8839,7 +8839,7 @@ bool CLuaFunctionDefinitions::GetCameraInterior( lua_State* pLuaVM, void* pPlaye
 
 // Camera set functions
 
-bool CLuaFunctionDefinitions::SetCameraMatrix( lua_State* pLuaVM, void* pElement, const Vector3& vecPosition, Vector3& pvecLookAt, float fRoll, float fFOV )
+bool CLuaFunctionDefinitions::SetCameraMatrix( lua_State* pLuaVM, PVOID pElement, const Vector3& vecPosition, Vector3& pvecLookAt, float fRoll, float fFOV )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8864,7 +8864,7 @@ bool CLuaFunctionDefinitions::SetCameraMatrix( lua_State* pLuaVM, void* pElement
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetCameraTarget( lua_State* pLuaVM, void* pElement, void* pTarget )
+bool CLuaFunctionDefinitions::SetCameraTarget( lua_State* pLuaVM, PVOID pElement, PVOID pTarget )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8879,7 +8879,7 @@ bool CLuaFunctionDefinitions::SetCameraTarget( lua_State* pLuaVM, void* pElement
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetCameraInterior( lua_State* pLuaVM, void* pElement, unsigned char ucInterior )
+bool CLuaFunctionDefinitions::SetCameraInterior( lua_State* pLuaVM, PVOID pElement, unsigned char ucInterior )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8894,7 +8894,7 @@ bool CLuaFunctionDefinitions::SetCameraInterior( lua_State* pLuaVM, void* pEleme
 	return false;
 }
 
-bool CLuaFunctionDefinitions::FadeCamera( lua_State* pLuaVM, void* pElement, bool bFadeIn, float fFadeTime, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue )
+bool CLuaFunctionDefinitions::FadeCamera( lua_State* pLuaVM, PVOID pElement, bool bFadeIn, float fFadeTime, unsigned char ucRed, unsigned char ucGreen, unsigned char ucBlue )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8915,7 +8915,7 @@ bool CLuaFunctionDefinitions::FadeCamera( lua_State* pLuaVM, void* pElement, boo
 
 // Weapon give/take functions
 
-bool CLuaFunctionDefinitions::GiveWeapon( lua_State* pLuaVM, void* pElement, unsigned char ucWeaponID, unsigned short usAmmo, bool bSetAsCurrent )
+bool CLuaFunctionDefinitions::GiveWeapon( lua_State* pLuaVM, PVOID pElement, unsigned char ucWeaponID, unsigned short usAmmo, bool bSetAsCurrent )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8932,7 +8932,7 @@ bool CLuaFunctionDefinitions::GiveWeapon( lua_State* pLuaVM, void* pElement, uns
 	return false;
 }
 
-bool CLuaFunctionDefinitions::TakeWeapon( lua_State* pLuaVM, void* pElement, unsigned char ucWeaponID, unsigned short usAmmo )
+bool CLuaFunctionDefinitions::TakeWeapon( lua_State* pLuaVM, PVOID pElement, unsigned char ucWeaponID, unsigned short usAmmo )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8948,7 +8948,7 @@ bool CLuaFunctionDefinitions::TakeWeapon( lua_State* pLuaVM, void* pElement, uns
 	return false;
 }
 
-bool CLuaFunctionDefinitions::TakeAllWeapons( lua_State* pLuaVM, void* pElement )
+bool CLuaFunctionDefinitions::TakeAllWeapons( lua_State* pLuaVM, PVOID pElement )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8962,7 +8962,7 @@ bool CLuaFunctionDefinitions::TakeAllWeapons( lua_State* pLuaVM, void* pElement 
 	return false;
 }
 
-bool CLuaFunctionDefinitions::SetWeaponAmmo( lua_State* pLuaVM, void* pElement, unsigned char ucWeaponID, unsigned short usAmmo, unsigned short usAmmoInClip )
+bool CLuaFunctionDefinitions::SetWeaponAmmo( lua_State* pLuaVM, PVOID pElement, unsigned char ucWeaponID, unsigned short usAmmo, unsigned short usAmmoInClip )
 {
 	CLuaArguments pLuaArguments;
 

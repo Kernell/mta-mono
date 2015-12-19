@@ -36,7 +36,7 @@ MonoArray* CMonoFunctions::Account::GetAll( void )
 		return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TLIGHTUSERDATA>( mono_get_uint32_class(), pLuaTable );
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 DWORD CMonoFunctions::Account::GetPlayer( DWORD pAccount )
@@ -61,7 +61,7 @@ bool CMonoFunctions::Account::IsGuest( DWORD pAccount )
 		}
 	}
 
-	return NULL;
+	return false;
 }
 
 MonoString* CMonoFunctions::Account::GetSerial( DWORD pAccount )
@@ -76,7 +76,7 @@ MonoString* CMonoFunctions::Account::GetSerial( DWORD pAccount )
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 // Account set funcs
@@ -100,7 +100,7 @@ bool CMonoFunctions::Account::Remove( DWORD pAccount )
 		return CLuaFunctionDefinitions::RemoveAccount( RESOURCE->GetLua(), (void*)pAccount );
 	}
 
-	return NULL;
+	return false;
 }
 
 bool CMonoFunctions::Account::SetPassword( DWORD pAccount, MonoString* msPassword )
@@ -112,7 +112,7 @@ bool CMonoFunctions::Account::SetPassword( DWORD pAccount, MonoString* msPasswor
 		return CLuaFunctionDefinitions::SetAccountPassword( RESOURCE->GetLua(), (void*)pAccount, szPassword );
 	}
 
-	return NULL;
+	return false;
 }
 
 bool CMonoFunctions::Account::CopyData( DWORD pAccount, DWORD pFromAccount )
@@ -122,5 +122,5 @@ bool CMonoFunctions::Account::CopyData( DWORD pAccount, DWORD pFromAccount )
 		return CLuaFunctionDefinitions::CopyAccountData( RESOURCE->GetLua(), (void*)pAccount, (void*)pFromAccount );
 	}
 
-	return NULL;
+	return false;
 }

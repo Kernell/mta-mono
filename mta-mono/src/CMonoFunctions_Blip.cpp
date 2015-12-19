@@ -84,7 +84,7 @@ MonoObject* CMonoFunctions::Blip::GetColor( DWORD pUserData )
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 short CMonoFunctions::Blip::GetOrdering( DWORD pUserData )

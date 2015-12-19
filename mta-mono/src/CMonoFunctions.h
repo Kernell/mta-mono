@@ -116,7 +116,7 @@ public:
 		static MonoString*		GetID								( DWORD pUserData );
 		static MonoObject*		GetData								( DWORD pUserData, MonoString* sKey, bool bInherit = true );
 		static MonoArray*		GetAllData							( DWORD pUserData );
-		static unsigned int		GetParent							( DWORD pUserData );
+		static DWORD			GetParent							( DWORD pUserData );
 		static MonoObject*		GetPosition							( DWORD pUserData );
 		static MonoObject*		GetRotation							( DWORD pUserData );
 		static MonoObject*		GetVelocity							( DWORD pUserData );

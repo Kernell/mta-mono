@@ -910,7 +910,7 @@ MonoString* CMonoFunctions::Game::GetRuleValue( MonoString* msKey )
 		return RESOURCE->GetDomain()->NewString( CLuaFunctionDefinitions::GetRuleValue( RESOURCE->GetLua(), szKey ) );
 	}
 
-	return false;
+	return nullptr;
 }
 
 bool CMonoFunctions::Game::SetRuleValue( MonoString* msKey, MonoString* msValue )

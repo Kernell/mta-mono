@@ -43,6 +43,8 @@ typedef unsigned short      WORD;       //  16
 typedef unsigned long       DWORD;      //  32      32      64
 typedef float               FLOAT;      //  32
 
+typedef void*               PVOID;
+
 #ifndef NUMELMS     // from DShow.h
     #define NUMELMS(aa) (sizeof(aa)/sizeof((aa)[0]))
 #endif
