@@ -10,6 +10,7 @@
 *
 *********************************************************/
 
+#include "StdInc.h"
 #include "CMonoFunctions.h"
 
 bool CMonoFunctions::Event::Add( MonoString* msName, bool bAllowRemoteTrigger )

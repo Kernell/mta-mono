@@ -10,6 +10,7 @@
 *
 *********************************************************/
 
+#include "StdInc.h"
 #include "CMonoFunctions.h"
 
 DWORD CMonoFunctions::Ban::Add( MonoString* msIP, MonoString* msUsername, MonoString* msSerial, DWORD pResponsible, MonoString* msResponsible, MonoString* msReason, int iUnban )

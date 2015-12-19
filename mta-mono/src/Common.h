@@ -71,6 +71,57 @@ namespace FunctionArgumentType
 }
 
 //
+// Some templates
+//
+template < class T >T Min ( const T& a, const T& b )
+{
+    return a < b ? a : b;
+}
+
+template < class T >T Max ( const T& a, const T& b )
+{
+    return a > b ? a : b;
+}
+
+// Clamps a value between two other values ( min < a < max )
+template< class T >T Clamp ( const T& min, const T& a, const T& max )
+{
+    return a < min ? min : a > max ? max : a;
+}
+
+// Lerps between two values depending on the weight
+template< class T >T Lerp ( const T& from, float fAlpha, const T& to )
+{
+    return (T)( ( to - from ) * fAlpha + from );
+}
+
+// Find the relative position of Pos between From and To
+inline const float Unlerp( const double dFrom, const double dPos, const double dTo )
+{
+    // Avoid dividing by 0 (results in INF values)
+    if ( dFrom == dTo ) return 1.0f;
+
+    return static_cast< float >( ( dPos - dFrom ) / ( dTo - dFrom ) );
+}
+
+// Unlerp avoiding extrapolation
+inline const float UnlerpClamped( const double dFrom, const double dPos, const double dTo )
+{
+    return Clamp( 0.0f, Unlerp( dFrom, dPos, dTo ), 1.0f );
+}
+
+template < class T > int Round ( T value )
+{
+    return static_cast< int >( floor( value + 0.5f ) );
+}
+
+template < class T > T WrapAround ( T fLow, T fValue, T fHigh )
+{
+    const T fSize = fHigh - fLow;
+    return fValue - ( fSize * floor( ( fValue - fLow ) / fSize ) );
+}
+
+//
 // SColor
 //
 // Encapsulates the most common usage of 4 byte color storage.
@@ -173,63 +224,6 @@ inline unsigned char COLOR_ARGB_A ( SColor color ) { return color.A; }
 inline SColor COLOR_RGBA ( unsigned char R, unsigned char G, unsigned char B, unsigned char A ) { return SColorRGBA ( R, G, B, A ); }
 inline SColor COLOR_ARGB ( unsigned char A, unsigned char R, unsigned char G, unsigned char B ) { return SColorRGBA ( R, G, B, A ); }
 inline SColor COLOR_ABGR ( unsigned char A, unsigned char B, unsigned char G, unsigned char R ) { return SColorRGBA ( R, G, B, A ); }
-
-//
-// Some templates
-//
-template < class T >
-T Min ( const T& a, const T& b )
-{
-    return a < b ? a : b;
-}
-
-template < class T >
-T Max ( const T& a, const T& b )
-{
-    return a > b ? a : b;
-}
-
-// Clamps a value between two other values ( min < a < max )
-template < class T >
-T Clamp ( const T& min, const T& a, const T& max )
-{
-    return a < min ? min : a > max ? max : a;
-}
-
-// Lerps between two values depending on the weight
-template< class T >
-T Lerp ( const T& from, float fAlpha, const T& to )
-{
-    return (T)( ( to - from ) * fAlpha + from );
-}
-
-// Find the relative position of Pos between From and To
-inline const float Unlerp ( const double dFrom, const double dPos, const double dTo )
-{
-    // Avoid dividing by 0 (results in INF values)
-    if ( dFrom == dTo ) return 1.0f;
-
-    return static_cast < float > ( ( dPos - dFrom ) / ( dTo - dFrom ) );
-}
-
-// Unlerp avoiding extrapolation
-inline const float UnlerpClamped ( const double dFrom, const double dPos, const double dTo )
-{
-    return Clamp ( 0.0f, Unlerp( dFrom, dPos, dTo ), 1.0f );
-}
-
-template < class T >
-int Round ( T value )
-{
-    return static_cast < int > ( std::floor ( value + 0.5f ) );
-}
-
-template < class T >
-T WrapAround ( T fLow, T fValue, T fHigh )
-{
-    const T fSize = fHigh - fLow;
-    return fValue - ( fSize * std::floor ( ( fValue - fLow ) / fSize ) );
-}
 
 class CVehicleColor
 {

@@ -10,6 +10,7 @@
 *
 *********************************************************/
 
+#include "../StdInc.h"
 #include "CLuaFunctionDefinitions.h"
 
 // All-Seeing Eye related Functions

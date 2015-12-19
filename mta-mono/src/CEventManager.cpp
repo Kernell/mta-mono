@@ -10,6 +10,7 @@
 *
 *********************************************************/
 
+#include "StdInc.h"
 #include "CEventManager.h"
 
 CEventManager::CEventManager( CResource* pResource )

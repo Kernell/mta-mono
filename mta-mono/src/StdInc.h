@@ -30,10 +30,14 @@ extern "C"
 #include <sys/stat.h>
 #include <assert.h>
 
+#ifdef WIN32
 #pragma warning( push )
 #pragma warning( disable: 4996 )
 #include <glib.h>
 #pragma warning( pop )
+#else
+#include <glib.h>
+#endif
 
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>

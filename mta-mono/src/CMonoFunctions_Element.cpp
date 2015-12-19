@@ -10,6 +10,7 @@
 *
 *********************************************************/
 
+#include "StdInc.h"
 #include "CMonoFunctions.h"
 
 // Element create/destroy

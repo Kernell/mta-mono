@@ -10,6 +10,7 @@
 *
 *********************************************************/
 
+#include "StdInc.h"
 #include "CMonoGC.h"
 
 CMonoGC::CMonoGC( void )
@@ -73,20 +74,10 @@ int64 CMonoGC::GetHeapSize()
 
 void CMonoGC::ReleaseGCHandle( unsigned int handle )
 {
-	if( handle == -1 )
-	{
-		return;
-	}
-
 	mono_gchandle_free( handle );
 }
 
 MonoObject* CMonoGC::GetGCHandleTarget( unsigned int handle )
 {
-	if( handle == -1 )
-	{
-		return nullptr;
-	}
-
 	return mono_gchandle_get_target( handle );
 }

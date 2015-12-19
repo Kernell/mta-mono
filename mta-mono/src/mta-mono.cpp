@@ -10,6 +10,8 @@
 *
 *********************************************************/
 
+#include "StdInc.h"
+
 #define MODULE_NAME         "Mono 4.2.1"
 #define MODULE_AUTHOR       "Dmitry Korolev <kernell@mtaroleplay.ru>"
 #define MODULE_VERSION      0.24f

@@ -10,6 +10,7 @@
 *
 *********************************************************/
 
+#include "StdInc.h"
 #include "CMonoCorlib.h"
 
 CMonoCorlib::CMonoCorlib( CMonoDomain* pDomain )

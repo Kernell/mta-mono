@@ -10,6 +10,7 @@
 *
 *********************************************************/
 
+#include "StdInc.h"
 #include "CMonoFunctions.h"
 
 // Audio funcs
@@ -27,7 +28,9 @@ bool CMonoFunctions::Audio::PlayMission( DWORD pUserData, MonoObject* pPosition,
 {
 	if( RESOURCE )
 	{
-		return CLuaFunctionDefinitions::PlayMissionAudio( RESOURCE->GetLua(), (void*)pUserData, Vector3( pPosition ), usSlot );
+		Vector3 vecPosition( pPosition );
+
+		return CLuaFunctionDefinitions::PlayMissionAudio( RESOURCE->GetLua(), (void*)pUserData, vecPosition, usSlot );
 	}
 
 	return false;

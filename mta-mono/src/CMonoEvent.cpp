@@ -10,6 +10,7 @@
 *
 *********************************************************/
 
+#include "StdInc.h"
 #include "CMonoEvent.h"
 
 CMonoEvent::CMonoEvent( CMonoClass* pClass, MonoEvent* pEvent )

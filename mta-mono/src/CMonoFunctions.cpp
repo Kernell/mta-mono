@@ -10,13 +10,14 @@
 *
 *********************************************************/
 
+#include "StdInc.h"
 #include "CMonoFunctions.h"
 
 void CMonoFunctions::AddInternals( void )
 {
-	mono_add_internal_call( "MultiTheftAuto.Debug::Log",						CMonoFunctions::Debug::Log );
-	mono_add_internal_call( "MultiTheftAuto.Debug::Info",						CMonoFunctions::Debug::Info );
-	mono_add_internal_call( "MultiTheftAuto.Debug::Error",						CMonoFunctions::Debug::Error );
+	mono_add_internal_call( "MultiTheftAuto.Debug::Log",						(const void*)CMonoFunctions::Debug::Log );
+	mono_add_internal_call( "MultiTheftAuto.Debug::Info",						(const void*)CMonoFunctions::Debug::Info );
+	mono_add_internal_call( "MultiTheftAuto.Debug::Error",						(const void*)CMonoFunctions::Debug::Error );
 
 	MONO_DECLARE( Config, Get );
 	MONO_DECLARE( Config, Set );

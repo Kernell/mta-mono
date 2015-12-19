@@ -10,6 +10,8 @@
 *
 *********************************************************/
 
+#include "StdInc.h"
+
 #ifndef _CMONO_FUNCS_PLAYER
 #define _CMONO_FUNCS_PLAYER
 

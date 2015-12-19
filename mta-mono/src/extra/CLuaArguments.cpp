@@ -16,6 +16,7 @@
 *
 *********************************************************/
 
+#include "../StdInc.h"
 #include "CLuaArguments.h"
 #include <assert.h>
 
@@ -103,7 +104,6 @@ bool CLuaArguments::Call ( lua_State* luaVM, const char* szFunction, int iResult
 
     if ( iret == LUA_ERRRUN || iret == LUA_ERRMEM )
     {
-        const char* szRes = lua_tostring( luaVM, -1 );
         return false; // the function call failed
     }
         

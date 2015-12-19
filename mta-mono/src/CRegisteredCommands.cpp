@@ -10,6 +10,7 @@
 *
 *********************************************************/
 
+#include "StdInc.h"
 #include "CRegisteredCommands.h"
 
 CRegisteredCommands::CRegisteredCommands( CResource* pResource )

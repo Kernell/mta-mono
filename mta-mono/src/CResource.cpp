@@ -10,6 +10,7 @@
 *
 *********************************************************/
 
+#include "StdInc.h"
 #include "CResource.h"
 
 CResource::CResource( CMonoInterface* pMono, lua_State *pLuaVM, string sName )

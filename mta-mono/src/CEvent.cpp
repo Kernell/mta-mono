@@ -10,6 +10,7 @@
 *
 *********************************************************/
 
+#include "StdInc.h"
 #include "CEvent.h"
 
 CEvent::CEvent( CEventManager* pEventManager, string strName, DWORD pElement, MonoObject* pMonoDelegate, bool bPropagated, string strPriority )
@@ -26,7 +27,6 @@ CEvent::CEvent( CEventManager* pEventManager, string strName, DWORD pElement, Mo
 CEvent::~CEvent( void )
 {
 	this->m_pMonoDelegate	= nullptr;
-	this->m_bPropagated		= nullptr;
 
 	this->m_pEventManager	= nullptr;
 }

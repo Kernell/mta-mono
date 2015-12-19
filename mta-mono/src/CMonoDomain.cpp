@@ -10,6 +10,7 @@
 *
 *********************************************************/
 
+#include "StdInc.h"
 #include "CMonoDomain.h"
 
 CMonoDomain::CMonoDomain( CMonoInterface* pMono, MonoDomain* pDomain, CResource* pResource, const char* szName )

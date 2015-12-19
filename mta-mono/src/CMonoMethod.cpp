@@ -10,6 +10,7 @@
 *
 *********************************************************/
 
+#include "StdInc.h"
 #include "CMonoMethod.h"
 
 CMonoMethod::CMonoMethod( CMonoClass* pClass, MonoMethod* pMethod )

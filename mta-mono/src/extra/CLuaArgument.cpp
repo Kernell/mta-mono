@@ -16,6 +16,7 @@
 *
 *********************************************************/
 
+#include "../StdInc.h"
 #include "CLuaArgument.h"
 #include <assert.h>
 #include <cstring>

@@ -31,7 +31,7 @@ extern CResourceManager	*g_pResourceManager;
 
 #define RESOURCE g_pResourceManager->GetFromList( mono_domain_get() )
 
-#define MONO_DECLARE(a,b) mono_add_internal_call("MultiTheftAuto.Native."#a"::"#b,CMonoFunctions::a::b)
+#define MONO_DECLARE(a,b) mono_add_internal_call("MultiTheftAuto.Native."#a"::"#b,(const void*)CMonoFunctions::a::b)
 
 class CMonoFunctions
 {

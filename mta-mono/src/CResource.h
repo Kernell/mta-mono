@@ -15,7 +15,6 @@ class CResource;
 #ifndef __CRESOURCE_H
 #define __CRESOURCE_H
 
-#include "Common.h"
 #include "CMonoClass.h"
 #include "CMonoEvent.h"
 #include "CMonoInterface.h"

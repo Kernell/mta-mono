@@ -10,6 +10,7 @@
 *
 *********************************************************/
 
+#include "StdInc.h"
 #include "CFunctions.h"
 #include "extra/CLuaArguments.h"
 
@@ -131,7 +132,7 @@ int CFunctions::monoCommandHandler( lua_State* pLuaVM )
 				return 0;
 			}
 
-			void* pPlayerSource;
+			void* pPlayerSource = nullptr;
 			string strCommandName;
 
 			uint i = 0;
@@ -140,8 +141,6 @@ int CFunctions::monoCommandHandler( lua_State* pLuaVM )
 
 			for( auto iter : pLuaArgs.GetArguments() )
 			{
-				int iLuaType = iter->GetType();
-
 				switch( i )
 				{
 					case 0:
