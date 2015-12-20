@@ -36,6 +36,8 @@ namespace Test
 			//Event.Trigger( "onTest", vehicle, "test", true, false, 123, 456.7f, 1337.01d, null, vehicle );
 
 			vehicle.Destroy();
+
+			Debug.Info( Color.Aquamarine.ToString() );
 		}
 
 		static void Root_OnPlayerJoin( Element sender, ElementEventArgs e )
@@ -43,6 +45,8 @@ namespace Test
 			Player player = sender as Player;
 
 			Debug.Info( "Player '" + player.GetName() + "' joined" );
+
+			player.FadeCamera( true, 1.0f, Color.Black );
 		}
 
 		static void Root_OnPlayerConnect( Element sender, PlayerConnectEventArgs e )
