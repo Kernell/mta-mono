@@ -8781,20 +8781,48 @@ bool CLuaFunctionDefinitions::GetCameraMatrix( lua_State* pLuaVM, PVOID pPlayer,
 
 	pLuaArguments.PushUserData( pPlayer );
 	
-	int i = 8;
+	int iArgumentsCount = 8;
 
-	if( pLuaArguments.Call( pLuaVM, "getCameraMatrix", i ) )
+	if( pLuaArguments.Call( pLuaVM, "getCameraMatrix", iArgumentsCount ) )
 	{
-		vecPosition.fX	= static_cast< float >( ( new CLuaArgument( pLuaVM, -( i-- ) ) )->GetNumber() );
-		vecPosition.fY	= static_cast< float >( ( new CLuaArgument( pLuaVM, -( i-- ) ) )->GetNumber() );
-		vecPosition.fZ	= static_cast< float >( ( new CLuaArgument( pLuaVM, -( i-- ) ) )->GetNumber() );
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		vecLookAt.fX	= static_cast< float >( ( new CLuaArgument( pLuaVM, -( i-- ) ) )->GetNumber() );
-		vecLookAt.fY	= static_cast< float >( ( new CLuaArgument( pLuaVM, -( i-- ) ) )->GetNumber() );
-		vecLookAt.fZ	= static_cast< float >( ( new CLuaArgument( pLuaVM, -( i-- ) ) )->GetNumber() );
+		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		{
+			return pLuaArgument.GetBoolean();
+		}
 
-		fRoll			= static_cast< float >( ( new CLuaArgument( pLuaVM, -( i-- ) ) )->GetNumber() );
-		fFOV			= static_cast< float >( ( new CLuaArgument( pLuaVM, -( i-- ) ) )->GetNumber() );
+		CLuaArguments pLuaArgs;
+
+		pLuaArgs.ReadArguments( pLuaVM );
+
+		uint i = 0;
+
+		for( auto iter : pLuaArgs.GetArguments() )
+		{
+			if( iter->GetType() != LUA_TNUMBER )
+			{
+				return false;
+			}
+
+			float fValue = iter->GetNumber< float >();
+
+			switch( i )
+			{
+				case 0: vecPosition.fX  = fValue; break;
+				case 1: vecPosition.fY  = fValue; break;
+				case 2: vecPosition.fZ  = fValue; break;
+
+				case 3: vecLookAt.fX    = fValue; break;
+				case 4: vecLookAt.fY    = fValue; break;
+				case 5: vecLookAt.fZ    = fValue; break;
+
+				case 6: fRoll           = fValue; break;
+				case 7: fFOV            = fValue; break;
+			}
+
+			i++;
+		}
 
 		return true;
 	}
@@ -8829,9 +8857,14 @@ bool CLuaFunctionDefinitions::GetCameraInterior( lua_State* pLuaVM, PVOID pPlaye
 	
 	if( pLuaArguments.Call( pLuaVM, "getCameraInterior", 1 ) )
 	{
-		ucInterior = static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		return true;
+		if( pLuaArgument.GetType() == LUA_TNUMBER )
+		{
+			ucInterior = pLuaArgument.GetNumber< unsigned char >();
+
+			return true;
+		}
 	}
 
 	return false;
@@ -8858,7 +8891,12 @@ bool CLuaFunctionDefinitions::SetCameraMatrix( lua_State* pLuaVM, PVOID pElement
 	
 	if( pLuaArguments.Call( pLuaVM, "setCameraMatrix", 1 ) )
 	{
-		return CLuaArgument( pLuaVM, -1 ).GetBoolean();
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		{
+			return pLuaArgument.GetBoolean();
+		}
 	}
 
 	return false;
@@ -8873,7 +8911,12 @@ bool CLuaFunctionDefinitions::SetCameraTarget( lua_State* pLuaVM, PVOID pElement
 
 	if( pLuaArguments.Call( pLuaVM, "setCameraTarget", 1 ) )
 	{
-		return ( new CLuaArgument( pLuaVM, -1 ) )->GetBoolean();
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		{
+			return pLuaArgument.GetBoolean();
+		}
 	}
 
 	return false;
@@ -8888,7 +8931,12 @@ bool CLuaFunctionDefinitions::SetCameraInterior( lua_State* pLuaVM, PVOID pEleme
 
 	if( pLuaArguments.Call( pLuaVM, "setCameraInterior", 1 ) )
 	{
-		return ( new CLuaArgument( pLuaVM, -1 ) )->GetBoolean();
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		{
+			return pLuaArgument.GetBoolean();
+		}
 	}
 
 	return false;
@@ -8905,9 +8953,14 @@ bool CLuaFunctionDefinitions::FadeCamera( lua_State* pLuaVM, PVOID pElement, boo
 	pLuaArguments.PushNumber( ucGreen );
 	pLuaArguments.PushNumber( ucBlue );
 
-	if( pLuaArguments.Call( pLuaVM, "fFadeCamera", 1 ) )
+	if( pLuaArguments.Call( pLuaVM, "fadeCamera", 1 ) )
 	{
-		return ( new CLuaArgument( pLuaVM, -1 ) )->GetBoolean();
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		{
+			return pLuaArgument.GetBoolean();
+		}
 	}
 
 	return false;

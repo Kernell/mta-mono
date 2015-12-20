@@ -33,7 +33,7 @@ CMonoInterface::CMonoInterface( void )
 	mono_trace_set_print_handler( CMonoInterface::MonoPrintCallbackHandler );
 	mono_trace_set_printerr_handler( CMonoInterface::MonoPrintErrorCallbackHandler );
 
-	this->m_pMonoDomain = mono_jit_init_version( "Mono Root", "v4.0.30319" );
+	this->m_pMonoDomain = mono_jit_init_version( "mono_root_domain", "v4.0.30319" );
 
 	CMonoInterface::m_pMTALib	= mono_assembly_open_full( "mods/deathmatch/mono/lib/MultiTheftAuto.dll", nullptr, FALSE );
 

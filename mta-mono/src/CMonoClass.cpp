@@ -22,7 +22,7 @@ CMonoClass::CMonoClass( MonoClass* pMonoClass, CMonoDomain* pDomain )
 
 	while( pMonoBaseClass )
 	{
-		gpointer iter = nullptr;
+		PVOID iter = nullptr;
 
 		while( MonoMethod* pMonoMethod = mono_class_get_methods( pMonoBaseClass, &iter ) )
 		{

@@ -830,7 +830,7 @@ MonoObject* CMonoFunctions::Server::GetVersion( void )
 
 			CMonoCorlib* pLib = RESOURCE->GetDomain()->GetCorlib();
 
-			void** args = new gpointer[ 8 ];
+			PVOID* args = new PVOID[ 8 ];
 
 			MonoObject* pNumber			= pLib->Class[ "uint64" ]->Box( &ulNumber );
 			MonoString* pString			= RESOURCE->GetDomain()->NewString( szString );

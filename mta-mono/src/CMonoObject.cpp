@@ -47,7 +47,7 @@ bool CMonoObject::SetPropertyValue( MonoObject* pObject, const char* szPropertyN
 	return CMonoObject::SetPropertyValue( pObject, szPropertyName, mono_string_new( mono_domain_get(), szValue ) );
 }
 
-bool CMonoObject::SetPropertyValue( MonoObject* pObject, const char* szPropertyName, gpointer gValue )
+bool CMonoObject::SetPropertyValue( MonoObject* pObject, const char* szPropertyName, PVOID gValue )
 {
 	MonoClass* pMonoClass = mono_object_get_class( pObject );
 	
@@ -58,7 +58,7 @@ bool CMonoObject::SetPropertyValue( MonoObject* pObject, const char* szPropertyN
 		return false;
 	}
 
-	gpointer args[ 1 ] = { gValue };
+	PVOID args[ 1 ] = { gValue };
 
 	mono_property_set_value( pMonoProperty, pObject, args, NULL );
 

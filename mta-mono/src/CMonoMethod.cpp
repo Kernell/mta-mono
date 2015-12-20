@@ -39,7 +39,7 @@ void CMonoMethod::ParseSignature( void )
 
 	if( pSignature )
 	{
-		gpointer iter = nullptr;
+		PVOID iter = nullptr;
 
 		this->m_strSignature += this->GetName() + "(";
 

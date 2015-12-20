@@ -31,12 +31,12 @@ AC_ARG_ENABLE([debug],
               [want_debug="$enableval"], [want_debug=no])
 
 if test "x$want_debug" = "xyes" -a $ac_cv_c_compiler_gnu != no; then
-	CFLAGS="$CFLAGS -std=c++0x -pipe -Wall -O0 -ggdb"
-	CXXFLAGS="$CXXFLAGS -std=c++0x -pipe -Wall -O0 -ggdb"
+	CFLAGS="$CFLAGS -std=c++0x -pipe -Wall -O0 -ggdb -Wl,--export-dynamic"
+	CXXFLAGS="$CXXFLAGS -std=c++0x -pipe -Wall -O0 -ggdb -Wl,--export-dynamic"
 	AC_DEFINE([DEBUG], 1, [Define for debugging])
 else
-	CFLAGS="$CFLAGS -std=c++0x -pipe -Wall -O2 -DNDEBUG -D_FORTIFY_SOURCE=2 -fPIC -MD"
-	CXXFLAGS="$CXXFLAGS -std=c++0x -pipe -Wall -O2 -DNDEBUG -D_FORTIFY_SOURCE=2 -fPIC -MD"
+	CFLAGS="$CFLAGS -std=c++0x -pipe -Wall -O2 -DNDEBUG -D_FORTIFY_SOURCE=2 -fPIC -MD -Wl,--export-dynamic"
+	CXXFLAGS="$CXXFLAGS -std=c++0x -pipe -Wall -O2 -DNDEBUG -D_FORTIFY_SOURCE=2 -fPIC -MD -Wl,--export-dynamic"
 fi
 
 AC_CONFIG_FILES([Makefile src/Makefile src/extra/Makefile src/lua/Makefile])

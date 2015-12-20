@@ -82,7 +82,7 @@ void** CMonoEvent::ParseArguments( list< CLuaArgument* > argv )
 	CMonoMTALib* pMTALib = this->GetClass()->GetDomain()->GetMTALib();
 	CMonoCorlib* pCorlib = this->GetClass()->GetDomain()->GetCorlib();
 
-	gpointer *pArguments = new gpointer[ argv.size() ];
+	PVOID* pArguments = new PVOID[ argv.size() ];
 	
 	uint argc = 0;
 

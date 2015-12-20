@@ -25,7 +25,7 @@ public:
 	static bool SetPropertyValue( MonoObject* pMonoObject, const char* szPropertyName, int iValue );
 	static bool SetPropertyValue( MonoObject* pMonoObject, const char* szPropertyName, float fValue );
 	static bool SetPropertyValue( MonoObject* pMonoObject, const char* szPropertyName, char* szValue );
-	static bool SetPropertyValue( MonoObject* pMonoObject, const char* szPropertyName, gpointer gValue );
+	static bool SetPropertyValue( MonoObject* pMonoObject, const char* szPropertyName, PVOID gValue );
 
 	static MonoObject* GetPropertyValue( MonoObject* pMonoObject, const char* szPropertyName );
 	

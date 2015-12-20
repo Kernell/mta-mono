@@ -176,7 +176,7 @@ void CRegisteredCommands::Invoke( void* pUserData, MonoObject* pDelegate, string
 		mono_array_set( pArguments, MonoString*, index++, this->m_pResource->GetDomain()->NewString( arg ) );
 	}
 
-	gpointer* params = new gpointer[ 3 ];
+	PVOID* params = new PVOID[ 3 ];
 
 	params[ 0 ] = pPlayer;
 	params[ 1 ] = pCommandName;

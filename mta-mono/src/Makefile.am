@@ -1,4 +1,4 @@
-AM_CPPFLAGS=-I. -I./include -I../vendor/lua51/src -I../vendor/eglib/src
+AM_CPPFLAGS=-I. -I./include -I../vendor/lua51/src -I../vendor/eglib/src -I/usr/include/mono-2.0
 
 SUBDIRS = extra lua
 
@@ -44,4 +44,4 @@ libmta_mono_la_SOURCES = \
 	mta-mono.cpp \
 	StdInc.cpp
 	
-libmta_mono_la_LIBADD = -lstdc++ -lm -llua_f_defs -lmta_mono_extra -llua -leglib -lmonoboehm-2.0 -L./lua -L./extra -L../lib -L../vendor/lua51/src
+libmta_mono_la_LIBADD = -L/usr/lib64 -lmono-2.0 -lm -lrt -ldl -lpthread -lstdc++ -llua_f_defs -lmta_mono_extra -llua -leglib -L./lua -L./extra -L../lib -L../vendor/lua51/src
