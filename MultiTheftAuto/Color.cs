@@ -350,22 +350,10 @@ namespace MultiTheftAuto
 
 		internal string name;
 
-		public uint R = 255;
-		public uint G = 255;
-		public uint B = 255;
-		public uint A = 255;
-
-		public uint Alpha
-		{
-			get
-			{
-				return this.A;
-			}
-			set
-			{
-				this.A = value;
-			}
-		}
+		public uint R { get; set; }
+		public uint G { get; set; }
+		public uint B { get; set; }
+		public uint A { get; set; }
 
 		public string Name
 		{
