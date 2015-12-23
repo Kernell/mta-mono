@@ -526,7 +526,7 @@ public:
 		static DWORD					CreateCuboid					( MonoObject* pPosition, MonoObject* vecSize );
 		static DWORD					CreateSphere					( MonoObject* pPosition, float fRadius );
 		static DWORD					CreateRectangle					( MonoObject* pPosition, MonoObject* vecSize );
-		static DWORD					CreatePolygon					( MonoArray* vecPointList );
+		static DWORD					CreatePolygon					( float fX, float fY, float fX1, float fY1, float fX2, float fY2, float fX3, float fY3, MonoArray* vecPointList );
 		static DWORD					CreateTube						( MonoObject* pPosition, float fRadius, float fHeight );
 	};
 
