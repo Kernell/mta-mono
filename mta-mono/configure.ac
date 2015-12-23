@@ -2,20 +2,8 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.69])
-AC_INIT(mta-mono, 0.25a, kernell.it@gmail.com)
+AC_INIT(mta-mono, 0.26a, kernell.it@gmail.com)
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
-
-AC_ARG_ENABLE(debug,
-AS_HELP_STRING([--enable-debug],
-               [enable debugging, default: no]),
-[case "${enableval}" in
-             yes) debug=true ;;
-             no)  debug=false ;;
-             *)   AC_MSG_ERROR([bad value ${enableval} for --enable-debug]) ;;
-esac],
-[debug=false])
-
-AM_CONDITIONAL(DEBUG, test x"$debug" = x"true")
 
 # prevent setting xFLAGS to default of -g -O2
 if test x"$CFLAGS" = x""; then
@@ -25,18 +13,23 @@ if test x"$CXXFLAGS" = x""; then
   AC_SUBST(CXXFLAGS, [ ])
 fi
 
-AC_ARG_ENABLE([debug], 
-              AC_HELP_STRING([--enable-debug],
-              [compile with debug symbols @<:@default=no@:>@]),
-              [want_debug="$enableval"], [want_debug=no])
+AC_ARG_ENABLE(debug,
+	AC_HELP_STRING([--enable-debug], [compile with debug symbols @<:@default=no@:>@]),
+	[case "${enableval}" in
+		 yes) debug=true ;;
+		 no)  debug=false ;;
+		 *)   AC_MSG_ERROR([bad value ${enableval} for --enable-debug]);;
+	esac],
+	[debug=false]
+)
 
-if test "x$want_debug" = "xyes" -a $ac_cv_c_compiler_gnu != no; then
-	CFLAGS="$CFLAGS -std=c++0x -pipe -Wall -O0 -ggdb -Wl,--export-dynamic"
-	CXXFLAGS="$CXXFLAGS -std=c++0x -pipe -Wall -O0 -ggdb -Wl,--export-dynamic"
+if test x"$debug" == x"true"; then
+	CFLAGS="$CFLAGS -std=c++0x -Wall -O0 -pipe -fPIC -ggdb -D_DEBUG -D_REENTRANT"
+	CXXFLAGS="$CXXFLAGS -std=c++0x -Wall -O0 -pipe -fPIC -D_DEBUG -ggdb -D_REENTRANT"
 	AC_DEFINE([DEBUG], 1, [Define for debugging])
 else
-	CFLAGS="$CFLAGS -std=c++0x -pipe -Wall -O2 -DNDEBUG -D_FORTIFY_SOURCE=2 -fPIC -MD -Wl,--export-dynamic"
-	CXXFLAGS="$CXXFLAGS -std=c++0x -pipe -Wall -O2 -DNDEBUG -D_FORTIFY_SOURCE=2 -fPIC -MD -Wl,--export-dynamic"
+	CFLAGS="$CFLAGS -std=c++0x -Wall -O2 -pipe -fPIC -MD -DNDEBUG -D_REENTRANT"
+	CXXFLAGS="$CXXFLAGS -std=c++0x -Wall -O2 -pipe -fPIC -MD -DNDEBUG -D_REENTRANT"
 fi
 
 AC_CONFIG_FILES([Makefile src/Makefile src/extra/Makefile src/lua/Makefile])

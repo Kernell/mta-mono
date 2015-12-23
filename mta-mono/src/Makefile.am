@@ -44,4 +44,4 @@ libmta_mono_la_SOURCES = \
 	mta-mono.cpp \
 	StdInc.cpp
 	
-libmta_mono_la_LIBADD = -L/usr/lib64 -lmono-2.0 -lm -lrt -ldl -lpthread -lstdc++ -llua_f_defs -lmta_mono_extra -llua -leglib -L./lua -L./extra -L../lib -L../vendor/lua51/src
+libmta_mono_la_LIBADD = -L/usr/lib64 -lmono-2.0 -lm -lrt -ldl -lpthread -lstdc++ -llua_f_defs -lmta_mono_extra -llua -L./lua -L./extra -L../lib -L../vendor/lua51/src
