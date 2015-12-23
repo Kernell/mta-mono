@@ -24,21 +24,26 @@ AC_ARG_ENABLE(debug,
 )
 
 if test x"$debug" == x"true"; then
-	CFLAGS="$CFLAGS -std=c++0x -Wall -O0 -pipe -fPIC -ggdb -D_DEBUG -D_REENTRANT"
-	CXXFLAGS="$CXXFLAGS -std=c++0x -Wall -O0 -pipe -fPIC -D_DEBUG -ggdb -D_REENTRANT"
+	CFLAGS="$CFLAGS -std=c++0x -Wall -O0 -pipe -fPIC -ggdb -D_DEBUG -DGC_LINUX_THREADS -D_REENTRANT"
+	CXXFLAGS="$CXXFLAGS -std=c++0x -Wall -O0 -pipe -fPIC -D_DEBUG -ggdb -DGC_LINUX_THREADS -D_REENTRANT"
 	AC_DEFINE([DEBUG], 1, [Define for debugging])
 else
-	CFLAGS="$CFLAGS -std=c++0x -Wall -O2 -pipe -fPIC -MD -DNDEBUG -D_REENTRANT"
-	CXXFLAGS="$CXXFLAGS -std=c++0x -Wall -O2 -pipe -fPIC -MD -DNDEBUG -D_REENTRANT"
+	CFLAGS="$CFLAGS -std=c++0x -Wall -O2 -pipe -fPIC -MD -DNDEBUG -DGC_LINUX_THREADS -D_REENTRANT"
+	CXXFLAGS="$CXXFLAGS -std=c++0x -Wall -O2 -pipe -fPIC -MD -DNDEBUG -DGC_LINUX_THREADS -D_REENTRANT"
 fi
 
 AC_CONFIG_FILES([Makefile src/Makefile src/extra/Makefile src/lua/Makefile])
 
-AM_PROG_AR
-
+AC_CHECK_TOOL(CC, gcc, gcc)
 AC_PROG_CC
+AC_CHECK_TOOL(CXX, g++, g++)
 AC_PROG_CXX
+AM_PROG_AR
+AM_PROG_AS
 AC_PROG_LIBTOOL
+AC_PROG_INSTALL
+AC_PROG_AWK
+AM_PROG_CC_C_O
 
 AC_C_CONST
 AC_TYPE_SIZE_T
