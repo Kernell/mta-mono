@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace MultiTheftAuto.Native
 {
-	public class Blip
+	internal class Blip
 	{
 		// Blip create/destroy functions
 		[MethodImpl( MethodImplOptions.InternalCall )]
