@@ -83,28 +83,24 @@ MonoObject* CMonoFunctions::Vehicle::GetColor( DWORD pUserData )
 {
 	if( RESOURCE )
 	{
-		CVehicleColor pColor;
+		CVehicleColor pVehicleColor;
 		
-		if( CLuaFunctionDefinitions::GetVehicleColor( RESOURCE->GetLua(), (void*)pUserData, pColor ) )
+		if( CLuaFunctionDefinitions::GetVehicleColor( RESOURCE->GetLua(), (PVOID)pUserData, pVehicleColor ) )
 		{
-			SColor pColor1 = pColor.GetRGBColor( 0 );
-			SColor pColor2 = pColor.GetRGBColor( 1 );
-			SColor pColor3 = pColor.GetRGBColor( 2 );
-			SColor pColor4 = pColor.GetRGBColor( 3 );
+			CMonoMTALib* pMTALib = RESOURCE->GetDomain()->GetMTALib();
 
-			void* args[] =
+			PVOID args[ 4 ];
+
+			for( int i = 0; i < 4; i++ )
 			{
-				&pColor1,
-				&pColor2,
-				&pColor3,
-				&pColor4
-			};
+				args[ i ] = pMTALib->Color->New( pVehicleColor.GetRGBColor( i ) );
+			}
 
-			return RESOURCE->GetDomain()->GetMTALib()->GetClass( "VehicleColor" )->New( args, 4 );
+			return pMTALib->GetClass( "VehicleColor" )->New( args, 4 );
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 unsigned short CMonoFunctions::Vehicle::GetModelFromName( MonoString* msName )
