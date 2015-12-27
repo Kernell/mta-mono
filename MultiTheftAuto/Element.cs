@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using MultiTheftAuto.EventArgs;
 using MultiTheftAuto.Pools;
 using MultiTheftAuto.Utils;
@@ -343,30 +344,16 @@ namespace MultiTheftAuto
 
 		public override string ToString()
 		{
-			return string.Format( "[{0}: 0x{1}]", this.GetType(), this.userdata.ToString( "X" ) );
+			return string.Format( "[{0}: 0x{1}]", this.GetType().Name, this.userdata.ToString( "X8" ) );
 		}
 
 		#endregion
 
 		#region Static methods
 
-		public static T[] GetByType<T>( string elementType ) where T : class
+		public static IEnumerable<T> GetByType<T>( string elementType ) where T : class
 		{
-			UInt32[] userdataArray = Native.Element.GetByType( elementType );
-
-			T[] elements = new T[ userdataArray.Length ];
-
-			for( uint i = 0; i < userdataArray.Length; i++ )
-			{
-				UInt32 userdata = userdataArray[ i ];
-
-				if( userdata != 0 )
-				{
-					elements.SetValue( Element.FindOrCreate( userdata ) as T, i );
-				}
-			}
-			
-			return elements;
+			return Native.Element.GetByType( elementType ).Select( i => Element.FindOrCreate( i ) as T );
 		}
 
 		public static Object GetByID( string elementID, int index = 0 )
