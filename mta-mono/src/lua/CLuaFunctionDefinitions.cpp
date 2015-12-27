@@ -496,8 +496,9 @@ PVOID CLuaFunctionDefinitions::CloneElement( lua_State* pLuaVM, PVOID pUserData,
 
 // Element get funcs
 
-CLuaArguments* CLuaFunctionDefinitions::GetElementsByType( lua_State* pLuaVM, const char* szTypeName, PVOID pUserData )
+CLuaArgumentsVector CLuaFunctionDefinitions::GetElementsByType( lua_State* pLuaVM, const char* szTypeName, PVOID pUserData )
 {
+	CLuaArgument pLuaArgument;
 	CLuaArguments pLuaArguments;
 
 	pLuaArguments.PushString( szTypeName );
@@ -509,12 +510,10 @@ CLuaArguments* CLuaFunctionDefinitions::GetElementsByType( lua_State* pLuaVM, co
 
 	if( pLuaArguments.Call( pLuaVM, "getElementsByType", 1 ) )
 	{
-		CLuaArgument pLuaArgument( pLuaVM, -1 );
-
-		return pLuaArgument.GetArray();
+		pLuaArgument.Read( pLuaVM, -1 );
 	}
-	
-	return nullptr;
+
+	return pLuaArgument.GetArray();
 }
 
 bool CLuaFunctionDefinitions::IsElement( lua_State* pLuaVM, PVOID pUserData )
@@ -647,8 +646,9 @@ string CLuaFunctionDefinitions::GetElementID( lua_State* pLuaVM, PVOID pUserData
 	return string();
 }
 
-CLuaArgument* CLuaFunctionDefinitions::GetElementData( lua_State* pLuaVM, PVOID pUserData, string sKey, bool bInherit )
+CLuaArgument CLuaFunctionDefinitions::GetElementData( lua_State* pLuaVM, PVOID pUserData, string sKey, bool bInherit )
 {
+	CLuaArgument pLuaArgument;
 	CLuaArguments pLuaArguments;
 
 	pLuaArguments.PushUserData( pUserData );
@@ -657,13 +657,13 @@ CLuaArgument* CLuaFunctionDefinitions::GetElementData( lua_State* pLuaVM, PVOID 
 
 	if( pLuaArguments.Call( pLuaVM, "getElementData", 1 ) )
 	{
-		return new CLuaArgument( pLuaVM, -1 );
+		pLuaArgument.Read( pLuaVM, -1 );
 	}
 
-	return nullptr;
+	return pLuaArgument;
 }
 
-CLuaArguments* CLuaFunctionDefinitions::GetAllElementData( lua_State* pLuaVM, PVOID pUserData )
+CLuaArguments CLuaFunctionDefinitions::GetAllElementData( lua_State* pLuaVM, PVOID pUserData )
 {
 	CLuaArguments pLuaArguments;
 
@@ -671,14 +671,14 @@ CLuaArguments* CLuaFunctionDefinitions::GetAllElementData( lua_State* pLuaVM, PV
 
 	if( pLuaArguments.Call( pLuaVM, "getAllElementData", 1 ) )
 	{
-		CLuaArguments *pLuaArguments = new CLuaArguments();
-
-		pLuaArguments->ReadArguments( pLuaVM );
-
-		return pLuaArguments;
+		pLuaArguments.ReadArguments( pLuaVM );
+	}
+	else
+	{
+		pLuaArguments.DeleteArguments();
 	}
 
-	return nullptr;
+	return pLuaArguments;
 }
 
 PVOID CLuaFunctionDefinitions::GetElementParent( lua_State* pLuaVM, PVOID pUserData )
@@ -708,9 +708,9 @@ bool CLuaFunctionDefinitions::GetElementPosition( lua_State* pLuaVM, PVOID pUser
 	
 	if( pLuaArguments.Call( pLuaVM, "getElementPosition", 3 ) )
 	{
-		vecPosition.fX = static_cast< float >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
-		vecPosition.fY = static_cast< float >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
-		vecPosition.fZ = static_cast< float >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		vecPosition.fX = static_cast< float >( CLuaArgument( pLuaVM, -3 ).GetNumber() );
+		vecPosition.fY = static_cast< float >( CLuaArgument( pLuaVM, -2 ).GetNumber() );
+		vecPosition.fZ = static_cast< float >( CLuaArgument( pLuaVM, -1 ).GetNumber() );
 		
 		return true;
 	}
@@ -726,9 +726,9 @@ bool CLuaFunctionDefinitions::GetElementRotation( lua_State* pLuaVM, PVOID pUser
 	
 	if( pLuaArguments.Call( pLuaVM, "getElementRotation", 3 ) )
 	{
-		vecRotation.fX = static_cast< float >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
-		vecRotation.fY = static_cast< float >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
-		vecRotation.fZ = static_cast< float >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		vecRotation.fX = static_cast< float >( CLuaArgument( pLuaVM, -3 ).GetNumber() );
+		vecRotation.fY = static_cast< float >( CLuaArgument( pLuaVM, -2 ).GetNumber() );
+		vecRotation.fZ = static_cast< float >( CLuaArgument( pLuaVM, -1 ).GetNumber() );
 		
 		return true;
 	}
@@ -745,9 +745,9 @@ bool CLuaFunctionDefinitions::GetElementVelocity( lua_State* pLuaVM, PVOID pUser
 	
 	if( pLuaArguments.Call( pLuaVM, "getElementVelocity", 3 ) )
 	{
-		vecVelocity.fX = static_cast< float >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
-		vecVelocity.fY = static_cast< float >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
-		vecVelocity.fZ = static_cast< float >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		vecVelocity.fX = static_cast< float >( CLuaArgument( pLuaVM, -3 ).GetNumber() );
+		vecVelocity.fY = static_cast< float >( CLuaArgument( pLuaVM, -2 ).GetNumber() );
+		vecVelocity.fZ = static_cast< float >( CLuaArgument( pLuaVM, -1 ).GetNumber() );
 		
 		return true;
 	}
@@ -997,12 +997,12 @@ bool CLuaFunctionDefinitions::GetElementAttachedOffsets( lua_State* pLuaVM, PVOI
 
 	if( pLuaArguments.Call( pLuaVM, "getElementAttachedOffsets", 6 ) )
 	{
-		vecPosition.fX	= static_cast< float >( ( new CLuaArgument( pLuaVM, -6 ) )->GetNumber() );
-		vecPosition.fY	= static_cast< float >( ( new CLuaArgument( pLuaVM, -5 ) )->GetNumber() );
-		vecPosition.fZ	= static_cast< float >( ( new CLuaArgument( pLuaVM, -4 ) )->GetNumber() );
-		vecRotation.fX	= static_cast< float >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
-		vecRotation.fY	= static_cast< float >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
-		vecRotation.fZ	= static_cast< float >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		vecPosition.fX	= static_cast< float >( CLuaArgument( pLuaVM, -6 ).GetNumber() );
+		vecPosition.fY	= static_cast< float >( CLuaArgument( pLuaVM, -5 ).GetNumber() );
+		vecPosition.fZ	= static_cast< float >( CLuaArgument( pLuaVM, -4 ).GetNumber() );
+		vecRotation.fX	= static_cast< float >( CLuaArgument( pLuaVM, -3 ).GetNumber() );
+		vecRotation.fY	= static_cast< float >( CLuaArgument( pLuaVM, -2 ).GetNumber() );
+		vecRotation.fZ	= static_cast< float >( CLuaArgument( pLuaVM, -1 ).GetNumber() );
 
 		return true;
 	}
@@ -1634,28 +1634,30 @@ bool CLuaFunctionDefinitions::GetPlayerWantedLevel( lua_State* pLuaVM, PVOID pUs
 	return false;
 }
 
-CLuaArguments* CLuaFunctionDefinitions::GetAlivePlayers( lua_State* pLuaVM )
+CLuaArgumentsVector CLuaFunctionDefinitions::GetAlivePlayers( lua_State* pLuaVM )
 {
+	CLuaArgument pLuaArgument;
 	CLuaArguments pLuaArguments;
 
 	if( pLuaArguments.Call( pLuaVM, "getAlivePlayers", 1 ) )
 	{
-		return CLuaArgument( pLuaVM, -1 ).GetArray();
+		pLuaArgument.Read( pLuaVM, -1 );
 	}
 
-	return nullptr;
+	return pLuaArgument.GetArray();
 }
 
-CLuaArguments* CLuaFunctionDefinitions::GetDeadPlayers( lua_State* pLuaVM )
+CLuaArgumentsVector CLuaFunctionDefinitions::GetDeadPlayers( lua_State* pLuaVM )
 {
+	CLuaArgument pLuaArgument;
 	CLuaArguments pLuaArguments;
 
 	if( pLuaArguments.Call( pLuaVM, "getDeadPlayers", 1 ) )
 	{
-		return CLuaArgument( pLuaVM, -1 ).GetArray();
+		pLuaArgument.Read( pLuaVM, -1 );
 	}
 
-	return nullptr;
+	return pLuaArgument.GetArray();
 }
 
 bool CLuaFunctionDefinitions::GetPlayerIdleTime( lua_State* pLuaVM, PVOID pUserData, unsigned int& uiIdleTime )
@@ -1853,20 +1855,23 @@ string CLuaFunctionDefinitions::GetPlayerVersion( lua_State* pLuaVM, PVOID pUser
 	return string();
 }
 
-LuaTable CLuaFunctionDefinitions::GetPlayerACInfo( lua_State* pLuaVM, PVOID pUserData )
+CLuaArgumentsMap* CLuaFunctionDefinitions::GetPlayerACInfo( lua_State* pLuaVM, PVOID pUserData )
 {
-	map<string, CLuaArgument*> pLuaTable;
-
 	CLuaArguments pLuaArguments;
 	
 	pLuaArguments.PushUserData( pUserData );
 	
 	if( pLuaArguments.Call( pLuaVM, "getPlayerACInfo", 1 ) )
 	{
-		pLuaTable = CLuaArgument( pLuaVM, -1 ).GetTable();
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		if( pLuaArgument.GetType() == LUA_TTABLE )
+		{
+			return &pLuaArgument.GetTable();
+		}
 	}
 	
-	return pLuaTable;
+	return nullptr;
 }
 
 // Player set functions
@@ -2313,8 +2318,8 @@ bool CLuaFunctionDefinitions::GetPedClothes( lua_State* pLuaVM, PVOID pUserData,
 
 	if( pLuaArguments.Call( pLuaVM, "getPedClothes", 2 ) )
 	{
-		strOutTexture	= string( ( new CLuaArgument( pLuaVM, -2 ) )->GetString() );
-		strOutModel		= string( ( new CLuaArgument( pLuaVM, -1 ) )->GetString() );
+		strOutTexture	= CLuaArgument( pLuaVM, -2 ).GetString();
+		strOutModel		= CLuaArgument( pLuaVM, -1 ).GetString();
 
 		return true;
 	}
@@ -3037,8 +3042,8 @@ bool CLuaFunctionDefinitions::GetVehicleVariant( lua_State* pLuaVM, PVOID pUserD
 
 	if( pLuaArguments.Call( pLuaVM, "getVehicleVariant", 2 ) )
 	{
-		ucVariant	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
-		ucVariant2	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		ucVariant	= static_cast< unsigned char >( CLuaArgument( pLuaVM, -2 ).GetNumber() );
+		ucVariant2	= static_cast< unsigned char >( CLuaArgument( pLuaVM, -1 ).GetNumber() );
 
 		return true;
 	}
@@ -3138,7 +3143,12 @@ bool CLuaFunctionDefinitions::GetVehicleName( lua_State* pLuaVM, PVOID pUserData
 
 	if( pLuaArguments.Call( pLuaVM, "getVehicleName", 1 ) )
 	{
-		strOutName = string( CLuaArgument( pLuaVM, -1 ).GetString() );
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		if( pLuaArgument.GetType() == LUA_TSTRING )
+		{
+			strOutName = pLuaArgument.GetString();
+		}
 
 		return true;
 	}
@@ -3154,7 +3164,12 @@ bool CLuaFunctionDefinitions::GetVehicleNameFromModel( lua_State* pLuaVM, unsign
 
 	if( pLuaArguments.Call( pLuaVM, "getVehicleNameFromModel", 1 ) )
 	{
-		strOutName = string( CLuaArgument( pLuaVM, -1 ).GetString() );
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		if( pLuaArgument.GetType() == LUA_TSTRING )
+		{
+			strOutName = pLuaArgument.GetString();
+		}
 
 		return true;
 	}
@@ -3182,18 +3197,19 @@ PVOID CLuaFunctionDefinitions::GetVehicleOccupant( lua_State* pLuaVM, PVOID pUse
 	return nullptr;
 }
 
-CLuaArguments* CLuaFunctionDefinitions::GetVehicleOccupants( lua_State* pLuaVM, PVOID pUserData )
+CLuaArgumentsVector CLuaFunctionDefinitions::GetVehicleOccupants( lua_State* pLuaVM, PVOID pUserData )
 {
+	CLuaArgument pLuaArgument;
 	CLuaArguments pLuaArguments;
 
 	pLuaArguments.PushUserData( pUserData );
 
 	if( pLuaArguments.Call( pLuaVM, "getVehicleOccupants", 1 ) )
 	{
-		return CLuaArgument( pLuaVM, -1 ).GetArray();
+		pLuaArgument.Read( pLuaVM, -1 );
 	}
 
-	return nullptr;
+	return pLuaArgument.GetArray();
 }
 
 PVOID CLuaFunctionDefinitions::GetVehicleController( lua_State* pLuaVM, PVOID pUserData )
@@ -3223,9 +3239,14 @@ bool CLuaFunctionDefinitions::GetVehicleSirensOn( lua_State* pLuaVM, PVOID pUser
 
 	if( pLuaArguments.Call( pLuaVM, "getVehicleSirensOn", 1 ) )
 	{
-		bSirensOn = CLuaArgument( pLuaVM, -1 ).GetBoolean();
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		return true;
+		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		{
+			bSirensOn = pLuaArgument.GetBoolean();
+
+			return true;
+		}
 	}
 
 	return false;
@@ -3282,18 +3303,19 @@ bool CLuaFunctionDefinitions::IsVehicleLocked( lua_State* pLuaVM, PVOID pUserDat
 	return false;
 }
 
-CLuaArguments* CLuaFunctionDefinitions::GetVehiclesOfType( lua_State* pLuaVM, unsigned int uiModel )
+CLuaArgumentsVector CLuaFunctionDefinitions::GetVehiclesOfType( lua_State* pLuaVM, unsigned int uiModel )
 {
-	CLuaArguments* pLuaArguments = new CLuaArguments();
+	CLuaArgument pLuaArgument;
+	CLuaArguments pLuaArguments;
 
-	pLuaArguments->PushNumber( uiModel );
+	pLuaArguments.PushNumber( uiModel );
 
-	if( pLuaArguments->Call( pLuaVM, "getVehiclesOfType", 1 ) )
+	if( pLuaArguments.Call( pLuaVM, "getVehiclesOfType", 1 ) )
 	{
-		return CLuaArgument( pLuaVM, -1 ).GetArray();
+		pLuaArgument.Read( pLuaVM, -1 );
 	}
 
-	return nullptr;
+	return pLuaArgument.GetArray();
 }
 
 bool CLuaFunctionDefinitions::GetVehicleUpgradeOnSlot( lua_State* pLuaVM, PVOID pUserData, unsigned char ucSlot, unsigned short& usUpgrade )
@@ -3305,26 +3327,32 @@ bool CLuaFunctionDefinitions::GetVehicleUpgradeOnSlot( lua_State* pLuaVM, PVOID 
 
 	if( pLuaArguments.Call( pLuaVM, "getVehicleUpgradeOnSlot", 1 ) )
 	{
-		usUpgrade = CLuaArgument( pLuaVM, -1 ).GetNumber< unsigned short >();
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		return true;
+		if( pLuaArgument.GetType() == LUA_TNUMBER )
+		{
+			usUpgrade = pLuaArgument.GetNumber< unsigned short >();
+
+			return true;
+		}
 	}
 
 	return false;
 }
 
-CLuaArguments* CLuaFunctionDefinitions::GetVehicleUpgrades( lua_State* pLuaVM, PVOID pUserData )
+CLuaArgumentsVector CLuaFunctionDefinitions::GetVehicleUpgrades( lua_State* pLuaVM, PVOID pUserData )
 {
+	CLuaArgument pLuaArgument;
 	CLuaArguments pLuaArguments;
 
 	pLuaArguments.PushUserData( pUserData );
 
 	if( pLuaArguments.Call( pLuaVM, "getVehicleUpgrades", 1 ) )
 	{
-		return CLuaArgument( pLuaVM, -1 ).GetArray();
+		pLuaArgument.Read( pLuaVM, -1 );
 	}
 
-	return nullptr;
+	return pLuaArgument.GetArray();
 }
 
 bool CLuaFunctionDefinitions::GetVehicleUpgradeSlotName( lua_State* pLuaVM, unsigned char ucSlot, string& strOutName )
@@ -3335,7 +3363,7 @@ bool CLuaFunctionDefinitions::GetVehicleUpgradeSlotName( lua_State* pLuaVM, unsi
 
 	if( pLuaArguments.Call( pLuaVM, "getVehicleUpgradeSlotName", 1 ) )
 	{
-		strOutName = string( CLuaArgument( pLuaVM, -1 ).GetString() );
+		strOutName = CLuaArgument( pLuaVM, -1 ).GetString();
 		
 		return true;
 	}
@@ -3351,7 +3379,7 @@ bool CLuaFunctionDefinitions::GetVehicleUpgradeSlotName( lua_State* pLuaVM, unsi
 
 	if( pLuaArguments.Call( pLuaVM, "getVehicleUpgradeSlotName", 1 ) )
 	{
-		strOutName = string( CLuaArgument( pLuaVM, -1 ).GetString() );
+		strOutName = CLuaArgument( pLuaVM, -1 ).GetString();
 		
 		return true;
 	}
@@ -3359,18 +3387,19 @@ bool CLuaFunctionDefinitions::GetVehicleUpgradeSlotName( lua_State* pLuaVM, unsi
 	return false;
 }
 
-CLuaArguments* CLuaFunctionDefinitions::GetVehicleCompatibleUpgrades( lua_State* pLuaVM, PVOID pUserData )
+CLuaArgumentsVector CLuaFunctionDefinitions::GetVehicleCompatibleUpgrades( lua_State* pLuaVM, PVOID pUserData )
 {
+	CLuaArgument pLuaArgument;
 	CLuaArguments pLuaArguments;
 
 	pLuaArguments.PushUserData( pUserData );
 
 	if( pLuaArguments.Call( pLuaVM, "getVehicleCompatibleUpgrades", 1 ) )
 	{
-		return CLuaArgument( pLuaVM, -1 ).GetArray();
+		pLuaArgument.Read( pLuaVM, -1 );
 	}
 
-	return nullptr;
+	return pLuaArgument.GetArray();
 }
 
 bool CLuaFunctionDefinitions::GetVehicleDoorState( lua_State* pLuaVM, PVOID pUserData, unsigned char ucDoor, unsigned char& ucState )
@@ -3398,10 +3427,10 @@ bool CLuaFunctionDefinitions::GetVehicleWheelStates( lua_State* pLuaVM, PVOID pU
 
 	if( pLuaArguments.Call( pLuaVM, "getVehicleWheelStates", 4 ) )
 	{
-		ucFrontLeft		= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -4 ) )->GetNumber() );
-		ucRearLeft		= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
-		ucFrontRight	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
-		ucRearRight		= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		ucFrontLeft		= static_cast< unsigned char >( CLuaArgument( pLuaVM, -4 ).GetNumber() );
+		ucRearLeft		= static_cast< unsigned char >( CLuaArgument( pLuaVM, -3 ).GetNumber() );
+		ucFrontRight	= static_cast< unsigned char >( CLuaArgument( pLuaVM, -2 ).GetNumber() );
+		ucRearRight		= static_cast< unsigned char >( CLuaArgument( pLuaVM, -1 ).GetNumber() );
 
 		return true;
 	}
@@ -4655,10 +4684,10 @@ bool CLuaFunctionDefinitions::GetMarkerColor( lua_State* pLuaVM, PVOID pUserData
 
 	if( pLuaArguments.Call( pLuaVM, "getMarkerColor", 4 ) )
 	{
-		outColor.R	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -4 ) )->GetNumber() );
-		outColor.G	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
-		outColor.B	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
-		outColor.A	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		outColor.R	= static_cast< unsigned char >( CLuaArgument( pLuaVM, -4 ).GetNumber() );
+		outColor.G	= static_cast< unsigned char >( CLuaArgument( pLuaVM, -3 ).GetNumber() );
+		outColor.B	= static_cast< unsigned char >( CLuaArgument( pLuaVM, -2 ).GetNumber() );
+		outColor.A	= static_cast< unsigned char >( CLuaArgument( pLuaVM, -1 ).GetNumber() );
 
 		return true;
 	}
@@ -4674,9 +4703,9 @@ bool CLuaFunctionDefinitions::GetMarkerTarget( lua_State* pLuaVM, PVOID pUserDat
 
 	if( pLuaArguments.Call( pLuaVM, "getMarkerTarget", 3 ) )
 	{
-		vecTarget.fX	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
-		vecTarget.fY	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
-		vecTarget.fZ	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		vecTarget.fX	= static_cast< unsigned char >( CLuaArgument( pLuaVM, -3 ).GetNumber() );
+		vecTarget.fY	= static_cast< unsigned char >( CLuaArgument( pLuaVM, -2 ).GetNumber() );
+		vecTarget.fZ	= static_cast< unsigned char >( CLuaArgument( pLuaVM, -1 ).GetNumber() );
 
 		return true;
 	}
@@ -4908,10 +4937,10 @@ bool CLuaFunctionDefinitions::GetBlipColor( lua_State* pLuaVM, PVOID pUserData, 
 
 	if( pLuaArguments.Call( pLuaVM, "getBlipColor", 4 ) )
 	{
-		outColor.R	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -4 ) )->GetNumber() );
-		outColor.G	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
-		outColor.B	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
-		outColor.A	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		outColor.R	= static_cast< unsigned char >( CLuaArgument( pLuaVM, -4 ).GetNumber() );
+		outColor.G	= static_cast< unsigned char >( CLuaArgument( pLuaVM, -3 ).GetNumber() );
+		outColor.B	= static_cast< unsigned char >( CLuaArgument( pLuaVM, -2 ).GetNumber() );
+		outColor.A	= static_cast< unsigned char >( CLuaArgument( pLuaVM, -1 ).GetNumber() );
 
 		return true;
 	}
@@ -5084,9 +5113,9 @@ bool CLuaFunctionDefinitions::GetObjectScale( lua_State* pLuaVM, PVOID pUserData
 
 	if( pLuaArguments.Call( pLuaVM, "getObjectScale", 3 ) )
 	{
-		vecScale.fX = static_cast< float >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
-		vecScale.fY = static_cast< float >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
-		vecScale.fZ = static_cast< float >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		vecScale.fX = static_cast< float >( CLuaArgument( pLuaVM, -3 ).GetNumber() );
+		vecScale.fY = static_cast< float >( CLuaArgument( pLuaVM, -2 ).GetNumber() );
+		vecScale.fZ = static_cast< float >( CLuaArgument( pLuaVM, -1 ).GetNumber() );
 
 		return true;
 	}
@@ -5204,8 +5233,8 @@ bool CLuaFunctionDefinitions::GetRadarAreaSize( lua_State* pLuaVM, PVOID pUserDa
 
 	if( pLuaArguments.Call( pLuaVM, "getRadarAreaSize", 2 ) )
 	{
-		vecSize.fX = static_cast< float >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
-		vecSize.fY = static_cast< float >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		vecSize.fX = CLuaArgument( pLuaVM, -2 ).GetNumber< float >();
+		vecSize.fY = CLuaArgument( pLuaVM, -1 ).GetNumber< float >();
 
 		return true;
 	}
@@ -5221,10 +5250,10 @@ bool CLuaFunctionDefinitions::GetRadarAreaColor( lua_State* pLuaVM, PVOID pUserD
 
 	if( pLuaArguments.Call( pLuaVM, "getRadarAreaColor", 4 ) )
 	{
-		outColor.R	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -4 ) )->GetNumber() );
-		outColor.G	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
-		outColor.B	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
-		outColor.A	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		outColor.R	= CLuaArgument( pLuaVM, -4 ).GetNumber< unsigned char >();
+		outColor.G	= CLuaArgument( pLuaVM, -3 ).GetNumber< unsigned char >();
+		outColor.B	= CLuaArgument( pLuaVM, -2 ).GetNumber< unsigned char >();
+		outColor.A	= CLuaArgument( pLuaVM, -1 ).GetNumber< unsigned char >();
 
 		return true;
 	}
@@ -5781,8 +5810,8 @@ bool CLuaFunctionDefinitions::GetTypeIndexFromClothes( lua_State* pLuaVM, const 
 
 	if( pLuaArguments.Call( pLuaVM, "getTypeIndexFromClothes", 2 ) )
 	{
-		ucTypeReturn	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
-		ucIndexReturn	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		ucTypeReturn	= CLuaArgument( pLuaVM, -2 ).GetNumber< unsigned char >();
+		ucIndexReturn	= CLuaArgument( pLuaVM, -1 ).GetNumber< unsigned char >();
 
 		return true;
 	}
@@ -6015,9 +6044,9 @@ bool CLuaFunctionDefinitions::GetTeamColor( lua_State* pLuaVM, PVOID pTeam, unsi
 
 	if( pLuaArguments.Call( pLuaVM, "getTeamColor", 3 ) )
 	{
-		ucRed	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
-		ucGreen	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
-		ucBlue	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		ucRed	= CLuaArgument( pLuaVM, -3 ).GetNumber< unsigned char >();
+		ucGreen	= CLuaArgument( pLuaVM, -2 ).GetNumber< unsigned char >();
+		ucBlue	= CLuaArgument( pLuaVM, -1 ).GetNumber< unsigned char >();
 
 		return true;
 	}
@@ -6246,9 +6275,9 @@ bool CLuaFunctionDefinitions::GetWaterVertexPosition( lua_State* pLuaVM, PVOID p
 
 	if( pLuaArguments.Call( pLuaVM, "getWaterVertexPosition", 3 ) )
 	{
-		vecPosition.fX = static_cast< float >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
-		vecPosition.fY = static_cast< float >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
-		vecPosition.fZ = static_cast< float >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		vecPosition.fX = CLuaArgument( pLuaVM, -3 ).GetNumber< float >();
+		vecPosition.fY = CLuaArgument( pLuaVM, -2 ).GetNumber< float >();
+		vecPosition.fZ = CLuaArgument( pLuaVM, -1 ).GetNumber< float >();
 
 		return true;
 	}
@@ -6282,10 +6311,10 @@ bool CLuaFunctionDefinitions::GetWaterColor( lua_State* pLuaVM, unsigned char& u
 
 	if( pLuaArguments.Call( pLuaVM, "getWaterColor", 4 ) )
 	{
-		ucRed	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -4 ) )->GetNumber() );
-		ucGreen	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
-		ucBlue	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
-		ucAlpha	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		ucRed	= CLuaArgument( pLuaVM, -4 ).GetNumber< unsigned char >();
+		ucGreen	= CLuaArgument( pLuaVM, -3 ).GetNumber< unsigned char >();
+		ucBlue	= CLuaArgument( pLuaVM, -2 ).GetNumber< unsigned char >();
+		ucAlpha	= CLuaArgument( pLuaVM, -1 ).GetNumber< unsigned char >();
 
 		return true;
 	}
@@ -6429,8 +6458,8 @@ bool CLuaFunctionDefinitions::GetTime( lua_State* pLuaVM, unsigned char& ucHour,
 
 	if( pLuaArguments.Call( pLuaVM, "getTime", 2 ) )
 	{
-		ucHour		= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
-		ucMinute	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		ucHour		= CLuaArgument( pLuaVM, -2 ).GetNumber< unsigned char >();
+		ucMinute	= CLuaArgument( pLuaVM, -1 ).GetNumber< unsigned char >();
 
 		return true;
 	}
@@ -6444,8 +6473,8 @@ bool CLuaFunctionDefinitions::GetWeather( lua_State* pLuaVM, unsigned char& ucWe
 
 	if( pLuaArguments.Call( pLuaVM, "getWeather", 2 ) )
 	{
-		ucWeather			= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
-		ucWeatherBlendingTo	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		ucWeather			= CLuaArgument( pLuaVM, -2 ).GetNumber< unsigned char >();
+		ucWeatherBlendingTo	= CLuaArgument( pLuaVM, -1 ).GetNumber< unsigned char >();
 
 		return true;
 	}
@@ -6483,7 +6512,7 @@ bool CLuaFunctionDefinitions::GetGravity( lua_State* pLuaVM, float& fGravity )
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		fGravity = static_cast< float >( pLuaArgument.GetNumber() );
+		fGravity = pLuaArgument.GetNumber< float >();
 		
 		return true;
 	}
@@ -6499,7 +6528,7 @@ bool CLuaFunctionDefinitions::GetGameSpeed( lua_State* pLuaVM, float& fSpeed )
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		fSpeed = static_cast< float >( pLuaArgument.GetNumber() );
+		fSpeed = pLuaArgument.GetNumber< float >();
 		
 		return true;
 	}
@@ -6515,7 +6544,7 @@ bool CLuaFunctionDefinitions::GetWaveHeight( lua_State* pLuaVM, float& fHeight )
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		fHeight = static_cast< float >( pLuaArgument.GetNumber() );
+		fHeight = pLuaArgument.GetNumber< float >();
 		
 		return true;
 	}
@@ -6531,7 +6560,7 @@ bool CLuaFunctionDefinitions::GetFPSLimit( lua_State* pLuaVM, unsigned short& us
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		usLimit = static_cast< unsigned short >( pLuaArgument.GetNumber() );
+		usLimit = pLuaArgument.GetNumber< unsigned short >();
 		
 		return true;
 	}
@@ -6547,7 +6576,7 @@ bool CLuaFunctionDefinitions::GetMinuteDuration( lua_State* pLuaVM, unsigned lon
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		ulDuration = static_cast< unsigned long >( pLuaArgument.GetNumber() );
+		ulDuration = pLuaArgument.GetNumber< unsigned long >();
 		
 		return true;
 	}
@@ -6579,7 +6608,7 @@ bool CLuaFunctionDefinitions::GetTrafficLightState( lua_State* pLuaVM, unsigned 
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		ucState = static_cast< unsigned char >( pLuaArgument.GetNumber() );
+		ucState = pLuaArgument.GetNumber< unsigned char >();
 		
 		return true;
 	}
@@ -6611,7 +6640,7 @@ bool CLuaFunctionDefinitions::GetJetpackMaxHeight( lua_State* pLuaVM, float& fMa
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		fMaxHeight = static_cast< float >( pLuaArgument.GetNumber() );
+		fMaxHeight = pLuaArgument.GetNumber< float >();
 		
 		return true;
 	}
@@ -6627,7 +6656,7 @@ bool CLuaFunctionDefinitions::GetAircraftMaxVelocity( lua_State* pLuaVM, float& 
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		fVelocity = static_cast< float >( pLuaArgument.GetNumber() );
+		fVelocity = pLuaArgument.GetNumber< float >();
 		
 		return true;
 	}
@@ -6659,7 +6688,7 @@ bool CLuaFunctionDefinitions::GetRainLevel( lua_State* pLuaVM, float& fRainLevel
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		fRainLevel = static_cast< float >( pLuaArgument.GetNumber() );
+		fRainLevel = pLuaArgument.GetNumber< float >();
 		
 		return true;
 	}
@@ -6675,7 +6704,7 @@ bool CLuaFunctionDefinitions::GetSunSize( lua_State* pLuaVM, float& fSunSize )
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		fSunSize = static_cast< float >( pLuaArgument.GetNumber() );
+		fSunSize = pLuaArgument.GetNumber< float >();
 		
 		return true;
 	}
@@ -6689,13 +6718,13 @@ bool CLuaFunctionDefinitions::GetSunColor( lua_State* pLuaVM, unsigned char& ucC
 
 	if( pLuaArguments.Call( pLuaVM, "getSunColor", 6 ) )
 	{
-		ucCoreR		= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -6 ) )->GetNumber() );
-		ucCoreG		= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -5 ) )->GetNumber() );
-		ucCoreB		= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -4 ) )->GetNumber() );
+		ucCoreR		= CLuaArgument( pLuaVM, -6 ).GetNumber< unsigned char >();
+		ucCoreG		= CLuaArgument( pLuaVM, -5 ).GetNumber< unsigned char >();
+		ucCoreB		= CLuaArgument( pLuaVM, -4 ).GetNumber< unsigned char >();
 
-		ucCoronaR	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
-		ucCoronaG	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
-		ucCoronaB	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		ucCoronaR	= CLuaArgument( pLuaVM, -3 ).GetNumber< unsigned char >();
+		ucCoronaG	= CLuaArgument( pLuaVM, -2 ).GetNumber< unsigned char >();
+		ucCoronaB	= CLuaArgument( pLuaVM, -1 ).GetNumber< unsigned char >();
 
 		return true;
 	}
@@ -6709,9 +6738,9 @@ bool CLuaFunctionDefinitions::GetWindVelocity( lua_State* pLuaVM, float& fVelX, 
 
 	if( pLuaArguments.Call( pLuaVM, "getWindVelocity", 3 ) )
 	{
-		fVelX	= static_cast< float >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
-		fVelY	= static_cast< float >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
-		fVelZ	= static_cast< float >( ( new CLuaArgument( pLuaVM, -1 ) )->GetNumber() );
+		fVelX	= CLuaArgument( pLuaVM, -3 ).GetNumber< float >();
+		fVelY	= CLuaArgument( pLuaVM, -2 ).GetNumber< float >();
+		fVelZ	= CLuaArgument( pLuaVM, -1 ).GetNumber< float >();
 
 		return true;
 	}
@@ -6727,7 +6756,7 @@ bool CLuaFunctionDefinitions::GetFarClipDistance( lua_State* pLuaVM, float& fFar
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		fFarClip = static_cast< float >( pLuaArgument.GetNumber() );
+		fFarClip = pLuaArgument.GetNumber< float >();
 		
 		return true;
 	}
@@ -6743,7 +6772,7 @@ bool CLuaFunctionDefinitions::GetFogDistance( lua_State* pLuaVM, float& fFogDist
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		fFogDist = static_cast< float >( pLuaArgument.GetNumber() );
+		fFogDist = pLuaArgument.GetNumber< float >();
 		
 		return true;
 	}
@@ -6759,7 +6788,7 @@ bool CLuaFunctionDefinitions::GetAircraftMaxHeight( lua_State* pLuaVM, float& fM
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		fMaxHeight = static_cast< float >( pLuaArgument.GetNumber() );
+		fMaxHeight = pLuaArgument.GetNumber< float >();
 		
 		return true;
 	}
@@ -6791,7 +6820,7 @@ bool CLuaFunctionDefinitions::GetMoonSize( lua_State* pLuaVM, int& iSize )
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		iSize = static_cast< int >( pLuaArgument.GetNumber() );
+		iSize = pLuaArgument.GetNumber< int >();
 		
 		return true;
 	}
@@ -6904,13 +6933,13 @@ bool CLuaFunctionDefinitions::GetSkyGradient( lua_State* pLuaVM, unsigned char& 
 
 	if( pLuaArguments.Call( pLuaVM, "getSkyGradient", 6 ) )
 	{
-		ucTopRed		= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -6 ) )->GetBoolean() );
-		ucTopGreen		= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -5 ) )->GetBoolean() );
-		ucTopBlue		= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -4 ) )->GetBoolean() );
+		ucTopRed		= CLuaArgument( pLuaVM, -6 ).GetNumber< unsigned char >();
+		ucTopGreen		= CLuaArgument( pLuaVM, -5 ).GetNumber< unsigned char >();
+		ucTopBlue		= CLuaArgument( pLuaVM, -4 ).GetNumber< unsigned char >();
 
-		ucBottomRed		= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -3 ) )->GetBoolean() );
-		ucBottomGreen	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -2 ) )->GetBoolean() );
-		ucBottomBlue	= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -1 ) )->GetBoolean() );
+		ucBottomRed		= CLuaArgument( pLuaVM, -3 ).GetNumber< unsigned char >();
+		ucBottomGreen	= CLuaArgument( pLuaVM, -2 ).GetNumber< unsigned char >();
+		ucBottomBlue	= CLuaArgument( pLuaVM, -1 ).GetNumber< unsigned char >();
 
 		return true;
 	}
@@ -6960,15 +6989,15 @@ bool CLuaFunctionDefinitions::GetHeatHaze( lua_State* pLuaVM, SHeatHazeSettings&
 
 	if( pLuaArguments.Call( pLuaVM, "getHeatHaze", 9 ) )
 	{
-		heatHazeSettings.ucIntensity		= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -9 ) )->GetNumber() );
-		heatHazeSettings.ucRandomShift		= static_cast< unsigned char >( ( new CLuaArgument( pLuaVM, -8 ) )->GetNumber() );
-		heatHazeSettings.usSpeedMin			= static_cast< unsigned short >( ( new CLuaArgument( pLuaVM, -7 ) )->GetNumber() );
-		heatHazeSettings.usSpeedMax			= static_cast< unsigned short >( ( new CLuaArgument( pLuaVM, -6 ) )->GetNumber() );
-		heatHazeSettings.sScanSizeX			= static_cast< short >( ( new CLuaArgument( pLuaVM, -5 ) )->GetNumber() );
-		heatHazeSettings.sScanSizeY			= static_cast< short >( ( new CLuaArgument( pLuaVM, -4 ) )->GetNumber() );
-		heatHazeSettings.usRenderSizeX		= static_cast< unsigned short >( ( new CLuaArgument( pLuaVM, -3 ) )->GetNumber() );
-		heatHazeSettings.usRenderSizeY		= static_cast< unsigned short >( ( new CLuaArgument( pLuaVM, -2 ) )->GetNumber() );
-		heatHazeSettings.bInsideBuilding	= ( new CLuaArgument( pLuaVM, -1 ) )->GetBoolean();
+		heatHazeSettings.ucIntensity		= CLuaArgument( pLuaVM, -9 ).GetNumber< unsigned char >();
+		heatHazeSettings.ucRandomShift		= CLuaArgument( pLuaVM, -8 ).GetNumber< unsigned char >();
+		heatHazeSettings.usSpeedMin			= CLuaArgument( pLuaVM, -7 ).GetNumber< unsigned short >();
+		heatHazeSettings.usSpeedMax			= CLuaArgument( pLuaVM, -6 ).GetNumber< unsigned short >();
+		heatHazeSettings.sScanSizeX			= CLuaArgument( pLuaVM, -5 ).GetNumber< short >();
+		heatHazeSettings.sScanSizeY			= CLuaArgument( pLuaVM, -4 ).GetNumber< short >();
+		heatHazeSettings.usRenderSizeX		= CLuaArgument( pLuaVM, -3 ).GetNumber< unsigned short >();
+		heatHazeSettings.usRenderSizeY		= CLuaArgument( pLuaVM, -2 ).GetNumber< unsigned short >();
+		heatHazeSettings.bInsideBuilding	= CLuaArgument( pLuaVM, -1 ).GetBoolean();
 
 		return true;
 	}
@@ -7640,18 +7669,17 @@ PVOID CLuaFunctionDefinitions::GetAccount( lua_State* pLuaVM, const char* szName
 	return nullptr;
 }
 
-CLuaArguments* CLuaFunctionDefinitions::GetAccounts( lua_State* pLuaVM )
+CLuaArgumentsVector CLuaFunctionDefinitions::GetAccounts( lua_State* pLuaVM )
 {
+	CLuaArgument pLuaArgument;
 	CLuaArguments pLuaArguments;
 
 	if( pLuaArguments.Call( pLuaVM, "getAccounts", 1 ) )
 	{
-		CLuaArgument pLuaArgument( pLuaVM, -1 );
-
-		return pLuaArgument.GetArray();
+		pLuaArgument.Read( pLuaVM, -1 );
 	}
 
-	return nullptr;
+	return pLuaArgument.GetArray();
 }
 
 PVOID CLuaFunctionDefinitions::GetAccountPlayer( lua_State* pLuaVM, PVOID pAccount )
@@ -7691,8 +7719,9 @@ bool CLuaFunctionDefinitions::IsGuestAccount( lua_State* pLuaVM, PVOID pAccount,
 	return false;
 }
 
-CLuaArgument* CLuaFunctionDefinitions::GetAccountData( lua_State* pLuaVM, PVOID pAccount, const char* szKey )
+CLuaArgument CLuaFunctionDefinitions::GetAccountData( lua_State* pLuaVM, PVOID pAccount, const char* szKey )
 {
+	CLuaArgument pLuaArgument;
 	CLuaArguments pLuaArguments;
 
 	pLuaArguments.PushUserData( pAccount );
@@ -7700,10 +7729,10 @@ CLuaArgument* CLuaFunctionDefinitions::GetAccountData( lua_State* pLuaVM, PVOID 
 
 	if( pLuaArguments.Call( pLuaVM, "getAccountData", 1 ) )
 	{
-		return new CLuaArgument( pLuaVM, -1 );
+		pLuaArgument.Read( pLuaVM, -1 );
 	}
 
-	return nullptr;
+	return pLuaArgument;
 }
 
 bool CLuaFunctionDefinitions::GetAllAccountData( lua_State* pLuaVM, PVOID pAccount )
@@ -8370,20 +8399,19 @@ bool CLuaFunctionDefinitions::RemoveResourceFile( lua_State* pLuaVM, PVOID pReso
 	return false;
 }
 
-CLuaArguments* CLuaFunctionDefinitions::GetResourceExportedFunctions( lua_State* pLuaVM, PVOID pResource )
+CLuaArgumentsVector CLuaFunctionDefinitions::GetResourceExportedFunctions( lua_State* pLuaVM, PVOID pResource )
 {
+	CLuaArgument pLuaArgument;
 	CLuaArguments pLuaArguments;
 
 	pLuaArguments.PushUserData( pResource );
 
 	if( pLuaArguments.Call( pLuaVM, "getResourceExportedFunctions", 1 ) )
 	{
-		CLuaArgument pLuaArgument( pLuaVM, -1 );
-
-		return pLuaArgument.GetArray();
+		pLuaArgument.Read( pLuaVM, -1 );
 	}
 
-	return nullptr;
+	return pLuaArgument.GetArray();
 }
 
 PVOID CLuaFunctionDefinitions::GetResourceFromName( lua_State* pLuaVM, const char* szResourceName )
@@ -8496,18 +8524,17 @@ bool CLuaFunctionDefinitions::GetResourceName( lua_State* pLuaVM, PVOID pResourc
 	return false;
 }
 
-CLuaArguments* CLuaFunctionDefinitions::GetResources( lua_State* pLuaVM )
+CLuaArgumentsVector CLuaFunctionDefinitions::GetResources( lua_State* pLuaVM )
 {
+	CLuaArgument pLuaArgument;
 	CLuaArguments pLuaArguments;
 
 	if( pLuaArguments.Call( pLuaVM, "getResources", 1 ) )
 	{
-		CLuaArgument pLuaArgument( pLuaVM, -1 );
-
-		return pLuaArgument.GetArray();
+		pLuaArgument.Read( pLuaVM, -1 );
 	}
 
-	return nullptr;
+	return pLuaArgument.GetArray();
 }
 
 bool CLuaFunctionDefinitions::GetResourceState( lua_State* pLuaVM, PVOID pResource, string& strState )
@@ -8762,16 +8789,16 @@ bool CLuaFunctionDefinitions::UpdateResourceACLRequest( lua_State* pLuaVM, PVOID
 
 // Version funcs
 
-LuaTable CLuaFunctionDefinitions::GetVersion( lua_State* pLuaVM )
+CLuaArgumentsMap CLuaFunctionDefinitions::GetVersion( lua_State* pLuaVM )
 {
-	LuaTable pLuaTable;
+	CLuaArgument pLuaArgument;
 
 	if( CLuaArguments().Call( pLuaVM, "getVersion", 1 ) )
 	{
-		pLuaTable = CLuaArgument( pLuaVM, -1 ).GetTable();
+		pLuaArgument.Read( pLuaVM, -1 );
 	}
 
-	return pLuaTable;
+	return pLuaArgument.GetTable();
 }
 
 // Camera get functions
@@ -8979,7 +9006,7 @@ bool CLuaFunctionDefinitions::GiveWeapon( lua_State* pLuaVM, PVOID pElement, uns
 
 	if( pLuaArguments.Call( pLuaVM, "giveWeapon", 1 ) )
 	{
-		return ( new CLuaArgument( pLuaVM, -1 ) )->GetBoolean();
+		return CLuaArgument( pLuaVM, -1 ).GetBoolean();
 	}
 
 	return false;
@@ -8995,7 +9022,7 @@ bool CLuaFunctionDefinitions::TakeWeapon( lua_State* pLuaVM, PVOID pElement, uns
 
 	if( pLuaArguments.Call( pLuaVM, "takeWeapon", 1 ) )
 	{
-		return ( new CLuaArgument( pLuaVM, -1 ) )->GetBoolean();
+		return CLuaArgument( pLuaVM, -1 ).GetBoolean();
 	}
 
 	return false;
@@ -9009,7 +9036,7 @@ bool CLuaFunctionDefinitions::TakeAllWeapons( lua_State* pLuaVM, PVOID pElement 
 
 	if( pLuaArguments.Call( pLuaVM, "takeAllWeapons", 1 ) )
 	{
-		return ( new CLuaArgument( pLuaVM, -1 ) )->GetBoolean();
+		return CLuaArgument( pLuaVM, -1 ).GetBoolean();
 	}
 
 	return false;
@@ -9026,7 +9053,7 @@ bool CLuaFunctionDefinitions::SetWeaponAmmo( lua_State* pLuaVM, PVOID pElement, 
 
 	if( pLuaArguments.Call( pLuaVM, "setWeaponAmmo", 1 ) )
 	{
-		return ( new CLuaArgument( pLuaVM, -1 ) )->GetBoolean();
+		return CLuaArgument( pLuaVM, -1 ).GetBoolean();
 	}
 
 	return false;

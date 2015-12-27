@@ -124,20 +124,11 @@ MonoArray* CMonoFunctions::Player::GetAlivePlayers( void )
 {
 	if( RESOURCE )
 	{
-		CLuaArguments* pLuaArguments = CLuaFunctionDefinitions::GetAlivePlayers( RESOURCE->GetLua() );
+		CLuaArgumentsVector pLuaArguments = CLuaFunctionDefinitions::GetAlivePlayers( RESOURCE->GetLua() );
 
-		if( pLuaArguments )
+		if( pLuaArguments.size() > 0 )
 		{
-			MonoArray* pArray = mono_array_new( RESOURCE->GetDomain()->GetMonoPtr(), mono_get_uint32_class(), pLuaArguments->Count() );
-
-			vector< CLuaArgument* >::const_iterator iter = pLuaArguments->IterBegin();
-
-			for( unsigned int i = 0; iter != pLuaArguments->IterEnd(); iter++, i++ )
-			{
-				mono_array_set( pArray, DWORD, i, (DWORD)( *iter )->GetLightUserData() );
-			}
-
-			return pArray;
+			return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TLIGHTUSERDATA>( mono_get_uint32_class(), &pLuaArguments );
 		}
 	}
 
@@ -148,20 +139,11 @@ MonoArray* CMonoFunctions::Player::GetDeadPlayers( void )
 {
 	if( RESOURCE )
 	{
-		CLuaArguments* pLuaArguments = CLuaFunctionDefinitions::GetDeadPlayers( RESOURCE->GetLua() );
+		CLuaArgumentsVector pLuaArguments = CLuaFunctionDefinitions::GetDeadPlayers( RESOURCE->GetLua() );
 
-		if( pLuaArguments )
+		if( pLuaArguments.size() > 0 )
 		{
-			MonoArray* pArray = mono_array_new( RESOURCE->GetDomain()->GetMonoPtr(), mono_get_uint32_class(), pLuaArguments->Count() );
-
-			vector< CLuaArgument* >::const_iterator iter = pLuaArguments->IterBegin();
-
-			for( unsigned int i = 0; iter != pLuaArguments->IterEnd(); iter++, i++ )
-			{
-				mono_array_set( pArray, DWORD, i, (DWORD)( *iter )->GetLightUserData() );
-			}
-
-			return pArray;
+			return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TLIGHTUSERDATA>( mono_get_uint32_class(), &pLuaArguments );
 		}
 	}
 
@@ -337,15 +319,15 @@ MonoObject* CMonoFunctions::Player::GetACInfo( DWORD pUserData )
 {
 	if( RESOURCE )
 	{
-		LuaTable pLuaTable = CLuaFunctionDefinitions::GetPlayerACInfo( RESOURCE->GetLua(), (void*)pUserData );
+		CLuaArgumentsMap* pLuaTable = CLuaFunctionDefinitions::GetPlayerACInfo( RESOURCE->GetLua(), (PVOID)pUserData );
 
-		if( !pLuaTable.empty() )
+		if( pLuaTable )
 		{
-			MonoString* msDetectedAC	= RESOURCE->GetDomain()->NewString( pLuaTable[ "DetectedAC" ]->GetString() );
-			MonoString* msD3D9MD5		= RESOURCE->GetDomain()->NewString( pLuaTable[ "d3d9MD5" ]->GetString() );
-			MonoString* msD3D9SHA256	= RESOURCE->GetDomain()->NewString( pLuaTable[ "d3d9SHA256" ]->GetString() );
+			MonoString* msDetectedAC	= RESOURCE->GetDomain()->NewString( (*pLuaTable)[ "DetectedAC" ].GetString() );
+			MonoString* msD3D9MD5		= RESOURCE->GetDomain()->NewString( (*pLuaTable)[ "d3d9MD5" ].GetString() );
+			MonoString* msD3D9SHA256	= RESOURCE->GetDomain()->NewString( (*pLuaTable)[ "d3d9SHA256" ].GetString() );
 
-			unsigned int iD3D9Size		= pLuaTable[ "d3d9Size" ]->GetNumber< unsigned int >();
+			unsigned int iD3D9Size		= (*pLuaTable)[ "d3d9Size" ].GetNumber< unsigned int >();
 
 			void *args[] =
 			{

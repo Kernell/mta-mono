@@ -177,9 +177,12 @@ MonoArray* CMonoFunctions::Resource::GetResources( void )
 {
 	if( RESOURCE )
 	{
-		CLuaArguments* pLuaTable = CLuaFunctionDefinitions::GetResources( RESOURCE->GetLua() );
+		CLuaArgumentsVector pLuaTable = CLuaFunctionDefinitions::GetResources( RESOURCE->GetLua() );
 
-		return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TLIGHTUSERDATA>( mono_get_uint32_class(), pLuaTable );
+		if( pLuaTable.size() > 0 )
+		{
+			return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TLIGHTUSERDATA>( mono_get_uint32_class(), &pLuaTable );
+		}
 	}
 
 	return NULL;

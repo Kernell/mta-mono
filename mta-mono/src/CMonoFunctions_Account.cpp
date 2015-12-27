@@ -31,9 +31,12 @@ MonoArray* CMonoFunctions::Account::GetAll( void )
 {
 	if( RESOURCE )
 	{
-		CLuaArguments* pLuaTable = CLuaFunctionDefinitions::GetAccounts( RESOURCE->GetLua() );
+		CLuaArgumentsVector pLuaTable = CLuaFunctionDefinitions::GetAccounts( RESOURCE->GetLua() );
 
-		return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TLIGHTUSERDATA>( mono_get_uint32_class(), pLuaTable );
+		if( pLuaTable.size() > 0 )
+		{
+			return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TLIGHTUSERDATA>( mono_get_uint32_class(), &pLuaTable );
+		}
 	}
 
 	return nullptr;

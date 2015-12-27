@@ -30,7 +30,7 @@ DWORD CMonoFunctions::Vehicle::Create( int model, MonoObject* position, MonoObje
 
 		if( numberplate && mono_string_length( numberplate ) > 0 )
 		{
-			sNumberplate = string( mono_string_to_utf8( numberplate ) );
+			sNumberplate = mono_string_to_utf8( numberplate );
 		}
 
 		return (DWORD)CLuaFunctionDefinitions::CreateVehicle( RESOURCE->GetLua(), model, fX, fY, fZ, fRX, fRY, fRZ, sNumberplate, direction, variant1, variant2 );
@@ -198,12 +198,15 @@ MonoArray* CMonoFunctions::Vehicle::GetOccupants( DWORD pUserData )
 {
 	if( RESOURCE )
 	{
-		CLuaArguments* pLuaArguments = CLuaFunctionDefinitions::GetVehicleOccupants( RESOURCE->GetLua(), (void*)pUserData );
+		CLuaArgumentsVector pLuaArguments = CLuaFunctionDefinitions::GetVehicleOccupants( RESOURCE->GetLua(), (PVOID)pUserData );
 
-		return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TLIGHTUSERDATA>( mono_get_uint32_class(), pLuaArguments );
+		if( pLuaArguments.size() > 0 )
+		{
+			return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TLIGHTUSERDATA>( mono_get_uint32_class(), &pLuaArguments );
+		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 DWORD CMonoFunctions::Vehicle::GetController( DWORD pUserData )
@@ -280,9 +283,12 @@ MonoArray* CMonoFunctions::Vehicle::GetOfType( unsigned int uiModel )
 {
 	if( RESOURCE )
 	{
-		CLuaArguments* pLuaArguments = CLuaFunctionDefinitions::GetVehiclesOfType( RESOURCE->GetLua(), uiModel );
+		CLuaArgumentsVector pLuaArguments = CLuaFunctionDefinitions::GetVehiclesOfType( RESOURCE->GetLua(), uiModel );
 
-		return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TLIGHTUSERDATA>( mono_get_uint32_class(), pLuaArguments );
+		if( pLuaArguments.size() > 0 )
+		{
+			return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TLIGHTUSERDATA>( mono_get_uint32_class(), &pLuaArguments );
+		}
 	}
 
 	return NULL;
@@ -307,9 +313,12 @@ MonoArray* CMonoFunctions::Vehicle::GetUpgrades( DWORD pUserData )
 {
 	if( RESOURCE )
 	{
-		CLuaArguments* pLuaArguments = CLuaFunctionDefinitions::GetVehicleUpgrades( RESOURCE->GetLua(), (void*)pUserData );
+		CLuaArgumentsVector pLuaArguments = CLuaFunctionDefinitions::GetVehicleUpgrades( RESOURCE->GetLua(), (void*)pUserData );
 
-		return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TNUMBER>( mono_get_uint32_class(), pLuaArguments );
+		if( pLuaArguments.size() > 0 )
+		{
+			return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TNUMBER>( mono_get_uint32_class(), &pLuaArguments );
+		}
 	}
 
 	return NULL;
@@ -334,12 +343,15 @@ MonoArray* CMonoFunctions::Vehicle::GetCompatibleUpgrades( DWORD pUserData )
 {
 	if( RESOURCE )
 	{
-		CLuaArguments* pLuaArguments = CLuaFunctionDefinitions::GetVehicleCompatibleUpgrades( RESOURCE->GetLua(), (void*)pUserData );
+		CLuaArgumentsVector pLuaArguments = CLuaFunctionDefinitions::GetVehicleCompatibleUpgrades( RESOURCE->GetLua(), (void*)pUserData );
 
-		return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TNUMBER>( mono_get_uint32_class(), pLuaArguments );
+		if( pLuaArguments.size() > 0 )
+		{
+			return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TNUMBER>( mono_get_uint32_class(), &pLuaArguments );
+		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 unsigned char CMonoFunctions::Vehicle::GetDoorState( DWORD pUserData, unsigned char ucDoor )

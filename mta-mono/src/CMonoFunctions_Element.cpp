@@ -66,9 +66,12 @@ MonoArray* CMonoFunctions::Element::GetByType( MonoString* msType, DWORD pStartE
 	{
 		const char* szType = mono_string_to_utf8( msType );
 
-		CLuaArguments* pLuaArguments = CLuaFunctionDefinitions::GetElementsByType( RESOURCE->GetLua(), szType, (void*)pStartElement );
-		
-		return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TLIGHTUSERDATA>( mono_get_uint32_class(), pLuaArguments );
+		CLuaArgumentsVector pLuaArguments = CLuaFunctionDefinitions::GetElementsByType( RESOURCE->GetLua(), szType, (PVOID)pStartElement );
+
+		if( pLuaArguments.size() )
+		{
+			return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TLIGHTUSERDATA>( mono_get_uint32_class(), &pLuaArguments );
+		}
 	}
 
 	return nullptr;
@@ -454,11 +457,11 @@ DWORD CMonoFunctions::Element::GetLowLod( DWORD pUserData )
 {
 	if( RESOURCE )
 	{
-		void* pUserData;
+		PVOID pLODUserData;
 
-		if( CLuaFunctionDefinitions::GetLowLodElement( RESOURCE->GetLua(), (void*)pUserData, pUserData ) )
+		if( CLuaFunctionDefinitions::GetLowLodElement( RESOURCE->GetLua(), (PVOID)pUserData, pLODUserData ) )
 		{
-			return (DWORD)pUserData;
+			return (DWORD)pLODUserData;
 		}
 	}
 

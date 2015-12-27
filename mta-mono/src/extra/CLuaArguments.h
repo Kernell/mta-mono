@@ -2,7 +2,7 @@
 *
 *  Multi Theft Auto: San Andreas - Deathmatch
 *
-*  Squirrel 3, External lua add-on module
+*  External lua add-on module
 *  
 *  Copyright © 2003-2008 MTA.  All Rights Reserved.
 *

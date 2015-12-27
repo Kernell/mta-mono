@@ -815,22 +815,22 @@ MonoObject* CMonoFunctions::Server::GetVersion( void )
 {
 	if( RESOURCE )
 	{
-		LuaTable pLuaTable = CLuaFunctionDefinitions::GetVersion( RESOURCE->GetLua() );
+		CLuaArgumentsMap pLuaTable = CLuaFunctionDefinitions::GetVersion( RESOURCE->GetLua() );
 
-		if( !pLuaTable.empty() )
+		if( pLuaTable.size() >= 8 )
 		{
-			unsigned long	ulNumber	= pLuaTable[ "number" ]->GetNumber< unsigned long >();
-			const char*		szString	= pLuaTable[ "mta" ]->GetString();
-			const char*		szName		= pLuaTable[ "name" ]->GetString();
-			const char*		szBuildType	= pLuaTable[ "type" ]->GetString();
-			unsigned long	ulNetcode	= pLuaTable[ "netcode" ]->GetNumber< unsigned long >();
-			const char*		szOS		= pLuaTable[ "os" ]->GetString();
-			const char*		szBuildTag	= pLuaTable[ "tag" ]->GetString();
-			const char*		szSortable	= pLuaTable[ "sortable" ]->GetString();
+			unsigned long	ulNumber	= pLuaTable[ "number" ].GetNumber< unsigned long >();
+			const char*		szString	= pLuaTable[ "mta" ].GetString();
+			const char*		szName		= pLuaTable[ "name" ].GetString();
+			const char*		szBuildType	= pLuaTable[ "type" ].GetString();
+			unsigned long	ulNetcode	= pLuaTable[ "netcode" ].GetNumber< unsigned long >();
+			const char*		szOS		= pLuaTable[ "os" ].GetString();
+			const char*		szBuildTag	= pLuaTable[ "tag" ].GetString();
+			const char*		szSortable	= pLuaTable[ "sortable" ].GetString();
 
 			CMonoCorlib* pLib = RESOURCE->GetDomain()->GetCorlib();
 
-			PVOID* args = new PVOID[ 8 ];
+			PVOID* args = new PVOID[ pLuaTable.size() ];
 
 			MonoObject* pNumber			= pLib->Class[ "uint64" ]->Box( &ulNumber );
 			MonoString* pString			= RESOURCE->GetDomain()->NewString( szString );
@@ -850,11 +850,15 @@ MonoObject* CMonoFunctions::Server::GetVersion( void )
 			args[ 6 ] = pBuildTag;
 			args[ 7 ] = pSortable;
 
-			return RESOURCE->GetDomain()->GetMTALib()->GetClass( "ServerVersion" )->New( args, 8 );
+			MonoObject* pObject = RESOURCE->GetDomain()->GetMTALib()->GetClass( "ServerVersion" )->New( args, pLuaTable.size() );
+
+			delete [] args;
+
+			return pObject;
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 MonoString* CMonoFunctions::Game::GetType( void )

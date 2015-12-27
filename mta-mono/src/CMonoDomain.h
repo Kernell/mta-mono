@@ -60,36 +60,46 @@ public:
 	MonoString*		NewString			( const char* szText );
 	MonoString*		NewString			( string strText );
 
-	template <class T, int LuaType>
-	MonoArray*		NewArray			( MonoClass* pMonoClass, CLuaArguments* pLuaArguments = NULL )
+	template <class T, int iLuaType>
+	MonoArray*		NewArray			( MonoClass* pMonoClass, CLuaArgumentsVector* pLuaArguments = nullptr )
 	{
-		MonoArray* pArray = mono_array_new( this->m_pDomain, pMonoClass, pLuaArguments ? pLuaArguments->Count() : 0 );
+		MonoArray* pArray = mono_array_new( this->m_pDomain, pMonoClass, pLuaArguments ? pLuaArguments->size() : 0 );
 
 		if( pLuaArguments )
 		{
 			int i = 0;
 
-			for( auto iter : pLuaArguments->GetArguments() )
+			for( const auto& pArgument : *pLuaArguments )
 			{
-				if( LuaType == LUA_TBOOLEAN )
+				switch( iLuaType )
 				{
-					mono_array_set( pArray, T, i++, (T)( iter->GetBoolean() ) );
-				}
-				else if( LuaType == LUA_TLIGHTUSERDATA )
-				{
-					mono_array_set( pArray, T, i++, (T)( iter->GetLightUserData() ) );
-				}
-				else if( LuaType == LUA_TNUMBER )
-				{
-					mono_array_set( pArray, T, i++, iter->GetNumber< T >() );
-				}
-				else if( LuaType == LUA_TSTRING )
-				{
-					mono_array_set( pArray, T, i++, (T)( iter->GetString() ) );
-				}
-				else if( LuaType == LUA_TUSERDATA )
-				{
-					mono_array_set( pArray, T, i++, (T)( iter->GetLightUserData() ) );
+					case LUA_TBOOLEAN:
+					{
+						mono_array_set( pArray, T, i++, (T)( pArgument.GetBoolean() ) );
+
+						break;
+					}
+					case LUA_TNUMBER:
+					{
+						mono_array_set( pArray, T, i++, pArgument.GetNumber< T >() );
+
+						break;
+					}
+					case LUA_TSTRING:
+					{
+						MonoString* msValue = this->NewString( pArgument.GetString() );
+
+						mono_array_set( pArray, MonoString*, i++, msValue );
+
+						break;
+					}
+					case LUA_TLIGHTUSERDATA:
+					case LUA_TUSERDATA:
+					{
+						mono_array_set( pArray, T, i++, reinterpret_cast< T >( pArgument.GetLightUserData() ) );
+
+						break;
+					}
 				}
 			}
 		}
