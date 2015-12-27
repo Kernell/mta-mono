@@ -13,10 +13,10 @@ namespace MultiTheftAuto.Native
 		public static extern string GetType( UInt32 vehicle );
 
 		[MethodImpl( MethodImplOptions.InternalCall )]
-		public static extern Array GetVariant( UInt32 vehicle );
+		public static extern char[] GetVariant( UInt32 vehicle );
 
 		[MethodImpl( MethodImplOptions.InternalCall )]
-		public static extern Color GetColor( UInt32 vehicle, int colorIndex );
+		public static extern VehicleColor GetColor( UInt32 vehicle );
 
 		[MethodImpl( MethodImplOptions.InternalCall )]
 		public static extern int GetModelFromName( string name );
@@ -34,13 +34,13 @@ namespace MultiTheftAuto.Native
 		public static extern string GetNameFromModel( int modelID );
 
 		[MethodImpl( MethodImplOptions.InternalCall )]
-		public static extern Player GetOccupant( UInt32 vehicle, int seat = 0 );
+		public static extern UInt32 GetOccupant( UInt32 vehicle, int seat = 0 );
 
 		[MethodImpl( MethodImplOptions.InternalCall )]
-		public static extern Array GetOccupants( UInt32 vehicle );
+		public static extern UInt32[] GetOccupants( UInt32 vehicle );
 
 		[MethodImpl( MethodImplOptions.InternalCall )]
-		public static extern Player GetController( UInt32 vehicle );
+		public static extern UInt32 GetController( UInt32 vehicle );
 
 		[MethodImpl( MethodImplOptions.InternalCall )]
 		public static extern bool GetSirensOn( UInt32 vehicle );
@@ -54,26 +54,26 @@ namespace MultiTheftAuto.Native
 		[MethodImpl( MethodImplOptions.InternalCall )]
 		public static extern bool IsLocked( UInt32 vehicle );
 
-//		[MethodImpl( MethodImplOptions.InternalCall )]
-//		public static int GetVehiclesOfType( lua_State* luaVM );
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public static extern UInt32[] GetOfType( int model );
 
 		[MethodImpl( MethodImplOptions.InternalCall )]
 		public static extern int GetUpgradeOnSlot( UInt32 vehicle, int slot );
 
 		[MethodImpl( MethodImplOptions.InternalCall )]
-		public static extern Array GetUpgrades( UInt32 vehicle );
+		public static extern UInt32[] GetUpgrades( UInt32 vehicle );
 
 		[MethodImpl( MethodImplOptions.InternalCall )]
 		public static extern string GetUpgradeSlotName( int upgradeOrSlot );
 
 		[MethodImpl( MethodImplOptions.InternalCall )]
-		public static extern Array GetCompatibleUpgrades( UInt32 vehicle, int slot = 0 );
+		public static extern UInt32[] GetCompatibleUpgrades( UInt32 vehicle, int slot = 0 );
 
 		[MethodImpl( MethodImplOptions.InternalCall )]
 		public static extern int GetDoorState( UInt32 vehicle, int door );
 
 		[MethodImpl( MethodImplOptions.InternalCall )]
-		public static extern Array GetWheelStates( UInt32 vehicle );
+		public static extern VehicleWheelsState GetWheelStates( UInt32 vehicle );
 
 		[MethodImpl( MethodImplOptions.InternalCall )]
 		public static extern int GetLightState( UInt32 vehicle, int light );

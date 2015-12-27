@@ -238,18 +238,37 @@ namespace MultiTheftAuto
 
 		#region Constructors
 
+		public Vehicle( VehicleModel model, Vector3 position, Vector3 rotation, string numberplate = null, bool direction = false, int variant1 = 255, int variant2 = 255 )
+			: base( Native.Vehicle.Create( (int)model, position, rotation, numberplate, direction, variant1, variant2 ) )
+		{
+			
+		}
+
 		public Vehicle( UInt32 userdata )
 			: base( userdata )
 		{
 
 		}
 
-		public Vehicle( VehicleModel model, Vector3 position, Vector3 rotation, string numberplate = null, bool direction = false, int variant1 = 255, int variant2 = 255 )
-			: base( Native.Vehicle.Create( (int)model, position, rotation, numberplate, direction, variant1, variant2 ) )
+		#endregion
+
+		#region Static Methods
+
+		public static string GetNameFromModel( int modelID )
 		{
-			
+			return Native.Vehicle.GetNameFromModel( modelID );
 		}
-		
+
+		public static string GetUpgradeSlotName( int upgradeOrSlot )
+		{
+			return Native.Vehicle.GetUpgradeSlotName( upgradeOrSlot );
+		}
+
+		public static IEnumerable<Vehicle> GetOfType( VehicleModel model )
+		{
+			return Native.Vehicle.GetOfType( (int)model ).Select( i => Element.FindOrCreate( i ) as Vehicle );
+		}
+
 		#endregion
 
 		#region Methods
@@ -478,12 +497,162 @@ namespace MultiTheftAuto
 
 		public Array GetSirens()
 		{
-			return Native.Vehicle.GetSirens( this.GetUserData() );
+			return Native.Vehicle.GetSirens( this.userdata );
 		}
 
 		public Object GetSirenParams()
 		{
-			return Native.Vehicle.GetSirenParams( this.GetUserData() );
+			return Native.Vehicle.GetSirenParams( this.userdata );
+		}
+
+		public string GetVehicleType()
+		{
+			return Native.Vehicle.GetType( this.userdata );
+		}
+		
+		public char[] GetVariant()
+		{
+			return Native.Vehicle.GetVariant( this.userdata );
+		}
+
+		public VehicleColor GetColor()
+		{
+			return Native.Vehicle.GetColor( this.userdata );
+		}
+
+		public static int GetModelFromName( string name )
+		{
+			return Native.Vehicle.GetModelFromName( name );
+		}
+
+		public bool GetLandingGearDown()
+		{
+			return Native.Vehicle.GetLandingGearDown( this.userdata );
+		}
+
+		public int GetMaxPassengers()
+		{
+			return Native.Vehicle.GetMaxPassengers( this.userdata );
+		}
+
+		public string GetName()
+		{
+			return Native.Vehicle.GetName( this.userdata );
+		}
+
+		public Ped GetOccupant( int seat = 0 )
+		{
+			return Element.FindOrCreate( Native.Vehicle.GetOccupant( this.userdata, seat ) ) as Ped;
+		}
+
+		public IEnumerable<Ped> GetOccupants()
+		{
+			return Native.Vehicle.GetOccupants( this.userdata ).Select( i => Element.FindOrCreate( i ) as Ped );
+		}
+
+		public Ped GetController()
+		{
+			return Element.FindOrCreate( Native.Vehicle.GetController( this.userdata ) ) as Ped;
+		}
+
+		public bool GetSirensOn()
+		{
+			return Native.Vehicle.GetSirensOn( this.userdata );
+		}
+
+		public Vector3 GetTurnVelocity()
+		{
+			return Native.Vehicle.GetTurnVelocity( this.userdata );
+		}
+
+		public Vector3 GetTurretPosition()
+		{
+			return Native.Vehicle.GetTurretPosition( this.userdata );
+		}
+
+		public int GetUpgradeOnSlot( int slot )
+		{
+			return Native.Vehicle.GetUpgradeOnSlot( this.userdata, slot );
+		}
+
+		public UInt32[] GetUpgrades()
+		{
+			return Native.Vehicle.GetUpgrades( this.userdata );
+		}
+
+		public UInt32[] GetCompatibleUpgrades( int slot = 0 )
+		{
+			return Native.Vehicle.GetCompatibleUpgrades( this.userdata, slot );
+		}
+
+		public int GetDoorState( int door )
+		{
+			return Native.Vehicle.GetDoorState( this.userdata, door );
+		}
+
+		public VehicleWheelsState GetWheelStates()
+		{
+			return Native.Vehicle.GetWheelStates( this.userdata );
+		}
+
+		public int GetLightState( int light )
+		{
+			return Native.Vehicle.GetLightState( this.userdata, light );
+		}
+
+		public int GetPanelState( int panel )
+		{
+			return Native.Vehicle.GetPanelState( this.userdata, panel );
+		}
+
+		public int GetOverrideLights()
+		{
+			return Native.Vehicle.GetOverrideLights( this.userdata );
+		}
+
+		public Vehicle GetTowedByVehicle()
+		{
+			return Element.FindOrCreate( Native.Vehicle.GetTowedByVehicle( this.userdata ) ) as Vehicle;
+		}
+
+		public Vehicle GetTowingVehicle()
+		{
+			return Element.FindOrCreate( Native.Vehicle.GetTowingVehicle( this.userdata ) ) as Vehicle;
+		}
+
+		public int GetPaintjob()
+		{
+			return Native.Vehicle.GetPaintjob( this.userdata );
+		}
+
+		public string GetPlateText()
+		{
+			return Native.Vehicle.GetPlateText( this.userdata );
+		}
+
+		public bool GetEngineState()
+		{
+			return Native.Vehicle.GetEngineState( this.userdata );
+		}
+
+		public bool GetTrainDirection()
+		{
+			return Native.Vehicle.GetTrainDirection( this.userdata );
+		}
+
+		public float GetTrainSpeed()
+		{
+			return Native.Vehicle.GetTrainSpeed( this.userdata );
+		}
+
+		public Color GetHeadLightColor()
+		{
+			return Native.Vehicle.GetHeadLightColor( this.userdata );
+		}
+
+		public float GetVehicleDoorOpenRatio( int door )
+		{
+			return Native.Vehicle.GetVehicleDoorOpenRatio( this.userdata, door );
 		}
 
 		#endregion
@@ -493,6 +662,41 @@ namespace MultiTheftAuto
 		public bool IsTaxiLightOn()
 		{
 			return Native.Vehicle.IsTaxiLightOn( this.GetUserData() );
+		}
+
+		public bool IsTrainDerailed()
+		{
+			return Native.Vehicle.IsTrainDerailed( this.userdata );
+		}
+
+		public bool IsTrainDerailable()
+		{
+			return Native.Vehicle.IsTrainDerailable( this.userdata );
+		}
+
+		public bool IsDamageProof()
+		{
+			return Native.Vehicle.IsDamageProof( this.userdata );
+		}
+
+		public bool IsFuelTankExplodable()
+		{
+			return Native.Vehicle.IsFuelTankExplodable( this.userdata );
+		}
+
+		public bool IsOnGround()
+		{
+			return Native.Vehicle.IsOnGround( this.userdata );
+		}
+
+		public bool IsBlown()
+		{
+			return Native.Vehicle.IsBlown( this.userdata );
+		}
+
+		public bool IsLocked()
+		{
+			return Native.Vehicle.IsLocked( this.userdata );
 		}
 
 		#endregion
