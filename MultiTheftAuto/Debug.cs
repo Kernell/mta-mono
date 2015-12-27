@@ -19,7 +19,7 @@ namespace MultiTheftAuto
 		[MethodImpl( MethodImplOptions.InternalCall )]
 		private static extern void Error( string message );
 
-		public static void Log( string message, params string[] args )
+		public static void Log( string message, params object[] args )
 		{
 			Log( String.Format( message, args ) );
 		}
