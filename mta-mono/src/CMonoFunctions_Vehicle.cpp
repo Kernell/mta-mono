@@ -93,7 +93,9 @@ MonoObject* CMonoFunctions::Vehicle::GetColor( DWORD pUserData )
 
 			for( int i = 0; i < 4; i++ )
 			{
-				args[ i ] = pMTALib->Color->New( pVehicleColor.GetRGBColor( i ) );
+				MonoObject* pObject = pMTALib->Color->New( pVehicleColor.GetRGBColor( i ) );
+
+				args[ i ] = pObject;
 			}
 
 			return pMTALib->GetClass( "VehicleColor" )->New( args, 4 );

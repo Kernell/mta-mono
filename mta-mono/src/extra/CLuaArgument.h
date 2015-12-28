@@ -26,7 +26,6 @@ extern "C"
     #include <lua.h>
 }
 
-#include "CReferenceCounter.h"
 #include "CLuaArguments.h"
 
 typedef vector< CLuaArgument >					    CLuaArgumentsVector;

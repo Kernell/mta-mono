@@ -52,6 +52,10 @@ extern "C"
 #define SAFE_DELETE(p)	{ if(p) { delete (p); (p)=nullptr; } }
 #define SAFE_RELEASE(p)	{ if(p) { (p)->Release(); (p)=nullptr; } }
 
+#define ASSERT(_Expression) (void)( (!!(_Expression)) || (_wassert(_CRT_WIDE(#_Expression), _CRT_WIDE(__FILE__), __LINE__), 0) )
+
+#define ASSERT_MSG(_Expression, _Message) (void)( (!!(_Expression)) || (_wassert(_CRT_WIDE(_Message), _CRT_WIDE(__FILE__), __LINE__), 0) )
+
 #include "extra/Vector2.h"
 #include "extra/Vector3.h"
 

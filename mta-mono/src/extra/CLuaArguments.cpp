@@ -18,7 +18,6 @@
 
 #include "../StdInc.h"
 #include "CLuaArguments.h"
-#include <assert.h>
 
 CLuaArguments::CLuaArguments( const CLuaArguments& Arguments )
 {
@@ -76,15 +75,15 @@ void CLuaArguments::PushArguments( CLuaArguments& Arguments )
 
 bool CLuaArguments::Call( lua_State* luaVM, const char* szFunction, int iResults, int iErrorFunc ) const
 {
-	assert( szFunction );
-	assert( luaVM );
+	ASSERT( szFunction );
+	ASSERT( luaVM );
 
 	lua_pushstring( luaVM, szFunction );
 	lua_gettable( luaVM, LUA_GLOBALSINDEX );
 
 	this->PushArguments( luaVM );
 
-	int iret = lua_pcall( luaVM, m_Arguments.size(), iResults, iErrorFunc );
+	int iret = lua_pcall( luaVM, this->m_Arguments.size(), iResults, iErrorFunc );
 
 	return iret != LUA_ERRRUN && iret != LUA_ERRMEM;
 }

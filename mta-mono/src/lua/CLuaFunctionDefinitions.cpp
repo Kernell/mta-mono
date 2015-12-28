@@ -3058,26 +3058,41 @@ bool CLuaFunctionDefinitions::GetVehicleColor( lua_State* pLuaVM, PVOID pUserDat
 	pLuaArguments.PushUserData( pUserData );
 	pLuaArguments.PushBoolean( true );
 
-	if( pLuaArguments.Call( pLuaVM, "getVehicleColor", 12 ) )
+	int iLuaTop = lua_gettop( pLuaVM );
+
+	if( pLuaArguments.Call( pLuaVM, "getVehicleColor", 9 ) )
 	{
-		SColor
-			color1, color2, color3, color4;
+		SColor color1, color2, color3, color4;
 
-		color1.R = CLuaArgument( pLuaVM, -12 ).GetNumber< unsigned char >();
-		color1.G = CLuaArgument( pLuaVM, -11 ).GetNumber< unsigned char >();
-		color1.B = CLuaArgument( pLuaVM, -10 ).GetNumber< unsigned char >();
+		int iResults = lua_gettop( pLuaVM ) - iLuaTop;
 
-		color2.R = CLuaArgument( pLuaVM, -9 ).GetNumber< unsigned char >();
-		color2.G = CLuaArgument( pLuaVM, -8 ).GetNumber< unsigned char >();
-		color2.B = CLuaArgument( pLuaVM, -7 ).GetNumber< unsigned char >();
+		for( int iArgument	= -iResults, i = 1; iArgument < 0; iArgument++, i++ )
+		{
+			ASSERT( lua_type( pLuaVM, iArgument ) == LUA_TNUMBER );
 
-		color3.R = CLuaArgument( pLuaVM, -6 ).GetNumber< unsigned char >();
-		color3.G = CLuaArgument( pLuaVM, -5 ).GetNumber< unsigned char >();
-		color3.B = CLuaArgument( pLuaVM, -4 ).GetNumber< unsigned char >();
+			unsigned char ucValue = static_cast< unsigned char >( lua_tonumber( pLuaVM, iArgument ) );
 
-		color4.R = CLuaArgument( pLuaVM, -3 ).GetNumber< unsigned char >();
-		color4.G = CLuaArgument( pLuaVM, -2 ).GetNumber< unsigned char >();
-		color4.B = CLuaArgument( pLuaVM, -1 ).GetNumber< unsigned char >();
+			switch( i )
+			{
+				case 1: color1.R  = ucValue; break;
+				case 2: color1.G  = ucValue; break;
+				case 3: color1.B  = ucValue; break;
+
+				case 4: color2.R   = ucValue; break;
+				case 5: color2.G   = ucValue; break;
+				case 6: color2.B   = ucValue; break;
+
+				case 7: color3.R   = ucValue; break;
+				case 8: color3.G   = ucValue; break;
+				case 9: color3.B   = ucValue; break;
+
+				case 10: color4.R  = ucValue; break;
+				case 11: color4.G  = ucValue; break;
+				case 12: color4.B  = ucValue; break;
+			}
+		}
+
+		color1.A = color2.A = color3.A = color4.A = 255;
 
 		color.SetRGBColors( color1, color2, color3, color4 );
 
