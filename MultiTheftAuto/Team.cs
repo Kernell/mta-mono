@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,79 +10,47 @@ namespace MultiTheftAuto
 	{
 		#region Construcotrs
 
-		public Team( string name, Color color = null )
-			: base( Native.Team.Create( name, color ) )
-		{
-			
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Team( string name, Color color = null );
 
-		public Team( UInt32 userdata )
-			: base( userdata )
+		private Team()
 		{
-
 		}
 
 		#endregion
 
 		#region Methods
 
-		public string GetName()
-		{
-			return Native.Team.GetName( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern string GetName();
 
-		public Color GetColor()
-		{
-			return Native.Team.GetColor( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Color GetColor();
 
-		public bool GetFriendlyFire()
-		{
-			return Native.Team.GetFriendlyFire( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool GetFriendlyFire();
 
-		public Player[] GetPlayers()
-		{
-			UInt32[] userdataArray = Native.Team.GetPlayers( this.userdata );
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Player[] GetPlayers();
 
-			Player[] players = new Player[ userdataArray.Length ];
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern int CountPlayers();
 
-			for( uint i = 0; i < userdataArray.Length; i++ )
-			{
-				players.SetValue( Element.FindOrCreate( userdataArray[ i ] ) as Player, i );
-			}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetName( string name );
 
-			return players;
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetColor( Color color );
 
-		public int CountPlayers()
-		{
-			return Native.Team.CountPlayers( this.userdata );
-		}
-
-		public bool SetName( string name )
-		{
-			return Native.Team.SetName( this.userdata, name );
-		}
-
-		public bool SetColor( Color color )
-		{
-			return Native.Team.SetColor( this.userdata, color );
-		}
-
-		public bool SetFriendlyFire( bool enabled )
-		{
-			return Native.Team.SetFriendlyFire( this.userdata, enabled );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetFriendlyFire( bool enabled );
 
 		#endregion
 
 		#region Static methods
 
-		public static Team GetFromName( string name )
-		{
-			return Element.FindOrCreate( Native.Team.GetFromName( name ) ) as Team;
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern static Team GetFromName( string name );
 
 		#endregion
 	}

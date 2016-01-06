@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,283 +8,173 @@ namespace MultiTheftAuto
 {
 	public class Player : Ped
 	{
-		#region Constructors
-		
-		public Player( UInt32 userdata )
-			: base( userdata )
-		{
-
-		}
-		
-		#endregion
-
 		#region Methods
 
 		#region Set
 
-		public bool SetMoney( int money )
-		{
-			return Native.Player.SetMoney( this.GetUserData(), money );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetMoney( int money );
 
-		public bool GiveMoney( int money )
-		{
-			return Native.Player.GiveMoney( this.GetUserData(), money );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool GiveMoney( int money );
 
-		public bool TakeMoney( int money )
-		{
-			return Native.Player.TakeMoney( this.GetUserData(), money );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool TakeMoney( int money );
 
-		public bool Spawn( Vector3 position, int rotation = 0, int skinID = 0, int interior = 0, int dimension = 0, Team team = null )
-		{
-			return Native.Player.Spawn( this.GetUserData(), position, rotation, skinID, interior, dimension, team != null ? team.GetUserData() : 0 );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool Spawn( Vector3 position, int rotation = 0, int skinID = 0, int interior = 0, int dimension = 0, Team team = null );
 
-		public bool ShowHudComponent( string component, bool show )
-		{
-			return Native.Player.ShowHudComponent( this.GetUserData(), component, show );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool ShowHudComponent( string component, bool show );
 
-		public bool SetWantedLevel( int level )
-		{
-			return Native.Player.SetWantedLevel( this.GetUserData(), level );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetWantedLevel( int level );
 
-		public bool ForceMap( bool forcedOn )
-		{
-			return Native.Player.ForceMap( this.GetUserData(), forcedOn );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool ForceMap( bool forcedOn );
 
-		public bool SetNametagText( string text )
-		{
-			return Native.Player.SetNametagText( this.GetUserData(), text );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetNametagText( string text );
 
-		public bool SetNametagColor( Color color )
-		{
-			return Native.Player.SetNametagColor( this.GetUserData(), color );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetNametagColor( Color color );
 
-		public bool SetNametagShowing( bool showed )
-		{
-			return Native.Player.SetNametagShowing( this.GetUserData(), showed );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetNametagShowing( bool showed );
 
-		public bool SetMuted( bool muted )
-		{
-			return Native.Player.SetMuted( this.GetUserData(), muted );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetMuted( bool muted );
 
-		public bool SetBlurLevel( int level )
-		{
-			return Native.Player.SetBlurLevel( this.GetUserData(), level );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetBlurLevel( int level );
 
-		public bool Redirect( string serverIP, int serverPort, string serverPassword = null )
-		{
-			return Native.Player.Redirect( this.GetUserData(), serverIP, serverPort, serverPassword );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool Redirect( string serverIP, int serverPort, string serverPassword = null );
 
-		public bool SetName( string name )
-		{
-			return Native.Player.SetName( this.GetUserData(), name );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetName( string name );
 
-		public bool DetonateSatchels()
-		{
-			return Native.Player.DetonateSatchels( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool DetonateSatchels();
 
-		public bool TakeScreenShot( int width, int height, string tag = "", int quality = 30, int maxBandwith = 5000 )
-		{
-			return Native.Player.TakeScreenShot( this.GetUserData(), width, height, tag, quality, maxBandwith );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool TakeScreenShot( int width, int height, string tag = "", int quality = 30, int maxBandwith = 5000 );
 
-		public bool SetTeam( Team team )
-		{
-			return Native.Player.SetTeam( this.GetUserData(), team.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetTeam( Team team );
 
-		public bool SetCameraMatrix( CameraMatrix pCameraMatrix )
-		{
-			return Native.Player.SetCameraMatrix( this.userdata, pCameraMatrix );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetCameraMatrix( CameraMatrix pCameraMatrix );
 
-		public bool SetCameraTarget( Element pTarget )
-		{
-			return Native.Player.SetCameraTarget( this.userdata, pTarget.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetCameraTarget( Element pTarget );
 
-		public bool SetCameraInterior( UInt16 ucInterior )
-		{
-			return Native.Player.SetCameraInterior( this.userdata, ucInterior );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetCameraInterior( UInt16 ucInterior );
 
-		public bool FadeCamera( bool bFadeIn, float fFadeTime, Color pColor )
-		{
-			return Native.Player.FadeCamera( this.userdata, bFadeIn, fFadeTime, pColor );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool FadeCamera( bool bFadeIn, float fFadeTime, Color pColor );
 
 		#endregion
 
 		#region Get
 
-		public int GetAmmoInClip( int weaponSlot = 0 )
-		{
-			return Native.Player.GetAmmoInClip( this.GetUserData(), weaponSlot );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern int GetAmmoInClip( int weaponSlot = 0 );
 
-		public int GetTotalAmmo( int weaponSlot = 0 )
-		{
-			return Native.Player.GetTotalAmmo( this.GetUserData(), weaponSlot );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern int GetTotalAmmo( int weaponSlot = 0 );
 
-		public bool SetWeaponAmmo( int weapon, int totalAmmo, int ammoInClip )
-		{
-			return Native.Player.SetWeaponAmmo( this.GetUserData(), weapon, totalAmmo, ammoInClip );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetWeaponAmmo( int weapon, int totalAmmo, int ammoInClip );
 
-		public Player GetFromName( string name )
-		{
-			return Element.FindOrCreate( Native.Player.GetFromName( name ) ) as Player;
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Player GetFromName( string name );
 
-		public int GetMoney()
-		{
-			return Native.Player.GetMoney( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern int GetMoney();
 
-		public int GetPing()
-		{
-			return Native.Player.GetPing( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern int GetPing();
 
-		public Player GetRandom()
-		{
-			return Element.FindOrCreate( Native.Player.GetRandom() ) as Player;
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Player GetRandom();
 
-		public Team GetTeam()
-		{
-			return Element.FindOrCreate( Native.Player.GetTeam( this.GetUserData() ) ) as Team;
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Team GetTeam();
 
-		public int GetWantedLevel()
-		{
-			return Native.Player.GetWantedLevel( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern int GetWantedLevel();
 
-		public int GetIdleTime()
-		{
-			return Native.Player.GetIdleTime( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern int GetIdleTime();
 
-		public string GetNametagText()
-		{
-			return Native.Player.GetNametagText( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern string GetNametagText();
 
-		public Color GetNametagColor()
-		{
-			return Native.Player.GetNametagColor( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Color GetNametagColor();
 
-		public string GetSerial()
-		{
-			return Native.Player.GetSerial( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern string GetSerial();
 
-		public string GetUserName()
-		{
-			return Native.Player.GetUserName( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern string GetUserName();
 
-		public int GetBlurLevel()
-		{
-			return Native.Player.GetBlurLevel( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern int GetBlurLevel();
 
-		public string GetName()
-		{
-			return Native.Player.GetName( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern string GetName();
 
-		public string GetIP()
-		{
-			return Native.Player.GetIP( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern string GetIP();
 
-		public Account GetAccount()
-		{
-			return Element.FindOrCreate( Native.Player.GetAccount( this.GetUserData() ) ) as Account;
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Account GetAccount();
 
-		public string GetVersion()
-		{
-			return Native.Player.GetVersion( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern string GetVersion();
 
-		public Object GetACInfo()
-		{
-			return Native.Player.GetACInfo( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern PlayerACInfo GetACInfo();
 
-		public CameraMatrix GetCameraMatrix()
-		{
-			return Native.Player.GetCameraMatrix( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern CameraMatrix GetCameraMatrix();
 
-		public UInt32 GetCameraTarget()
-		{
-			return Native.Player.GetCameraTarget( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Element GetCameraTarget();
 
-		public UInt16 GetCameraInterior()
-		{
-			return Native.Player.GetCameraInterior( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern UInt16 GetCameraInterior();
 
 		#endregion
 
 		#region Is
 
-		public bool IsMuted()
-		{
-			return Native.Player.IsMuted( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool IsMuted();
 
-		public bool IsMapForced()
-		{
-			return Native.Player.IsMapForced( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool IsMapForced();
 
-		public bool IsNametagShowing()
-		{
-			return Native.Player.IsNametagShowing( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool IsNametagShowing();
 
 		#endregion
 
 		#endregion
 
 		#region Static
-		
-		public static Array GetAlivePlayers()
-		{
-			return Native.Player.GetAlivePlayers();
-		}
 
-		public static Array GetDeadPlayers()
-		{
-			return Native.Player.GetDeadPlayers();
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern static Player[] GetAlivePlayers();
 
-		public static int GetCount()
-		{
-			return Native.Player.GetCount();
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern static Player[] GetDeadPlayers();
+
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern static int GetCount();
 		
 		#endregion
 	}

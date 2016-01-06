@@ -7,24 +7,16 @@ namespace MultiTheftAuto
 
 	public static class Server
 	{
-		public static bool OutputChatBox( string text, Element element, Color color, bool colorCoded )
-		{
-			return Native.Server.OutputChatBox( text, element.userdata, color, colorCoded );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern static bool OutputChatBox( string text, Element element, Color color, bool colorCoded );
 
-		public static bool AddCommandHandler( string name, CommandHandler handler, bool restricted = false, bool caseSensitive = true )
-		{
-			return Native.Server.AddCommandHandler( name, handler, restricted, caseSensitive );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern static bool AddCommandHandler( string name, CommandHandler handler, bool restricted = false, bool caseSensitive = true );
 
-		public static bool ExecuteCommandHandler( string name, Player player, string args )
-		{
-			return Native.Server.ExecuteCommandHandler( name, player.userdata, args );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern static bool ExecuteCommandHandler( string name, Player player, string args );
 
-		public static bool RemoveCommandHandler( string name, CommandHandler handler )
-		{
-			return Native.Server.RemoveCommandHandler( name, handler );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern static bool RemoveCommandHandler( string name, CommandHandler handler = null );
 	}
 }

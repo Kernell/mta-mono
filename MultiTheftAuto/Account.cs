@@ -7,10 +7,8 @@ namespace MultiTheftAuto
 {
 	public class Account : Element
 	{
-		public Account( UInt32 userdata )
-			: base( userdata )
+		public Account()
 		{
-
 		}
 	}
 }

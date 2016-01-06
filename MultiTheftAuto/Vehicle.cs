@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -230,7 +231,7 @@ namespace MultiTheftAuto
 		{
 			get
 			{
-				return Native.Vehicle.GetType( this.GetUserData() );
+				return this.GetVehicleType();
 			}
 		}
 
@@ -238,36 +239,34 @@ namespace MultiTheftAuto
 
 		#region Constructors
 
-		public Vehicle( VehicleModel model, Vector3 position, Vector3 rotation, string numberplate = null, bool direction = false, int variant1 = 255, int variant2 = 255 )
-			: base( Native.Vehicle.Create( (int)model, position, rotation, numberplate, direction, variant1, variant2 ) )
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Vehicle( VehicleModel model, Vector3 position, Vector3 rotation, string numberplate = null, bool direction = false, int variant1 = 255, int variant2 = 255 );
+
+		internal Vehicle()
 		{
-			
+
 		}
 
-		public Vehicle( UInt32 userdata )
-			: base( userdata )
+		~Vehicle()
 		{
-
+			Debug.Info( "~Vehicle() [" + this.GetName() + "]" );
 		}
 
 		#endregion
 
 		#region Static Methods
 
-		public static string GetNameFromModel( int modelID )
-		{
-			return Native.Vehicle.GetNameFromModel( modelID );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern static string GetNameFromModel( int modelID );
 
-		public static string GetUpgradeSlotName( int upgradeOrSlot )
-		{
-			return Native.Vehicle.GetUpgradeSlotName( upgradeOrSlot );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern static string GetUpgradeSlotName( int upgradeOrSlot );
 
-		public static IEnumerable<Vehicle> GetOfType( VehicleModel model )
-		{
-			return Native.Vehicle.GetOfType( (int)model ).Select( i => Element.FindOrCreate( i ) as Vehicle );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern static Vehicle[] GetOfType( VehicleModel model );
+
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern static int GetModelFromName( string name );
 
 		#endregion
 
@@ -275,429 +274,256 @@ namespace MultiTheftAuto
 
 		#region Set
 
-		public bool Fix()
-		{
-			return Native.Vehicle.Fix( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool Fix();
 
-		public bool Blow( bool blow = true )
-		{
-			return Native.Vehicle.Blow( this.GetUserData(), blow );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool Blow( bool blow = true );
 
-		public bool SetTurnVelocity( Vector3 velocity )
-		{
-			return Native.Vehicle.SetTurnVelocity( this.GetUserData(), velocity );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetTurnVelocity( Vector3 velocity );
 
-		public bool SetColor( Color color1, Color color2 = null, Color color3 = null, Color color4 = null )
-		{
-			return Native.Vehicle.SetColor( this.GetUserData(), color1, color2, color3, color4 );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetColor( Color color1, Color color2 = null, Color color3 = null, Color color4 = null );
 
-		public bool SetLandingGearDown( bool state )
-		{
-			return Native.Vehicle.SetLandingGearDown( this.GetUserData(), state );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetLandingGearDown( bool state );
 
-		public bool SetLocked( bool locked )
-		{
-			return Native.Vehicle.SetLocked( this.GetUserData(), locked );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetLocked( bool locked );
 
-		public bool SetDoorsUndamageable( bool state )
-		{
-			return Native.Vehicle.SetDoorsUndamageable( this.GetUserData(), state );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetDoorsUndamageable( bool state );
 
-		public bool SetSirensOn( bool state )
-		{
-			return Native.Vehicle.SetSirensOn( this.GetUserData(), state );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetSirensOn( bool state );
 
-		public bool SetTaxiLightOn( bool state )
-		{
-			return Native.Vehicle.SetTaxiLightOn( this.GetUserData(), state );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetTaxiLightOn( bool state );
 
-		public bool AddUpgrade( int upgrade )
-		{
-			return Native.Vehicle.AddUpgrade( this.GetUserData(), upgrade );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool AddUpgrade( int upgrade );
 
-		public bool RemoveUpgrade( int upgrade )
-		{
-			return Native.Vehicle.RemoveUpgrade( this.GetUserData(), upgrade );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool RemoveUpgrade( int upgrade );
 
-		public bool SetDoorState( int door, int state )
-		{
-			return Native.Vehicle.SetDoorState( this.GetUserData(), door, state );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetDoorState( int door, int state );
 
-		public bool SetWheelStates( int frontLeft, int rearLeft, int frontRight, int rearRight )
-		{
-			return Native.Vehicle.SetWheelStates( this.GetUserData(), frontLeft, rearLeft, frontRight, rearRight );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetWheelStates( int frontLeft, int rearLeft, int frontRight, int rearRight );
 
-		public bool SetLightState( int light, int state )
-		{
-			return Native.Vehicle.SetLightState( this.GetUserData(), light, state );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetLightState( int light, int state );
 
-		public bool SetPanelState( int panelID, int state )
-		{
-			return Native.Vehicle.SetPanelState( this.GetUserData(), panelID, state );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetPanelState( int panelID, int state );
 
-		public bool SetIdleRespawnDelay( int timeDelay )
-		{
-			return Native.Vehicle.SetIdleRespawnDelay( this.GetUserData(), timeDelay );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetIdleRespawnDelay( int timeDelay );
 
-		public bool SetRespawnDelay( int timeDelay )
-		{
-			return Native.Vehicle.SetRespawnDelay( this.GetUserData(), timeDelay );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetRespawnDelay( int timeDelay );
 
-		public bool SetRespawnPosition( Vector3 position, Vector3 rotation )
-		{
-			return Native.Vehicle.SetRespawnPosition( this.GetUserData(), position, rotation );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetRespawnPosition( Vector3 position, Vector3 rotation );
 
-		public bool ToggleRespawn( bool respawn )
-		{
-			return Native.Vehicle.ToggleRespawn( this.GetUserData(), respawn );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool ToggleRespawn( bool respawn );
 
-		public bool ResetExplosionTime()
-		{
-			return Native.Vehicle.ResetExplosionTime( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool ResetExplosionTime();
 
-		public bool ResetIdleTime()
-		{
-			return Native.Vehicle.ResetIdleTime( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool ResetIdleTime();
 
-		public bool Spawn( Vector3 position, Vector3 rotation )
-		{
-			return Native.Vehicle.Spawn( this.GetUserData(), position, rotation );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool Spawn( Vector3 position, Vector3 rotation );
 
-		public bool Respawn()
-		{
-			return Native.Vehicle.Respawn( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool Respawn();
 
-		public bool SetOverrideLights( int state )
-		{
-			return Native.Vehicle.SetOverrideLights( this.GetUserData(), state );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetOverrideLights( int state );
 
-		public bool AttachTrailerToVehicle( Element trailer )
-		{
-			return Native.Vehicle.AttachTrailerToVehicle( this.GetUserData(), trailer.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool AttachTrailerToVehicle( Element trailer );
 
-		public bool DetachTrailerFromVehicle( Element trailer = null )
-		{
-			if( trailer == null )
-				return Native.Vehicle.DetachTrailerFromVehicle( this.GetUserData() );
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool DetachTrailerFromVehicle( Element trailer = null );
 
-			return Native.Vehicle.DetachTrailerFromVehicle( this.GetUserData(), trailer.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetEngineState( bool state );
 
-		public bool SetEngineState( bool state )
-		{
-			return Native.Vehicle.SetEngineState( this.GetUserData(), state );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetDamageProof( bool state );
 
-		public bool SetDamageProof( bool state )
-		{
-			return Native.Vehicle.SetDamageProof( this.GetUserData(), state );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetPaintjob( int value );
 
-		public bool SetPaintjob( int value )
-		{
-			return Native.Vehicle.SetPaintjob( this.GetUserData(), value );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetFuelTankExplodable( bool state );
 
-		public bool SetFuelTankExplodable( bool state )
-		{
-			return Native.Vehicle.SetFuelTankExplodable( this.GetUserData(), state );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetTrainDerailed( bool state );
 
-		public bool SetTrainDerailed( bool state )
-		{
-			return Native.Vehicle.SetTrainDerailed( this.GetUserData(), state );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetTrainDerailable( bool state );
 
-		public bool SetTrainDerailable( bool state )
-		{
-			return Native.Vehicle.SetTrainDerailable( this.GetUserData(), state );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetTrainDirection( bool state );
 
-		public bool SetTrainDirection( bool state )
-		{
-			return Native.Vehicle.SetTrainDirection( this.GetUserData(), state );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetTrainSpeed( float speed );
 
-		public bool SetTrainSpeed( float speed )
-		{
-			return Native.Vehicle.SetTrainSpeed( this.GetUserData(), speed );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetHeadLightColor( Color color );
 
-		public bool SetHeadLightColor( Color color )
-		{
-			return Native.Vehicle.SetHeadLightColor( this.GetUserData(), color );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetTurretPosition( float x, float y );
 
-		public bool SetTurretPosition( float x, float y )
-		{
-			return Native.Vehicle.SetTurretPosition( this.GetUserData(), x, y );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetDoorOpenRatio( int door, float ratio, int time = 0 );
 
-		public bool SetDoorOpenRatio( int door, float ratio, int time = 0 )
-		{
-			return Native.Vehicle.SetDoorOpenRatio( this.GetUserData(), door, ratio, time );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetVariant( int variant1 = 255, int variant2 = 255 );
 
-		public bool SetVariant( int variant1 = 255, int variant2 = 255 )
-		{
-			return Native.Vehicle.SetVariant( this.GetUserData(), variant1, variant2 );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool AddSirens( int sirenCount, int sirenType, bool flag360 = false, bool checkLos = true, bool useRandomiser = true, bool silent = false );
 
-		public bool AddSirens( int sirenCount, int sirenType, bool flag360 = false, bool checkLos = true, bool useRandomiser = true, bool silent = false )
-		{
-			return Native.Vehicle.AddSirens( this.GetUserData(), sirenCount, sirenType, flag360, checkLos, useRandomiser, silent );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool RemoveSirens();
 
-		public bool RemoveSirens()
-		{
-			return Native.Vehicle.RemoveSirens( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetSirens( int sirenPoint, Vector3 position, Color color = null, float minAlpha = 0.0f );
 
-		public bool SetSirens( int sirenPoint, Vector3 position, Color color = null, float minAlpha = 0.0f )
-		{
-			if( color == null )
-				return Native.Vehicle.SetSirens( this.GetUserData(), sirenPoint, position, color, minAlpha );
-			
-			return Native.Vehicle.SetSirens( this.GetUserData(), sirenPoint, position, color, minAlpha );
-		}
-
-		public bool SetPlateText( string text )
-		{
-			return Native.Vehicle.SetPlateText( this.GetUserData(), text );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetPlateText( string text );
 
 		#endregion
 
 		#region Get
 
-		public Array GetSirens()
-		{
-			return Native.Vehicle.GetSirens( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Array GetSirens();
 
-		public Object GetSirenParams()
-		{
-			return Native.Vehicle.GetSirenParams( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern object GetSirenParams();
 
-		public string GetVehicleType()
-		{
-			return Native.Vehicle.GetType( this.userdata );
-		}
-		
-		public char[] GetVariant()
-		{
-			return Native.Vehicle.GetVariant( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern string GetVehicleType();
 
-		public VehicleColor GetColor()
-		{
-			return Native.Vehicle.GetColor( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern char[] GetVariant();
 
-		public static int GetModelFromName( string name )
-		{
-			return Native.Vehicle.GetModelFromName( name );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern VehicleColor GetColor();
 
-		public bool GetLandingGearDown()
-		{
-			return Native.Vehicle.GetLandingGearDown( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool GetLandingGearDown();
 
-		public int GetMaxPassengers()
-		{
-			return Native.Vehicle.GetMaxPassengers( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern int GetMaxPassengers();
 
-		public string GetName()
-		{
-			return Native.Vehicle.GetName( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern string GetName();
 
-		public Ped GetOccupant( int seat = 0 )
-		{
-			return Element.FindOrCreate( Native.Vehicle.GetOccupant( this.userdata, seat ) ) as Ped;
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Ped GetOccupant( int seat = 0 );
 
-		public IEnumerable<Ped> GetOccupants()
-		{
-			return Native.Vehicle.GetOccupants( this.userdata ).Select( i => Element.FindOrCreate( i ) as Ped );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Ped[] GetOccupants();
 
-		public Ped GetController()
-		{
-			return Element.FindOrCreate( Native.Vehicle.GetController( this.userdata ) ) as Ped;
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Ped GetController();
 
-		public bool GetSirensOn()
-		{
-			return Native.Vehicle.GetSirensOn( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool GetSirensOn();
 
-		public Vector3 GetTurnVelocity()
-		{
-			return Native.Vehicle.GetTurnVelocity( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Vector3 GetTurnVelocity();
 
-		public Vector3 GetTurretPosition()
-		{
-			return Native.Vehicle.GetTurretPosition( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Vector3 GetTurretPosition();
 
-		public int GetUpgradeOnSlot( int slot )
-		{
-			return Native.Vehicle.GetUpgradeOnSlot( this.userdata, slot );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern int GetUpgradeOnSlot( int slot );
 
-		public UInt32[] GetUpgrades()
-		{
-			return Native.Vehicle.GetUpgrades( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern UInt32[] GetUpgrades();
 
-		public UInt32[] GetCompatibleUpgrades( int slot = 0 )
-		{
-			return Native.Vehicle.GetCompatibleUpgrades( this.userdata, slot );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern UInt32[] GetCompatibleUpgrades( int slot = 0 );
 
-		public int GetDoorState( int door )
-		{
-			return Native.Vehicle.GetDoorState( this.userdata, door );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern int GetDoorState( int door );
 
-		public VehicleWheelsState GetWheelStates()
-		{
-			return Native.Vehicle.GetWheelStates( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern VehicleWheelsState GetWheelStates();
 
-		public int GetLightState( int light )
-		{
-			return Native.Vehicle.GetLightState( this.userdata, light );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern int GetLightState( int light );
 
-		public int GetPanelState( int panel )
-		{
-			return Native.Vehicle.GetPanelState( this.userdata, panel );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern int GetPanelState( int panel );
 
-		public int GetOverrideLights()
-		{
-			return Native.Vehicle.GetOverrideLights( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern int GetOverrideLights();
 
-		public Vehicle GetTowedByVehicle()
-		{
-			return Element.FindOrCreate( Native.Vehicle.GetTowedByVehicle( this.userdata ) ) as Vehicle;
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Vehicle GetTowedByVehicle();
 
-		public Vehicle GetTowingVehicle()
-		{
-			return Element.FindOrCreate( Native.Vehicle.GetTowingVehicle( this.userdata ) ) as Vehicle;
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Vehicle GetTowingVehicle();
 
-		public int GetPaintjob()
-		{
-			return Native.Vehicle.GetPaintjob( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern int GetPaintjob();
 
-		public string GetPlateText()
-		{
-			return Native.Vehicle.GetPlateText( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern string GetPlateText();
 
-		public bool GetEngineState()
-		{
-			return Native.Vehicle.GetEngineState( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool GetEngineState();
 
-		public bool GetTrainDirection()
-		{
-			return Native.Vehicle.GetTrainDirection( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool GetTrainDirection();
 
-		public float GetTrainSpeed()
-		{
-			return Native.Vehicle.GetTrainSpeed( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern float GetTrainSpeed();
 
-		public Color GetHeadLightColor()
-		{
-			return Native.Vehicle.GetHeadLightColor( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Color GetHeadLightColor();
 
-		public float GetVehicleDoorOpenRatio( int door )
-		{
-			return Native.Vehicle.GetVehicleDoorOpenRatio( this.userdata, door );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern float GetVehicleDoorOpenRatio( int door );
 
 		#endregion
 
 		#region Is
 
-		public bool IsTaxiLightOn()
-		{
-			return Native.Vehicle.IsTaxiLightOn( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool IsTaxiLightOn();
 
-		public bool IsTrainDerailed()
-		{
-			return Native.Vehicle.IsTrainDerailed( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool IsTrainDerailed();
 
-		public bool IsTrainDerailable()
-		{
-			return Native.Vehicle.IsTrainDerailable( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool IsTrainDerailable();
 
-		public bool IsDamageProof()
-		{
-			return Native.Vehicle.IsDamageProof( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool IsDamageProof();
 
-		public bool IsFuelTankExplodable()
-		{
-			return Native.Vehicle.IsFuelTankExplodable( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool IsFuelTankExplodable();
 
-		public bool IsOnGround()
-		{
-			return Native.Vehicle.IsOnGround( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool IsOnGround();
 
-		public bool IsBlown()
-		{
-			return Native.Vehicle.IsBlown( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool IsBlown();
 
-		public bool IsLocked()
-		{
-			return Native.Vehicle.IsLocked( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool IsLocked();
 
 		#endregion
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,16 +26,11 @@ namespace MultiTheftAuto
 
 		#region Constructors
 
-		public Ped( UInt32 userdata )
-			: base( userdata )
-		{
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Ped( int modelid, Vector3 position, float rot = 0.0f, bool synced = true );
 
-		}
-
-		public Ped( int modelid, Vector3 position, float rot = 0.0f, bool synced = true )
-			: base( Native.Ped.Create( modelid, position, rot, synced ) )
+		internal Ped()
 		{
-		
 		}
 		
 		#endregion
@@ -43,213 +39,133 @@ namespace MultiTheftAuto
 
 		#region Set
 
-		public bool SetArmor( int armor )
-		{
-			return Native.Ped.SetArmor( this.GetUserData(), armor );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetArmor( int armor );
 
-		public bool Kill( Ped killer = null, int weapon = 255, int bodyPart = 255, bool stealth = false  )
-		{
-			return Native.Ped.Kill( this.GetUserData(), killer != null ? killer.GetUserData() : 0, weapon, bodyPart, stealth );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool Kill( Ped killer = null, int weapon = 255, int bodyPart = 255, bool stealth = false );
 
-		public bool SetStat( int stat, float value )
-		{
-			return Native.Ped.SetStat( this.GetUserData(), stat, value );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetStat( int stat, float value );
 
-		public bool AddClothes( string clothesTexture, string clothesModel, int clothesType )
-		{
-			return Native.Ped.AddClothes( this.GetUserData(), clothesTexture, clothesModel, clothesType );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool AddClothes( string clothesTexture, string clothesModel, int clothesType );
 
-		public bool RemoveClothes( int clothesType, string clothesTexture, string clothesModel )
-		{
-			return Native.Ped.RemoveClothes( this.GetUserData(), clothesType, clothesTexture, clothesModel );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool RemoveClothes( int clothesType, string clothesTexture, string clothesModel );
 
-		public bool GiveJetPack()
-		{
-			return Native.Ped.GiveJetPack( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool GiveJetPack();
 
-		public bool RemoveJetPack()
-		{
-			return Native.Ped.RemoveJetPack( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool RemoveJetPack();
 
-		public bool SetFightingStyle( int style )
-		{
-			return Native.Ped.SetFightingStyle( this.GetUserData(), style );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetFightingStyle( int style );
 
-		public bool SetPedMoveAnim( int style )
-		{
-			return Native.Ped.SetPedMoveAnim( this.GetUserData(), style );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetPedMoveAnim( int style );
 
-		public bool SetGravity( float gravity )
-		{
-			return Native.Ped.SetGravity( this.GetUserData(), gravity );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetGravity( float gravity );
 
-		public bool SetChoking( bool choking )
-		{
-			return Native.Ped.SetChoking( this.GetUserData(), choking );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetChoking( bool choking );
 
-		public bool WarpIntoVehicle( Vehicle vehicle, int seat = 0 )
-		{
-			return Native.Ped.WarpIntoVehicle( this.GetUserData(), vehicle.GetUserData(), seat );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool WarpIntoVehicle( Vehicle vehicle, int seat = 0 );
 
-		public bool RemoveFromVehicle()
-		{
-			return Native.Ped.RemoveFromVehicle( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool RemoveFromVehicle();
 
-		public bool SetDoingGangDriveby( bool state )
-		{
-			return Native.Ped.SetDoingGangDriveby( this.GetUserData(), state );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetDoingGangDriveby( bool state );
 
-		public bool SetAnimation( string block = null, string anim = null, int time = -1, bool loop = true, bool updatePosition = true, bool interruptable = true, bool freezeLastFrame = true )
-		{
-			return Native.Ped.SetAnimation( this.GetUserData(), block, anim, time, loop, updatePosition, interruptable, freezeLastFrame );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetAnimation( string block = null, string anim = null, int time = -1, bool loop = true, bool updatePosition = true, bool interruptable = true, bool freezeLastFrame = true );
 
-		public bool SetAnimationProgress( string anim, float progress )
-		{
-			return Native.Ped.SetAnimationProgress( this.GetUserData(), anim, progress );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetAnimationProgress( string anim, float progress );
 
-		public bool SetWeaponSlot( int weaponSlot )
-		{
-			return Native.Ped.SetWeaponSlot( this.GetUserData(), weaponSlot );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetWeaponSlot( int weaponSlot );
 
-		public bool SetOnFire( bool isOnFire )
-		{
-			return Native.Ped.SetOnFire( this.GetUserData(), isOnFire );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetOnFire( bool isOnFire );
 
-		public bool SetHeadless( bool headless )
-		{
-			return Native.Ped.SetHeadless( this.GetUserData(), headless );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetHeadless( bool headless );
 
-		public bool ReloadWeapon()
-		{
-			return Native.Ped.ReloadWeapon( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool ReloadWeapon();
 
 		#endregion
 
 		#region Get
-		
-		public float GetArmor()
-		{
-			return Native.Ped.GetArmor( this.GetUserData() );
-		}
 
-		public float GetStat( int stat )
-		{
-			return Native.Ped.GetStat( this.GetUserData(), stat );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern float GetArmor();
 
-		public Object GetTarget()
-		{
-			return Element.FindOrCreate( Native.Ped.GetTarget( this.GetUserData() ) );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern float GetStat( int stat );
 
-		public int GetWeapon( int slot = 0 )
-		{
-			return Native.Ped.GetWeapon( this.GetUserData(), slot );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Element GetTarget();
 
-		public int GetFightingStyle()
-		{
-			return Native.Ped.GetFightingStyle( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern int GetWeapon( int slot = 0 );
 
-		public int GetPedMoveAnim()
-		{
-			return Native.Ped.GetPedMoveAnim( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern int GetFightingStyle();
 
-		public float GetGravity()
-		{
-			return Native.Ped.GetGravity( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern int GetPedMoveAnim();
 
-		public Object GetContactElement()
-		{
-			return Element.FindOrCreate( Native.Ped.GetContactElement( this.GetUserData() ) );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern float GetGravity();
 
-		public int GetWeaponSlot()
-		{
-			return Native.Ped.GetWeaponSlot( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Element GetContactElement();
 
-		public Vehicle GetVehicle()
-		{
-			return Element.FindOrCreate( Native.Ped.GetOccupiedVehicle( this.GetUserData() ) ) as Vehicle;
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern int GetWeaponSlot();
 
-		public int GetVehicleSeat()
-		{
-			return Native.Ped.GetOccupiedVehicleSeat( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Vehicle GetVehicle();
+
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern int GetVehicleSeat();
 
 		#endregion
 
 		#region Is
 
-		public bool IsChoking()
-		{
-			return Native.Ped.IsChoking( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool IsChoking();
 
-		public bool IsDead()
-		{
-			return Native.Ped.IsDead( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool IsDead();
 
-		public bool IsDucked()
-		{
-			return Native.Ped.IsDucked( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool IsDucked();
 
-		public bool IsHaveJetPack()
-		{
-			return Native.Ped.DoesHaveJetPack( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool IsHaveJetPack();
 
-		public bool IsOnGround()
-		{
-			return Native.Ped.IsOnGround( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool IsOnGround();
 
-		public bool IsDoingGangDriveby()
-		{
-			return Native.Ped.IsDoingGangDriveby( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool IsDoingGangDriveby();
 
-		public bool IsOnFire()
-		{
-			return Native.Ped.IsOnFire( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool IsOnFire();
 
-		public bool IsHeadless()
-		{
-			return Native.Ped.IsHeadless( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool IsHeadless();
 
-		public bool IsInVehicle()
-		{
-			return Native.Ped.IsInVehicle( this.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool IsInVehicle();
 
 		#endregion
 

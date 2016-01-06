@@ -8,8 +8,7 @@ namespace MultiTheftAuto
 {
 	public class Ban : Element
 	{
-		public Ban( UInt32 userdata )
-			: base( userdata )
+		internal Ban()
 		{
 		}
 	}

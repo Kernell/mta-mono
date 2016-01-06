@@ -8,8 +8,7 @@ namespace MultiTheftAuto
 {
 	public class Pickup : Element
 	{
-		public Pickup( UInt32 userdata )
-			: base( userdata )
+		public Pickup()
 		{
 		}
 	}

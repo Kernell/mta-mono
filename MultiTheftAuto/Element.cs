@@ -1,33 +1,20 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using System.Linq;
 using MultiTheftAuto.EventArgs;
-using MultiTheftAuto.Pools;
-using MultiTheftAuto.Utils;
 
 namespace MultiTheftAuto
 {
-	public class Element : IdentifiedPool<Element>, IIdentifyable
+	public class Element
 	{
-		#region Properties
-
-		public UInt32 userdata
-		{
-			get;
-			private set;
-		}
-
-		#endregion
-
 		#region Static properties
 
 		public static Element Root
 		{
 			get
 			{
-				UInt32 userdata = Native.Element.GetRootElement();
-
-				return userdata != 0 ? Element.FindOrCreate( userdata ) : null;
+				return Element.GetRootElement();
 			}
 		}
 
@@ -35,16 +22,16 @@ namespace MultiTheftAuto
 
 		#region Constructors
 
-		public Element( UInt32 userdata )
-		{
-			this.userdata = userdata;
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Element( string type, string ID );
 
-			FindOrCreate( userdata );
+		internal Element()
+		{
 		}
 
-		public Element( string type, string ID )
-			: this( Native.Element.Create( type, ID ) )
+		~Element()
 		{
+			Debug.Info( "~Element() [0x" + this + "]" );
 		}
 
 		#endregion
@@ -53,282 +40,172 @@ namespace MultiTheftAuto
 
 		#region Set
 
-		public bool Destroy()
-		{
-			bool result = Native.Element.Destroy( this.userdata );
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool Destroy();
 
-			if( result )
-			{
-				this.userdata = 0;
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Element Clone( Vector3 position = null, bool cloneChildren = false );
 
-				this.Dispose();
-			}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool ClearElementVisibleTo();
 
-			return result;
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetID( string id );
 
-		public Element Clone( Vector3 position = null, bool cloneChildren = false )
-		{
-			return Element.FindOrCreate( Native.Element.Clone( this.userdata, position, cloneChildren ) );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetData( string key, string value, bool sync = true );
 
-		public bool ClearElementVisibleTo()
-		{
-			return Native.Element.ClearElementVisibleTo( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool RemoveData( string key );
 
-		public bool SetID( string id )
-		{
-			return Native.Element.SetID( this.userdata, id );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetParent( Element parent );
 
-		public bool SetData( string key, string value, bool sync = true )
-		{
-			return Native.Element.SetData( this.userdata, key, value, sync );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetPosition( Vector3 position, bool warp = true );
 
-		public bool RemoveData( string key )
-		{
-			return Native.Element.RemoveData( this.userdata, key );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetRotation( Vector3 rotation, string order = "default", bool pedRotation = false );
 
-		public bool SetParent( UInt32 parent )
-		{
-			return Native.Element.SetParent( this.userdata, parent );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetVelocity( Vector3 velocity );
 
-		public bool SetPosition( Vector3 position, bool warp = true )
-		{
-			return Native.Element.SetPosition( this.userdata, position, warp );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetVisibleTo( Element target, bool visible );
 
-		public bool SetRotation( Vector3 rotation, string order = "default", bool pedRotation = false )
-		{
-			return Native.Element.SetRotation( this.userdata, rotation, order, pedRotation );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetInterior( int interior, Vector3 position = null );
 
-		public bool SetVelocity( Vector3 velocity )
-		{
-			return Native.Element.SetVelocity( this.userdata, velocity );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetDimension( int dimension );
 
-		public bool SetVisibleTo( Element target, bool visible )
-		{
-			return Native.Element.SetVisibleTo( this.userdata, target.GetUserData(), visible );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool Attach( Element target, Vector3 offsetPosition = null, Vector3 offsetRotation = null );
 
-		public bool SetInterior( int interior, Vector3 position = null )
-		{
-			return Native.Element.SetInterior( this.userdata, interior, position );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool Detach( Element target );
 
-		public bool SetDimension( int dimension )
-		{
-			return Native.Element.SetDimension( this.userdata, dimension );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetAlpha( int alpha );
 
-		public bool Attach( Element target, Vector3 offsetPosition = null, Vector3 offsetRotation = null )
-		{
-			return Native.Element.Attach( this.userdata, target.GetUserData(), offsetPosition, offsetRotation );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetDoubleSided( bool doublesided );
 
-		public bool Detach( Element target )
-		{
-			return Native.Element.Detach( this.userdata, target.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetHealth( float health );
 
-		public bool SetAlpha( int alpha )
-		{
-			return Native.Element.SetAlpha( this.userdata, alpha );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetModel( int model );
 
-		public bool SetDoubleSided( bool doublesided )
-		{
-			return Native.Element.SetDoubleSided( this.userdata, doublesided );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetAttachedOffsets( Vector3 offsetPosition = null, Vector3 offsetRotation = null );
 
-		public bool SetHealth( float health )
-		{
-			return Native.Element.SetHealth( this.userdata, health );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetSyncer( Player player );
 
-		public bool SetModel( int model )
-		{
-			return Native.Element.SetModel( this.userdata, model );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetCollisionsEnabled( bool enabled );
 
-		public bool SetAttachedOffsets( Vector3 offsetPosition = null, Vector3 offsetRotation = null )
-		{
-			return Native.Element.SetAttachedOffsets( this.userdata, offsetPosition, offsetRotation );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetFrozen( bool frozen );
 
-		public bool SetSyncer( Player player )
-		{
-			return Native.Element.SetSyncer( this.userdata, player.GetUserData() );
-		}
-
-		public bool SetCollisionsEnabled( bool enabled )
-		{
-			return Native.Element.SetCollisionsEnabled( this.userdata, enabled );
-		}
-
-		public bool SetFrozen( bool frozen )
-		{
-			return Native.Element.SetFrozen( this.userdata, frozen );
-		}
-
-		public bool SetLowLODElement( Element element )
-		{
-			return Native.Element.SetLowLODElement( this.userdata, element.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetLowLODElement( Element element );
 
 		#endregion
 
 		#region Get
 
-		public string GetID()
-		{
-			return Native.Element.GetID( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern uint GetUserData();
 
-		public string GetData( string key, bool inherit = true )
-		{
-			return Native.Element.GetData( this.userdata, key, inherit );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern string GetID();
 
-		public string GetElementType()
-		{
-			return Native.Element.GetType( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern object GetData( string key, bool inherit = true );
 
-		public Object GetChild( UInt32 parent, int index )
-		{
-			return Element.FindOrCreate( Native.Element.GetChild( this.userdata, index ) );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern string GetElementType();
 
-		public int GetChildrenCount()
-		{
-			return Native.Element.GetChildrenCount( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern object GetChild( int index );
 
-		public Object GetParent()
-		{
-			return Element.FindOrCreate( Native.Element.GetParent( this.userdata ) );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern int GetChildrenCount();
 
-		public Vector3 GetPosition()
-		{
-			return Native.Element.GetPosition( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern object GetParent();
 
-		public Vector3 GetRotation( string order = "default" )
-		{
-			return Native.Element.GetRotation( this.userdata, order );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Vector3 GetPosition();
 
-		public Vector3 GetVelocity()
-		{
-			return Native.Element.GetVelocity( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Vector3 GetRotation( string order = "default" );
 
-		public int GetInterior()
-		{
-			return Native.Element.GetInterior( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Vector3 GetVelocity();
 
-		public int GetDimension()
-		{
-			return Native.Element.GetDimension( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern int GetInterior();
 
-		public string GetZoneName()
-		{
-			return Native.Element.GetZoneName( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern int GetDimension();
 
-		public Object GetAttachedTo()
-		{
-			return Element.FindOrCreate( Native.Element.GetAttachedTo( this.userdata ) );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern string GetZoneName();
 
-		public Object GetColShape()
-		{
-			return Element.FindOrCreate( Native.Element.GetColShape( this.userdata ) );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Element GetAttachedTo();
 
-		public int GetAlpha()
-		{
-			return Native.Element.GetAlpha( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Element GetColShape();
 
-		public float GetHealth()
-		{
-			return Native.Element.GetHealth( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern int GetAlpha();
 
-		public int GetModel()
-		{
-			return Native.Element.GetModel( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern float GetHealth();
 
-		public Player GetSyncer()
-		{
-			return Element.FindOrCreate( Native.Element.GetSyncer( this.userdata ) ) as Player;
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern int GetModel();
 
-		public bool GetCollisionsEnabled()
-		{
-			return Native.Element.GetCollisionsEnabled( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Player GetSyncer();
 
-		public Object GetLowLODElement()
-		{
-			return Element.FindOrCreate( Native.Element.GetLowLODElement( this.userdata ) );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool GetCollisionsEnabled();
+
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Element GetLowLODElement();
 
 		#endregion
 
 		#region Is
 
-		public bool IsValid()
-		{
-			return Native.Element.IsElement( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool IsValid();
 
-		public bool IsWithinColShape( ColShape colshape )
-		{
-			return Native.Element.IsWithinColShape( this.userdata, colshape.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool IsWithinColShape( ColShape colshape );
 
-		public bool IsWithinMarker( Marker marker )
-		{
-			return Native.Element.IsWithinMarker( this.userdata, marker.GetUserData() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool IsWithinMarker( Marker marker );
 
-		public bool IsAttached()
-		{
-			return Native.Element.IsAttached( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool IsAttached();
 
-		public bool IsDoubleSided()
-		{
-			return Native.Element.IsDoubleSided( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool IsDoubleSided();
 
-		public bool IsInWater()
-		{
-			return Native.Element.IsInWater( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool IsInWater();
 
-		public bool IsFrozen()
-		{
-			return Native.Element.IsFrozen( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool IsFrozen();
 
-		public bool IsElementLowLOD()
-		{
-			return Native.Element.IsElementLowLOD( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool IsElementLowLOD();
 
 		#endregion
 
@@ -337,37 +214,30 @@ namespace MultiTheftAuto
 			return (int)this.GetHashCode();
 		}
 
-		public uint GetUserData()
-		{
-			return this.userdata;
-		}
-
 		public override string ToString()
 		{
-			return string.Format( "[{0}: 0x{1}]", this.GetType().Name, this.userdata.ToString( "X8" ) );
+			return string.Format( "[{0}: 0x{1}]", this.GetType().Name, this.GetUserData().ToString( "X8" ) );
 		}
 
 		#endregion
 
 		#region Static methods
 
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public static extern Element GetRootElement();
+
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public static extern Element[] GetByType( string elementType );
+
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public static extern Element GetByID( string elementID, int index = 0 );
+
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public static extern Element GetByIndex( string type, int index );
+
 		public static IEnumerable<T> GetByType<T>( string elementType ) where T : class
 		{
-			return Native.Element.GetByType( elementType ).Select( i => Element.FindOrCreate( i ) as T );
-		}
-
-		public static Object GetByID( string elementID, int index = 0 )
-		{
-			UInt32 userdata = Native.Element.GetByID( elementID, index );
-
-			return userdata != 0 ? Element.FindOrCreate( userdata ) : null;
-		}
-
-		public static Object GetByIndex( string type, int index )
-		{
-			UInt32 userdata = Native.Element.GetByIndex( type, index );
-
-			return userdata != 0 ? Element.FindOrCreate( userdata ) : null;
+			return GetByType( elementType ).Select( i => i as T );
 		}
 
 		#endregion

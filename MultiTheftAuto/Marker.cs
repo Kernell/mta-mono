@@ -9,8 +9,7 @@ namespace MultiTheftAuto
 	{
 		#region Constructors
 
-		public Marker( UInt32 userdata )
-			: base( userdata )
+		public Marker()
 		{
 
 		}

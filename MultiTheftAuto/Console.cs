@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,15 +9,12 @@ namespace MultiTheftAuto
 {
 	public class Console : Player
 	{
-		public Console( uint userdata ) :
-			base( userdata )
+		private Console()
 		{
 		}
 
-		public static bool Output( string text, Element element = null )
-		{
-			return Native.Server.OutputConsole( text, element == null ? Element.Root.userdata : element.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public static extern bool Output( string text, Element element = null );
 
 		public static int Read()
 		{
@@ -38,14 +36,20 @@ namespace MultiTheftAuto
 			return System.Console.ReadLine();
 		}
 
-		public static bool Write( string message, params string[] args )
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		private static extern void Write( string message );
+
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		private static extern void WriteLine( string message );
+
+		public static void Write( string message, params object[] args )
 		{
-			return Native.Server.OutputServerLog( string.Format( message, args ) );
+			Write( String.Format( message, args ) );
 		}
 
-		public static bool WriteLine( string message, params string[] args )
+		public static void WriteLine( string message, params object[] args )
 		{
-			return Native.Server.OutputServerLog( string.Format( message, args ) );
+			WriteLine( String.Format( message, args ) );
 		}
 	}
 }

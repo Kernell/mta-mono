@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -79,81 +80,53 @@ namespace MultiTheftAuto
 	{
 		#region Constructors
 
-		public Blip( Vector3 position, BlipIcon icon = BlipIcon.None, int size = 2, Color color = null, int ordering = 0, float visibleDistance = 99999.0f, Element visibleTo = null )
-			: base( Native.Blip.Create( position, (int)icon, size, color, ordering, visibleDistance, visibleTo != null ? visibleTo.userdata : 0 ) )
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Blip( Vector3 position, BlipIcon icon = BlipIcon.None, int size = 2, Color color = null, int ordering = 0, float visibleDistance = 99999.0f, Element visibleTo = null );
+
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Blip( Element element, BlipIcon icon = BlipIcon.None, int size = 2, Color color = null, int ordering = 0, float visibleDistance = 99999.0f, Element visibleTo = null );
+
+		internal Blip()
 		{
-
-		}
-
-		public Blip( Element element, BlipIcon icon = BlipIcon.None, int size = 2, Color color = null, int ordering = 0, float visibleDistance = 99999.0f, Element visibleTo = null )
-			: base( Native.Blip.CreateAttachedTo( element.userdata, (int)icon, size, color, ordering, visibleDistance, visibleTo != null ? visibleTo.userdata : 0 ) )
-		{
-
-		}
-
-		public Blip( UInt32 userdata )
-			: base( userdata )
-		{
-
 		}
 
 		#endregion
 
 		#region Get functions
 
-		public int GetIcon()
-		{
-			return Native.Blip.GetIcon( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern int GetIcon();
 
-		public int GetSize()
-		{
-			return Native.Blip.GetSize( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern int GetSize();
 
-		public Color GetColor()
-		{
-			return Native.Blip.GetColor( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Color GetColor();
 
-		public int GetOrdering()
-		{
-			return Native.Blip.GetOrdering( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern int GetOrdering();
 
-		public float GetVisibleDistance()
-		{
-			return Native.Blip.GetVisibleDistance( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern float GetVisibleDistance();
 
 		#endregion
 
 		#region Set functions
 
-		public bool SetIcon( int icon )
-		{
-			return Native.Blip.SetIcon( this.userdata, icon );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetIcon( int icon );
 
-		public bool SetSize( int size )
-		{
-			return Native.Blip.SetSize( this.userdata, size );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetSize( int size );
 
-		public bool SetColor( Color color )
-		{
-			return Native.Blip.SetColor( this.userdata, color );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetColor( Color color );
 
-		public bool SetOrdering( int ordering )
-		{
-			return Native.Blip.SetOrdering( this.userdata, ordering );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetOrdering( int ordering );
 
-		public bool SetVisibleDistance( float distance )
-		{
-			return Native.Blip.SetVisibleDistance( this.userdata, distance );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetVisibleDistance( float distance );
 
 		#endregion
 	}

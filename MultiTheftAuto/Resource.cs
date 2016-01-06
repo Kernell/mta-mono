@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,25 +9,15 @@ using MultiTheftAuto.Utils;
 
 namespace MultiTheftAuto
 {
-	public class Resource : IdentifiedPool<Resource>, IIdentifyable
+	public class Resource
 	{
-		#region Properties
-
-		public UInt32 userdata
-		{
-			get;
-			private set;
-		}
-
-		#endregion
-
 		#region Static properties
 
 		public static Element Root
 		{
 			get
 			{
-				return Element.FindOrCreate( Native.Resource.GetRootElement() );
+				return Resource.GetCurrent().GetRoot();
 			}
 		}
 
@@ -34,174 +25,98 @@ namespace MultiTheftAuto
 
 		#region Constuctors
 
-		public Resource( string resourceName, string organizationalDir )
-			: this( Native.Resource.Create( resourceName, organizationalDir ) )
-		{
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Resource( string resourceName, string organizationalDir );
 
-		public Resource( UInt32 userdata )
+		private Resource()
 		{
-			this.userdata = userdata;
 		}
 
 		#endregion
 
 		#region Methods
 
-		public Resource Copy( string newResourceName, string organizationalDir )
-		{
-			return new Resource( Native.Resource.Copy( this.userdata, newResourceName, organizationalDir ) );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Resource Copy( string newResourceName, string organizationalDir );
 
-		public Element GetRoot()
-		{
-			return Element.FindOrCreate( Native.Resource.GetRootElement( this.userdata ) );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Element GetRoot();
 
-		public Element GetMapRootElement( UInt32 resource, string map )
-		{
-			return Element.FindOrCreate( Native.Resource.GetMapRootElement( this.userdata, map ) );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Element GetMapRootElement( UInt32 resource, string map );
 
-		public Element GetDynamicElementRoot()
-		{
-			return Element.FindOrCreate( Native.Resource.GetDynamicElementRoot( this.userdata ) );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern Element GetDynamicElementRoot();
 
-		public bool RemoveFile( string filename )
-		{
-			return Native.Resource.RemoveFile( this.userdata, filename );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool RemoveFile( string filename );
 
-		public string GetInfo( string attribute )
-		{
-			return Native.Resource.GetInfo( this.userdata, attribute );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern string GetInfo( string attribute );
 
-		public uint GetLastStartTime()
-		{
-			return Native.Resource.GetLastStartTime( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern uint GetLastStartTime();
 
-		public string GetLoadFailureReason()
-		{
-			return Native.Resource.GetLoadFailureReason( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern string GetLoadFailureReason();
 
-		public uint GetLoadTime()
-		{
-			return Native.Resource.GetLoadTime( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern uint GetLoadTime();
 
-		public string GetName()
-		{
-			return Native.Resource.GetName( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern string GetName();
 
-		public string GetState()
-		{
-			return Native.Resource.GetState( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern string GetState();
 
-		public bool SetDefaultSetting( string settingName, string settingValue )
-		{
-			return Native.Resource.SetDefaultSetting( this.userdata, settingName, settingValue );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetDefaultSetting( string settingName, string settingValue );
 
-		public bool RemoveDefaultSetting( string settingName )
-		{
-			return Native.Resource.RemoveDefaultSetting( this.userdata, settingName );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool RemoveDefaultSetting( string settingName );
 
-		public bool Start( bool persistent = false, bool startIncludedResources = true, bool loadServerConfigs = true, bool loadMaps = true, bool loadServerScripts = true, bool loadHTML = true, bool loadClientConfigs = true, bool loadClientScripts = true, bool loadFiles = true )
-		{
-			return Native.Resource.Start( this.userdata, persistent, startIncludedResources, loadServerConfigs, loadMaps, loadServerScripts, loadHTML, loadClientConfigs, loadClientScripts, loadFiles );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool Start( bool persistent = false, bool startIncludedResources = true, bool loadServerConfigs = true, bool loadMaps = true, bool loadServerScripts = true, bool loadHTML = true, bool loadClientConfigs = true, bool loadClientScripts = true, bool loadFiles = true );
 
-		public bool Restart()
-		{
-			return Native.Resource.Restart( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool Restart();
 
-		public bool Stop()
-		{
-			return Native.Resource.Stop( this.userdata );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool Stop();
 
-		public bool SetInfo( string attribute, string value )
-		{
-			return Native.Resource.SetInfo( this.userdata, attribute, value );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool SetInfo( string attribute, string value );
 
-		public bool Rename( string newResourceName, string organizationalPath )
-		{
-			return Native.Resource.Rename( this.GetName(), newResourceName, organizationalPath );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool Rename( string newResourceName, string organizationalPath );
 
-		public bool Delete()
-		{
-			return Native.Resource.Delete( this.GetName() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool Delete();
 
-		public bool UpdateACLRequest( string rightName, bool bAccess, string byWho )
-		{
-			return Native.Resource.UpdateACLRequest( this.userdata, rightName, bAccess, byWho );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern bool UpdateACLRequest( string rightName, bool bAccess, string byWho );
 
 		#endregion
 
 		#region Static methods
 
-		public static bool Rename( string resourceName, string newResourceName, string organizationalPath )
-		{
-			return Native.Resource.Rename( resourceName, newResourceName, organizationalPath );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern static bool Rename( string resourceName, string newResourceName, string organizationalPath );
 
-		public static bool Delete( string resourceName )
-		{
-			return Native.Resource.Delete( resourceName );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern static bool Delete( string resourceName );
 
-		public static bool Refresh( bool refreshAll = false )
-		{
-			return Native.Resource.Refresh( refreshAll );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern static bool Refresh( bool refreshAll = false );
 
-		public static Resource GetCurrent()
-		{
-			return Resource.FindOrCreate( Native.Resource.GetCurrent() );
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern static Resource GetCurrent();
 
-		public static Resource[] GetAll()
-		{
-			UInt32[] userdataArray = Native.Resource.GetResources();
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern static Resource[] GetAll();
 
-			Resource[] resources = new Resource[ userdataArray.Length ];
-
-			for( uint i = 0; i < userdataArray.Length; i++ )
-			{
-				resources.SetValue( Resource.FindOrCreate( userdataArray[ i ] ), i );
-			}
-
-			return resources;
-		}
-
-		public static Element GetRootElement( Element resource = null )
-		{
-			return Element.FindOrCreate( Native.Resource.GetRootElement( resource.userdata ) );
-		}
-
-		public static Resource GetFromName( string resourceName )
-		{
-			UInt32 userdata = Native.Resource.GetFromName( resourceName );
-
-			if( userdata != 0 )
-			{
-				return Resource.FindOrCreate( userdata );
-			}
-
-			return null;
-		}
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public extern static Resource GetFromName( string resourceName );
 
 		#endregion
 	}
