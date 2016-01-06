@@ -23,6 +23,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -103,7 +104,6 @@
     <Compile Include="EventArgs\VehicleStartEnterEventArgs.cs" />
     <Compile Include="HeatHazeSettings.cs" />
     <Compile Include="Marker.cs" />
-    <Compile Include="MultiTheftAuto.cs" />
     <Compile Include="Native\Account.cs" />
     <Compile Include="Native\Blip.cs" />
     <Compile Include="Native\ColShape.cs" />
@@ -129,15 +129,11 @@
     <Compile Include="Player.cs" />
     <Compile Include="PlayerACInfo.cs" />
     <Compile Include="PlayerModInfo.cs" />
-    <Compile Include="Pools\IdentifiedPool.cs" />
-    <Compile Include="Pools\Pool.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resource.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="ServerVersion.cs" />
     <Compile Include="Team.cs" />
-    <Compile Include="Utils\Disposable.cs" />
-    <Compile Include="Utils\IIdentifyable.cs" />
     <Compile Include="Vector2.cs" />
     <Compile Include="Vector3.cs" />
     <Compile Include="Vehicle.cs" />
