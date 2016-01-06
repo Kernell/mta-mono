@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
-namespace MultiTheftAuto.Native
+namespace MultiTheftAuto
 {
     public static class Game
     {

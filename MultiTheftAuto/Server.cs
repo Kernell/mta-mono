@@ -8,7 +8,22 @@ namespace MultiTheftAuto
 	public static class Server
 	{
 		[MethodImpl( MethodImplOptions.InternalCall )]
-		public extern static bool OutputChatBox( string text, Element element, Color color, bool colorCoded );
+		public static extern uint GetMaxPlayers();
+
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public static extern bool SetMaxPlayers( uint maxPlayers );
+
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public static extern bool OutputChatBox( string text, Element element, Color color, bool colorCoded );
+
+//		[MethodImpl( MethodImplOptions.InternalCall )]
+//		public static extern bool OutputLog( string text );
+
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public static extern bool SetPassword( string password, bool bSave );
+
+		[MethodImpl( MethodImplOptions.InternalCall )]
+		public static extern ServerVersion GetVersion();
 
 		[MethodImpl( MethodImplOptions.InternalCall )]
 		public extern static bool AddCommandHandler( string name, CommandHandler handler, bool restricted = false, bool caseSensitive = true );

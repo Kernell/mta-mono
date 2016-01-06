@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Account.cs" />
+    <Compile Include="Audio.cs" />
     <Compile Include="Ban.cs" />
     <Compile Include="Blip.cs" />
     <Compile Include="Blowfish.cs" />
@@ -104,26 +105,14 @@
     <Compile Include="EventArgs\VehicleStartEnterEventArgs.cs" />
     <Compile Include="HeatHazeSettings.cs" />
     <Compile Include="Marker.cs" />
-    <Compile Include="Native\Account.cs" />
-    <Compile Include="Native\Blip.cs" />
-    <Compile Include="Native\ColShape.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="Debug.cs" />
-    <Compile Include="Native\Element.cs" />
-    <Compile Include="Native\Event.cs" />
-    <Compile Include="Native\Explosion.cs" />
-    <Compile Include="Native\Fire.cs" />
-    <Compile Include="Native\Game.cs" />
-    <Compile Include="Native\Marker.cs" />
-    <Compile Include="Native\Object.cs" />
-    <Compile Include="Native\Ped.cs" />
-    <Compile Include="Native\Player.cs" />
-    <Compile Include="Native\RadarArea.cs" />
-    <Compile Include="Native\Resource.cs" />
-    <Compile Include="Native\Server.cs" />
-    <Compile Include="Native\Team.cs" />
-    <Compile Include="Native\Vehicle.cs" />
-    <Compile Include="Native\Water.cs" />
+    <Compile Include="Explosion.cs" />
+    <Compile Include="Fire.cs" />
+    <Compile Include="Game.cs" />
+    <Compile Include="Object.cs" />
+    <Compile Include="RadarArea.cs" />
+    <Compile Include="Water.cs" />
     <Compile Include="Ped.cs" />
     <Compile Include="Pickup.cs" />
     <Compile Include="Player.cs" />
@@ -140,6 +129,7 @@
     <Compile Include="VehicleColor.cs" />
     <Compile Include="VehicleWheelsState.cs" />
     <Compile Include="Weapon.cs" />
+    <Compile Include="World.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
