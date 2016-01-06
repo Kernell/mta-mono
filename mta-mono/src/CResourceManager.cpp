@@ -13,8 +13,9 @@
 #include "StdInc.h"
 #include "CResourceManager.h"
 
-CResourceManager::CResourceManager( CMonoInterface* pMono )
+CResourceManager::CResourceManager( CModule* pModule, CMonoInterface* pMono )
 {
+	this->m_pModule = pModule;
 	this->m_pMono = pMono;
 }
 
@@ -23,6 +24,30 @@ CResourceManager::~CResourceManager( void )
 	for( auto iter : this->m_List )
 	{
 		delete iter;
+	}
+
+	this->m_pModule = nullptr;
+}
+
+void CResourceManager::ResourceStopping( lua_State* pLuaVM )
+{
+	CResource* pResource = this->GetFromList( pLuaVM );
+
+	if( pResource )
+	{
+		pResource->OnStopping();
+	}
+}
+
+void CResourceManager::ResourceStopped( lua_State* pLuaVM )
+{
+	CResource* pResource = this->GetFromList( pLuaVM );
+
+	if( pResource )
+	{
+		this->RemoveFromList( pResource );
+
+		delete pResource;
 	}
 }
 
@@ -39,7 +64,7 @@ CResource* CResourceManager::Create( lua_State* luaVM, string strName )
 			return nullptr;
 		}
 
-		CResource *pResource = new CResource( this->m_pMono, luaVM, strName );
+		CResource *pResource = new CResource( this, luaVM, strName );
 
 		this->AddToList( pResource );
 
@@ -56,7 +81,7 @@ void CResourceManager::AddToList( CResource* pResource )
 
 CResource* CResourceManager::GetFromList( lua_State* pLuaVM )
 {
-	for( auto iter : this->m_List )
+	for( const auto& iter : this->m_List )
 	{
 		if( iter->GetLua() == pLuaVM )
 		{
@@ -69,7 +94,7 @@ CResource* CResourceManager::GetFromList( lua_State* pLuaVM )
 
 CResource* CResourceManager::GetFromList( MonoDomain* pDomain )
 {
-	for( auto iter : this->m_List )
+	for( const auto& iter : this->m_List )
 	{
 		if( iter->GetDomain()->GetMonoPtr() == pDomain )
 		{
@@ -90,7 +115,7 @@ void CResourceManager::RemoveFromList( CResource* pResource )
 	
 void CResourceManager::DoPulse( void )
 {
-	for( auto iter : this->m_List )
+	for( const auto& iter : this->m_List )
 	{
 		iter->DoPulse();
 	}

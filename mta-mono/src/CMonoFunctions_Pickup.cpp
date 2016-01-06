@@ -14,27 +14,35 @@
 #include "CMonoFunctions.h"
 
 // Pickup create/destroy funcs
-DWORD CMonoFunctions::Pickup::Create( MonoObject* pPosition, unsigned char ucType, double dFive, unsigned long ulRespawnInterval, double dSix )
+void CMonoFunctions::Pickup::Ctor( TElement pThis, MonoObject* pPosition, unsigned char ucType, double dFive, unsigned long ulRespawnInterval, double dSix )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		Vector3 vecPosition( pPosition );
 
-		return (DWORD)CLuaFunctionDefinitions::CreatePickup( RESOURCE->GetLua(), vecPosition, ucType, dFive, ulRespawnInterval, dSix );
-	}
+		PVOID pUserData = CLuaFunctionDefinitions::CreatePickup( pResource->GetLua(), vecPosition, ucType, dFive, ulRespawnInterval, dSix );
 
-	return NULL;
+		ASSERT( pUserData );
+
+		pResource->GetElementManager()->Create( pThis, pUserData );
+	}
 }
 
 
 // Pickup get funcs
-unsigned char CMonoFunctions::Pickup::GetType( DWORD pUserData )
+unsigned char CMonoFunctions::Pickup::GetPickupType( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned char ucType;
 		
-		if( CLuaFunctionDefinitions::GetPickupType( RESOURCE->GetLua(), (void*)pUserData, ucType ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetPickupType( pResource->GetLua(), pElement->ToLuaUserData(), ucType ) )
 		{
 			return ucType;
 		}
@@ -43,13 +51,17 @@ unsigned char CMonoFunctions::Pickup::GetType( DWORD pUserData )
 	return 0;
 }
 
-unsigned char CMonoFunctions::Pickup::GetWeapon( DWORD pUserData )
+unsigned char CMonoFunctions::Pickup::GetWeapon( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned char ucWeapon;
 		
-		if( CLuaFunctionDefinitions::GetPickupWeapon( RESOURCE->GetLua(), (void*)pUserData, ucWeapon ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetPickupWeapon( pResource->GetLua(), pElement->ToLuaUserData(), ucWeapon ) )
 		{
 			return ucWeapon;
 		}
@@ -58,13 +70,17 @@ unsigned char CMonoFunctions::Pickup::GetWeapon( DWORD pUserData )
 	return 0;
 }
 
-float CMonoFunctions::Pickup::GetAmount( DWORD pUserData )
+float CMonoFunctions::Pickup::GetAmount( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		float fAmount;
 		
-		if( CLuaFunctionDefinitions::GetPickupAmount( RESOURCE->GetLua(), (void*)pUserData, fAmount ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetPickupAmount( pResource->GetLua(), pElement->ToLuaUserData(), fAmount ) )
 		{
 			return fAmount;
 		}
@@ -73,13 +89,17 @@ float CMonoFunctions::Pickup::GetAmount( DWORD pUserData )
 	return 0;
 }
 
-unsigned short CMonoFunctions::Pickup::GetAmmo( DWORD pUserData )
+unsigned short CMonoFunctions::Pickup::GetAmmo( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned short usAmmo;
 		
-		if( CLuaFunctionDefinitions::GetPickupAmmo( RESOURCE->GetLua(), (void*)pUserData, usAmmo ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetPickupAmmo( pResource->GetLua(), pElement->ToLuaUserData(), usAmmo ) )
 		{
 			return usAmmo;
 		}
@@ -88,13 +108,17 @@ unsigned short CMonoFunctions::Pickup::GetAmmo( DWORD pUserData )
 	return 0;
 }
 
-unsigned long CMonoFunctions::Pickup::GetRespawnInterval( DWORD pUserData )
+unsigned long CMonoFunctions::Pickup::GetRespawnInterval( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned long ulInterval;
 		
-		if( CLuaFunctionDefinitions::GetPickupRespawnInterval( RESOURCE->GetLua(), (void*)pUserData, ulInterval ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetPickupRespawnInterval( pResource->GetLua(), pElement->ToLuaUserData(), ulInterval ) )
 		{
 			return ulInterval;
 		}
@@ -103,13 +127,17 @@ unsigned long CMonoFunctions::Pickup::GetRespawnInterval( DWORD pUserData )
 	return 0;
 }
 
-bool CMonoFunctions::Pickup::IsSpawned( DWORD pUserData )
+bool CMonoFunctions::Pickup::IsSpawned( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		bool bSpawned;
 		
-		if( CLuaFunctionDefinitions::IsPickupSpawned( RESOURCE->GetLua(), (void*)pUserData, bSpawned ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::IsPickupSpawned( pResource->GetLua(), pElement->ToLuaUserData(), bSpawned ) )
 		{
 			return bSpawned;
 		}
@@ -120,31 +148,44 @@ bool CMonoFunctions::Pickup::IsSpawned( DWORD pUserData )
 
 
 // Pickup set funcs
-bool CMonoFunctions::Pickup::SetType( DWORD pUserData, unsigned char ucType, double dThree, double dFour )
+bool CMonoFunctions::Pickup::SetType( TElement pThis, unsigned char ucType, double dThree, double dFour )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetPickupType( RESOURCE->GetLua(), (void*)pUserData, ucType, dThree, dFour );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetPickupType( pResource->GetLua(), pElement->ToLuaUserData(), ucType, dThree, dFour );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Pickup::SetRespawnInterval( DWORD pUserData, unsigned long ulInterval )
+bool CMonoFunctions::Pickup::SetRespawnInterval( TElement pThis, unsigned long ulInterval )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetPickupRespawnInterval( RESOURCE->GetLua(), (void*)pUserData, ulInterval );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetPickupRespawnInterval( pResource->GetLua(), pElement->ToLuaUserData(), ulInterval );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Pickup::Use( DWORD pUserData, DWORD pPlayer )
+bool CMonoFunctions::Pickup::Use( TElement pThis, TElement pPlayer )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::UsePickup( RESOURCE->GetLua(), (void*)pUserData, (void*)pPlayer );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		CElement* pPlayerElement = pResource->GetElementManager()->GetFromList( pPlayer );
+		
+		return CLuaFunctionDefinitions::UsePickup( pResource->GetLua(), pElement->ToLuaUserData(), pPlayerElement->ToLuaUserData() );
 	}
 
 	return false;

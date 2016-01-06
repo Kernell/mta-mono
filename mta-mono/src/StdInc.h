@@ -62,5 +62,3 @@ extern "C"
 
 #include "extra/Vector2.h"
 #include "extra/Vector3.h"
-
-#include "include/ILuaModuleManager.h"

@@ -21,10 +21,7 @@ class CMonoMTALib;
 class CMonoMTALib
 {
 private:
-	MonoAssembly*		m_pAssembly;
 	MonoImage*			m_pImage;
-	MonoObject*			m_pObject;
-	CMonoClass*			m_pClass;
 	CMonoDomain*		m_pDomain;
 
 public:
@@ -38,10 +35,6 @@ public:
 
 	CMonoClass*			GetClass			( const char* szName );
 	CMonoClass*			GetClass			( const char* szNameSpace, const char* szName );
-
-	string				GetElementType		( void* pUserData );
-
-	MonoObject*			RegisterElement		( void* pUserData );
 
 	CMonoDomain*		GetDomain			( void )	{ return this->m_pDomain; }
 };

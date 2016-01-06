@@ -25,7 +25,7 @@ string CLuaFunctionDefinitions::Get( lua_State *pLuaVM, const char* szKey )
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 		
-		if( const char *szString = pLuaArgument.GetString() )
+		if( const char* szString = pLuaArgument.GetString() )
 		{
 			return string( szString );
 		}
@@ -534,6 +534,8 @@ bool CLuaFunctionDefinitions::IsElement( lua_State* pLuaVM, PVOID pUserData )
 
 string CLuaFunctionDefinitions::GetElementType( lua_State* pLuaVM, PVOID pUserData )
 {
+	string strResult;
+
 	CLuaArguments pLuaArguments;
 
 	pLuaArguments.PushUserData( pUserData );
@@ -542,13 +544,13 @@ string CLuaFunctionDefinitions::GetElementType( lua_State* pLuaVM, PVOID pUserDa
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetString() )
+		if( pLuaArgument.GetType() == LUA_TSTRING )
 		{
-			return string( pLuaArgument.GetString() );
+			strResult = pLuaArgument.GetString();
 		}
 	}
 
-	return string();
+	return strResult;
 }
 
 PVOID CLuaFunctionDefinitions::GetElementByID( lua_State* pLuaVM, const char* szID, unsigned int uiIndex )
@@ -640,7 +642,10 @@ string CLuaFunctionDefinitions::GetElementID( lua_State* pLuaVM, PVOID pUserData
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		return string( pLuaArgument.GetString() );
+		if( pLuaArgument.GetType() == LUA_TSTRING )
+		{
+			return pLuaArgument.GetString();
+		}
 	}
 
 	return string();
@@ -839,9 +844,12 @@ bool CLuaFunctionDefinitions::GetElementZoneName( lua_State* pLuaVM, PVOID pUser
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		strOutName = string( pLuaArgument.GetString() );
+		if( pLuaArgument.GetType() == LUA_TSTRING )
+		{
+			strOutName = pLuaArgument.GetString();
 		
-		return true;
+			return true;
+		}
 	}
 
 	return false;
@@ -1700,9 +1708,14 @@ bool CLuaFunctionDefinitions::GetPlayerNametagText( lua_State* pLuaVM, PVOID pUs
 
 	if( pLuaArguments.Call( pLuaVM, "getPlayerNametagText", 1 ) )
 	{
-		strOutText = string( CLuaArgument( pLuaVM, -1 ).GetString() );
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		return true;
+		if( pLuaArgument.GetType() == LUA_TSTRING )
+		{
+			strOutText = pLuaArgument.GetString();
+			
+			return true;
+		}
 	}
 
 	return false;
@@ -1752,7 +1765,10 @@ string CLuaFunctionDefinitions::GetPlayerSerial( lua_State* pLuaVM, PVOID pUserD
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		return string( pLuaArgument.GetString() );
+		if( pLuaArgument.GetType() == LUA_TSTRING )
+		{
+			return pLuaArgument.GetString();
+		}
 	}
 
 	return string();
@@ -1768,7 +1784,10 @@ string CLuaFunctionDefinitions::GetPlayerUserName( lua_State* pLuaVM, PVOID pUse
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		return string( pLuaArgument.GetString() );
+		if( pLuaArgument.GetType() == LUA_TSTRING )
+		{
+			return pLuaArgument.GetString();
+		}
 	}
 
 	return string();
@@ -1796,9 +1815,14 @@ bool CLuaFunctionDefinitions::GetPlayerName( lua_State* pLuaVM, PVOID pUserData,
 
 	if( pLuaArguments.Call( pLuaVM, "getPlayerName", 1 ) )
 	{
-		strOutName = string( CLuaArgument( pLuaVM, -1 ).GetString() );
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		return true;
+		if( pLuaArgument.GetType() == LUA_TSTRING )
+		{
+			strOutName = pLuaArgument.GetString();
+		
+			return true;
+		}
 	}
 
 	return false;
@@ -1812,9 +1836,14 @@ bool CLuaFunctionDefinitions::GetPlayerIP( lua_State* pLuaVM, PVOID pUserData, s
 
 	if( pLuaArguments.Call( pLuaVM, "getPlayerIP", 1 ) )
 	{
-		strOutIP = string( CLuaArgument( pLuaVM, -1 ).GetString() );
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		return true;
+		if( pLuaArgument.GetType() == LUA_TSTRING )
+		{
+			strOutIP = pLuaArgument.GetString();
+		
+			return true;
+		}
 	}
 
 	return false;
@@ -1849,7 +1878,10 @@ string CLuaFunctionDefinitions::GetPlayerVersion( lua_State* pLuaVM, PVOID pUser
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		return string( pLuaArgument.GetString() );
+		if( pLuaArgument.GetType() == LUA_TSTRING )
+		{
+			return pLuaArgument.GetString();
+		}
 	}
 
 	return string();
@@ -3026,7 +3058,12 @@ bool CLuaFunctionDefinitions::GetVehicleType( lua_State* pLuaVM, PVOID pUserData
 
 	if( pLuaArguments.Call( pLuaVM, "getVehicleType", 1 ) )
 	{
-		strType = string( CLuaArgument( pLuaVM, -1 ).GetString() );
+		CLuaArgument pLuaArgument( pLuaVM, -1 );
+
+		if( pLuaArgument.GetType() == LUA_TSTRING )
+		{
+			strType = pLuaArgument.GetString();
+		}
 
 		return true;
 	}
@@ -3078,17 +3115,17 @@ bool CLuaFunctionDefinitions::GetVehicleColor( lua_State* pLuaVM, PVOID pUserDat
 				case 2: color1.G  = ucValue; break;
 				case 3: color1.B  = ucValue; break;
 
-				case 4: color2.R   = ucValue; break;
-				case 5: color2.G   = ucValue; break;
-				case 6: color2.B   = ucValue; break;
+				case 4: color2.R  = ucValue; break;
+				case 5: color2.G  = ucValue; break;
+				case 6: color2.B  = ucValue; break;
 
-				case 7: color3.R   = ucValue; break;
-				case 8: color3.G   = ucValue; break;
-				case 9: color3.B   = ucValue; break;
+				case 7: color3.R  = ucValue; break;
+				case 8: color3.G  = ucValue; break;
+				case 9: color3.B  = ucValue; break;
 
-				case 10: color4.R  = ucValue; break;
-				case 11: color4.G  = ucValue; break;
-				case 12: color4.B  = ucValue; break;
+				case 10: color4.R = ucValue; break;
+				case 11: color4.G = ucValue; break;
+				case 12: color4.B = ucValue; break;
 			}
 		}
 
@@ -7765,9 +7802,12 @@ bool CLuaFunctionDefinitions::GetAccountSerial( lua_State* pLuaVM, PVOID pAccoun
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		strSerial = string( pLuaArgument.GetString() );
-
-		return true;
+		if( pLuaArgument.GetType() == LUA_TSTRING )
+		{
+			strSerial = pLuaArgument.GetString();
+			
+			return true;
+		}
 	}
 
 	return false;
@@ -8033,9 +8073,12 @@ bool CLuaFunctionDefinitions::GetBanIP( lua_State* pLuaVM, PVOID pBan, string& s
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		strOutIP = string( pLuaArgument.GetString() );
-
-		return true;
+		if( pLuaArgument.GetType() == LUA_TSTRING )
+		{
+			strOutIP = pLuaArgument.GetString();
+			
+			return true;
+		}
 	}
 
 	return false;
@@ -8051,9 +8094,12 @@ bool CLuaFunctionDefinitions::GetBanSerial( lua_State* pLuaVM, PVOID pBan, strin
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		strOutSerial = string( pLuaArgument.GetString() );
+		if( pLuaArgument.GetType() == LUA_TSTRING )
+		{
+			strOutSerial = pLuaArgument.GetString();
 
-		return true;
+			return true;
+		}
 	}
 
 	return false;
@@ -8069,9 +8115,12 @@ bool CLuaFunctionDefinitions::GetBanUsername( lua_State* pLuaVM, PVOID pBan, str
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		strOutUsername = string( pLuaArgument.GetString() );
+		if( pLuaArgument.GetType() == LUA_TSTRING )
+		{
+			strOutUsername = pLuaArgument.GetString();
 
-		return true;
+			return true;
+		}
 	}
 
 	return false;
@@ -8087,9 +8136,12 @@ bool CLuaFunctionDefinitions::GetBanNick( lua_State* pLuaVM, PVOID pBan, string&
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		strOutNick = string( pLuaArgument.GetString() );
+		if( pLuaArgument.GetType() == LUA_TSTRING )
+		{
+			strOutNick = pLuaArgument.GetString();
 
-		return true;
+			return true;
+		}
 	}
 
 	return false;
@@ -8105,9 +8157,12 @@ bool CLuaFunctionDefinitions::GetBanReason( lua_State* pLuaVM, PVOID pBan, strin
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		strOutReason = string( pLuaArgument.GetString() );
+		if( pLuaArgument.GetType() == LUA_TSTRING )
+		{
+			strOutReason = pLuaArgument.GetString();
 
-		return true;
+			return true;
+		}
 	}
 
 	return false;
@@ -8123,9 +8178,12 @@ bool CLuaFunctionDefinitions::GetBanAdmin( lua_State* pLuaVM, PVOID pBan, string
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		strOutAdmin = string( pLuaArgument.GetString() );
+		if( pLuaArgument.GetType() == LUA_TSTRING )
+		{
+			strOutAdmin = pLuaArgument.GetString();
 
-		return true;
+			return true;
+		}
 	}
 
 	return false;
@@ -8459,7 +8517,10 @@ bool CLuaFunctionDefinitions::GetResourceInfo( lua_State* pLuaVM, PVOID pResourc
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		strInfo = string( pLuaArgument.GetString() );
+		if( pLuaArgument.GetType() == LUA_TSTRING )
+		{
+			strInfo = pLuaArgument.GetString();
+		}
 
 		return true;
 	}
@@ -8495,7 +8556,10 @@ bool CLuaFunctionDefinitions::GetResourceLoadFailureReason( lua_State* pLuaVM, P
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		strReason = string( pLuaArgument.GetString() );
+		if( pLuaArgument.GetType() == LUA_TSTRING )
+		{
+			strReason = pLuaArgument.GetString();
+		}
 
 		return true;
 	}
@@ -8531,7 +8595,10 @@ bool CLuaFunctionDefinitions::GetResourceName( lua_State* pLuaVM, PVOID pResourc
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		strName = string( pLuaArgument.GetString() );
+		if( pLuaArgument.GetType() == LUA_TSTRING )
+		{
+			strName = pLuaArgument.GetString();
+		}
 
 		return true;
 	}
@@ -8562,9 +8629,12 @@ bool CLuaFunctionDefinitions::GetResourceState( lua_State* pLuaVM, PVOID pResour
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		strState = string( pLuaArgument.GetString() );
+		if( pLuaArgument.GetType() == LUA_TSTRING )
+		{
+			strState = pLuaArgument.GetString();
 
-		return false;
+			return true;
+		}
 	}
 
 	return false;

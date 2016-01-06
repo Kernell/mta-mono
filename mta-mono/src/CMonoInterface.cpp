@@ -16,8 +16,10 @@
 
 MonoAssembly* CMonoInterface::m_pMTALib = nullptr;
 
-CMonoInterface::CMonoInterface( void )
+CMonoInterface::CMonoInterface( CModule* pModule )
 {
+	this->m_pModule = pModule;
+
 	mono_set_dirs( "mods/deathmatch/mono/lib", "mods/deathmatch/mono/etc" );
 
 	mono_set_signal_chaining( false );
@@ -25,7 +27,7 @@ CMonoInterface::CMonoInterface( void )
 	mono_debug_init( MONO_DEBUG_FORMAT_MONO );
 
 #if _DEBUG
-	mono_trace_set_level_string( "debug" );
+	//mono_trace_set_level_string( "debug" );
 #else
 	mono_trace_set_level_string( "critical" );
 #endif
@@ -47,6 +49,8 @@ CMonoInterface::~CMonoInterface( void )
 	mono_jit_cleanup( this->m_pMonoDomain );
 
 	SAFE_DELETE( this->m_pGC );
+
+	this->m_pModule = nullptr;
 }
 
 CMonoDomain* CMonoInterface::CreateAppdomain( CResource* pResource, const char* szName, char* szConfig )
@@ -66,7 +70,7 @@ void CMonoInterface::SetDomain( MonoDomain* pDomain, bool bForce )
 	mono_domain_set( pDomain != nullptr ? pDomain : this->m_pMonoDomain, bForce );
 }
 
-CLuaArguments CMonoInterface::MonoArrayToLuaArguments( MonoArray* pArray )
+CLuaArguments CMonoInterface::MonoArrayToLuaArguments( MonoArray* pArray, CResource* pResource )
 {
 	CLuaArguments pLuaArguments;
 
@@ -209,7 +213,9 @@ CLuaArguments CMonoInterface::MonoArrayToLuaArguments( MonoArray* pArray )
 			case MONO_TYPE_OBJECT: // System.Object
 			case MONO_TYPE_CLASS:
 			{
-				void* pValue = CMonoObject::GetPropertyValue<void*>( pObj, "userdata" );
+				CElement* pElement = pResource->GetElementManager()->GetFromList( pObj );
+
+				PVOID pValue = pElement->ToLuaUserData();
 
 				if( pValue )
 				{
@@ -224,7 +230,9 @@ CLuaArguments CMonoInterface::MonoArrayToLuaArguments( MonoArray* pArray )
 			case MONO_TYPE_U:
 			default:
 			{
-				g_pModuleManager->ErrorPrintf( "Unsupported type: %s (0x%i)\n", pType ? mono_type_get_name( pType ) : "(unknown type)", iType );
+				ASSERT( g_pModule );
+
+				g_pModule->ErrorPrintf( "Unsupported type: %s (0x%i)\n", pType ? mono_type_get_name( pType ) : "(unknown type)", iType );
 
 				break;
 			}
@@ -244,10 +252,14 @@ MonoAssembly* CMonoInterface::GetMTALib( void )
 
 void CMonoInterface::MonoPrintCallbackHandler( const char *string, mono_bool is_stdout )
 {
-	g_pModuleManager->Printf( string );
+	ASSERT( g_pModule );
+
+	g_pModule->Printf( string );
 }
 
 void CMonoInterface::MonoPrintErrorCallbackHandler( const char *string, mono_bool is_stdout )
 {
-	g_pModuleManager->ErrorPrintf( string );
+	ASSERT( g_pModule );
+
+	g_pModule->ErrorPrintf( string );
 }

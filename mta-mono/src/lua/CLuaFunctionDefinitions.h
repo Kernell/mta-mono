@@ -18,8 +18,6 @@ class CLuaFunctionDefinitions;
 #include "../Common.h"
 #include "../extra/CLuaArguments.h"
 
-extern ILuaModuleManager10 *g_pModuleManager;
-
 class CLuaFunctionDefinitions
 {
 public:

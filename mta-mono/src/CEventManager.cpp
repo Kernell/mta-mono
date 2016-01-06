@@ -25,21 +25,21 @@ CEventManager::~CEventManager( void )
 	this->m_pResource = nullptr;
 }
 
-bool CEventManager::Add( string strName, DWORD pUserData, MonoObject* pMonoDelegate, bool bPropagated, string strPriority )
+bool CEventManager::Add( string strName, CElement* pElement, MonoObject* pMonoDelegate, bool bPropagated, string strPriority )
 {
-	if( !pUserData )
+	if( !pElement )
 	{
 		return false;
 	}
 
-	CEvent* pEvent = new CEvent( this, strName, pUserData, pMonoDelegate, bPropagated, strPriority );
+	CEvent* pEvent = new CEvent( this, strName, pElement, pMonoDelegate, bPropagated, strPriority );
 
 	this->m_Events.insert( pair< string, CEvent* >( pEvent->GetName(), pEvent ) );
 
 	return true;
 }
 
-bool CEventManager::Delete( string strName, DWORD pUserData, MonoObject* pMonoDelegate )
+bool CEventManager::Delete( string strName, CElement* pElement, MonoObject* pMonoDelegate )
 {
 	bool bFind = false;
 
@@ -74,70 +74,65 @@ void CEventManager::DeleteAll( void )
 	}
 }
 
-bool CEventManager::Call( string strName, void* pThis, list< CLuaArgument* > Arguments )
+bool CEventManager::Call( const string& strName, CElement* pThis, list< CLuaArgument* > Arguments )
 {
-	CMonoMTALib* pMTALib = this->GetResource()->GetDomain()->GetMTALib();
+	CElementManager* pElementManager = this->m_pResource->GetElementManager();
 
-	MonoObject* pThisObj = pMTALib->RegisterElement( pThis );
+	CMonoMTALib* pMTALib = this->m_pResource->GetDomain()->GetMTALib();
 
-	if( !pThisObj )
-	{
-		return false;
-	}
-
-	DWORD pSource = 0;
+	CElement* pSource = nullptr;
 
 	auto *iter = *Arguments.begin();
 
 	if( iter->GetType() == LUA_TLIGHTUSERDATA )
 	{
-		pSource = (DWORD)iter->GetLightUserData();
+		pSource = pElementManager->FindOrCreate( iter->GetLightUserData() );
 	}
 
-	void** params = new void*[ Arguments.size() ];
+	CMonoArguments pArguments;
 
-	this->ReadArgumens( Arguments, params );
+	this->ReadArgumens( Arguments, pArguments );
 
-	for( auto iter : this->m_Events )
+	for( const auto& iter : this->m_Events )
 	{
 		CEvent* pEvent = iter.second;
 
-		DWORD pElement = pEvent->GetElement();
+		CElement* pElement = pEvent->GetElement();
 
-		if( pEvent->GetName() == strName && ( pElement == (DWORD)pThis || ( pEvent->IsPropagated() && pElement == pSource ) ) )
+		if( pEvent->GetName() == strName && ( pElement == pThis || ( pEvent->IsPropagated() && pElement == pSource ) ) )
 		{
-			pEvent->Call( (DWORD)pThis, params );
+			pEvent->Call( pThis, *pArguments );
 		}
 	}
 
-	delete[] params;
-
 	CMonoClass* pClass = pMTALib->GetClass( "Element" );
 
-	assert( pClass );
+	ASSERT( pClass );
 
-	strName[ 0 ] = toupper( strName[ 0 ] );
+	string strEventName = strName;
 
-	CMonoEvent* pEvent = pClass->GetEvent( strName );
+	strEventName[ 0 ] = toupper( strEventName[ 0 ] );
+
+	CMonoEvent* pEvent = pClass->GetEvent( strEventName );
 
 	if( pEvent )
 	{
-		return pEvent->Call( pThisObj, Arguments );
+		return pEvent->Call( pThis->ToMonoObject(), Arguments );
 	}
 
 	return true;
 }
 
-void CEventManager::ReadArgumens( list< CLuaArgument* > Arguments, void** params )
+void CEventManager::ReadArgumens( list< CLuaArgument* > Arguments, CMonoArguments& pArguments )
 {
-	CMonoDomain* pDomain = this->GetResource()->GetDomain();
+	CElementManager* pElementManager = this->m_pResource->GetElementManager();
+
+	CMonoDomain* pDomain = this->m_pResource->GetDomain();
 
 	CMonoMTALib* pMTALib = pDomain->GetMTALib();
 	CMonoCorlib* pCorlib = pDomain->GetCorlib();
 
-	uint argc = 0;
-
-	for( auto iter : Arguments )
+	for( const auto& iter : Arguments )
 	{
 		int iLuaType = iter->GetType();
 
@@ -147,17 +142,15 @@ void CEventManager::ReadArgumens( list< CLuaArgument* > Arguments, void** params
 			{
 				bool bValue = iter->GetBoolean();
 
-				params[ argc++ ] = &bValue;
+				pArguments.Push( bValue );
 
 				break;
 			}
 			case LUA_TNUMBER:
 			{
-				double value = iter->GetNumber< double >();
+				double dValue = iter->GetNumber< double >();
 
-				MonoObject* pObj = pCorlib->Class[ "double" ]->Box( &value );
-
-				params[ argc++ ] = pObj;
+				pArguments.Push( dValue );
 
 				break;
 			}
@@ -167,24 +160,17 @@ void CEventManager::ReadArgumens( list< CLuaArgument* > Arguments, void** params
 
 				MonoString* pString = pDomain->NewString( szValue );
 
-				params[ argc++ ] = pString;
+				pArguments.Push( pString );
 
 				break;
 			}
 			case LUA_TLIGHTUSERDATA:
 			{
-				void* pUserData = iter->GetLightUserData();
+				CElement* pElement = pElementManager->FindOrCreate( iter->GetLightUserData() );
 
-				MonoObject* pValue = pMTALib->RegisterElement( pUserData );
+				MonoObject* pValue = pElement->ToMonoObject();
 
-				if( pValue )
-				{
-					params[ argc++ ] = pValue;
-				}
-				else
-				{
-					params[ argc++ ] = pUserData;
-				}
+				pArguments.Push( pValue );
 
 				break;
 			}

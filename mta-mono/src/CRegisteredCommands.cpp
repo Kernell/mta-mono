@@ -46,13 +46,13 @@ bool CRegisteredCommands::Add( string strCommandName, MonoObject* pDelegate, boo
 	return true;
 }
 
-bool CRegisteredCommands::Execute( void* pPlayer, string strCommandName, list< string > argv )
+bool CRegisteredCommands::Execute( CElement* pPlayer, string strCommandName, list< string > argv )
 {
 	bool bHandled = false;
 
 	int iCompareResult;
 
-	for( CRegisteredCommands::SCommand* pCommand : this->m_Commands )
+	for( const auto& pCommand : this->m_Commands )
 	{
 		if( pCommand->bCaseSensitive )
 		{
@@ -151,7 +151,7 @@ CRegisteredCommands::SCommand* CRegisteredCommands::GetCommand( string strName )
 	return nullptr;
 }
 
-void CRegisteredCommands::Invoke( void* pUserData, MonoObject* pDelegate, string strCommandName, list< string > argv )
+void CRegisteredCommands::Invoke( CElement* pPlayer, MonoObject* pDelegate, const string& strCommandName, list< string > argv )
 {
 	CMonoMTALib* pMTALib = this->m_pResource->GetDomain()->GetMTALib();
 	CMonoCorlib* pCorlib = this->m_pResource->GetDomain()->GetCorlib();
@@ -159,26 +159,19 @@ void CRegisteredCommands::Invoke( void* pUserData, MonoObject* pDelegate, string
 	assert( pMTALib );
 	assert( pCorlib );
 
-	MonoObject* pPlayer = pMTALib->RegisterElement( pUserData );
-
-	if( !pPlayer )
-	{
-		return;
-	}
-
 	MonoString* pCommandName	= this->m_pResource->GetDomain()->NewString( strCommandName );
 	MonoArray* pArguments		= mono_array_new( this->m_pResource->GetDomain()->GetMonoPtr(), pCorlib->Class[ "string" ]->GetMonoPtr(), argv.size() );
 
 	uint index = 0;
 
-	for( string arg : argv )
+	for( const string& arg : argv )
 	{
 		mono_array_set( pArguments, MonoString*, index++, this->m_pResource->GetDomain()->NewString( arg ) );
 	}
 
 	PVOID* params = new PVOID[ 3 ];
 
-	params[ 0 ] = pPlayer;
+	params[ 0 ] = pPlayer->ToMonoObject();
 	params[ 1 ] = pCommandName;
 	params[ 2 ] = pArguments;
 

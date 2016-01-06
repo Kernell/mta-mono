@@ -44,7 +44,7 @@ public:
 							CMonoMethod				( CMonoClass* pClass, MonoMethod* pMethod );
 							~CMonoMethod			( void );
 
-	MonoObject*				Invoke					( void* pObject, void** params, MonoObject* pException );
+	MonoObject*				Invoke					( PVOID pObject, PVOID* params, MonoObject** pException );
 	
 	string					GetSignature			( void )	{ return this->m_strSignature; }
 	vector< SMonoType >		GetArguments			( void )	{ return this->m_ArgList; }

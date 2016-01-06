@@ -13,28 +13,42 @@
 #include "StdInc.h"
 #include "CMonoFunctions.h"
 
-DWORD CMonoFunctions::Ban::Add( MonoString* msIP, MonoString* msUsername, MonoString* msSerial, DWORD pResponsible, MonoString* msResponsible, MonoString* msReason, int iUnban )
+TElement CMonoFunctions::Ban::Add( MonoString* msIP, MonoString* msUsername, MonoString* msSerial, TElement pResponsible, MonoString* msResponsible, MonoString* msReason, int iUnban )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		string
-			strIP( mono_string_to_utf8( msIP ) ),
-			strUsername( mono_string_to_utf8( msUsername ) ),
-			strSerial( mono_string_to_utf8( msSerial ) ),
-			strResponsible( mono_string_to_utf8( msResponsible ) ),
-			strReason( mono_string_to_utf8( msReason ) );
+			strIP			( mono_string_to_utf8( msIP ) ),
+			strUsername		( mono_string_to_utf8( msUsername ) ),
+			strSerial		( mono_string_to_utf8( msSerial ) ),
+			strResponsible	( mono_string_to_utf8( msResponsible ) ),
+			strReason		( mono_string_to_utf8( msReason ) );
 
-		return (DWORD)CLuaFunctionDefinitions::AddBan( RESOURCE->GetLua(), strIP, strUsername, strSerial, (void*)pResponsible, strResponsible, strReason, iUnban );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pResponsible );
+
+		PVOID pUserData = CLuaFunctionDefinitions::AddBan( pResource->GetLua(), strIP, strUsername, strSerial, pElement->ToLuaUserData(), strResponsible, strReason, iUnban );
+
+		if( pUserData )
+		{
+			return pResource->GetElementManager()->Create( nullptr, pUserData )->ToMonoObject();
+		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-bool CMonoFunctions::Ban::Remove( DWORD pBan, DWORD pResponsible )
+bool CMonoFunctions::Ban::Remove( TElement pBan, TElement pResponsible )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return (DWORD)CLuaFunctionDefinitions::RemoveBan( RESOURCE->GetLua(), (void*)pBan, (void*)pResponsible );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pBan );
+		CElement* pResponsibleElement = pResource->GetElementManager()->GetFromList( pResponsible );
+
+		return CLuaFunctionDefinitions::RemoveBan( pResource->GetLua(), pElement->ToLuaUserData(), pResponsibleElement->ToLuaUserData() );
 	}
 
 	return false;
@@ -43,99 +57,125 @@ bool CMonoFunctions::Ban::Remove( DWORD pBan, DWORD pResponsible )
 
 bool CMonoFunctions::Ban::Reload( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return (DWORD)CLuaFunctionDefinitions::ReloadBanList( RESOURCE->GetLua() );
+		return CLuaFunctionDefinitions::ReloadBanList( pResource->GetLua() );
 	}
 
 	return false;
 }
 
 
-MonoString* CMonoFunctions::Ban::GetIP( DWORD pBan )
+MonoString* CMonoFunctions::Ban::GetIP( TElement pBan )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		string strIP;
 
-		if( CLuaFunctionDefinitions::GetBanIP( RESOURCE->GetLua(), (void*)pBan, strIP ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pBan );
+
+		if( CLuaFunctionDefinitions::GetBanIP( pResource->GetLua(), pElement->ToLuaUserData(), strIP ) )
 		{
-			return RESOURCE->GetDomain()->NewString( strIP );
+			return pResource->GetDomain()->NewString( strIP );
 		}
 	}
 
 	return nullptr;
 }
 
-MonoString* CMonoFunctions::Ban::GetSerial( DWORD pBan )
+MonoString* CMonoFunctions::Ban::GetSerial( TElement pBan )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		string strSerial;
 
-		if( CLuaFunctionDefinitions::GetBanSerial( RESOURCE->GetLua(), (void*)pBan, strSerial ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pBan );
+
+		if( CLuaFunctionDefinitions::GetBanSerial( pResource->GetLua(), pElement->ToLuaUserData(), strSerial ) )
 		{
-			return RESOURCE->GetDomain()->NewString( strSerial );
+			return pResource->GetDomain()->NewString( strSerial );
 		}
 	}
 
 	return nullptr;
 }
 
-MonoString* CMonoFunctions::Ban::GetUsername( DWORD pBan )
+MonoString* CMonoFunctions::Ban::GetUsername( TElement pBan )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		string strUsername;
 
-		if( CLuaFunctionDefinitions::GetBanUsername( RESOURCE->GetLua(), (void*)pBan, strUsername ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pBan );
+
+		if( CLuaFunctionDefinitions::GetBanUsername( pResource->GetLua(), pElement->ToLuaUserData(), strUsername ) )
 		{
-			return RESOURCE->GetDomain()->NewString( strUsername );
+			return pResource->GetDomain()->NewString( strUsername );
 		}
 	}
 
 	return nullptr;
 }
 
-MonoString* CMonoFunctions::Ban::GetNick( DWORD pBan )
+MonoString* CMonoFunctions::Ban::GetNick( TElement pBan )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		string strNick;
 
-		if( CLuaFunctionDefinitions::GetBanNick( RESOURCE->GetLua(), (void*)pBan, strNick ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pBan );
+
+		if( CLuaFunctionDefinitions::GetBanNick( pResource->GetLua(), pElement->ToLuaUserData(), strNick ) )
 		{
-			return RESOURCE->GetDomain()->NewString( strNick );
+			return pResource->GetDomain()->NewString( strNick );
 		}
 	}
 
 	return nullptr;
 }
 
-MonoString* CMonoFunctions::Ban::GetReason( DWORD pBan )
+MonoString* CMonoFunctions::Ban::GetReason( TElement pBan )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		string strReason;
 
-		if( CLuaFunctionDefinitions::GetBanReason( RESOURCE->GetLua(), (void*)pBan, strReason ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pBan );
+
+		if( CLuaFunctionDefinitions::GetBanReason( pResource->GetLua(), pElement->ToLuaUserData(), strReason ) )
 		{
-			return RESOURCE->GetDomain()->NewString( strReason );
+			return pResource->GetDomain()->NewString( strReason );
 		}
 	}
 
 	return nullptr;
 }
 
-MonoString* CMonoFunctions::Ban::GetAdmin( DWORD pBan )
+MonoString* CMonoFunctions::Ban::GetAdmin( TElement pBan )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		string strAdmin;
 
-		if( CLuaFunctionDefinitions::GetBanAdmin( RESOURCE->GetLua(), (void*)pBan, strAdmin ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pBan );
+
+		if( CLuaFunctionDefinitions::GetBanAdmin( pResource->GetLua(), pElement->ToLuaUserData(), strAdmin ) )
 		{
-			return RESOURCE->GetDomain()->NewString( strAdmin );
+			return pResource->GetDomain()->NewString( strAdmin );
 		}
 	}
 
@@ -143,13 +183,17 @@ MonoString* CMonoFunctions::Ban::GetAdmin( DWORD pBan )
 }
 
 
-int CMonoFunctions::Ban::GetBanTime( DWORD pBan )
+int CMonoFunctions::Ban::GetBanTime( TElement pBan )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		time_t tTime;
 
-		if( CLuaFunctionDefinitions::GetBanTime( RESOURCE->GetLua(), (void*)pBan, tTime ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pBan );
+
+		if( CLuaFunctionDefinitions::GetBanTime( pResource->GetLua(), pElement->ToLuaUserData(), tTime ) )
 		{
 			return (int)tTime;
 		}
@@ -158,13 +202,17 @@ int CMonoFunctions::Ban::GetBanTime( DWORD pBan )
 	return 0;
 }
 
-int CMonoFunctions::Ban::GetUnbanTime( DWORD pBan )
+int CMonoFunctions::Ban::GetUnbanTime( TElement pBan )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		time_t tTime;
 
-		if( CLuaFunctionDefinitions::GetUnbanTime( RESOURCE->GetLua(), (void*)pBan, tTime ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pBan );
+
+		if( CLuaFunctionDefinitions::GetUnbanTime( pResource->GetLua(), pElement->ToLuaUserData(), tTime ) )
 		{
 			return (int)tTime;
 		}
@@ -174,35 +222,47 @@ int CMonoFunctions::Ban::GetUnbanTime( DWORD pBan )
 }
 
 
-bool CMonoFunctions::Ban::SetUnbanTime( DWORD pBan, int time )
+bool CMonoFunctions::Ban::SetUnbanTime( TElement pBan, int time )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetUnbanTime( RESOURCE->GetLua(), (void*)pBan, time );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pBan );
+
+		return CLuaFunctionDefinitions::SetUnbanTime( pResource->GetLua(), pElement->ToLuaUserData(), time );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Ban::SetReason( DWORD pBan, MonoString* msReason )
+bool CMonoFunctions::Ban::SetReason( TElement pBan, MonoString* msReason )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		string strReason( mono_string_to_utf8( msReason ) );
 
-		return CLuaFunctionDefinitions::SetBanReason( RESOURCE->GetLua(), (void*)pBan, strReason );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pBan );
+
+		return CLuaFunctionDefinitions::SetBanReason( pResource->GetLua(), pElement->ToLuaUserData(), strReason );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Ban::SetAdmin( DWORD pBan, MonoString* msAdminName )
+bool CMonoFunctions::Ban::SetAdmin( TElement pBan, MonoString* msAdminName )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		string strAdmin( mono_string_to_utf8( msAdminName ) );
 
-		return CLuaFunctionDefinitions::SetBanAdmin( RESOURCE->GetLua(), (void*)pBan, strAdmin );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pBan );
+
+		return CLuaFunctionDefinitions::SetBanAdmin( pResource->GetLua(), pElement->ToLuaUserData(), strAdmin );
 	}
 
 	return false;

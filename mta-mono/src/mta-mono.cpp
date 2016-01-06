@@ -14,22 +14,16 @@
 
 #define MODULE_NAME         "Mono 4.2.1"
 #define MODULE_AUTHOR       "Dmitry Korolev <kernell@mtaroleplay.ru>"
-#define MODULE_VERSION      0.26f
+#define MODULE_VERSION      0.27f
 
+#include "CModule.h"
 #include "CFunctions.h"
-#include "CResource.h"
-#include "CResourceManager.h"
-#include "CMonoInterface.h"
 
-ILuaModuleManager10*	g_pModuleManager		= nullptr;
-CResourceManager*		g_pResourceManager		= nullptr;
-CMonoInterface*			g_pMonoInterface		= nullptr;
+CModule* g_pModule = nullptr;
 
-MTAEXPORT bool InitModule( ILuaModuleManager10 *pManager, char *szModuleName, char *szAuthor, float *fVersion )
+MTAEXPORT bool InitModule( ILuaModuleManager10* pManager, char* szModuleName, char* szAuthor, float* fVersion )
 {
-    g_pModuleManager	= pManager;
-	g_pMonoInterface	= new CMonoInterface();
-	g_pResourceManager	= new CResourceManager( g_pMonoInterface );
+	g_pModule = new CModule( pManager );
 
     strncpy( szModuleName, MODULE_NAME, MAX_INFO_LENGTH );
     strncpy( szAuthor, MODULE_AUTHOR, MAX_INFO_LENGTH );
@@ -41,11 +35,10 @@ MTAEXPORT bool InitModule( ILuaModuleManager10 *pManager, char *szModuleName, ch
 
 MTAEXPORT void RegisterFunctions( lua_State *pLuaVM )
 {
-    if( g_pModuleManager && pLuaVM && g_pResourceManager )
+    if( g_pModule && pLuaVM )
 	{
-		if( g_pModuleManager->RegisterFunction( pLuaVM, "mono_init", CFunctions::monoInit ) )
+		if( g_pModule->RegisterFunction( pLuaVM, "mono_init", CFunctions::monoInit ) )
 		{
-			//luaL_dostring( pLuaVM, "addEventHandler( 'onResourceStart', resourceRoot, monoInit )" );
 			luaL_dostring( pLuaVM, "addEventHandler( 'onResourceStart', resourceRoot, function( res ) mono_init( getResourceName( res ) ) end )" );
 		}
 	}
@@ -53,9 +46,9 @@ MTAEXPORT void RegisterFunctions( lua_State *pLuaVM )
 
 MTAEXPORT bool DoPulse( void )
 {
-	if( g_pResourceManager )
+	if( g_pModule )
 	{
-		g_pResourceManager->DoPulse();
+		g_pModule->DoPulse();
 	}
 
     return true;
@@ -63,14 +56,9 @@ MTAEXPORT bool DoPulse( void )
 
 MTAEXPORT bool ShutdownModule( void )
 {
-    if( g_pResourceManager )
+    if( g_pModule )
 	{
-		delete g_pResourceManager;
-	}
-
-	if( g_pMonoInterface )
-	{
-		delete g_pMonoInterface;
+		g_pModule->Shutdown();
 	}
 
     return true;
@@ -78,9 +66,9 @@ MTAEXPORT bool ShutdownModule( void )
 
 MTAEXPORT bool ResourceStopping( lua_State* luaVM )
 {
-	if( CResource *pResource = g_pResourceManager->GetFromList( luaVM ) )
+	if( g_pModule )
 	{
-		pResource->OnStopping();
+		g_pModule->ResourceStopping( luaVM );
 	}
 
     return true;
@@ -88,9 +76,9 @@ MTAEXPORT bool ResourceStopping( lua_State* luaVM )
 
 MTAEXPORT bool ResourceStopped( lua_State* luaVM )
 {
-	if( CResource *pResource = g_pResourceManager->GetFromList( luaVM ) )
+	if( g_pModule )
 	{
-		delete pResource;
+		g_pModule->ResourceStopped( luaVM );
 	}
 
     return true;

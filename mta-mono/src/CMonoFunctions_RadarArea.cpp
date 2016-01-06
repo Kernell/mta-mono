@@ -14,65 +14,90 @@
 #include "CMonoFunctions.h"
 
 // Radar area create/destroy funcs
-DWORD CMonoFunctions::RadarArea::Create( MonoObject* pPosition, MonoObject* pSize, MonoObject* color, DWORD pVisibleTo )
+void CMonoFunctions::RadarArea::Ctor( TElement pThis, MonoObject* pPosition, MonoObject* pSize, MonoObject* color, TElement pVisibleTo )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		Vector2 vecPosition( pPosition );
-		Vector2 vecSize( pSize );
+		Vector2 vecPosition		( pPosition );
+		Vector2 vecSize			( pSize );
 		SColor pColor			= CMonoObject::GetColor( color );
 
-		return (DWORD)CLuaFunctionDefinitions::CreateRadarArea( RESOURCE->GetLua(), vecPosition, vecSize, pColor, (void*)pVisibleTo );
-	}
+		PVOID pElementVisibleTo = nullptr;
 
-	return NULL;
+		if( pVisibleTo )
+		{
+			pElementVisibleTo = pResource->GetElementManager()->GetFromList( pVisibleTo )->ToLuaUserData();
+		}
+
+		PVOID pUserData = CLuaFunctionDefinitions::CreateRadarArea( pResource->GetLua(), vecPosition, vecSize, pColor, pElementVisibleTo );
+
+		ASSERT( pUserData );
+
+		pResource->GetElementManager()->Create( pThis, pUserData );
+	}
 }
 
 
 // Radar area get funcs
-MonoObject* CMonoFunctions::RadarArea::GetSize( DWORD pUserData )
+MonoObject* CMonoFunctions::RadarArea::GetSize( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		Vector2 vecSize;
 		
-		if( CLuaFunctionDefinitions::GetRadarAreaSize( RESOURCE->GetLua(), (void*)pUserData, vecSize ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetRadarAreaSize( pResource->GetLua(), pElement->ToLuaUserData(), vecSize ) )
 		{
-			return RESOURCE->GetDomain()->GetMTALib()->Vector2->New( vecSize );
+			return pResource->GetDomain()->GetMTALib()->Vector2->New( vecSize );
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-MonoObject* CMonoFunctions::RadarArea::GetColor( DWORD pUserData )
+MonoObject* CMonoFunctions::RadarArea::GetColor( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		SColor outColor;
 		
-		if( CLuaFunctionDefinitions::GetRadarAreaColor( RESOURCE->GetLua(), (void*)pUserData, outColor ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetRadarAreaColor( pResource->GetLua(), pElement->ToLuaUserData(), outColor ) )
 		{
-			return RESOURCE->GetDomain()->GetMTALib()->Color->New( outColor );
+			return pResource->GetDomain()->GetMTALib()->Color->New( outColor );
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-bool CMonoFunctions::RadarArea::IsFlashing( DWORD pUserData )
+bool CMonoFunctions::RadarArea::IsFlashing( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::IsRadarAreaFlashing( RESOURCE->GetLua(), (void*)pUserData );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::IsRadarAreaFlashing( pResource->GetLua(), pElement->ToLuaUserData() );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::RadarArea::IsInside( DWORD pUserData, MonoObject* pPosition )
+bool CMonoFunctions::RadarArea::IsInside( TElement pThis, MonoObject* pPosition )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		bool bInside;
 
@@ -80,8 +105,10 @@ bool CMonoFunctions::RadarArea::IsInside( DWORD pUserData, MonoObject* pPosition
 		float fY = CMonoObject::GetPropertyValue< float >( pPosition, "Y" );
 
 		Vector2 vecPosition( fX, fY );
-
-		if( CLuaFunctionDefinitions::IsInsideRadarArea( RESOURCE->GetLua(), (void*)pUserData, vecPosition, bInside ) )
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::IsInsideRadarArea( pResource->GetLua(), pElement->ToLuaUserData(), vecPosition, bInside ) )
 		{
 			return bInside;
 		}
@@ -92,38 +119,50 @@ bool CMonoFunctions::RadarArea::IsInside( DWORD pUserData, MonoObject* pPosition
 
 
 // Radar area set funcs
-bool CMonoFunctions::RadarArea::SetSize( DWORD pUserData, MonoObject* pSize )
+bool CMonoFunctions::RadarArea::SetSize( TElement pThis, MonoObject* pSize )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		float fX = CMonoObject::GetPropertyValue< float >( pSize, "X" );
 		float fY = CMonoObject::GetPropertyValue< float >( pSize, "Y" );
 
 		Vector2 vecPosition( fX, fY );
-
-		return CLuaFunctionDefinitions::SetRadarAreaSize( RESOURCE->GetLua(), (void*)pUserData, vecPosition );
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetRadarAreaSize( pResource->GetLua(), pElement->ToLuaUserData(), vecPosition );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::RadarArea::SetColor( DWORD pUserData, MonoObject* color )
+bool CMonoFunctions::RadarArea::SetColor( TElement pThis, MonoObject* color )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		SColor pColor = CMonoObject::GetColor( color );
-
-		return CLuaFunctionDefinitions::SetRadarAreaColor( RESOURCE->GetLua(), (void*)pUserData, pColor );
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetRadarAreaColor( pResource->GetLua(), pElement->ToLuaUserData(), pColor );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::RadarArea::SetFlashing( DWORD pUserData, bool bFlashing )
+bool CMonoFunctions::RadarArea::SetFlashing( TElement pThis, bool bFlashing )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetRadarAreaFlashing( RESOURCE->GetLua(), (void*)pUserData, bFlashing );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetRadarAreaFlashing( pResource->GetLua(), pElement->ToLuaUserData(), bFlashing );
 	}
 
 	return false;

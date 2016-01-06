@@ -13,7 +13,7 @@
 #include "StdInc.h"
 #include "CEvent.h"
 
-CEvent::CEvent( CEventManager* pEventManager, string strName, DWORD pElement, MonoObject* pMonoDelegate, bool bPropagated, string strPriority )
+CEvent::CEvent( CEventManager* pEventManager, string strName, CElement* pElement, MonoObject* pMonoDelegate, bool bPropagated, string strPriority )
 {
 	this->m_pEventManager	= pEventManager;
 
@@ -27,19 +27,20 @@ CEvent::CEvent( CEventManager* pEventManager, string strName, DWORD pElement, Mo
 CEvent::~CEvent( void )
 {
 	this->m_pMonoDelegate	= nullptr;
+	this->m_pElement		= nullptr;
 
 	this->m_pEventManager	= nullptr;
 }
 
-bool CEvent::Call( DWORD pThis, void** params )
+bool CEvent::Call( CElement* pThis, void** params )
 {
 	CResource* pResource = this->m_pEventManager->GetResource();
 
-	assert( pResource );
+	ASSERT( pResource );
 
 	CMonoMTALib* pMTALib = pResource->GetDomain()->GetMTALib();
 
-	assert( pMTALib );
+	ASSERT( pMTALib );
 
 	MonoObject* pException = nullptr;
 

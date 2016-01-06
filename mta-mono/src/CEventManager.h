@@ -15,9 +15,11 @@ class CEventManager;
 #ifndef __CEVENTMANAGER_H
 #define __CEVENTMANAGER_H
 
+#include "CElement.h"
 #include "CResource.h"
 #include "CMonoDomain.h"
 #include "CEvent.h"
+#include "CMonoArguments.h"
 
 #include "extra/CLuaArgument.h"
 #include "extra/CLuaArguments.h"
@@ -32,13 +34,13 @@ public:
 								CEventManager			( CResource* pResource );
 								~CEventManager			( void );
 
-	bool						Add						( string strName, DWORD pUserData, MonoObject* pMonoDelegate, bool bPropagated, string strPriority );
-	bool						Delete					( string strName, DWORD pUserData, MonoObject* pMonoDelegate = nullptr );
+	bool						Add						( string strName, CElement* pElement, MonoObject* pMonoDelegate, bool bPropagated, string strPriority );
+	bool						Delete					( string strName, CElement* pElement, MonoObject* pMonoDelegate = nullptr );
 	void						DeleteAll				( void );
 
-	bool						Call					( string strName, void* pThis, list< CLuaArgument* > Arguments );
+	bool						Call					( const string& strName, CElement* pThis, list< CLuaArgument* > Arguments );
 
-	void						ReadArgumens			( list< CLuaArgument* > Arguments, void** params );
+	void						ReadArgumens			( list< CLuaArgument* > Arguments, CMonoArguments& pArguments );
 
 	CResource*					GetResource( void )		{ return this->m_pResource; }
 };

@@ -11,42 +11,51 @@
 *********************************************************/
 
 #include "StdInc.h"
-
-#ifndef _CMONO_FUNCS_PLAYER
-#define _CMONO_FUNCS_PLAYER
-
 #include "CMonoFunctions.h"
 
 // Player get functions
 unsigned int CMonoFunctions::Player::GetCount( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::GetPlayerCount( RESOURCE->GetLua() );
+		return CLuaFunctionDefinitions::GetPlayerCount( pResource->GetLua() );
 	}
 
 	return 0;
 }
 
-DWORD CMonoFunctions::Player::GetFromName( MonoString* msNick )
+TElement CMonoFunctions::Player::GetFromName( MonoString* msNick )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szNick = mono_string_to_utf8( msNick );
 
-		return (DWORD)CLuaFunctionDefinitions::GetPlayerFromName( RESOURCE->GetLua(), szNick );
+		PVOID pUserData = CLuaFunctionDefinitions::GetPlayerFromName( pResource->GetLua(), szNick );
+
+		if( pUserData )
+		{
+			return pResource->GetElementManager()->FindOrCreate( pUserData )->ToMonoObject();
+		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-unsigned int CMonoFunctions::Player::GetPing( DWORD pUserData )
+unsigned int CMonoFunctions::Player::GetPing( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned int uiPing;
-
-		if( CLuaFunctionDefinitions::GetPlayerPing( RESOURCE->GetLua(), (void*)pUserData, uiPing ) )
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetPlayerPing( pResource->GetLua(), pElement->ToLuaUserData(), uiPing ) )
 		{
 			return uiPing;
 		}
@@ -55,13 +64,17 @@ unsigned int CMonoFunctions::Player::GetPing( DWORD pUserData )
 	return 0;
 }
 
-long CMonoFunctions::Player::GetMoney( DWORD pUserData )
+long CMonoFunctions::Player::GetMoney( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		long lMoney;
 		
-		if( CLuaFunctionDefinitions::GetPlayerMoney( RESOURCE->GetLua(), (void*)pUserData, lMoney ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetPlayerMoney( pResource->GetLua(), pElement->ToLuaUserData(), lMoney ) )
 		{
 			return lMoney;
 		}
@@ -70,48 +83,72 @@ long CMonoFunctions::Player::GetMoney( DWORD pUserData )
 	return 0;
 }
 
-DWORD CMonoFunctions::Player::GetRandom( void )
+TElement CMonoFunctions::Player::GetRandom( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return (DWORD)CLuaFunctionDefinitions::GetRandomPlayer( RESOURCE->GetLua() );
+		PVOID pUserData = CLuaFunctionDefinitions::GetRandomPlayer( pResource->GetLua() );
+
+		if( pUserData )
+		{
+			return pResource->GetElementManager()->FindOrCreate( pUserData )->ToMonoObject();
+		}
 	}
 	
-	return 0;
+	return nullptr;
 }
 
-bool CMonoFunctions::Player::IsMuted( DWORD pUserData )
+bool CMonoFunctions::Player::IsMuted( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		bool bMuted;
 		
-		if( CLuaFunctionDefinitions::IsPlayerMuted( RESOURCE->GetLua(), (void*)pUserData, bMuted ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::IsPlayerMuted( pResource->GetLua(), pElement->ToLuaUserData(), bMuted ) )
 		{
 			return bMuted;
 		}
 	}
 	
-	return 0;
+	return false;
 }
 
-DWORD CMonoFunctions::Player::GetTeam( DWORD pUserData )
+TElement CMonoFunctions::Player::GetTeam( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return (DWORD)CLuaFunctionDefinitions::GetPlayerTeam( RESOURCE->GetLua(), (void*)pUserData );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		PVOID pUserData = CLuaFunctionDefinitions::GetPlayerTeam( pResource->GetLua(), pElement->ToLuaUserData() );
+
+		if( pUserData )
+		{
+			return pResource->GetElementManager()->FindOrCreate( pUserData )->ToMonoObject();
+		}
 	}
 	
-	return 0;
+	return nullptr;
 }
 
-unsigned int CMonoFunctions::Player::GetWantedLevel( DWORD pUserData )
+unsigned int CMonoFunctions::Player::GetWantedLevel( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned int uiWantedLevel;
 		
-		if( CLuaFunctionDefinitions::GetPlayerWantedLevel( RESOURCE->GetLua(), (void*)pUserData, uiWantedLevel ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetPlayerWantedLevel( pResource->GetLua(), pElement->ToLuaUserData(), uiWantedLevel ) )
 		{
 			return uiWantedLevel;
 		}
@@ -122,41 +159,49 @@ unsigned int CMonoFunctions::Player::GetWantedLevel( DWORD pUserData )
 
 MonoArray* CMonoFunctions::Player::GetAlivePlayers( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		CLuaArgumentsVector pLuaArguments = CLuaFunctionDefinitions::GetAlivePlayers( RESOURCE->GetLua() );
+		CLuaArgumentsVector pLuaArguments = CLuaFunctionDefinitions::GetAlivePlayers( pResource->GetLua() );
 
 		if( pLuaArguments.size() > 0 )
 		{
-			return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TLIGHTUSERDATA>( mono_get_uint32_class(), &pLuaArguments );
+			return pResource->GetDomain()->NewElementArray( mono_get_uint32_class(), pLuaArguments );
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 MonoArray* CMonoFunctions::Player::GetDeadPlayers( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		CLuaArgumentsVector pLuaArguments = CLuaFunctionDefinitions::GetDeadPlayers( RESOURCE->GetLua() );
+		CLuaArgumentsVector pLuaArguments = CLuaFunctionDefinitions::GetDeadPlayers( pResource->GetLua() );
 
 		if( pLuaArguments.size() > 0 )
 		{
-			return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TLIGHTUSERDATA>( mono_get_uint32_class(), &pLuaArguments );
+			return pResource->GetDomain()->NewElementArray( pResource->GetDomain()->GetMTALib()->GetClass( "Player" )->GetMonoPtr(), pLuaArguments );
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-unsigned int CMonoFunctions::Player::GetIdleTime( DWORD pUserData )
+unsigned int CMonoFunctions::Player::GetIdleTime( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned int uiIdleTime;
 		
-		if( CLuaFunctionDefinitions::GetPlayerIdleTime( RESOURCE->GetLua(), (void*)pUserData, uiIdleTime ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetPlayerIdleTime( pResource->GetLua(), pElement->ToLuaUserData(), uiIdleTime ) )
 		{
 			return uiIdleTime;
 		}
@@ -165,13 +210,17 @@ unsigned int CMonoFunctions::Player::GetIdleTime( DWORD pUserData )
 	return 0;
 }
 
-bool CMonoFunctions::Player::IsMapForced( DWORD pUserData )
+bool CMonoFunctions::Player::IsMapForced( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		bool bForced;
 		
-		if( CLuaFunctionDefinitions::IsPlayerMapForced( RESOURCE->GetLua(), (void*)pUserData, bForced ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::IsPlayerMapForced( pResource->GetLua(), pElement->ToLuaUserData(), bForced ) )
 		{
 			return bForced;
 		}
@@ -180,48 +229,60 @@ bool CMonoFunctions::Player::IsMapForced( DWORD pUserData )
 	return 0;
 }
 
-MonoString* CMonoFunctions::Player::GetNametagText( DWORD pUserData )
+MonoString* CMonoFunctions::Player::GetNametagText( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		string strOutText;
 		
-		if( CLuaFunctionDefinitions::GetPlayerNametagText( RESOURCE->GetLua(), (void*)pUserData, strOutText ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetPlayerNametagText( pResource->GetLua(), pElement->ToLuaUserData(), strOutText ) )
 		{
-			return RESOURCE->GetDomain()->NewString( strOutText );
+			return pResource->GetDomain()->NewString( strOutText );
 		}
 	}
 	
-	return NULL;
+	return nullptr;
 }
 
-MonoObject* CMonoFunctions::Player::GetNametagColor( DWORD pUserData )
+MonoObject* CMonoFunctions::Player::GetNametagColor( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned char ucR, ucG, ucB;
 		
-		if( CLuaFunctionDefinitions::GetPlayerNametagColor( RESOURCE->GetLua(), (void*)pUserData, ucR, ucG, ucB ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetPlayerNametagColor( pResource->GetLua(), pElement->ToLuaUserData(), ucR, ucG, ucB ) )
 		{
-			void *args[] =
+			PVOID args[] =
 			{
 				&ucR, &ucG, &ucB
 			};
 			
-			return RESOURCE->GetDomain()->GetMTALib()->Color->New( args, 3 );
+			return pResource->GetDomain()->GetMTALib()->Color->New( args, 3 );
 		}
 	}
 	
-	return NULL;
+	return nullptr;
 }
 
-bool CMonoFunctions::Player::IsNametagShowing( DWORD pUserData )
+bool CMonoFunctions::Player::IsNametagShowing( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		bool bShowing;
 		
-		if( CLuaFunctionDefinitions::IsPlayerNametagShowing( RESOURCE->GetLua(), (void*)pUserData, bShowing ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::IsPlayerNametagShowing( pResource->GetLua(), pElement->ToLuaUserData(), bShowing ) )
 		{
 			return bShowing;
 		}
@@ -230,33 +291,45 @@ bool CMonoFunctions::Player::IsNametagShowing( DWORD pUserData )
 	return false;
 }
 
-MonoString* CMonoFunctions::Player::GetSerial( DWORD pUserData )
+MonoString* CMonoFunctions::Player::GetSerial( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return RESOURCE->GetDomain()->NewString( CLuaFunctionDefinitions::GetPlayerSerial( RESOURCE->GetLua(), (void*)pUserData ) );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return pResource->GetDomain()->NewString( CLuaFunctionDefinitions::GetPlayerSerial( pResource->GetLua(), pElement->ToLuaUserData() ) );
 	}
 	
-	return NULL;
+	return nullptr;
 }
 
-MonoString* CMonoFunctions::Player::GetUserName( DWORD pUserData )
+MonoString* CMonoFunctions::Player::GetUserName( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return RESOURCE->GetDomain()->NewString( CLuaFunctionDefinitions::GetPlayerUserName( RESOURCE->GetLua(), (void*)pUserData ) );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return pResource->GetDomain()->NewString( CLuaFunctionDefinitions::GetPlayerUserName( pResource->GetLua(), pElement->ToLuaUserData() ) );
 	}
 	
-	return NULL;
+	return nullptr;
 }
 
-unsigned char CMonoFunctions::Player::GetBlurLevel( DWORD pUserData )
+unsigned char CMonoFunctions::Player::GetBlurLevel( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned char ucBlurLevel;
 		
-		if( CLuaFunctionDefinitions::GetPlayerBlurLevel( RESOURCE->GetLua(), (void*)pUserData, ucBlurLevel ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetPlayerBlurLevel( pResource->GetLua(), pElement->ToLuaUserData(), ucBlurLevel ) )
 		{
 			return ucBlurLevel;
 		}
@@ -265,67 +338,92 @@ unsigned char CMonoFunctions::Player::GetBlurLevel( DWORD pUserData )
 	return 0;
 }
 
-MonoString* CMonoFunctions::Player::GetName( DWORD pUserData )
+MonoString* CMonoFunctions::Player::GetName( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		string strOutName;
 		
-		if( CLuaFunctionDefinitions::GetPlayerName( RESOURCE->GetLua(), (void*)pUserData, strOutName ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetPlayerName( pResource->GetLua(), pElement->ToLuaUserData(), strOutName ) )
 		{
-			return RESOURCE->GetDomain()->NewString( strOutName );
+			return pResource->GetDomain()->NewString( strOutName );
 		}
 	}
 	
-	return NULL;
+	return nullptr;
 }
 
-MonoString* CMonoFunctions::Player::GetIP( DWORD pUserData )
+MonoString* CMonoFunctions::Player::GetIP( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		string strIP;
 		
-		if( CLuaFunctionDefinitions::GetPlayerIP( RESOURCE->GetLua(), (void*)pUserData, strIP ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetPlayerIP( pResource->GetLua(), pElement->ToLuaUserData(), strIP ) )
 		{
-			return RESOURCE->GetDomain()->NewString( strIP );
+			return pResource->GetDomain()->NewString( strIP );
 		}
 	}
 	
-	return NULL;
+	return nullptr;
 }
 
-DWORD CMonoFunctions::Player::GetAccount( DWORD pUserData )
+TElement CMonoFunctions::Player::GetAccount( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return (DWORD)CLuaFunctionDefinitions::GetPlayerAccount( RESOURCE->GetLua(), (void*)pUserData );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		PVOID pUserData = CLuaFunctionDefinitions::GetPlayerAccount( pResource->GetLua(), pElement->ToLuaUserData() );
+
+		if( pUserData )
+		{
+			return pResource->GetElementManager()->FindOrCreate( pUserData )->ToMonoObject();
+		}
 	}
 	
-	return NULL;
+	return nullptr;
 }
 
-MonoString* CMonoFunctions::Player::GetVersion( DWORD pUserData )
+MonoString* CMonoFunctions::Player::GetVersion( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return RESOURCE->GetDomain()->NewString( CLuaFunctionDefinitions::GetPlayerVersion( RESOURCE->GetLua(), (void*)pUserData ) );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return pResource->GetDomain()->NewString( CLuaFunctionDefinitions::GetPlayerVersion( pResource->GetLua(), pElement->ToLuaUserData() ) );
 	}
 	
-	return NULL;
+	return nullptr;
 }
 
-MonoObject* CMonoFunctions::Player::GetACInfo( DWORD pUserData )
+MonoObject* CMonoFunctions::Player::GetACInfo( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		CLuaArgumentsMap* pLuaTable = CLuaFunctionDefinitions::GetPlayerACInfo( RESOURCE->GetLua(), (PVOID)pUserData );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		CLuaArgumentsMap* pLuaTable = CLuaFunctionDefinitions::GetPlayerACInfo( pResource->GetLua(), pElement->ToLuaUserData() );
 
 		if( pLuaTable )
 		{
-			MonoString* msDetectedAC	= RESOURCE->GetDomain()->NewString( (*pLuaTable)[ "DetectedAC" ].GetString() );
-			MonoString* msD3D9MD5		= RESOURCE->GetDomain()->NewString( (*pLuaTable)[ "d3d9MD5" ].GetString() );
-			MonoString* msD3D9SHA256	= RESOURCE->GetDomain()->NewString( (*pLuaTable)[ "d3d9SHA256" ].GetString() );
+			MonoString* msDetectedAC	= pResource->GetDomain()->NewString( (*pLuaTable)[ "DetectedAC" ].GetString() );
+			MonoString* msD3D9MD5		= pResource->GetDomain()->NewString( (*pLuaTable)[ "d3d9MD5" ].GetString() );
+			MonoString* msD3D9SHA256	= pResource->GetDomain()->NewString( (*pLuaTable)[ "d3d9SHA256" ].GetString() );
 
 			unsigned int iD3D9Size		= (*pLuaTable)[ "d3d9Size" ].GetNumber< unsigned int >();
 
@@ -337,261 +435,349 @@ MonoObject* CMonoFunctions::Player::GetACInfo( DWORD pUserData )
 				&msD3D9SHA256
 			};
 
-			return RESOURCE->GetDomain()->GetMTALib()->GetClass( "PlayerACInfo" )->New( args, 4 );
+			return pResource->GetDomain()->GetMTALib()->GetClass( "PlayerACInfo" )->New( args, 4 );
 		}
 	}
-	return NULL;
+	return nullptr;
 }
 
-MonoString* CMonoFunctions::Player::GetPlayerAnnounceValue( DWORD pElement, MonoString* msKey )
+MonoString* CMonoFunctions::Player::GetPlayerAnnounceValue( TElement pThis, MonoString* msKey )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szKey = mono_string_to_utf8( msKey );
-
-		return RESOURCE->GetDomain()->NewString( CLuaFunctionDefinitions::GetPlayerAnnounceValue( RESOURCE->GetLua(), (void*)pElement, szKey ) );
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return pResource->GetDomain()->NewString( CLuaFunctionDefinitions::GetPlayerAnnounceValue( pResource->GetLua(), (void*)pElement, szKey ) );
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 
 // Player set functions
-bool CMonoFunctions::Player::SetMoney( DWORD pUserData, int iAmount, bool bInstant )
+bool CMonoFunctions::Player::SetMoney( TElement pThis, int iAmount, bool bInstant )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetPlayerMoney( RESOURCE->GetLua(), (void*)pUserData, iAmount, bInstant );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetPlayerMoney( pResource->GetLua(), pElement->ToLuaUserData(), iAmount, bInstant );
 	}
 	
 	return false;
 }
 
-bool CMonoFunctions::Player::GiveMoney( DWORD pUserData, int iAmount )
+bool CMonoFunctions::Player::GiveMoney( TElement pThis, int iAmount )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::GivePlayerMoney( RESOURCE->GetLua(), (void*)pUserData, iAmount );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::GivePlayerMoney( pResource->GetLua(), pElement->ToLuaUserData(), iAmount );
 	}
 	
 	return false;
 }
 
-bool CMonoFunctions::Player::TakeMoney( DWORD pUserData, int iAmount )
+bool CMonoFunctions::Player::TakeMoney( TElement pThis, int iAmount )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::TakePlayerMoney( RESOURCE->GetLua(), (void*)pUserData, iAmount );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::TakePlayerMoney( pResource->GetLua(), pElement->ToLuaUserData(), iAmount );
 	}
 	
 	return false;
 }
 
-bool CMonoFunctions::Player::Spawn( DWORD pUserData, MonoObject* pPosition, int iRotation, int iSkinID, int iInterior, int iDimension, DWORD pTeam )
+bool CMonoFunctions::Player::Spawn( TElement pThis, MonoObject* pPosition, int iRotation, int iSkinID, int iInterior, int iDimension, TElement pTeam )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		Vector3 vecPosition( pPosition );
-
-		return CLuaFunctionDefinitions::SpawnPlayer( RESOURCE->GetLua(), (void*)pUserData, vecPosition, iRotation, iSkinID, iInterior, iDimension, (void*)pTeam );
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SpawnPlayer( pResource->GetLua(), pElement->ToLuaUserData(), vecPosition, iRotation, iSkinID, iInterior, iDimension, (void*)pTeam );
 	}
 	
 	return false;
 }
 
-bool CMonoFunctions::Player::ShowHudComponent( DWORD pUserData, MonoString* msComponent, bool bShow )
+bool CMonoFunctions::Player::ShowHudComponent( TElement pThis, MonoString* msComponent, bool bShow )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		string strComponent( mono_string_to_utf8( msComponent ) );
-
-		return CLuaFunctionDefinitions::ShowPlayerHudComponent( RESOURCE->GetLua(), (void*)pUserData, strComponent, bShow );
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::ShowPlayerHudComponent( pResource->GetLua(), pElement->ToLuaUserData(), strComponent, bShow );
 	}
 	
 	return false;
 }
 
-bool CMonoFunctions::Player::SetWantedLevel( DWORD pUserData, int iLevel )
+bool CMonoFunctions::Player::SetWantedLevel( TElement pThis, int iLevel )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetPlayerWantedLevel( RESOURCE->GetLua(), (void*)pUserData, iLevel );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetPlayerWantedLevel( pResource->GetLua(), pElement->ToLuaUserData(), iLevel );
 	}
 	
 	return false;
 }
 
-bool CMonoFunctions::Player::ForceMap( DWORD pUserData, bool bForceOn )
+bool CMonoFunctions::Player::ForceMap( TElement pThis, bool bForceOn )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::ForcePlayerMap( RESOURCE->GetLua(), (void*)pUserData, bForceOn );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::ForcePlayerMap( pResource->GetLua(), pElement->ToLuaUserData(), bForceOn );
 	}
 	
 	return false;
 }
 
-bool CMonoFunctions::Player::SetNametagText( DWORD pUserData, MonoString* sText )
+bool CMonoFunctions::Player::SetNametagText( TElement pThis, MonoString* sText )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetPlayerNametagText( RESOURCE->GetLua(), (void*)pUserData, string( mono_string_to_utf8( sText ) ) );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetPlayerNametagText( pResource->GetLua(), pElement->ToLuaUserData(), mono_string_to_utf8( sText ) );
 	}
 	
 	return false;
 }
 
-bool CMonoFunctions::Player::SetNametagColor( DWORD pUserData, int iRed, int iGreen, int iBlue )
+bool CMonoFunctions::Player::SetNametagColor( TElement pThis, int iRed, int iGreen, int iBlue )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetPlayerNametagColor( RESOURCE->GetLua(), (void*)pUserData, iRed, iGreen, iBlue );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetPlayerNametagColor( pResource->GetLua(), pElement->ToLuaUserData(), iRed, iGreen, iBlue );
 	}
 	
 	return false;
 }
 
-bool CMonoFunctions::Player::SetNametagShowing( DWORD pUserData, bool bShowing )
+bool CMonoFunctions::Player::SetNametagShowing( TElement pThis, bool bShowing )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetPlayerNametagShowing( RESOURCE->GetLua(), (void*)pUserData, bShowing );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetPlayerNametagShowing( pResource->GetLua(), pElement->ToLuaUserData(), bShowing );
 	}
 	
 	return false;
 }
 
-bool CMonoFunctions::Player::SetMuted( DWORD pUserData, bool bMuted )
+bool CMonoFunctions::Player::SetMuted( TElement pThis, bool bMuted )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetPlayerMuted( RESOURCE->GetLua(), (void*)pUserData, bMuted );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetPlayerMuted( pResource->GetLua(), pElement->ToLuaUserData(), bMuted );
 	}
 	
 	return false;
 }
 
-bool CMonoFunctions::Player::SetBlurLevel( DWORD pUserData, int iLevel )
+bool CMonoFunctions::Player::SetBlurLevel( TElement pThis, int iLevel )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetPlayerBlurLevel( RESOURCE->GetLua(), (void*)pUserData, iLevel );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetPlayerBlurLevel( pResource->GetLua(), pElement->ToLuaUserData(), iLevel );
 	}
 	
 	return false;
 }
 
-bool CMonoFunctions::Player::Redirect( DWORD pUserData, MonoString* sServerIP, int iServerPort, MonoString* sServerPassword )
+bool CMonoFunctions::Player::Redirect( TElement pThis, MonoString* sServerIP, int iServerPort, MonoString* sServerPassword )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szServerIP			= mono_string_to_utf8( sServerIP );
 		const char* szServerPassword	= mono_string_to_utf8( sServerPassword );
 		
-		return CLuaFunctionDefinitions::RedirectPlayer( RESOURCE->GetLua(), (void*)pUserData, szServerIP, iServerPort, szServerPassword );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::RedirectPlayer( pResource->GetLua(), pElement->ToLuaUserData(), szServerIP, iServerPort, szServerPassword );
 	}
 	
 	return false;
 }
 
-bool CMonoFunctions::Player::SetName( DWORD pUserData, MonoString* sName )
+bool CMonoFunctions::Player::SetName( TElement pThis, MonoString* sName )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szName			= mono_string_to_utf8( sName );
 		
-		return CLuaFunctionDefinitions::SetPlayerName( RESOURCE->GetLua(), (void*)pUserData, szName );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetPlayerName( pResource->GetLua(), pElement->ToLuaUserData(), szName );
 	}
 	
 	return false;
 }
 
-bool CMonoFunctions::Player::DetonateSatchels( DWORD pUserData )
+bool CMonoFunctions::Player::DetonateSatchels( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::DetonateSatchels( RESOURCE->GetLua(), (void*)pUserData );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::DetonateSatchels( pResource->GetLua(), pElement->ToLuaUserData() );
 	}
 	
 	return false;
 }
 
-bool CMonoFunctions::Player::TakeScreenShot( DWORD pUserData, int iWidth, int iHeight, MonoString* sTag, int iQuality, int iMaxBandwith )
+bool CMonoFunctions::Player::TakeScreenShot( TElement pThis, int iWidth, int iHeight, MonoString* sTag, int iQuality, int iMaxBandwith )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		string strTag( mono_string_to_utf8( sTag ) );
-
-		return CLuaFunctionDefinitions::TakePlayerScreenShot( RESOURCE->GetLua(), (void*)pUserData, iWidth, iHeight, strTag, iQuality, iMaxBandwith );
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::TakePlayerScreenShot( pResource->GetLua(), pElement->ToLuaUserData(), iWidth, iHeight, strTag, iQuality, iMaxBandwith );
 	}
 	
 	return false;
 }
 
-bool CMonoFunctions::Player::SetTeam( DWORD pUserData, DWORD pTeam )
+bool CMonoFunctions::Player::SetTeam( TElement pThis, TElement pTeam )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetPlayerTeam( RESOURCE->GetLua(), (void*)pUserData, (void*)pTeam );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		CElement* pTeaElement = pResource->GetElementManager()->GetFromList( pTeam );
+		
+		return CLuaFunctionDefinitions::SetPlayerTeam( pResource->GetLua(), pElement->ToLuaUserData(), pTeaElement->ToLuaUserData() );
 	}
 	
 	return false;
 }
 
-bool CMonoFunctions::Player::SetPlayerAnnounceValue( DWORD pElement, MonoString* msKey, MonoString* msValue )
+bool CMonoFunctions::Player::SetPlayerAnnounceValue( TElement pThis, MonoString* msKey, MonoString* msValue )
 {
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
 
-	if( RESOURCE )
+	if( pResource )
 	{
 		const char* szKey	= mono_string_to_utf8( msKey );
 		const char* szValue	= mono_string_to_utf8( msValue );
-
-		return CLuaFunctionDefinitions::SetPlayerAnnounceValue( RESOURCE->GetLua(), (void*)pElement, szKey, szValue );
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetPlayerAnnounceValue( pResource->GetLua(), (void*)pElement, szKey, szValue );
 	}
 
-	return NULL;
+	return false;
 }
 
 // Input funcs
 
-bool CMonoFunctions::Player::BindKey( DWORD pUserData, MonoString* msKey, MonoString* msHitState, MonoString* msCommandName, MonoString* msArguments )
+bool CMonoFunctions::Player::BindKey( TElement pThis, MonoString* msKey, MonoString* msHitState, MonoString* msCommandName, MonoString* msArguments )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szKey			= mono_string_to_utf8( msKey );
 		const char* szHitState		= mono_string_to_utf8( msHitState );
 		const char* szCommandName	= mono_string_to_utf8( msCommandName );
 		const char* szArguments		= mono_string_to_utf8( msArguments );
-
-		return CLuaFunctionDefinitions::BindKey( RESOURCE->GetLua(), (void*)pUserData, szKey, szHitState, szCommandName, szArguments );
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::BindKey( pResource->GetLua(), pElement->ToLuaUserData(), szKey, szHitState, szCommandName, szArguments );
 	}
 	
 	return false;
 }
 
-bool CMonoFunctions::Player::UnbindKey( DWORD pUserData, MonoString* msKey, MonoString* msHitState, MonoString* msCommandName )
+bool CMonoFunctions::Player::UnbindKey( TElement pThis, MonoString* msKey, MonoString* msHitState, MonoString* msCommandName )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szKey			= mono_string_to_utf8( msKey );
 		const char* szHitState		= mono_string_to_utf8( msHitState );
 		const char* szCommandName	= mono_string_to_utf8( msCommandName );
 		
-		return CLuaFunctionDefinitions::UnbindKey( RESOURCE->GetLua(), (void*)pUserData, szKey, szHitState, szCommandName );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::UnbindKey( pResource->GetLua(), pElement->ToLuaUserData(), szKey, szHitState, szCommandName );
 	}
 	
 	return false;
 }
 
-bool CMonoFunctions::Player::GetControlState( DWORD pUserData, MonoString* msControl )
+bool CMonoFunctions::Player::GetControlState( TElement pThis, MonoString* msControl )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szControl = mono_string_to_utf8( msControl );
 		
 		bool bState;
-
-		if( CLuaFunctionDefinitions::GetControlState( RESOURCE->GetLua(), (void*)pUserData, szControl, bState ) )
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetControlState( pResource->GetLua(), pElement->ToLuaUserData(), szControl, bState ) )
 		{
 			return bState;
 		}
@@ -600,15 +786,19 @@ bool CMonoFunctions::Player::GetControlState( DWORD pUserData, MonoString* msCon
 	return false;
 }
 
-bool CMonoFunctions::Player::IsControlEnabled( DWORD pUserData, MonoString* msControl )
+bool CMonoFunctions::Player::IsControlEnabled( TElement pThis, MonoString* msControl )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szControl = mono_string_to_utf8( msControl );
 		
 		bool bEnabled;
-
-		if( CLuaFunctionDefinitions::IsControlEnabled( RESOURCE->GetLua(), (void*)pUserData, szControl, bEnabled ) )
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::IsControlEnabled( pResource->GetLua(), pElement->ToLuaUserData(), szControl, bEnabled ) )
 		{
 			return bEnabled;
 		}
@@ -618,35 +808,47 @@ bool CMonoFunctions::Player::IsControlEnabled( DWORD pUserData, MonoString* msCo
 }
 
 		
-bool CMonoFunctions::Player::SetControlState( DWORD pUserData, MonoString* msControl, bool bState )
+bool CMonoFunctions::Player::SetControlState( TElement pThis, MonoString* msControl, bool bState )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		const char* szControl			= mono_string_to_utf8( msControl );
+		const char* szControl = mono_string_to_utf8( msControl );
 		
-		return CLuaFunctionDefinitions::SetControlState( RESOURCE->GetLua(), (void*)pUserData, szControl, bState );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetControlState( pResource->GetLua(), pElement->ToLuaUserData(), szControl, bState );
 	}
 	
 	return false;
 }
 
-bool CMonoFunctions::Player::ToggleControl( DWORD pUserData, MonoString* msControl, bool bEnabled )
+bool CMonoFunctions::Player::ToggleControl( TElement pThis, MonoString* msControl, bool bEnabled )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szControl			= mono_string_to_utf8( msControl );
 		
-		return CLuaFunctionDefinitions::ToggleControl( RESOURCE->GetLua(), (void*)pUserData, szControl, bEnabled );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::ToggleControl( pResource->GetLua(), pElement->ToLuaUserData(), szControl, bEnabled );
 	}
 	
 	return false;
 }
 
-bool CMonoFunctions::Player::ToggleAllControls( DWORD pUserData, bool bGTAControls, bool bMTAControls, bool bEnabled )
+bool CMonoFunctions::Player::ToggleAllControls( TElement pThis, bool bGTAControls, bool bMTAControls, bool bEnabled )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::ToggleAllControls( RESOURCE->GetLua(), (void*)pUserData, bGTAControls, bMTAControls, bEnabled );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::ToggleAllControls( pResource->GetLua(), pElement->ToLuaUserData(), bGTAControls, bMTAControls, bEnabled );
 	}
 	
 	return false;
@@ -654,21 +856,30 @@ bool CMonoFunctions::Player::ToggleAllControls( DWORD pUserData, bool bGTAContro
 
 
 // Log in/out funcs
-bool CMonoFunctions::Player::LogIn( DWORD pPlayer, DWORD pAccount, MonoString* msPassword )
+bool CMonoFunctions::Player::LogIn( TElement pThis, TElement pAccount, MonoString* msPassword )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::LogIn( RESOURCE->GetLua(), (void*)pPlayer, (void*)pAccount, mono_string_to_utf8( msPassword ) );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		CElement* pAccountElement = pResource->GetElementManager()->GetFromList( pAccount );
+		
+		return CLuaFunctionDefinitions::LogIn( pResource->GetLua(), pElement->ToLuaUserData(), pAccountElement->ToLuaUserData(), mono_string_to_utf8( msPassword ) );
 	}
 	
 	return false;
 }
 
-bool CMonoFunctions::Player::LogOut( DWORD pPlayer )
+bool CMonoFunctions::Player::LogOut( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::LogOut( RESOURCE->GetLua(), (void*)pPlayer );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::LogOut( pResource->GetLua(), pElement->ToLuaUserData() );
 	}
 	
 	return false;
@@ -676,43 +887,67 @@ bool CMonoFunctions::Player::LogOut( DWORD pPlayer )
 
 
 // Admin funcs
-bool CMonoFunctions::Player::Kick( DWORD pPlayer, MonoString* msResponsible, MonoString* msReason )
+bool CMonoFunctions::Player::Kick( TElement pThis, MonoString* msResponsible, MonoString* msReason )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		string
-			strResponsible( mono_string_to_utf8( msResponsible ) ),
-			strReason( mono_string_to_utf8( msReason ) );
+			strResponsible	( mono_string_to_utf8( msResponsible ) ),
+			strReason		( mono_string_to_utf8( msReason ) );
 		
-		return CLuaFunctionDefinitions::KickPlayer( RESOURCE->GetLua(), (void*)pPlayer, strResponsible, strReason );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::KickPlayer( pResource->GetLua(), pElement->ToLuaUserData(), strResponsible, strReason );
 	}
 	
 	return false;
 }
 
-DWORD CMonoFunctions::Player::Ban( DWORD pPlayer, bool bIP, bool bUsername, bool bSerial, DWORD pResponsible, MonoString* msResponsible, MonoString* msReason, int iUnban )
+TElement CMonoFunctions::Player::Ban( TElement pThis, bool bIP, bool bUsername, bool bSerial, TElement pArgResponsible, MonoString* msResponsible, MonoString* msReason, int iUnban )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		string
-			strResponsible( mono_string_to_utf8( msResponsible ) ),
-			strReason( mono_string_to_utf8( msReason ) );
+			strResponsible	( mono_string_to_utf8( msResponsible ) ),
+			strReason		( mono_string_to_utf8( msReason ) );
 		
-		return (DWORD)CLuaFunctionDefinitions::BanPlayer( RESOURCE->GetLua(), (void*)pPlayer, bIP, bUsername, bSerial, (void*)pResponsible, strResponsible, strReason, iUnban );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+
+		PVOID pResponsible = nullptr;
+
+		if( pArgResponsible )
+		{
+			pResponsible = pResource->GetElementManager()->GetFromList( pArgResponsible )->ToLuaUserData();
+		}
+		
+		PVOID pUserData = CLuaFunctionDefinitions::BanPlayer( pResource->GetLua(), pElement->ToLuaUserData(), bIP, bUsername, bSerial, pResponsible, strResponsible, strReason, iUnban );
+
+		if( pUserData )
+		{
+			return pResource->GetElementManager()->Create( nullptr, pUserData )->ToMonoObject();
+		}
 	}
 	
-	return false;
+	return nullptr;
 }
 
 		
 // Cursor get funcs
-bool CMonoFunctions::Player::IsCursorShowing( DWORD pPlayer )
+bool CMonoFunctions::Player::IsCursorShowing( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		bool bShowing;
 		
-		if( CLuaFunctionDefinitions::IsCursorShowing( RESOURCE->GetLua(), (void*)pPlayer, bShowing ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::IsCursorShowing( pResource->GetLua(), pElement->ToLuaUserData(), bShowing ) )
 		{
 			return bShowing;
 		}
@@ -723,11 +958,15 @@ bool CMonoFunctions::Player::IsCursorShowing( DWORD pPlayer )
 
 		
 // Cursor set funcs
-bool CMonoFunctions::Player::ShowCursor( DWORD pPlayer, bool bShow, bool bToggleControls )
+bool CMonoFunctions::Player::ShowCursor( TElement pThis, bool bShow, bool bToggleControls )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::ShowCursor( RESOURCE->GetLua(), (void*)pPlayer, bShow, bToggleControls );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::ShowCursor( pResource->GetLua(), pElement->ToLuaUserData(), bShow, bToggleControls );
 	}
 	
 	return false;
@@ -735,11 +974,15 @@ bool CMonoFunctions::Player::ShowCursor( DWORD pPlayer, bool bShow, bool bToggle
 
 		
 // Chat funcs
-bool CMonoFunctions::Player::ShowChat( DWORD pPlayer, bool bShow )
+bool CMonoFunctions::Player::ShowChat( TElement pThis, bool bShow )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::ShowChat( RESOURCE->GetLua(), (void*)pPlayer, bShow );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::ShowChat( pResource->GetLua(), pElement->ToLuaUserData(), bShow );
 	}
 	
 	return false;
@@ -747,17 +990,21 @@ bool CMonoFunctions::Player::ShowChat( DWORD pPlayer, bool bShow )
 
 
 // Camera get functions
-MonoObject* CMonoFunctions::Player::GetCameraMatrix( DWORD pPlayer )
+MonoObject* CMonoFunctions::Player::GetCameraMatrix( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		Vector3 vecPosition, vecLookAt;
 		
 		float fRoll, fFOV;
-
-		if( CLuaFunctionDefinitions::GetCameraMatrix( RESOURCE->GetLua(), (void*)pPlayer, vecPosition, vecLookAt, fRoll, fFOV ) )
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetCameraMatrix( pResource->GetLua(), pElement->ToLuaUserData(), vecPosition, vecLookAt, fRoll, fFOV ) )
 		{
-			void *args[] =
+			PVOID args[] =
 			{
 				&vecPosition.fX,
 				&vecPosition.fY,
@@ -769,30 +1016,43 @@ MonoObject* CMonoFunctions::Player::GetCameraMatrix( DWORD pPlayer )
 				&fFOV
 			};
 
-			return RESOURCE->GetDomain()->GetMTALib()->GetClass( "CameraMatrix" )->New( args, 8 );
+			return pResource->GetDomain()->GetMTALib()->GetClass( "CameraMatrix" )->New( args, 8 );
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-DWORD CMonoFunctions::Player::GetCameraTarget( DWORD pPlayer )
+TElement CMonoFunctions::Player::GetCameraTarget( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return (DWORD)CLuaFunctionDefinitions::GetCameraTarget( RESOURCE->GetLua(), (void*)pPlayer );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		PVOID pUserData = CLuaFunctionDefinitions::GetCameraTarget( pResource->GetLua(), pElement->ToLuaUserData() );
+
+		if( pUserData )
+		{
+			return pResource->GetElementManager()->FindOrCreate( pUserData )->ToMonoObject();
+		}
 	}
 	
-	return false;
+	return nullptr;
 }
 
-unsigned char CMonoFunctions::Player::GetCameraInterior( DWORD pPlayer )
+unsigned char CMonoFunctions::Player::GetCameraInterior( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned char ucInterior;
 		
-		if( CLuaFunctionDefinitions::GetCameraInterior( RESOURCE->GetLua(), (void*)pPlayer, ucInterior ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetCameraInterior( pResource->GetLua(), pElement->ToLuaUserData(), ucInterior ) )
 		{
 			return ucInterior;
 		}
@@ -803,9 +1063,11 @@ unsigned char CMonoFunctions::Player::GetCameraInterior( DWORD pPlayer )
 
 
 // Camera set functions
-bool CMonoFunctions::Player::SetCameraMatrix( DWORD pPlayer, MonoObject* pCameraMatrix )
+bool CMonoFunctions::Player::SetCameraMatrix( TElement pThis, MonoObject* pCameraMatrix )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		MonoObject* msPosition = CMonoObject::GetPropertyValue< MonoObject* >( pCameraMatrix, "Position" );
 
@@ -817,45 +1079,57 @@ bool CMonoFunctions::Player::SetCameraMatrix( DWORD pPlayer, MonoObject* pCamera
 
 		float fRoll = CMonoObject::GetPropertyValue< float >( pCameraMatrix, "Roll" );
 		float fFOV	= CMonoObject::GetPropertyValue< float >( pCameraMatrix, "FOV" );
-
-		return CLuaFunctionDefinitions::SetCameraMatrix( RESOURCE->GetLua(), (void*)pPlayer, vecPosition, vecLookAt, fRoll, fFOV );
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetCameraMatrix( pResource->GetLua(), pElement->ToLuaUserData(), vecPosition, vecLookAt, fRoll, fFOV );
 	}
 	
 	return false;
 }
 
-bool CMonoFunctions::Player::SetCameraTarget( DWORD pPlayer, DWORD pTarget )
+bool CMonoFunctions::Player::SetCameraTarget( TElement pThis, TElement pTarget )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetCameraTarget( RESOURCE->GetLua(), (void*)pPlayer, (void*)pTarget );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetCameraTarget( pResource->GetLua(), pElement->ToLuaUserData(), (void*)pTarget );
 	}
 	
 	return false;
 }
 
-bool CMonoFunctions::Player::SetCameraInterior( DWORD pPlayer, unsigned char ucInterior )
+bool CMonoFunctions::Player::SetCameraInterior( TElement pThis, unsigned char ucInterior )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetCameraInterior( RESOURCE->GetLua(), (void*)pPlayer, ucInterior );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetCameraInterior( pResource->GetLua(), pElement->ToLuaUserData(), ucInterior );
 	}
 	
 	return false;
 }
 
-bool CMonoFunctions::Player::FadeCamera( DWORD pPlayer, bool bFadeIn, float fFadeTime, MonoObject* pColor )
+bool CMonoFunctions::Player::FadeCamera( TElement pThis, bool bFadeIn, float fFadeTime, MonoObject* pColor )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned char ucReed	= CMonoObject::GetPropertyValue< unsigned char >( pColor, "R" );
 		unsigned char ucGreen	= CMonoObject::GetPropertyValue< unsigned char >( pColor, "G" );
 		unsigned char ucBlue	= CMonoObject::GetPropertyValue< unsigned char >( pColor, "B" );
-
-		return CLuaFunctionDefinitions::FadeCamera( RESOURCE->GetLua(), (void*)pPlayer, bFadeIn, fFadeTime, ucReed, ucGreen, ucBlue );
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::FadeCamera( pResource->GetLua(), pElement->ToLuaUserData(), bFadeIn, fFadeTime, ucReed, ucGreen, ucBlue );
 	}
 	
 	return false;
 }
-
-#endif

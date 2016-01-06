@@ -15,14 +15,17 @@ class CMonoEvent;
 #ifndef __CMONOEVENT_H
 #define __CMONOEVENT_H
 
+#include "CResource.h"
 #include "CMonoClass.h"
 #include "CMonoMethod.h"
+#include "CMonoArguments.h"
 
 #include "extra/CLuaArgument.h"
 
 class CMonoEvent
 {
 private:
+	CResource*					m_pResource;
 	CMonoClass*					m_pClass;
 
 	MonoEvent*					m_pEvent;
@@ -37,7 +40,7 @@ public:
 								~CMonoEvent					( void );
 
 	bool						Call						( MonoObject* pThis, list< CLuaArgument* > argv );
-	void**						ParseArguments				( list< CLuaArgument* > argv );
+	bool						ParseArguments				( CMonoArguments& pArguments, list< CLuaArgument* > argv );
 
 	CMonoMethod*				GetAddMethod				( void );
 	CMonoMethod*				GetRemoveMethod				( void );

@@ -16,13 +16,15 @@
 // General world get funcs
 MonoArray* CMonoFunctions::World::GetTime( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned char ucHour, ucMinute;
 
-		if( CLuaFunctionDefinitions::GetTime( RESOURCE->GetLua(), ucHour, ucMinute ) )
+		if( CLuaFunctionDefinitions::GetTime( pResource->GetLua(), ucHour, ucMinute ) )
 		{
-			MonoArray* pArray = mono_array_new( RESOURCE->GetDomain()->GetMonoPtr(), mono_get_char_class(), 2 );
+			MonoArray* pArray = mono_array_new( pResource->GetDomain()->GetMonoPtr(), mono_get_char_class(), 2 );
 
 			mono_array_set( pArray, unsigned char, 0, ucHour );
 			mono_array_set( pArray, unsigned char, 1, ucMinute );
@@ -31,18 +33,20 @@ MonoArray* CMonoFunctions::World::GetTime( void )
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 MonoArray* CMonoFunctions::World::GetWeather( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned char ucWeather, ucWeatherBlending;
 
-		if( CLuaFunctionDefinitions::GetWeather( RESOURCE->GetLua(), ucWeather, ucWeatherBlending ) )
+		if( CLuaFunctionDefinitions::GetWeather( pResource->GetLua(), ucWeather, ucWeatherBlending ) )
 		{
-			MonoArray* pArray = mono_array_new( RESOURCE->GetDomain()->GetMonoPtr(), mono_get_char_class(), 2 );
+			MonoArray* pArray = mono_array_new( pResource->GetDomain()->GetMonoPtr(), mono_get_char_class(), 2 );
 
 			mono_array_set( pArray, unsigned char, 0, ucWeather );
 			mono_array_set( pArray, unsigned char, 1, ucWeatherBlending );
@@ -51,33 +55,37 @@ MonoArray* CMonoFunctions::World::GetWeather( void )
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 MonoString* CMonoFunctions::World::GetZoneName( MonoObject* mPosition, bool bCitiesOnly )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		string strOutName;
 
 		Vector3 vecPosition( mPosition );
 
-		if( CLuaFunctionDefinitions::GetZoneName( RESOURCE->GetLua(), vecPosition, strOutName, bCitiesOnly ) )
+		if( CLuaFunctionDefinitions::GetZoneName( pResource->GetLua(), vecPosition, strOutName, bCitiesOnly ) )
 		{
-			return RESOURCE->GetDomain()->NewString( strOutName );
+			return pResource->GetDomain()->NewString( strOutName );
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 float CMonoFunctions::World::GetGravity( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		float fGravity;
 
-		if( CLuaFunctionDefinitions::GetGravity( RESOURCE->GetLua(), fGravity ) )
+		if( CLuaFunctionDefinitions::GetGravity( pResource->GetLua(), fGravity ) )
 		{
 			return fGravity;
 		}
@@ -88,11 +96,13 @@ float CMonoFunctions::World::GetGravity( void )
 
 float CMonoFunctions::World::GetGameSpeed( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		float fGameSpeed;
 
-		if( CLuaFunctionDefinitions::GetGameSpeed( RESOURCE->GetLua(), fGameSpeed ) )
+		if( CLuaFunctionDefinitions::GetGameSpeed( pResource->GetLua(), fGameSpeed ) )
 		{
 			return fGameSpeed;
 		}
@@ -103,11 +113,13 @@ float CMonoFunctions::World::GetGameSpeed( void )
 
 float CMonoFunctions::World::GetWaveHeight( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		float fHeight;
 
-		if( CLuaFunctionDefinitions::GetWaveHeight( RESOURCE->GetLua(), fHeight ) )
+		if( CLuaFunctionDefinitions::GetWaveHeight( pResource->GetLua(), fHeight ) )
 		{
 			return fHeight;
 		}
@@ -118,11 +130,13 @@ float CMonoFunctions::World::GetWaveHeight( void )
 
 unsigned short CMonoFunctions::World::GetFPSLimit( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned short usLimit;
 
-		if( CLuaFunctionDefinitions::GetFPSLimit( RESOURCE->GetLua(), usLimit ) )
+		if( CLuaFunctionDefinitions::GetFPSLimit( pResource->GetLua(), usLimit ) )
 		{
 			return usLimit;
 		}
@@ -133,11 +147,13 @@ unsigned short CMonoFunctions::World::GetFPSLimit( void )
 
 unsigned long CMonoFunctions::World::GetMinuteDuration( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned long usDuration;
 
-		if( CLuaFunctionDefinitions::GetMinuteDuration( RESOURCE->GetLua(), usDuration ) )
+		if( CLuaFunctionDefinitions::GetMinuteDuration( pResource->GetLua(), usDuration ) )
 		{
 			return usDuration;
 		}
@@ -148,11 +164,13 @@ unsigned long CMonoFunctions::World::GetMinuteDuration( void )
 
 bool CMonoFunctions::World::IsGarageOpen( unsigned char ucGarageID )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		bool bIsOpen;
 
-		if( CLuaFunctionDefinitions::IsGarageOpen( RESOURCE->GetLua(), ucGarageID, bIsOpen ) )
+		if( CLuaFunctionDefinitions::IsGarageOpen( pResource->GetLua(), ucGarageID, bIsOpen ) )
 		{
 			return bIsOpen;
 		}
@@ -163,11 +181,13 @@ bool CMonoFunctions::World::IsGarageOpen( unsigned char ucGarageID )
 
 unsigned char CMonoFunctions::World::GetTrafficLightState( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned char ucState;
 
-		if( CLuaFunctionDefinitions::GetTrafficLightState( RESOURCE->GetLua(), ucState ) )
+		if( CLuaFunctionDefinitions::GetTrafficLightState( pResource->GetLua(), ucState ) )
 		{
 			return ucState;
 		}
@@ -178,11 +198,13 @@ unsigned char CMonoFunctions::World::GetTrafficLightState( void )
 
 bool CMonoFunctions::World::GetTrafficLightsLocked( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		bool bIsLocked;
 
-		if( CLuaFunctionDefinitions::GetTrafficLightsLocked( RESOURCE->GetLua(), bIsLocked ) )
+		if( CLuaFunctionDefinitions::GetTrafficLightsLocked( pResource->GetLua(), bIsLocked ) )
 		{
 			return bIsLocked;
 		}
@@ -193,11 +215,13 @@ bool CMonoFunctions::World::GetTrafficLightsLocked( void )
 
 float CMonoFunctions::World::GetJetpackMaxHeight( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		float fHeight;
 
-		if( CLuaFunctionDefinitions::GetJetpackMaxHeight( RESOURCE->GetLua(), fHeight ) )
+		if( CLuaFunctionDefinitions::GetJetpackMaxHeight( pResource->GetLua(), fHeight ) )
 		{
 			return fHeight;
 		}
@@ -208,11 +232,13 @@ float CMonoFunctions::World::GetJetpackMaxHeight( void )
 
 float CMonoFunctions::World::GetAircraftMaxVelocity( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		float fVelocity;
 
-		if( CLuaFunctionDefinitions::GetAircraftMaxVelocity( RESOURCE->GetLua(), fVelocity ) )
+		if( CLuaFunctionDefinitions::GetAircraftMaxVelocity( pResource->GetLua(), fVelocity ) )
 		{
 			return fVelocity;
 		}
@@ -223,11 +249,13 @@ float CMonoFunctions::World::GetAircraftMaxVelocity( void )
 
 bool CMonoFunctions::World::GetInteriorSoundsEnabled( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		bool bEnabled;
 
-		if( CLuaFunctionDefinitions::GetInteriorSoundsEnabled( RESOURCE->GetLua(), bEnabled ) )
+		if( CLuaFunctionDefinitions::GetInteriorSoundsEnabled( pResource->GetLua(), bEnabled ) )
 		{
 			return bEnabled;
 		}
@@ -238,11 +266,13 @@ bool CMonoFunctions::World::GetInteriorSoundsEnabled( void )
 
 float CMonoFunctions::World::GetRainLevel( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		float fRainLevel;
 
-		if( CLuaFunctionDefinitions::GetRainLevel( RESOURCE->GetLua(), fRainLevel ) )
+		if( CLuaFunctionDefinitions::GetRainLevel( pResource->GetLua(), fRainLevel ) )
 		{
 			return fRainLevel;
 		}
@@ -253,11 +283,13 @@ float CMonoFunctions::World::GetRainLevel( void )
 
 float CMonoFunctions::World::GetSunSize( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		float fSunSize;
 
-		if( CLuaFunctionDefinitions::GetSunSize( RESOURCE->GetLua(), fSunSize ) )
+		if( CLuaFunctionDefinitions::GetSunSize( pResource->GetLua(), fSunSize ) )
 		{
 			return fSunSize;
 		}
@@ -268,20 +300,22 @@ float CMonoFunctions::World::GetSunSize( void )
 
 MonoArray* CMonoFunctions::World::GetSunColor( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		SColor pCore, pCorona;
 
-		if( CLuaFunctionDefinitions::GetSunColor( RESOURCE->GetLua(), pCore.R, pCore.G, pCore.B, pCorona.R, pCorona.G, pCorona.B ) )
+		if( CLuaFunctionDefinitions::GetSunColor( pResource->GetLua(), pCore.R, pCore.G, pCore.B, pCorona.R, pCorona.G, pCorona.B ) )
 		{
 			pCore.A	= pCorona.A = 255;
 
-			MonoObject* pCoreObject		= RESOURCE->GetDomain()->GetMTALib()->Color->New( pCore );
-			MonoObject* pCoronaObject	= RESOURCE->GetDomain()->GetMTALib()->Color->New( pCorona );
+			MonoObject* pCoreObject		= pResource->GetDomain()->GetMTALib()->Color->New( pCore );
+			MonoObject* pCoronaObject	= pResource->GetDomain()->GetMTALib()->Color->New( pCorona );
 
 			if( pCoreObject && pCoronaObject )
 			{
-				MonoArray* pMonoArray = mono_array_new( RESOURCE->GetDomain()->GetMonoPtr(), CMonoObject::GetClass( pCoreObject ), 2 );
+				MonoArray* pMonoArray = mono_array_new( pResource->GetDomain()->GetMonoPtr(), CMonoObject::GetClass( pCoreObject ), 2 );
 
 				mono_array_set( pMonoArray, MonoObject*, 0, pCoreObject );
 				mono_array_set( pMonoArray, MonoObject*, 1, pCoronaObject );
@@ -291,31 +325,35 @@ MonoArray* CMonoFunctions::World::GetSunColor( void )
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 MonoObject* CMonoFunctions::World::GetWindVelocity( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		Vector3 vecVelocity;
 
-		if( CLuaFunctionDefinitions::GetWindVelocity( RESOURCE->GetLua(), vecVelocity.fX, vecVelocity.fY, vecVelocity.fZ ) )
+		if( CLuaFunctionDefinitions::GetWindVelocity( pResource->GetLua(), vecVelocity.fX, vecVelocity.fY, vecVelocity.fZ ) )
 		{
-			return RESOURCE->GetDomain()->GetMTALib()->Vector3->New( vecVelocity );
+			return pResource->GetDomain()->GetMTALib()->Vector3->New( vecVelocity );
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 float CMonoFunctions::World::GetFarClipDistance( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		float fFarClip;
 
-		if( CLuaFunctionDefinitions::GetFarClipDistance( RESOURCE->GetLua(), fFarClip ) )
+		if( CLuaFunctionDefinitions::GetFarClipDistance( pResource->GetLua(), fFarClip ) )
 		{
 			return fFarClip;
 		}
@@ -326,11 +364,13 @@ float CMonoFunctions::World::GetFarClipDistance( void )
 
 float CMonoFunctions::World::GetFogDistance( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		float fFogDist;
 
-		if( CLuaFunctionDefinitions::GetFogDistance( RESOURCE->GetLua(), fFogDist ) )
+		if( CLuaFunctionDefinitions::GetFogDistance( pResource->GetLua(), fFogDist ) )
 		{
 			return fFogDist;
 		}
@@ -341,11 +381,13 @@ float CMonoFunctions::World::GetFogDistance( void )
 
 float CMonoFunctions::World::GetAircraftMaxHeight( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		float fMaxHeight;
 
-		if( CLuaFunctionDefinitions::GetAircraftMaxHeight( RESOURCE->GetLua(), fMaxHeight ) )
+		if( CLuaFunctionDefinitions::GetAircraftMaxHeight( pResource->GetLua(), fMaxHeight ) )
 		{
 			return fMaxHeight;
 		}
@@ -356,11 +398,13 @@ float CMonoFunctions::World::GetAircraftMaxHeight( void )
 
 bool CMonoFunctions::World::GetOcclusionsEnabled( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		bool bEnabled;
 
-		if( CLuaFunctionDefinitions::GetOcclusionsEnabled( RESOURCE->GetLua(), bEnabled ) )
+		if( CLuaFunctionDefinitions::GetOcclusionsEnabled( pResource->GetLua(), bEnabled ) )
 		{
 			return bEnabled;
 		}
@@ -371,11 +415,13 @@ bool CMonoFunctions::World::GetOcclusionsEnabled( void )
 
 int CMonoFunctions::World::GetMoonSize( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		int iSize;
 
-		if( CLuaFunctionDefinitions::GetMoonSize( RESOURCE->GetLua(), iSize ) )
+		if( CLuaFunctionDefinitions::GetMoonSize( pResource->GetLua(), iSize ) )
 		{
 			return iSize;
 		}
@@ -386,20 +432,22 @@ int CMonoFunctions::World::GetMoonSize( void )
 
 MonoArray* CMonoFunctions::World::GetSkyGradient( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		SColor pCore, pCorona;
 
-		if( CLuaFunctionDefinitions::GetSkyGradient( RESOURCE->GetLua(), pCore.R, pCore.G, pCore.B, pCorona.R, pCorona.G, pCorona.B ) )
+		if( CLuaFunctionDefinitions::GetSkyGradient( pResource->GetLua(), pCore.R, pCore.G, pCore.B, pCorona.R, pCorona.G, pCorona.B ) )
 		{
 			pCore.A	= pCorona.A = 255;
 
-			MonoObject* pCoreObject		= RESOURCE->GetDomain()->GetMTALib()->Color->New( pCore );
-			MonoObject* pCoronaObject	= RESOURCE->GetDomain()->GetMTALib()->Color->New( pCorona );
+			MonoObject* pCoreObject		= pResource->GetDomain()->GetMTALib()->Color->New( pCore );
+			MonoObject* pCoronaObject	= pResource->GetDomain()->GetMTALib()->Color->New( pCorona );
 
 			if( pCoreObject && pCoronaObject )
 			{
-				MonoArray* pMonoArray = mono_array_new( RESOURCE->GetDomain()->GetMonoPtr(), CMonoObject::GetClass( pCoreObject ), 2 );
+				MonoArray* pMonoArray = mono_array_new( pResource->GetDomain()->GetMonoPtr(), CMonoObject::GetClass( pCoreObject ), 2 );
 
 				mono_array_set( pMonoArray, MonoObject*, 0, pCoreObject );
 				mono_array_set( pMonoArray, MonoObject*, 1, pCoronaObject );
@@ -409,34 +457,38 @@ MonoArray* CMonoFunctions::World::GetSkyGradient( void )
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 MonoObject* CMonoFunctions::World::GetHeatHaze( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		SHeatHazeSettings heatHazeSettings;
 
-		if( CLuaFunctionDefinitions::GetHeatHaze( RESOURCE->GetLua(), heatHazeSettings ) )
+		if( CLuaFunctionDefinitions::GetHeatHaze( pResource->GetLua(), heatHazeSettings ) )
 		{
-			void* args[] =
+			PVOID args[] =
 			{
 				&heatHazeSettings
 			};
 
-			return RESOURCE->GetDomain()->GetMTALib()->GetClass( "HeatHazeSettings" )->New( args, 1 );
+			return pResource->GetDomain()->GetMTALib()->GetClass( "HeatHazeSettings" )->New( args, 1 );
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 bool CMonoFunctions::World::GetJetpackWeaponEnabled( unsigned int uiWeaponType )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::GetJetpackWeaponEnabled( RESOURCE->GetLua(), (eWeaponType)uiWeaponType );
+		return CLuaFunctionDefinitions::GetJetpackWeaponEnabled( pResource->GetLua(), (eWeaponType)uiWeaponType );
 	}
 
 	return false;
@@ -444,9 +496,11 @@ bool CMonoFunctions::World::GetJetpackWeaponEnabled( unsigned int uiWeaponType )
 
 bool CMonoFunctions::World::GetCloudsEnabled( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::GetCloudsEnabled( RESOURCE->GetLua() );
+		return CLuaFunctionDefinitions::GetCloudsEnabled( pResource->GetLua() );
 	}
 
 	return false;
@@ -456,9 +510,11 @@ bool CMonoFunctions::World::GetCloudsEnabled( void )
 // General world set funcs
 bool CMonoFunctions::World::SetTime( unsigned char ucHour, unsigned char ucMinute )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetTime( RESOURCE->GetLua(), ucHour, ucMinute );
+		return CLuaFunctionDefinitions::SetTime( pResource->GetLua(), ucHour, ucMinute );
 	}
 
 	return false;
@@ -466,9 +522,11 @@ bool CMonoFunctions::World::SetTime( unsigned char ucHour, unsigned char ucMinut
 
 bool CMonoFunctions::World::SetWeather( unsigned char ucWeather )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetWeather( RESOURCE->GetLua(), ucWeather );
+		return CLuaFunctionDefinitions::SetWeather( pResource->GetLua(), ucWeather );
 	}
 
 	return false;
@@ -476,9 +534,11 @@ bool CMonoFunctions::World::SetWeather( unsigned char ucWeather )
 
 bool CMonoFunctions::World::SetWeatherBlended( unsigned char ucWeather )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetWeatherBlended( RESOURCE->GetLua(), ucWeather );
+		return CLuaFunctionDefinitions::SetWeatherBlended( pResource->GetLua(), ucWeather );
 	}
 
 	return false;
@@ -486,9 +546,11 @@ bool CMonoFunctions::World::SetWeatherBlended( unsigned char ucWeather )
 
 bool CMonoFunctions::World::SetGravity( float fGravity )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetGravity( RESOURCE->GetLua(), fGravity );
+		return CLuaFunctionDefinitions::SetGravity( pResource->GetLua(), fGravity );
 	}
 
 	return false;
@@ -496,9 +558,11 @@ bool CMonoFunctions::World::SetGravity( float fGravity )
 
 bool CMonoFunctions::World::SetGameSpeed( float fSpeed )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetGameSpeed( RESOURCE->GetLua(), fSpeed );
+		return CLuaFunctionDefinitions::SetGameSpeed( pResource->GetLua(), fSpeed );
 	}
 
 	return false;
@@ -506,9 +570,11 @@ bool CMonoFunctions::World::SetGameSpeed( float fSpeed )
 
 bool CMonoFunctions::World::SetWaveHeight( float fHeight )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetWaveHeight( RESOURCE->GetLua(), fHeight );
+		return CLuaFunctionDefinitions::SetWaveHeight( pResource->GetLua(), fHeight );
 	}
 
 	return false;
@@ -516,12 +582,14 @@ bool CMonoFunctions::World::SetWaveHeight( float fHeight )
 
 bool CMonoFunctions::World::SetSkyGradient( MonoObject* pTopColor, MonoObject* pBottomColor )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		SColor pTop		= CMonoObject::GetColor( pTopColor );
 		SColor pBottom	= CMonoObject::GetColor( pBottomColor );
 
-		return CLuaFunctionDefinitions::SetSkyGradient( RESOURCE->GetLua(), pTop.R, pTop.G, pTop.B, pBottom.R, pBottom.G, pBottom.B );
+		return CLuaFunctionDefinitions::SetSkyGradient( pResource->GetLua(), pTop.R, pTop.G, pTop.B, pBottom.R, pBottom.G, pBottom.B );
 	}
 
 	return false;
@@ -529,9 +597,11 @@ bool CMonoFunctions::World::SetSkyGradient( MonoObject* pTopColor, MonoObject* p
 
 bool CMonoFunctions::World::ResetSkyGradient( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::ResetSkyGradient( RESOURCE->GetLua() );
+		return CLuaFunctionDefinitions::ResetSkyGradient( pResource->GetLua() );
 	}
 
 	return false;
@@ -539,7 +609,9 @@ bool CMonoFunctions::World::ResetSkyGradient( void )
 
 bool CMonoFunctions::World::SetHeatHaze( MonoObject* heatHazeSettings )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		SHeatHazeSettings pHeatHazeSettings;
 
@@ -553,7 +625,7 @@ bool CMonoFunctions::World::SetHeatHaze( MonoObject* heatHazeSettings )
 		pHeatHazeSettings.usRenderSizeY		= CMonoObject::GetPropertyValue< unsigned short >( heatHazeSettings, "usRenderSizeY" );
 		pHeatHazeSettings.bInsideBuilding	= CMonoObject::GetPropertyValue< bool >( heatHazeSettings, "bInsideBuilding" );
 
-		return CLuaFunctionDefinitions::SetHeatHaze( RESOURCE->GetLua(), pHeatHazeSettings );
+		return CLuaFunctionDefinitions::SetHeatHaze( pResource->GetLua(), pHeatHazeSettings );
 	}
 
 	return false;
@@ -561,9 +633,11 @@ bool CMonoFunctions::World::SetHeatHaze( MonoObject* heatHazeSettings )
 
 bool CMonoFunctions::World::ResetHeatHaze( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::ResetHeatHaze( RESOURCE->GetLua() );
+		return CLuaFunctionDefinitions::ResetHeatHaze( pResource->GetLua() );
 	}
 
 	return false;
@@ -571,9 +645,11 @@ bool CMonoFunctions::World::ResetHeatHaze( void )
 
 bool CMonoFunctions::World::SetFPSLimit( unsigned short usLimit, bool bSave )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetFPSLimit( RESOURCE->GetLua(), usLimit, bSave );
+		return CLuaFunctionDefinitions::SetFPSLimit( pResource->GetLua(), usLimit, bSave );
 	}
 
 	return false;
@@ -581,9 +657,11 @@ bool CMonoFunctions::World::SetFPSLimit( unsigned short usLimit, bool bSave )
 
 bool CMonoFunctions::World::SetMinuteDuration( unsigned long ulDuration )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetMinuteDuration( RESOURCE->GetLua(), ulDuration );
+		return CLuaFunctionDefinitions::SetMinuteDuration( pResource->GetLua(), ulDuration );
 	}
 
 	return false;
@@ -591,9 +669,11 @@ bool CMonoFunctions::World::SetMinuteDuration( unsigned long ulDuration )
 
 bool CMonoFunctions::World::SetGarageOpen( unsigned char ucGarageID, bool bIsOpen )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetGarageOpen( RESOURCE->GetLua(), ucGarageID, bIsOpen );
+		return CLuaFunctionDefinitions::SetGarageOpen( pResource->GetLua(), ucGarageID, bIsOpen );
 	}
 
 	return false;
@@ -601,11 +681,13 @@ bool CMonoFunctions::World::SetGarageOpen( unsigned char ucGarageID, bool bIsOpe
 
 bool CMonoFunctions::World::SetGlitchEnabled( MonoString* msGlitchName, bool bEnabled )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		string strGlitchName( mono_string_to_utf8( msGlitchName ) );
 
-		return CLuaFunctionDefinitions::SetGlitchEnabled( RESOURCE->GetLua(), strGlitchName, bEnabled );
+		return CLuaFunctionDefinitions::SetGlitchEnabled( pResource->GetLua(), strGlitchName, bEnabled );
 	}
 
 	return false;
@@ -613,11 +695,13 @@ bool CMonoFunctions::World::SetGlitchEnabled( MonoString* msGlitchName, bool bEn
 
 bool CMonoFunctions::World::IsGlitchEnabled( MonoString* msGlitchName )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		string strGlitchName( mono_string_to_utf8( msGlitchName ) );
 
-		return CLuaFunctionDefinitions::IsGlitchEnabled( RESOURCE->GetLua(), strGlitchName );
+		return CLuaFunctionDefinitions::IsGlitchEnabled( pResource->GetLua(), strGlitchName );
 	}
 
 	return false;
@@ -625,9 +709,11 @@ bool CMonoFunctions::World::IsGlitchEnabled( MonoString* msGlitchName )
 
 bool CMonoFunctions::World::SetJetpackWeaponEnabled( unsigned int uiWeaponType, bool bEnabled )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetJetpackWeaponEnabled( RESOURCE->GetLua(), (eWeaponType)uiWeaponType, bEnabled );
+		return CLuaFunctionDefinitions::SetJetpackWeaponEnabled( pResource->GetLua(), (eWeaponType)uiWeaponType, bEnabled );
 	}
 
 	return false;
@@ -635,9 +721,11 @@ bool CMonoFunctions::World::SetJetpackWeaponEnabled( unsigned int uiWeaponType, 
 
 bool CMonoFunctions::World::SetCloudsEnabled( bool bEnabled )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetCloudsEnabled( RESOURCE->GetLua(), bEnabled );
+		return CLuaFunctionDefinitions::SetCloudsEnabled( pResource->GetLua(), bEnabled );
 	}
 
 	return false;
@@ -645,9 +733,11 @@ bool CMonoFunctions::World::SetCloudsEnabled( bool bEnabled )
 
 bool CMonoFunctions::World::SetTrafficLightState( unsigned char ucState, bool bForced )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetTrafficLightState( RESOURCE->GetLua(), ucState, bForced );
+		return CLuaFunctionDefinitions::SetTrafficLightState( pResource->GetLua(), ucState, bForced );
 	}
 
 	return false;
@@ -655,9 +745,11 @@ bool CMonoFunctions::World::SetTrafficLightState( unsigned char ucState, bool bF
 
 bool CMonoFunctions::World::SetTrafficLightsLocked( bool bLocked )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetTrafficLightsLocked( RESOURCE->GetLua(), bLocked );
+		return CLuaFunctionDefinitions::SetTrafficLightsLocked( pResource->GetLua(), bLocked );
 	}
 
 	return false;
@@ -665,9 +757,11 @@ bool CMonoFunctions::World::SetTrafficLightsLocked( bool bLocked )
 
 bool CMonoFunctions::World::SetJetpackMaxHeight( float fMaxHeight )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetJetpackMaxHeight( RESOURCE->GetLua(), fMaxHeight );
+		return CLuaFunctionDefinitions::SetJetpackMaxHeight( pResource->GetLua(), fMaxHeight );
 	}
 
 	return false;
@@ -675,9 +769,11 @@ bool CMonoFunctions::World::SetJetpackMaxHeight( float fMaxHeight )
 
 bool CMonoFunctions::World::SetInteriorSoundsEnabled( bool bEnable )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetInteriorSoundsEnabled( RESOURCE->GetLua(), bEnable );
+		return CLuaFunctionDefinitions::SetInteriorSoundsEnabled( pResource->GetLua(), bEnable );
 	}
 
 	return false;
@@ -685,9 +781,11 @@ bool CMonoFunctions::World::SetInteriorSoundsEnabled( bool bEnable )
 
 bool CMonoFunctions::World::SetRainLevel( float fRainLevel )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetRainLevel( RESOURCE->GetLua(), fRainLevel );
+		return CLuaFunctionDefinitions::SetRainLevel( pResource->GetLua(), fRainLevel );
 	}
 
 	return false;
@@ -695,9 +793,11 @@ bool CMonoFunctions::World::SetRainLevel( float fRainLevel )
 
 bool CMonoFunctions::World::SetSunSize( float fSunSize )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetSunSize( RESOURCE->GetLua(), fSunSize );
+		return CLuaFunctionDefinitions::SetSunSize( pResource->GetLua(), fSunSize );
 	}
 
 	return false;
@@ -705,12 +805,14 @@ bool CMonoFunctions::World::SetSunSize( float fSunSize )
 
 bool CMonoFunctions::World::SetSunColor( MonoObject* pCoreColor, MonoObject* pCoronaColor )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		SColor pTop		= CMonoObject::GetColor( pCoreColor );
 		SColor pBottom	= CMonoObject::GetColor( pCoronaColor );
 
-		return CLuaFunctionDefinitions::SetSunColor( RESOURCE->GetLua(), pTop.R, pTop.G, pTop.B, pBottom.R, pBottom.G, pBottom.B );
+		return CLuaFunctionDefinitions::SetSunColor( pResource->GetLua(), pTop.R, pTop.G, pTop.B, pBottom.R, pBottom.G, pBottom.B );
 	}
 
 	return false;
@@ -718,11 +820,13 @@ bool CMonoFunctions::World::SetSunColor( MonoObject* pCoreColor, MonoObject* pCo
 
 bool CMonoFunctions::World::SetWindVelocity( MonoObject* pVelocity )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		Vector3 vecVelocity( pVelocity );
 
-		return CLuaFunctionDefinitions::SetWindVelocity( RESOURCE->GetLua(), vecVelocity.fX, vecVelocity.fY, vecVelocity.fZ );
+		return CLuaFunctionDefinitions::SetWindVelocity( pResource->GetLua(), vecVelocity.fX, vecVelocity.fY, vecVelocity.fZ );
 	}
 
 	return false;
@@ -730,9 +834,11 @@ bool CMonoFunctions::World::SetWindVelocity( MonoObject* pVelocity )
 
 bool CMonoFunctions::World::SetFarClipDistance( float fFarClip )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetFarClipDistance( RESOURCE->GetLua(), fFarClip );
+		return CLuaFunctionDefinitions::SetFarClipDistance( pResource->GetLua(), fFarClip );
 	}
 
 	return false;
@@ -740,9 +846,11 @@ bool CMonoFunctions::World::SetFarClipDistance( float fFarClip )
 
 bool CMonoFunctions::World::SetFogDistance( float fFogDist )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetFogDistance( RESOURCE->GetLua(), fFogDist );
+		return CLuaFunctionDefinitions::SetFogDistance( pResource->GetLua(), fFogDist );
 	}
 
 	return false;
@@ -750,9 +858,11 @@ bool CMonoFunctions::World::SetFogDistance( float fFogDist )
 
 bool CMonoFunctions::World::SetAircraftMaxHeight( float fMaxHeight )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetAircraftMaxHeight( RESOURCE->GetLua(), fMaxHeight );
+		return CLuaFunctionDefinitions::SetAircraftMaxHeight( pResource->GetLua(), fMaxHeight );
 	}
 
 	return false;
@@ -760,9 +870,11 @@ bool CMonoFunctions::World::SetAircraftMaxHeight( float fMaxHeight )
 
 bool CMonoFunctions::World::SetAircraftMaxVelocity( float fVelocity )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetAircraftMaxVelocity( RESOURCE->GetLua(), fVelocity );
+		return CLuaFunctionDefinitions::SetAircraftMaxVelocity( pResource->GetLua(), fVelocity );
 	}
 
 	return false;
@@ -770,9 +882,11 @@ bool CMonoFunctions::World::SetAircraftMaxVelocity( float fVelocity )
 
 bool CMonoFunctions::World::SetOcclusionsEnabled( bool bEnabled )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetOcclusionsEnabled( RESOURCE->GetLua(), bEnabled );
+		return CLuaFunctionDefinitions::SetOcclusionsEnabled( pResource->GetLua(), bEnabled );
 	}
 
 	return false;
@@ -780,9 +894,11 @@ bool CMonoFunctions::World::SetOcclusionsEnabled( bool bEnabled )
 
 bool CMonoFunctions::World::ResetRainLevel( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::ResetRainLevel( RESOURCE->GetLua() );
+		return CLuaFunctionDefinitions::ResetRainLevel( pResource->GetLua() );
 	}
 
 	return false;
@@ -790,9 +906,11 @@ bool CMonoFunctions::World::ResetRainLevel( void )
 
 bool CMonoFunctions::World::ResetSunSize( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::ResetSunSize( RESOURCE->GetLua() );
+		return CLuaFunctionDefinitions::ResetSunSize( pResource->GetLua() );
 	}
 
 	return false;
@@ -800,9 +918,11 @@ bool CMonoFunctions::World::ResetSunSize( void )
 
 bool CMonoFunctions::World::ResetSunColor( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::ResetSunColor( RESOURCE->GetLua() );
+		return CLuaFunctionDefinitions::ResetSunColor( pResource->GetLua() );
 	}
 
 	return false;
@@ -810,9 +930,11 @@ bool CMonoFunctions::World::ResetSunColor( void )
 
 bool CMonoFunctions::World::ResetWindVelocity( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::ResetWindVelocity( RESOURCE->GetLua() );
+		return CLuaFunctionDefinitions::ResetWindVelocity( pResource->GetLua() );
 	}
 
 	return false;
@@ -820,9 +942,11 @@ bool CMonoFunctions::World::ResetWindVelocity( void )
 
 bool CMonoFunctions::World::ResetFarClipDistance( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::ResetFarClipDistance( RESOURCE->GetLua() );
+		return CLuaFunctionDefinitions::ResetFarClipDistance( pResource->GetLua() );
 	}
 
 	return false;
@@ -830,9 +954,11 @@ bool CMonoFunctions::World::ResetFarClipDistance( void )
 
 bool CMonoFunctions::World::ResetFogDistance( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::ResetFogDistance( RESOURCE->GetLua() );
+		return CLuaFunctionDefinitions::ResetFogDistance( pResource->GetLua() );
 	}
 
 	return false;
@@ -840,11 +966,13 @@ bool CMonoFunctions::World::ResetFogDistance( void )
 
 bool CMonoFunctions::World::RemoveWorldModel( unsigned short usModel, float fRadius, MonoObject* pPosition, char cInterior )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		Vector3 vecPosition( pPosition );
 
-		return CLuaFunctionDefinitions::RemoveWorldModel( RESOURCE->GetLua(), usModel, fRadius, vecPosition, cInterior );
+		return CLuaFunctionDefinitions::RemoveWorldModel( pResource->GetLua(), usModel, fRadius, vecPosition, cInterior );
 	}
 
 	return false;
@@ -852,11 +980,13 @@ bool CMonoFunctions::World::RemoveWorldModel( unsigned short usModel, float fRad
 
 bool CMonoFunctions::World::RestoreWorldModel( unsigned short usModel, float fRadius, MonoObject* pPosition, char cInterior )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		Vector3 vecPosition( pPosition );
 
-		return CLuaFunctionDefinitions::RestoreWorldModel( RESOURCE->GetLua(), usModel, fRadius, vecPosition, cInterior );
+		return CLuaFunctionDefinitions::RestoreWorldModel( pResource->GetLua(), usModel, fRadius, vecPosition, cInterior );
 	}
 
 	return false;
@@ -864,9 +994,11 @@ bool CMonoFunctions::World::RestoreWorldModel( unsigned short usModel, float fRa
 
 bool CMonoFunctions::World::RestoreAllWorldModels( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::RestoreAllWorldModels( RESOURCE->GetLua() );
+		return CLuaFunctionDefinitions::RestoreAllWorldModels( pResource->GetLua() );
 	}
 
 	return false;
@@ -874,9 +1006,11 @@ bool CMonoFunctions::World::RestoreAllWorldModels( void )
 
 bool CMonoFunctions::World::SetMoonSize( int iMoonSize )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetMoonSize( RESOURCE->GetLua(), iMoonSize );
+		return CLuaFunctionDefinitions::SetMoonSize( pResource->GetLua(), iMoonSize );
 	}
 
 	return false;
@@ -884,9 +1018,11 @@ bool CMonoFunctions::World::SetMoonSize( int iMoonSize )
 
 bool CMonoFunctions::World::ResetMoonSize( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::ResetMoonSize( RESOURCE->GetLua() );
+		return CLuaFunctionDefinitions::ResetMoonSize( pResource->GetLua() );
 	}
 
 	return false;

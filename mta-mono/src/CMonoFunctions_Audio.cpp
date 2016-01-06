@@ -14,23 +14,31 @@
 #include "CMonoFunctions.h"
 
 // Audio funcs
-bool CMonoFunctions::Audio::PlayFrontEnd( DWORD pUserData, unsigned char ucSound )
+bool CMonoFunctions::Audio::PlayFrontEnd( TElement pThis, unsigned char ucSound )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::PlaySoundFrontEnd( RESOURCE->GetLua(), (void*)pUserData, ucSound );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+
+		return CLuaFunctionDefinitions::PlaySoundFrontEnd( pResource->GetLua(), pElement->ToLuaUserData(), ucSound );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Audio::PlayMission( DWORD pUserData, MonoObject* pPosition, unsigned short usSlot )
+bool CMonoFunctions::Audio::PlayMission( TElement pThis, MonoObject* pPosition, unsigned short usSlot )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		Vector3 vecPosition( pPosition );
 
-		return CLuaFunctionDefinitions::PlayMissionAudio( RESOURCE->GetLua(), (void*)pUserData, vecPosition, usSlot );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+
+		return CLuaFunctionDefinitions::PlayMissionAudio( pResource->GetLua(), pElement->ToLuaUserData(), vecPosition, usSlot );
 	}
 
 	return false;

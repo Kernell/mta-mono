@@ -15,9 +15,12 @@
 
 void CMonoFunctions::AddInternals( void )
 {
-	mono_add_internal_call( "MultiTheftAuto.Debug::Log",						(const void*)CMonoFunctions::Debug::Log );
-	mono_add_internal_call( "MultiTheftAuto.Debug::Info",						(const void*)CMonoFunctions::Debug::Info );
-	mono_add_internal_call( "MultiTheftAuto.Debug::Error",						(const void*)CMonoFunctions::Debug::Error );
+	MONO_DECLARE( Debug, Log );
+	MONO_DECLARE( Debug, Info );
+	MONO_DECLARE( Debug, Error );
+
+	MONO_DECLARE( Console, Write );
+	MONO_DECLARE( Console, WriteLine );
 
 	MONO_DECLARE( Config, Get );
 	MONO_DECLARE( Config, Set );
@@ -52,7 +55,7 @@ void CMonoFunctions::AddInternals( void )
 	MONO_DECLARE( Event, TriggerClient );
 
 	// Element create/destroy
-	MONO_DECLARE( Element, Create );
+	MONO_DECLARE_CTOR( Element );
 	MONO_DECLARE( Element, Destroy );
 	MONO_DECLARE( Element, Clone );
 
@@ -61,7 +64,8 @@ void CMonoFunctions::AddInternals( void )
 
 	MONO_DECLARE( Element, GetByType );
 	MONO_DECLARE( Element, IsElement );
-	MONO_DECLARE( Element, GetType );
+	MONO_DECLARE( Element, GetUserData );
+	MONO_DECLARE( Element, GetElementType );
 	MONO_DECLARE( Element, GetByID );
 	MONO_DECLARE( Element, GetByIndex );
 	MONO_DECLARE( Element, GetChild );
@@ -201,7 +205,7 @@ void CMonoFunctions::AddInternals( void )
 	MONO_DECLARE( Player, FadeCamera );
 
 	// Ped get functions
-	MONO_DECLARE( Ped, Create );
+	MONO_DECLARE_CTOR( Ped );
 	MONO_DECLARE( Ped, GetArmor );    
 	MONO_DECLARE( Ped, IsChoking );
 	MONO_DECLARE( Ped, IsDead );
@@ -265,10 +269,10 @@ void CMonoFunctions::AddInternals( void )
 	MONO_DECLARE( Ped, SetWeaponAmmo );
 
 	// Vehicle create/destroy functions
-	MONO_DECLARE( Vehicle, Create );
+	MONO_DECLARE_CTOR( Vehicle );
 
 	// Vehicle get functions
-	MONO_DECLARE( Vehicle, GetType );
+	MONO_DECLARE( Vehicle, GetVehicleType );
 	MONO_DECLARE( Vehicle, GetVariant );
 	MONO_DECLARE( Vehicle, GetColor );
 	MONO_DECLARE( Vehicle, GetModelFromName );
@@ -360,11 +364,11 @@ void CMonoFunctions::AddInternals( void )
 	MONO_DECLARE( Vehicle, SetPlateText );
 	
 	// Marker create/destroy functions
-	MONO_DECLARE( Marker, Create );
+	MONO_DECLARE_CTOR( Marker );
 
 	// Marker get functions
 	MONO_DECLARE( Marker, GetCount );
-	MONO_DECLARE( Marker, GetType );
+	MONO_DECLARE( Marker, GetMarkerType );
 	MONO_DECLARE( Marker, GetSize );
 	MONO_DECLARE( Marker, GetColor );
 	MONO_DECLARE( Marker, GetTarget );
@@ -378,8 +382,7 @@ void CMonoFunctions::AddInternals( void )
 	MONO_DECLARE( Marker, SetIcon );
 
 	// Blip create/destroy functions
-	MONO_DECLARE( Blip, Create );
-	MONO_DECLARE( Blip, CreateAttachedTo );
+	MONO_DECLARE_CTOR( Blip );
 	
 	// Blip get functions
 	MONO_DECLARE( Blip, GetIcon );
@@ -396,7 +399,7 @@ void CMonoFunctions::AddInternals( void )
 	MONO_DECLARE( Blip, SetVisibleDistance );
 
 	// Object create/destroy functions
-	MONO_DECLARE( Object, Create );
+	MONO_DECLARE_CTOR( Object );
 
 	// Object get functions
 	MONO_DECLARE( Object, GetScale );
@@ -407,7 +410,7 @@ void CMonoFunctions::AddInternals( void )
 	MONO_DECLARE( Object, Stop );
 
 	// Radar area create/destroy funcs
-	MONO_DECLARE( RadarArea, Create );
+	MONO_DECLARE_CTOR( RadarArea );
 
 	// Radar area get funcs
 	MONO_DECLARE( RadarArea, GetSize );
@@ -421,10 +424,10 @@ void CMonoFunctions::AddInternals( void )
 	MONO_DECLARE( RadarArea, SetFlashing );
 
 	// Pickup create/destroy funcs
-	MONO_DECLARE( Pickup, Create );
+	MONO_DECLARE_CTOR( Pickup );
 
 	// Pickup get funcs
-	MONO_DECLARE( Pickup, GetType );
+	MONO_DECLARE( Pickup, GetPickupType );
 	MONO_DECLARE( Pickup, GetWeapon );
 	MONO_DECLARE( Pickup, GetAmount );
 	MONO_DECLARE( Pickup, GetAmmo );
@@ -437,12 +440,12 @@ void CMonoFunctions::AddInternals( void )
 	MONO_DECLARE( Pickup, Use );
 
 	// Shape create funcs
-	MONO_DECLARE( Shape, CreateCircle );
-	MONO_DECLARE( Shape, CreateCuboid );
-	MONO_DECLARE( Shape, CreateSphere );
-	MONO_DECLARE( Shape, CreateRectangle );
-	MONO_DECLARE( Shape, CreatePolygon );
-	MONO_DECLARE( Shape, CreateTube );
+	MONO_DECLARE_CTOR( ColCircle );
+	MONO_DECLARE_CTOR( ColCuboid );
+	MONO_DECLARE_CTOR( ColSphere );
+	MONO_DECLARE_CTOR( ColRectangle );
+	MONO_DECLARE_CTOR( ColPolygon );
+	MONO_DECLARE_CTOR( ColTube );
 
 	// Explosion funcs
 	MONO_DECLARE( Explosion, Create );
@@ -452,7 +455,7 @@ void CMonoFunctions::AddInternals( void )
 	MONO_DECLARE( Audio, PlayMission );
 
 	// Team get funcs
-	MONO_DECLARE( Team, Create );
+	MONO_DECLARE_CTOR( Team );
 	MONO_DECLARE( Team, GetFromName );
 	MONO_DECLARE( Team, GetName );
 	MONO_DECLARE( Team, GetColor );
@@ -465,7 +468,7 @@ void CMonoFunctions::AddInternals( void )
 	MONO_DECLARE( Team, SetFriendlyFire );
 
 	// Water funcs
-	MONO_DECLARE( Water, Create );
+	MONO_DECLARE_CTOR( Water );
 	MONO_DECLARE( Water, SetLevel );
 	MONO_DECLARE( Water, SetLevelAll );
 	MONO_DECLARE( Water, SetLevelWorld );
@@ -586,7 +589,7 @@ void CMonoFunctions::AddInternals( void )
 	MONO_DECLARE( Ban, SetAdmin );
 
 	// Resource funcs
-	MONO_DECLARE( Resource, Create );
+	MONO_DECLARE_CTOR( Resource );
 	MONO_DECLARE( Resource, Copy );
 	MONO_DECLARE( Resource, GetRootElement );
 	MONO_DECLARE( Resource, GetMapRootElement );
@@ -622,52 +625,91 @@ void CMonoFunctions::AddInternals( void )
 	MONO_DECLARE( Resource, UpdateACLRequest );
 }
 
-void CMonoFunctions::Debug::Log( MonoString *string )
+void CMonoFunctions::Debug::Log( MonoString* pString )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		g_pModuleManager->Printf( "%s\n", mono_string_to_utf8( string ) );
+		string str = mono_string_to_utf8( pString );
+
+		str += "\n";
+
+		pResource->Printf( str.c_str() );
 	}
 }
 
-void CMonoFunctions::Debug::Info( MonoString *string )
+void CMonoFunctions::Debug::Info( MonoString* pString )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		g_pModuleManager->DebugPrintf( RESOURCE->GetLua(), "%s", mono_string_to_utf8( string ) );
+		string str = mono_string_to_utf8( pString );
+
+		pResource->DebugPrintf( str.c_str() );
 	}
 }
 
-void CMonoFunctions::Debug::Error( MonoString *string )
+void CMonoFunctions::Debug::Error( MonoString* pString )
 {
-	if( RESOURCE )
-	{
-		
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
 
-		g_pModuleManager->ErrorPrintf( "%s\n", mono_string_to_utf8( string ) );
+	if( pResource )
+	{
+		string str = mono_string_to_utf8( pString );
+
+		str += "\n";
+
+		pResource->ErrorPrintf( str.c_str() );
 	}
 }
 
-MonoString *CMonoFunctions::Config::Get( MonoString *msKey )
+void CMonoFunctions::Console::Write( MonoString* pString )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		string sValue = CLuaFunctionDefinitions::Get( RESOURCE->GetLua(), mono_string_to_utf8( msKey ) );
+		printf( mono_string_to_utf8( pString ) );
+	}
+}
+
+void CMonoFunctions::Console::WriteLine( MonoString* pString )
+{
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
+	{
+		printf( mono_string_to_utf8( pString ) );
+		printf( "\n" );
+	}
+}
+
+MonoString* CMonoFunctions::Config::Get( MonoString *msKey )
+{
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
+	{
+		string sValue = CLuaFunctionDefinitions::Get( pResource->GetLua(), mono_string_to_utf8( msKey ) );
 
 		return mono_string_new( mono_domain_get(), sValue.c_str() );
 	}
 
-	return mono_string_new( mono_domain_get(), "" );
+	return nullptr;
 }
 
 bool CMonoFunctions::Config::Set( MonoString *msKey, MonoString *msValue )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szKey	= mono_string_to_utf8( msKey );
 		const char* szValue	= mono_string_to_utf8( msValue );
 
-		return CLuaFunctionDefinitions::Set( RESOURCE->GetLua(), szKey, szValue );
+		return CLuaFunctionDefinitions::Set( pResource->GetLua(), szKey, szValue );
 	}
 
 	return false;
@@ -675,9 +717,11 @@ bool CMonoFunctions::Config::Set( MonoString *msKey, MonoString *msValue )
 
 unsigned int CMonoFunctions::Server::GetMaxPlayers( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::GetMaxPlayers( RESOURCE->GetLua() );
+		return CLuaFunctionDefinitions::GetMaxPlayers( pResource->GetLua() );
 	}
 	
 	return 0;
@@ -685,37 +729,61 @@ unsigned int CMonoFunctions::Server::GetMaxPlayers( void )
 
 bool CMonoFunctions::Server::SetMaxPlayers( unsigned int uiMax )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetMaxPlayers( RESOURCE->GetLua(), uiMax );
+		return CLuaFunctionDefinitions::SetMaxPlayers( pResource->GetLua(), uiMax );
 	}
 	
 	return 0;
 }
 
-bool CMonoFunctions::Server::OutputChatBox( MonoString* msText, DWORD pElement, MonoObject* mpColor, bool bColorCoded )
+bool CMonoFunctions::Server::OutputChatBox( MonoString* msText, MonoObject* pElementObj, MonoObject* mpColor, bool bColorCoded )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szText		= mono_string_to_utf8( msText );
+
+		CElement* pElement		= pResource->GetElementManager()->GetFromList( pElementObj );
+
+		if( !pElement )
+		{
+			pResource->ErrorPrintf( "Invalid argument #2 in method 'Server::OutputChatBox'\n" );
+
+			return false;
+		}
 
 		unsigned char ucRed		= CMonoObject::GetPropertyValue< unsigned char >( mpColor, "R" );
 		unsigned char ucGreen	= CMonoObject::GetPropertyValue< unsigned char >( mpColor, "G" );
 		unsigned char ucBlue	= CMonoObject::GetPropertyValue< unsigned char >( mpColor, "B" );
 
-		return CLuaFunctionDefinitions::OutputChatBox( RESOURCE->GetLua(), szText, (void*)pElement, ucRed, ucGreen, ucBlue, bColorCoded );
+		return CLuaFunctionDefinitions::OutputChatBox( pResource->GetLua(), szText, pElement->ToLuaUserData(), ucRed, ucGreen, ucBlue, bColorCoded );
 	}
 	
 	return false;
 }
 
-bool CMonoFunctions::Server::OutputConsole( MonoString* msText, DWORD pElement )
+bool CMonoFunctions::Server::OutputConsole( MonoString* msText, MonoObject* pElementObj )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szText		= mono_string_to_utf8( msText );
 
-		return CLuaFunctionDefinitions::OutputConsole( RESOURCE->GetLua(), szText, (void*)pElement );
+		CElement* pElement		= pResource->GetElementManager()->GetFromList( pElementObj );
+
+		if( !pElement )
+		{
+			pResource->ErrorPrintf( "Invalid argument #2 in method 'Server::OutputChatBox'\n" );
+
+			return false;
+		}
+
+		return CLuaFunctionDefinitions::OutputConsole( pResource->GetLua(), szText, pElement->ToLuaUserData() );
 	}
 	
 	return false;
@@ -723,11 +791,13 @@ bool CMonoFunctions::Server::OutputConsole( MonoString* msText, DWORD pElement )
 
 bool CMonoFunctions::Server::SetPassword( MonoString* msPassword, bool bSave )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szPassword		= mono_string_to_utf8( msPassword );
 
-		return CLuaFunctionDefinitions::SetServerPassword( RESOURCE->GetLua(), szPassword, bSave );
+		return CLuaFunctionDefinitions::SetServerPassword( pResource->GetLua(), szPassword, bSave );
 	}
 	
 	return false;
@@ -735,11 +805,13 @@ bool CMonoFunctions::Server::SetPassword( MonoString* msPassword, bool bSave )
 
 bool CMonoFunctions::Server::AddCommandHandler( MonoString* msCommand, MonoObject* pDelegate, bool bRestricted, bool bCaseSensitive )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		if( !pDelegate )
 		{
-			g_pModuleManager->ErrorPrintf( "Invalid argument #1 in method 'Server::AddCommandHandler'\n" );
+			pResource->ErrorPrintf( "Invalid argument #1 in method 'Server::AddCommandHandler'\n" );
 
 			return false;
 		}
@@ -748,14 +820,14 @@ bool CMonoFunctions::Server::AddCommandHandler( MonoString* msCommand, MonoObjec
 
 		if( strCommandName.length() == 0 )
 		{
-			g_pModuleManager->ErrorPrintf( "Invalid argument #2 in method 'Server::AddCommandHandler'\n" );
+			pResource->ErrorPrintf( "Invalid argument #2 in method 'Server::AddCommandHandler'\n" );
 
 			return false;
 		}
 		
-		if( RESOURCE->GetCommandManager()->Add( strCommandName, pDelegate, bRestricted, bCaseSensitive ) )
+		if( pResource->GetCommandManager()->Add( strCommandName, pDelegate, bRestricted, bCaseSensitive ) )
 		{
-			CLuaFunctionDefinitions::AddCommandHandler( RESOURCE->GetLua(), strCommandName.c_str(), CFunctions::monoCommandHandler, bRestricted, bCaseSensitive );
+			CLuaFunctionDefinitions::AddCommandHandler( pResource->GetLua(), strCommandName.c_str(), CFunctions::monoCommandHandler, bRestricted, bCaseSensitive );
 			
 			return true;
 		}
@@ -764,29 +836,40 @@ bool CMonoFunctions::Server::AddCommandHandler( MonoString* msCommand, MonoObjec
 	return false;
 }
 
-bool CMonoFunctions::Server::ExecuteCommandHandler( MonoString* msCommand, DWORD pUserData, MonoString* msArgs )
+bool CMonoFunctions::Server::ExecuteCommandHandler( MonoString* msCommand, MonoObject* pPlayerObj, MonoString* msArgs )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		string strCommandName = mono_string_to_utf8( msCommand );
 
 		if( strCommandName.length() == 0 )
 		{
-			g_pModuleManager->ErrorPrintf( "Invalid argument #1 in method 'Server::ExecuteCommandHandler'\n" );
+			pResource->ErrorPrintf( "Invalid argument #1 in method 'Server::ExecuteCommandHandler'\n" );
 
 			return false;
 		}
 
-		if( !pUserData )
+		if( !pPlayerObj )
 		{
-			g_pModuleManager->ErrorPrintf( "Invalid argument #2 in method 'Server::ExecuteCommandHandler'\n" );
+			pResource->ErrorPrintf( "Invalid argument #2 in method 'Server::ExecuteCommandHandler'\n" );
+
+			return false;
+		}
+
+		CElement* pPlayer = pResource->GetElementManager()->GetFromList( pPlayerObj );
+
+		if( !pPlayer )
+		{
+			pResource->ErrorPrintf( "Invalid argument #2 in method 'Server::ExecuteCommandHandler'\n" );
 
 			return false;
 		}
 
 		string strArguments = mono_string_to_utf8( msArgs );
 
-		return CLuaFunctionDefinitions::ExecuteCommandHandler( RESOURCE->GetLua(), strCommandName.c_str(), (void*)pUserData, strArguments.c_str() );
+		return CLuaFunctionDefinitions::ExecuteCommandHandler( pResource->GetLua(), strCommandName.c_str(), pPlayer->ToLuaUserData(), strArguments.c_str() );
 	}
 
 	return false;
@@ -794,18 +877,20 @@ bool CMonoFunctions::Server::ExecuteCommandHandler( MonoString* msCommand, DWORD
 
 bool CMonoFunctions::Server::RemoveCommandHandler( MonoString* msCommand, MonoObject* pDelegate )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		string strCommandName = mono_string_to_utf8( msCommand );
 
 		if( strCommandName.length() == 0 )
 		{
-			g_pModuleManager->ErrorPrintf( "Invalid argument #1 in method 'Server::RemoveCommandHandler'\n" );
+			pResource->ErrorPrintf( "Invalid argument #1 in method 'Server::RemoveCommandHandler'\n" );
 
 			return false;
 		}
 
-		return RESOURCE->GetCommandManager()->Remove( strCommandName.c_str(), pDelegate );
+		return pResource->GetCommandManager()->Remove( strCommandName.c_str(), pDelegate );
 	}
 
 	return false;
@@ -813,9 +898,11 @@ bool CMonoFunctions::Server::RemoveCommandHandler( MonoString* msCommand, MonoOb
 
 MonoObject* CMonoFunctions::Server::GetVersion( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		CLuaArgumentsMap pLuaTable = CLuaFunctionDefinitions::GetVersion( RESOURCE->GetLua() );
+		CLuaArgumentsMap pLuaTable = CLuaFunctionDefinitions::GetVersion( pResource->GetLua() );
 
 		if( pLuaTable.size() >= 8 )
 		{
@@ -828,18 +915,18 @@ MonoObject* CMonoFunctions::Server::GetVersion( void )
 			const char*		szBuildTag	= pLuaTable[ "tag" ].GetString();
 			const char*		szSortable	= pLuaTable[ "sortable" ].GetString();
 
-			CMonoCorlib* pLib = RESOURCE->GetDomain()->GetCorlib();
+			CMonoCorlib* pLib = pResource->GetDomain()->GetCorlib();
 
 			PVOID* args = new PVOID[ pLuaTable.size() ];
 
 			MonoObject* pNumber			= pLib->Class[ "uint64" ]->Box( &ulNumber );
-			MonoString* pString			= RESOURCE->GetDomain()->NewString( szString );
-			MonoString* pName			= RESOURCE->GetDomain()->NewString( szName );
-			MonoString* pBuildType		= RESOURCE->GetDomain()->NewString( szBuildType );
+			MonoString* pString			= pResource->GetDomain()->NewString( szString );
+			MonoString* pName			= pResource->GetDomain()->NewString( szName );
+			MonoString* pBuildType		= pResource->GetDomain()->NewString( szBuildType );
 			MonoObject* pNetcode		= pLib->Class[ "uint64" ]->Box( &ulNetcode );
-			MonoString* pOS				= RESOURCE->GetDomain()->NewString( szOS );
-			MonoString* pBuildTag		= RESOURCE->GetDomain()->NewString( szBuildTag );
-			MonoString* pSortable		= RESOURCE->GetDomain()->NewString( szSortable );
+			MonoString* pOS				= pResource->GetDomain()->NewString( szOS );
+			MonoString* pBuildTag		= pResource->GetDomain()->NewString( szBuildTag );
+			MonoString* pSortable		= pResource->GetDomain()->NewString( szSortable );
 
 			args[ 0 ] = pNumber;
 			args[ 1 ] = pString;
@@ -850,7 +937,7 @@ MonoObject* CMonoFunctions::Server::GetVersion( void )
 			args[ 6 ] = pBuildTag;
 			args[ 7 ] = pSortable;
 
-			MonoObject* pObject = RESOURCE->GetDomain()->GetMTALib()->GetClass( "ServerVersion" )->New( args, pLuaTable.size() );
+			MonoObject* pObject = pResource->GetDomain()->GetMTALib()->GetClass( "ServerVersion" )->New( args, pLuaTable.size() );
 
 			delete [] args;
 
@@ -863,31 +950,37 @@ MonoObject* CMonoFunctions::Server::GetVersion( void )
 
 MonoString* CMonoFunctions::Game::GetType( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return RESOURCE->GetDomain()->NewString( CLuaFunctionDefinitions::GetGameType( RESOURCE->GetLua() ) );
+		return pResource->GetDomain()->NewString( CLuaFunctionDefinitions::GetGameType( pResource->GetLua() ) );
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 MonoString* CMonoFunctions::Game::GetMapName( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return RESOURCE->GetDomain()->NewString( CLuaFunctionDefinitions::GetMapName( RESOURCE->GetLua() ) );
+		return pResource->GetDomain()->NewString( CLuaFunctionDefinitions::GetMapName( pResource->GetLua() ) );
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 bool CMonoFunctions::Game::SetType( MonoString* msGameType )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szGameType = mono_string_to_utf8( msGameType );
 
-		return CLuaFunctionDefinitions::SetGameType( RESOURCE->GetLua(), szGameType );
+		return CLuaFunctionDefinitions::SetGameType( pResource->GetLua(), szGameType );
 	}
 
 	return false;
@@ -895,11 +988,13 @@ bool CMonoFunctions::Game::SetType( MonoString* msGameType )
 
 bool CMonoFunctions::Game::SetMapName( MonoString* msMapName )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szMapName = mono_string_to_utf8( msMapName );
 
-		return CLuaFunctionDefinitions::SetMapName( RESOURCE->GetLua(), szMapName );
+		return CLuaFunctionDefinitions::SetMapName( pResource->GetLua(), szMapName );
 	}
 
 	return false;
@@ -907,11 +1002,13 @@ bool CMonoFunctions::Game::SetMapName( MonoString* msMapName )
 
 MonoString* CMonoFunctions::Game::GetRuleValue( MonoString* msKey )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szKey	= mono_string_to_utf8( msKey );
 
-		return RESOURCE->GetDomain()->NewString( CLuaFunctionDefinitions::GetRuleValue( RESOURCE->GetLua(), szKey ) );
+		return pResource->GetDomain()->NewString( CLuaFunctionDefinitions::GetRuleValue( pResource->GetLua(), szKey ) );
 	}
 
 	return nullptr;
@@ -919,12 +1016,14 @@ MonoString* CMonoFunctions::Game::GetRuleValue( MonoString* msKey )
 
 bool CMonoFunctions::Game::SetRuleValue( MonoString* msKey, MonoString* msValue )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szKey	= mono_string_to_utf8( msKey );
 		const char* szValue	= mono_string_to_utf8( msValue );
 
-		return CLuaFunctionDefinitions::SetRuleValue( RESOURCE->GetLua(), szKey, szValue );
+		return CLuaFunctionDefinitions::SetRuleValue( pResource->GetLua(), szKey, szValue );
 	}
 
 	return false;
@@ -932,11 +1031,13 @@ bool CMonoFunctions::Game::SetRuleValue( MonoString* msKey, MonoString* msValue 
 
 bool CMonoFunctions::Game::RemoveRuleValue( MonoString* msKey )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szKey = mono_string_to_utf8( msKey );
 
-		return CLuaFunctionDefinitions::RemoveRuleValue( RESOURCE->GetLua(), szKey );
+		return CLuaFunctionDefinitions::RemoveRuleValue( pResource->GetLua(), szKey );
 	}
 
 	return false;

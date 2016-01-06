@@ -14,12 +14,16 @@
 #include "CMonoFunctions.h"
 
 // Explosion funcs
-bool CMonoFunctions::Explosion::Create( MonoObject* pPosition, unsigned char ucType, DWORD pCreator )
+bool CMonoFunctions::Explosion::Create( MonoObject* pPosition, unsigned char ucType, TElement pCreator )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return (DWORD)CLuaFunctionDefinitions::CreateExplosion( RESOURCE->GetLua(), Vector3( pPosition ), ucType, (void*)pCreator );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pCreator );
+
+		return CLuaFunctionDefinitions::CreateExplosion( pResource->GetLua(), Vector3( pPosition ), ucType, pElement->ToLuaUserData() );
 	}
 
-	return NULL;
+	return false;
 }

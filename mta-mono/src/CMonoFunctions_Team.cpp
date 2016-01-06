@@ -14,68 +14,91 @@
 #include "CMonoFunctions.h"
 
 // Team get funcs
-DWORD CMonoFunctions::Team::Create( MonoString* msTeamName, MonoObject* mColor )
+void CMonoFunctions::Team::Ctor( TElement pThis, MonoString* msTeamName, MonoObject* mColor )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char*	szTeamName	= mono_string_to_utf8( msTeamName );
 		SColor pColor			= CMonoObject::GetColor( mColor );
 
-		return (DWORD)CLuaFunctionDefinitions::CreateTeam( RESOURCE->GetLua(), szTeamName, pColor.R, pColor.G, pColor.B );
-	}
+		PVOID pUserData = CLuaFunctionDefinitions::CreateTeam( pResource->GetLua(), szTeamName, pColor.R, pColor.G, pColor.B );
 
-	return NULL;
+		ASSERT( pUserData );
+
+		pResource->GetElementManager()->Create( pThis, pUserData );
+	}
 }
 
-DWORD CMonoFunctions::Team::GetFromName( MonoString* msTeamName )
+TElement CMonoFunctions::Team::GetFromName( MonoString* msTeamName )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char*	szTeamName	= mono_string_to_utf8( msTeamName );
 
-		return (DWORD)CLuaFunctionDefinitions::GetTeamFromName( RESOURCE->GetLua(), szTeamName );
+		PVOID pUserData = CLuaFunctionDefinitions::GetTeamFromName( pResource->GetLua(), szTeamName );
+
+		if( pUserData )
+		{
+			return pResource->GetElementManager()->FindOrCreate( pUserData )->ToMonoObject();
+		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-MonoString* CMonoFunctions::Team::GetName( DWORD pUserData )
+MonoString* CMonoFunctions::Team::GetName( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		string strOutName;
-
-		if( CLuaFunctionDefinitions::GetTeamName( RESOURCE->GetLua(), (void*)pUserData, strOutName ) )
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetTeamName( pResource->GetLua(), pElement->ToLuaUserData(), strOutName ) )
 		{
-			return RESOURCE->GetDomain()->NewString( strOutName );
+			return pResource->GetDomain()->NewString( strOutName );
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-MonoObject* CMonoFunctions::Team::GetColor( DWORD pUserData )
+MonoObject* CMonoFunctions::Team::GetColor( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		SColor pColor;
-
-		if( CLuaFunctionDefinitions::GetTeamColor( RESOURCE->GetLua(), (void*)pUserData, pColor.R, pColor.G, pColor.B ) )
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetTeamColor( pResource->GetLua(), pElement->ToLuaUserData(), pColor.R, pColor.G, pColor.B ) )
 		{
-			return RESOURCE->GetDomain()->GetMTALib()->Color->New( pColor );
+			return pResource->GetDomain()->GetMTALib()->Color->New( pColor );
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-unsigned int CMonoFunctions::Team::CountPlayers( DWORD pUserData )
+unsigned int CMonoFunctions::Team::CountPlayers( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned int uiCount;
 		
-		if( CLuaFunctionDefinitions::CountPlayersInTeam( RESOURCE->GetLua(), (void*)pUserData, uiCount ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::CountPlayersInTeam( pResource->GetLua(), pElement->ToLuaUserData(), uiCount ) )
 		{
 			return uiCount;
 		}
@@ -84,13 +107,17 @@ unsigned int CMonoFunctions::Team::CountPlayers( DWORD pUserData )
 	return 0;
 }
 
-bool CMonoFunctions::Team::GetFriendlyFire( DWORD pUserData )
+bool CMonoFunctions::Team::GetFriendlyFire( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		bool bFriendlyFire;
 		
-		if( CLuaFunctionDefinitions::GetTeamFriendlyFire( RESOURCE->GetLua(), (void*)pUserData, bFriendlyFire ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetTeamFriendlyFire( pResource->GetLua(), pElement->ToLuaUserData(), bFriendlyFire ) )
 		{
 			return bFriendlyFire;
 		}
@@ -101,35 +128,47 @@ bool CMonoFunctions::Team::GetFriendlyFire( DWORD pUserData )
 
 
 // Team set funcs
-bool CMonoFunctions::Team::SetName( DWORD pUserData, MonoString* msTeamName )
+bool CMonoFunctions::Team::SetName( TElement pThis, MonoString* msTeamName )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szTeamName = mono_string_to_utf8( msTeamName );
-
-		return CLuaFunctionDefinitions::SetTeamName( RESOURCE->GetLua(), (void*)pUserData, szTeamName );
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetTeamName( pResource->GetLua(), pElement->ToLuaUserData(), szTeamName );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Team::SetColor( DWORD pUserData, MonoObject* mColor )
+bool CMonoFunctions::Team::SetColor( TElement pThis, MonoObject* mColor )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		SColor pColor = CMonoObject::GetColor( mColor );
-
-		return CLuaFunctionDefinitions::SetTeamColor( RESOURCE->GetLua(), (void*)pUserData, pColor.R, pColor.G, pColor.B );
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetTeamColor( pResource->GetLua(), pElement->ToLuaUserData(), pColor.R, pColor.G, pColor.B );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Team::SetFriendlyFire( DWORD pUserData, bool bFriendlyFire )
+bool CMonoFunctions::Team::SetFriendlyFire( TElement pThis, bool bFriendlyFire )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetTeamFriendlyFire( RESOURCE->GetLua(), (void*)pUserData, bFriendlyFire );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetTeamFriendlyFire( pResource->GetLua(), pElement->ToLuaUserData(), bFriendlyFire );
 	}
 
 	return false;

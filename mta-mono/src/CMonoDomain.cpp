@@ -18,6 +18,7 @@ CMonoDomain::CMonoDomain( CMonoInterface* pMono, MonoDomain* pDomain, CResource*
 	this->m_pMono		= pMono;
 	this->m_pDomain		= pDomain;
 	this->m_pResource	= pResource;
+	this->m_pModule		= pResource->GetModule();
 
 	this->m_strName		= szName;
 
@@ -57,13 +58,14 @@ CMonoDomain::~CMonoDomain( void )
 	this->m_pMonoAssembly	= nullptr;
 	this->m_pMonoImage		= nullptr;
 	this->m_pMonoClass		= nullptr;
+	this->m_pModule			= nullptr;
 }
 
 void CMonoDomain::HandleException( MonoObject* pException )
 {
 	if( pException )
 	{
-		g_pModuleManager->ErrorPrintf( "%s\n", mono_string_to_utf8( mono_object_to_string( pException, nullptr ) ) );
+		this->m_pResource->ErrorPrintf( "%s\n", mono_string_to_utf8( mono_object_to_string( pException, nullptr ) ) );
 	}
 }
 
@@ -76,7 +78,7 @@ CMonoClass* CMonoDomain::FindOrAdd( MonoClass* klass )
 
 	if( this->m_pDomain )
 	{
-		for( auto iter : this->m_ClassPool )
+		for( const auto& iter : this->m_ClassPool )
 		{
 			if( iter->GetMonoPtr() == klass )
 			{
@@ -105,7 +107,7 @@ bool CMonoDomain::Init( void )
 
 	if( !this->m_pMonoAssembly )
 	{
-		g_pModuleManager->ErrorPrintf( "failed to open assembly '%s.dll'\n", this->m_strName.c_str() );
+		this->GetResource()->ErrorPrintf( "failed to open assembly '%s.dll'\n", this->m_strName.c_str() );
 
 		return false;
 	}
@@ -114,7 +116,7 @@ bool CMonoDomain::Init( void )
 
 	if( !this->m_pMonoImage )
 	{
-		g_pModuleManager->ErrorPrintf( "failed to get image '%s.dll'\n", this->m_strName.c_str() );
+		this->GetResource()->ErrorPrintf( "failed to get image '%s.dll'\n", this->m_strName.c_str() );
 
 		return false;
 	}
@@ -123,7 +125,7 @@ bool CMonoDomain::Init( void )
 
 	if( !this->m_pMonoClass )
 	{
-		g_pModuleManager->ErrorPrintf( "class '%s' not found in '%s.dll'\n", sClass.c_str(), this->m_strName.c_str() );
+		this->GetResource()->ErrorPrintf( "class '%s' not found in '%s.dll'\n", sClass.c_str(), this->m_strName.c_str() );
 
 		return false;
 	}
@@ -140,7 +142,7 @@ bool CMonoDomain::Start( void )
 
 	if( !pMethod )
 	{
-		g_pModuleManager->ErrorPrintf( "Assembly '%s.dll' doesn't have an entry point.\n", this->m_strName.c_str() );
+		this->GetResource()->ErrorPrintf( "Assembly '%s.dll' doesn't have an entry point.\n", this->m_strName.c_str() );
 
 		return false;
 	}
@@ -157,7 +159,7 @@ bool CMonoDomain::Start( void )
 
 	MonoObject* pException = nullptr;
 
-	pMethod->Invoke( nullptr, params, pException );
+	pMethod->Invoke( nullptr, params, &pException );
 
 	if( pException )
 	{
@@ -187,17 +189,41 @@ MonoObject* CMonoDomain::CreateObject( MonoClass* klass )
 	return mono_object_new( this->m_pDomain, klass );
 }
 
-void CMonoDomain::SetConfig( const char *szBaseDir, const char *szConfigFileName )
+void CMonoDomain::SetConfig( const char* szBaseDir, const char* szConfigFileName )
 {
 	mono_domain_set_config( this->m_pDomain, szBaseDir, szConfigFileName );
 }
 
-MonoString* CMonoDomain::NewString( const char* szText )
+MonoString* CMonoDomain::NewString( const char* szText ) const
 {
 	return mono_string_new( this->m_pDomain, szText );
 }
 
-MonoString* CMonoDomain::NewString( string strText )
+MonoString* CMonoDomain::NewString( const string& strText ) const
 {
 	return mono_string_new( this->m_pDomain, strText.c_str() );
+}
+
+MonoArray* CMonoDomain::NewElementArray( MonoClass* pMonoClass, CLuaArgumentsVector pLuaArguments )
+{
+	MonoArray* pArray = mono_array_new( this->m_pDomain, pMonoClass, pLuaArguments.size() );
+
+	if( pLuaArguments.size() > 0 )
+	{
+		int i = 0;
+
+		for( const auto& pArgument : pLuaArguments )
+		{
+			PVOID pUserData = pArgument.GetLightUserData();
+
+			if( pUserData )
+			{
+				CElement* pElement = this->m_pResource->GetElementManager()->FindOrCreate( pUserData );
+
+				mono_array_set( pArray, MonoObject*, i++, pElement->ToMonoObject() );
+			}
+		}
+	}
+
+	return pArray;
 }

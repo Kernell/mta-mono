@@ -124,6 +124,16 @@
     <ClCompile Include="src\CRegisteredCommands.cpp">
       <Filter>ResourceInterface</Filter>
     </ClCompile>
+    <ClCompile Include="src\CElement.cpp">
+      <Filter>ResourceInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CElementManager.cpp">
+      <Filter>ResourceInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CModule.cpp" />
+    <ClCompile Include="src\CMonoArguments.cpp">
+      <Filter>MonoInterface</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\include\ILuaModuleManager.h">
@@ -283,6 +293,16 @@
     </ClInclude>
     <ClInclude Include="src\CRegisteredCommands.h">
       <Filter>ResourceInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CElement.h">
+      <Filter>ResourceInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CElementManager.h">
+      <Filter>ResourceInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CModule.h" />
+    <ClInclude Include="src\CMonoArguments.h">
+      <Filter>MonoInterface</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

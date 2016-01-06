@@ -18,11 +18,11 @@ class CFunctions;
 #ifndef __CFUNCTIONS_H
 #define __CFUNCTIONS_H
 
+#include "CModule.h"
 #include "CResource.h"
 #include "CResourceManager.h"
 
-extern CResourceManager	*g_pResourceManager;
-extern ILuaModuleManager10 *g_pModuleManager;
+extern CModule* g_pModule;
 
 class CFunctions
 {

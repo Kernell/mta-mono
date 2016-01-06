@@ -61,9 +61,10 @@ public:
 	CLuaArgumentsVector         GetArray            ( void ) const;
 	CLuaArgumentsMap            GetTable            ( void ) const;
 
-	template <class T> T        GetNumber() const
+	template< class Type >
+	inline Type					GetNumber			( void )
 	{
-		return static_cast< T >( m_Number );
+		return static_cast< Type >( m_Number );
 	}
 
 private:

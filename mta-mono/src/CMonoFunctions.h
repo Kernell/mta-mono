@@ -20,18 +20,21 @@ class CMonoFunctions;
 
 #include "lua/CLuaFunctionDefinitions.h"
 
+#include "CModule.h"
+
 #include "CMonoDomain.h"
 #include "CMonoClass.h"
 #include "CMonoObject.h"
 #include "CMonoCorlib.h"
 #include "CMonoMTALib.h"
 
-extern ILuaModuleManager10	*g_pModuleManager;
-extern CResourceManager	*g_pResourceManager;
+extern CModule* g_pModule;
 
-#define RESOURCE g_pResourceManager->GetFromList( mono_domain_get() )
+#define MONO_DECLARE_CTOR(a)	mono_add_internal_call("MultiTheftAuto."#a"::.ctor",(const void*)CMonoFunctions::a::Ctor)
 
-#define MONO_DECLARE(a,b) mono_add_internal_call("MultiTheftAuto.Native."#a"::"#b,(const void*)CMonoFunctions::a::b)
+#define MONO_DECLARE(a,b)		mono_add_internal_call("MultiTheftAuto."#a"::"#b,(const void*)CMonoFunctions::a::b)
+
+typedef MonoObject* TElement;
 
 class CMonoFunctions
 {
@@ -41,16 +44,23 @@ public:
 	class Debug
 	{
 	public:
-		static void			Log									( MonoString *string );
-		static void			Info								( MonoString *string );
-		static void			Error								( MonoString *string );
+		static void			Log									( MonoString* pString );
+		static void			Info								( MonoString* pString );
+		static void			Error								( MonoString* pString );
+	};
+
+	class Console
+	{
+	public:
+		static void			Write								( MonoString* pString );
+		static void			WriteLine							( MonoString* pString );
 	};
 
 	class Config
 	{
 	public:
-		static MonoString*	Get									( MonoString *msKey );
-		static bool			Set									( MonoString *msKey, MonoString *msValue );
+		static MonoString*	Get									( MonoString* msKey );
+		static bool			Set									( MonoString* msKey, MonoString* msValue );
 	};
 
 	class Server
@@ -58,13 +68,13 @@ public:
 	public:
 		static unsigned int				GetMaxPlayers			( void );
 		static bool						SetMaxPlayers			( unsigned int uiMax );
-		static bool						OutputChatBox			( MonoString* szText, DWORD pElement, MonoObject* pColor, bool bColorCoded );
-		static bool						OutputConsole			( MonoString* szText, DWORD pElement );
+		static bool						OutputChatBox			( MonoString* szText, MonoObject* pThis, MonoObject* pColor, bool bColorCoded );
+		static bool						OutputConsole			( MonoString* szText, MonoObject* pThis );
 		static bool						SetPassword				( MonoString* msPassword, bool bSave );
 		static MonoObject*				GetVersion				( void );
 
 		static bool						AddCommandHandler		( MonoString* msCommand, MonoObject* pDelegate, bool bRestricted = false, bool bCaseSensitive = true );
-		static bool						ExecuteCommandHandler	( MonoString* msCommand, DWORD pUserData, MonoString* msArgs );
+		static bool						ExecuteCommandHandler	( MonoString* msCommand, MonoObject* pPlayerObj, MonoString* msArgs );
 		static bool						RemoveCommandHandler	( MonoString* msCommand, MonoObject* pDelegate = nullptr );
 	};
 
@@ -85,85 +95,86 @@ public:
 	{
 	public:
 		static bool				Add									( MonoString* msName, bool bAllowRemoteTrigger );
-		static bool				AddHandler							( MonoString* msName, DWORD pUserData, MonoObject* pDelegate, bool bPropagated, MonoString* msEventPriority );
-		static bool				RemoveHandler						( MonoString* msName, DWORD pUserData, MonoObject* pDelegate );
-		static bool				Trigger								( MonoString* msName, DWORD pUserData, MonoArray* mpArguments );
+		static bool				AddHandler							( MonoString* msName, MonoObject* pThis, MonoObject* pDelegate, bool bPropagated, MonoString* msEventPriority );
+		static bool				RemoveHandler						( MonoString* msName, MonoObject* pThis, MonoObject* pDelegate );
+		static bool				Trigger								( MonoString* msName, MonoObject* pThis, MonoArray* mpArguments );
 		static bool				Cancel								( bool bCancel, MonoString* msReason );
 		static bool				WasCancelled						( void );
 		static string			GetCancelReason						( void );
 
-		static bool				TriggerClient						( DWORD pSendTo, MonoString* msName, DWORD pSource, MonoArray* mpArguments );
+		static bool				TriggerClient						( MonoObject* pSendTo, MonoString* msName, MonoObject* pSource, MonoArray* mpArguments );
 	};
 
 	class Element
 	{
 	public:
 		// Element create/destroy
-		static DWORD			Create								( MonoString* msTypeName, MonoString* msID );
-		static bool				Destroy								( DWORD pUserData );
-		static DWORD			Clone								( DWORD pUserData, MonoObject* vecPosition, bool bCloneElement );
+		static void				Ctor								( TElement pThis, MonoString* msTypeName, MonoString* msID );
+		static bool				Destroy								( TElement pThis );
+		static TElement			Clone								( TElement pThis, MonoObject* vecPosition, bool bCloneElement );
 
 		// Element get funcs
-		static DWORD			GetRootElement						( void );
-		static MonoArray*		GetByType							( MonoString* msType, DWORD pStartElement );
+		static TElement			GetRootElement						( void );
+		static MonoArray*		GetByType							( MonoString* msType, TElement pStartElement );
 
-		static bool				IsElement							( DWORD pUserData );
-		static MonoString*		GetType								( DWORD pUserData );
-		static DWORD			GetByID								( MonoString* msID, unsigned int uiIndex );
-		static DWORD			GetByIndex							( int iIndex );
-		static DWORD			GetChild							( DWORD pUserData, int iIndex );
-		static int				GetChildrenCount					( DWORD pUserData );
-		static MonoString*		GetID								( DWORD pUserData );
-		static MonoObject*		GetData								( DWORD pUserData, MonoString* sKey, bool bInherit = true );
-		static MonoArray*		GetAllData							( DWORD pUserData );
-		static DWORD			GetParent							( DWORD pUserData );
-		static MonoObject*		GetPosition							( DWORD pUserData );
-		static MonoObject*		GetRotation							( DWORD pUserData );
-		static MonoObject*		GetVelocity							( DWORD pUserData );
-		static unsigned char	GetInterior							( DWORD pUserData );
-		static bool				IsWithinColShape					( DWORD pUserData );
-		static bool				IsWithinMarker						( DWORD pUserData );
-		static unsigned short	GetDimension						( DWORD pUserData );
-		static MonoString*		GetZoneName							( DWORD pUserData, bool bCitiesOnly = false );
-		static bool				IsAttached							( DWORD pUserData );
-		static DWORD			GetAttachedTo						( DWORD pUserData );
-		static DWORD			GetColShape							( DWORD pUserData );
-		static unsigned char	GetAlpha							( DWORD pUserData );
-		static bool				IsDoubleSided						( DWORD pUserData );
-		static float			GetHealth							( DWORD pUserData );
-		static unsigned short	GetModel							( DWORD pUserData );
-		static bool				IsInWater							( DWORD pUserData );
-		static MonoObject*		GetAttachedOffsetPosition			( DWORD pUserData );
-		static MonoObject*		GetAttachedOffsetRotation			( DWORD pUserData );
-		static DWORD			GetSyncer							( DWORD pUserData );
-		static bool				GetCollisionsEnabled				( DWORD pUserData );
-		static bool				IsFrozen							( DWORD pUserData );
-		static DWORD			GetLowLod							( DWORD pUserData );
-		static bool				IsLowLod							( DWORD pUserData );
+		static bool				IsElement							( TElement pThis );
+		static uint32_t			GetUserData							( TElement pThis );
+		static MonoString*		GetElementType						( TElement pThis );
+		static TElement			GetByID								( MonoString* msID, unsigned int uiIndex );
+		static TElement			GetByIndex							( int iIndex );
+		static TElement			GetChild							( TElement pThis, int iIndex );
+		static int				GetChildrenCount					( TElement pThis );
+		static MonoString*		GetID								( TElement pThis );
+		static MonoObject*		GetData								( TElement pThis, MonoString* sKey, bool bInherit = true );
+		static MonoArray*		GetAllData							( TElement pThis );
+		static TElement			GetParent							( TElement pThis );
+		static MonoObject*		GetPosition							( TElement pThis );
+		static MonoObject*		GetRotation							( TElement pThis );
+		static MonoObject*		GetVelocity							( TElement pThis );
+		static unsigned char	GetInterior							( TElement pThis );
+		static bool				IsWithinColShape					( TElement pThis );
+		static bool				IsWithinMarker						( TElement pThis );
+		static unsigned short	GetDimension						( TElement pThis );
+		static MonoString*		GetZoneName							( TElement pThis, bool bCitiesOnly = false );
+		static bool				IsAttached							( TElement pThis );
+		static TElement			GetAttachedTo						( TElement pThis );
+		static TElement			GetColShape							( TElement pThis );
+		static unsigned char	GetAlpha							( TElement pThis );
+		static bool				IsDoubleSided						( TElement pThis );
+		static float			GetHealth							( TElement pThis );
+		static unsigned short	GetModel							( TElement pThis );
+		static bool				IsInWater							( TElement pThis );
+		static MonoObject*		GetAttachedOffsetPosition			( TElement pThis );
+		static MonoObject*		GetAttachedOffsetRotation			( TElement pThis );
+		static TElement			GetSyncer							( TElement pThis );
+		static bool				GetCollisionsEnabled				( TElement pThis );
+		static bool				IsFrozen							( TElement pThis );
+		static TElement			GetLowLod							( TElement pThis );
+		static bool				IsLowLod							( TElement pThis );
 
 		// Element set funcs
-		static bool				ClearVisibleTo						( DWORD pUserData );
-		static bool				SetID								( DWORD pUserData, MonoString* msID );
-		static bool				SetData								( DWORD pUserData, MonoString* msKey, CLuaArgument& Variable );
-		static bool				RemoveData							( DWORD pUserData, MonoString* msKey );
-		static bool				SetParent							( DWORD pUserData, DWORD pTarget );
-		static bool				SetPosition							( DWORD pUserData, MonoObject* pPosition, bool bWarp );
-		static bool				SetRotation							( DWORD pUserData, MonoObject* pRotation, MonoString* msRotationOrder, bool bNewWay );
-		static bool				SetVelocity							( DWORD pUserData, MonoObject* pVelocity );
-		static bool				SetVisibleTo						( DWORD pUserData, DWORD pTarget, bool bVisible );
-		static bool				SetInterior							( DWORD pUserData, int iInterior );
-		static bool				SetDimension						( DWORD pUserData, int iDimension );
-		static bool				Attach								( DWORD pUserData, DWORD pTarget, MonoObject* pPosition, MonoObject* pRotation );
-		static bool				Detach								( DWORD pUserData, DWORD pTarget );
-		static bool				SetAlpha							( DWORD pUserData, int iAlpha );
-		static bool				SetDoubleSided						( DWORD pUserData, bool bDoubleSided );
-		static bool				SetHealth							( DWORD pUserData, float fHealth );
-		static bool				SetModel							( DWORD pUserData, int iModel );
-		static bool				SetAttachedOffsets					( DWORD pUserData, MonoObject* pPosition, MonoObject* pRotation );
-		static bool				SetSyncer							( DWORD pUserData, DWORD pPlayer );
-		static bool				SetCollisionsEnabled				( DWORD pUserData, bool bEnabled );
-		static bool				SetFrozen							( DWORD pUserData, bool bFrozen );
-		static bool				SetLowLod							( DWORD pUserData, bool bEnabled );
+		static bool				ClearVisibleTo						( TElement pThis );
+		static bool				SetID								( TElement pThis, MonoString* msID );
+		static bool				SetData								( TElement pThis, MonoString* msKey, CLuaArgument& Variable );
+		static bool				RemoveData							( TElement pThis, MonoString* msKey );
+		static bool				SetParent							( TElement pThis, TElement pTarget );
+		static bool				SetPosition							( TElement pThis, MonoObject* pPosition, bool bWarp );
+		static bool				SetRotation							( TElement pThis, MonoObject* pRotation, MonoString* msRotationOrder, bool bNewWay );
+		static bool				SetVelocity							( TElement pThis, MonoObject* pVelocity );
+		static bool				SetVisibleTo						( TElement pThis, TElement pTarget, bool bVisible );
+		static bool				SetInterior							( TElement pThis, int iInterior );
+		static bool				SetDimension						( TElement pThis, int iDimension );
+		static bool				Attach								( TElement pThis, TElement pTarget, MonoObject* pPosition, MonoObject* pRotation );
+		static bool				Detach								( TElement pThis, TElement pTarget );
+		static bool				SetAlpha							( TElement pThis, int iAlpha );
+		static bool				SetDoubleSided						( TElement pThis, bool bDoubleSided );
+		static bool				SetHealth							( TElement pThis, float fHealth );
+		static bool				SetModel							( TElement pThis, int iModel );
+		static bool				SetAttachedOffsets					( TElement pThis, MonoObject* pPosition, MonoObject* pRotation );
+		static bool				SetSyncer							( TElement pThis, TElement pPlayer );
+		static bool				SetCollisionsEnabled				( TElement pThis, bool bEnabled );
+		static bool				SetFrozen							( TElement pThis, bool bFrozen );
+		static bool				SetLowLod							( TElement pThis, bool bEnabled );
 	};
 
 	class Player
@@ -171,142 +182,142 @@ public:
 	public:
 		// Player get functions
 		static unsigned int			GetCount						( void );
-		static DWORD                GetFromName						( MonoString* msNick );
-		static unsigned int			GetPing							( DWORD pUserData );
-		static long					GetMoney						( DWORD pUserData );
-		static DWORD                GetRandom						( void );
-		static bool                 IsMuted							( DWORD pUserData );
-		static DWORD                GetTeam							( DWORD pUserData );
-		static unsigned int			GetWantedLevel					( DWORD pUserData );
+		static TElement				GetFromName						( MonoString* msNick );
+		static unsigned int			GetPing							( TElement pThis );
+		static long					GetMoney						( TElement pThis );
+		static TElement				GetRandom						( void );
+		static bool                 IsMuted							( TElement pThis );
+		static TElement				GetTeam							( TElement pThis );
+		static unsigned int			GetWantedLevel					( TElement pThis );
 		static MonoArray*			GetAlivePlayers					( void );
 		static MonoArray*			GetDeadPlayers					( void );
-		static unsigned int			GetIdleTime						( DWORD pUserData );
-		static bool					IsMapForced						( DWORD pUserData );
-		static MonoString*			GetNametagText					( DWORD pUserData );
-		static MonoObject*			GetNametagColor					( DWORD pUserData );
-		static bool					IsNametagShowing				( DWORD pUserData );
-		static MonoString*          GetSerial						( DWORD pUserData );
-		static MonoString*          GetUserName						( DWORD pUserData );
-		static unsigned char		GetBlurLevel					( DWORD pUserData );
-		static MonoString*			GetName							( DWORD pUserData );
-		static MonoString*			GetIP							( DWORD pUserData );
-		static DWORD                GetAccount						( DWORD pUserData );
-		static MonoString*          GetVersion						( DWORD pUserData );
-		static MonoObject*			GetACInfo						( DWORD pUserData );
-		static MonoString*			GetPlayerAnnounceValue			( DWORD pElement, MonoString* msKey );
+		static unsigned int			GetIdleTime						( TElement pThis );
+		static bool					IsMapForced						( TElement pThis );
+		static MonoString*			GetNametagText					( TElement pThis );
+		static MonoObject*			GetNametagColor					( TElement pThis );
+		static bool					IsNametagShowing				( TElement pThis );
+		static MonoString*          GetSerial						( TElement pThis );
+		static MonoString*          GetUserName						( TElement pThis );
+		static unsigned char		GetBlurLevel					( TElement pThis );
+		static MonoString*			GetName							( TElement pThis );
+		static MonoString*			GetIP							( TElement pThis );
+		static TElement				GetAccount						( TElement pThis );
+		static MonoString*          GetVersion						( TElement pThis );
+		static MonoObject*			GetACInfo						( TElement pThis );
+		static MonoString*			GetPlayerAnnounceValue			( TElement pThis, MonoString* msKey );
 
 		// Player set functions
-		static bool					SetMoney						( DWORD pUserData, int iAmount, bool bInstant );
-		static bool					GiveMoney						( DWORD pUserData, int iAmount );
-		static bool					TakeMoney						( DWORD pUserData, int iAmount );
-		static bool					Spawn							( DWORD pUserData, MonoObject* vecPosition, int iRotation, int iSkinID, int iInterior, int iDimension, DWORD pTeam );
-		static bool					ShowHudComponent				( DWORD pUserData, MonoString* sComponent, bool bShow );
-		static bool					SetWantedLevel					( DWORD pUserData, int iLevel );
-		static bool					ForceMap						( DWORD pUserData, bool bForceOn );
-		static bool					SetNametagText					( DWORD pUserData, MonoString* sText );
-		static bool					SetNametagColor					( DWORD pUserData, int iRed, int iGreen, int iBlue );
-		static bool					SetNametagShowing				( DWORD pUserData, bool bShowing );
-		static bool					SetMuted						( DWORD pUserData, bool bMuted );
-		static bool					SetBlurLevel					( DWORD pUserData, int iLevel );
-		static bool					Redirect						( DWORD pUserData, MonoString* sServerIP, int iServerPort, MonoString* sServerPassword );
-		static bool					SetName							( DWORD pUserData, MonoString* sName );
-		static bool					DetonateSatchels				( DWORD pUserData );
-		static bool					TakeScreenShot					( DWORD pUserData, int iWidth, int iHeight, MonoString* sTag, int iQuality, int iMaxBandwith );
-		static bool					SetTeam							( DWORD pUserData, DWORD pTeam );
-		static bool					SetPlayerAnnounceValue			( DWORD pElement, MonoString* msKey, MonoString* msValue );
+		static bool					SetMoney						( TElement pThis, int iAmount, bool bInstant );
+		static bool					GiveMoney						( TElement pThis, int iAmount );
+		static bool					TakeMoney						( TElement pThis, int iAmount );
+		static bool					Spawn							( TElement pThis, MonoObject* vecPosition, int iRotation, int iSkinID, int iInterior, int iDimension, TElement pTeam );
+		static bool					ShowHudComponent				( TElement pThis, MonoString* sComponent, bool bShow );
+		static bool					SetWantedLevel					( TElement pThis, int iLevel );
+		static bool					ForceMap						( TElement pThis, bool bForceOn );
+		static bool					SetNametagText					( TElement pThis, MonoString* sText );
+		static bool					SetNametagColor					( TElement pThis, int iRed, int iGreen, int iBlue );
+		static bool					SetNametagShowing				( TElement pThis, bool bShowing );
+		static bool					SetMuted						( TElement pThis, bool bMuted );
+		static bool					SetBlurLevel					( TElement pThis, int iLevel );
+		static bool					Redirect						( TElement pThis, MonoString* sServerIP, int iServerPort, MonoString* sServerPassword );
+		static bool					SetName							( TElement pThis, MonoString* sName );
+		static bool					DetonateSatchels				( TElement pThis );
+		static bool					TakeScreenShot					( TElement pThis, int iWidth, int iHeight, MonoString* sTag, int iQuality, int iMaxBandwith );
+		static bool					SetTeam							( TElement pThis, TElement pTeam );
+		static bool					SetPlayerAnnounceValue			( TElement pThis, MonoString* msKey, MonoString* msValue );
 
 		// Input funcs
-		static bool					BindKey							( DWORD pUserData, MonoString* msKey, MonoString* msHitState, MonoString* msCommandName, MonoString* msArguments );
-		static bool					UnbindKey						( DWORD pUserData, MonoString* msKey, MonoString* msHitState, MonoString* msCommandName );
-		static bool					GetControlState					( DWORD pUserData, MonoString* msControl );
-		static bool					IsControlEnabled				( DWORD pUserData, MonoString* msControl );
+		static bool					BindKey							( TElement pThis, MonoString* msKey, MonoString* msHitState, MonoString* msCommandName, MonoString* msArguments );
+		static bool					UnbindKey						( TElement pThis, MonoString* msKey, MonoString* msHitState, MonoString* msCommandName );
+		static bool					GetControlState					( TElement pThis, MonoString* msControl );
+		static bool					IsControlEnabled				( TElement pThis, MonoString* msControl );
 		
-		static bool					SetControlState					( DWORD pUserData, MonoString* msControl, bool bState );
-		static bool					ToggleControl					( DWORD pUserData, MonoString* msControl, bool bEnabled );
-		static bool					ToggleAllControls				( DWORD pUserData, bool bGTAControls, bool bMTAControls, bool bEnabled );
+		static bool					SetControlState					( TElement pThis, MonoString* msControl, bool bState );
+		static bool					ToggleControl					( TElement pThis, MonoString* msControl, bool bEnabled );
+		static bool					ToggleAllControls				( TElement pThis, bool bGTAControls, bool bMTAControls, bool bEnabled );
 
 		// Log in/out funcs
-		static bool					LogIn							( DWORD pPlayer, DWORD pAccount, MonoString* msPassword );
-		static bool					LogOut							( DWORD pPlayer );
+		static bool					LogIn							( TElement pPlayer, TElement pAccount, MonoString* msPassword );
+		static bool					LogOut							( TElement pPlayer );
 
 		// Admin funcs
-		static bool					Kick							( DWORD pPlayer, MonoString* msResponsible, MonoString* msReason );
-		static DWORD				Ban								( DWORD pPlayer, bool bIP, bool bUsername, bool bSerial, DWORD pResponsible, MonoString* msResponsible, MonoString* msReason, int iUnban );
+		static bool					Kick							( TElement pPlayer, MonoString* msResponsible, MonoString* msReason );
+		static TElement				Ban								( TElement pPlayer, bool bIP, bool bUsername, bool bSerial, TElement pResponsible, MonoString* msResponsible, MonoString* msReason, int iUnban );
 		
 		// Cursor get funcs
-		static bool					IsCursorShowing					( DWORD pPlayer );
+		static bool					IsCursorShowing					( TElement pPlayer );
 		
 		// Cursor set funcs
-		static bool					ShowCursor						( DWORD pPlayer, bool bShow, bool bToggleControls );
+		static bool					ShowCursor						( TElement pPlayer, bool bShow, bool bToggleControls );
 		
 		// Chat funcs
-		static bool					ShowChat						( DWORD pPlayer, bool bShow );
+		static bool					ShowChat						( TElement pPlayer, bool bShow );
 
 		// Camera get functions
-		static MonoObject*			GetCameraMatrix					( DWORD pPlayer );
-		static DWORD				GetCameraTarget					( DWORD pPlayer );
-		static unsigned char		GetCameraInterior				( DWORD pPlayer );
+		static MonoObject*			GetCameraMatrix					( TElement pPlayer );
+		static TElement				GetCameraTarget					( TElement pPlayer );
+		static unsigned char		GetCameraInterior				( TElement pPlayer );
 
 		// Camera set functions
-		static bool					SetCameraMatrix					( DWORD pPlayer, MonoObject* pCameraMatrix );
-		static bool					SetCameraTarget					( DWORD pPlayer, DWORD pTarget );
-		static bool					SetCameraInterior				( DWORD pPlayer, unsigned char ucInterior );
-		static bool					FadeCamera						( DWORD pPlayer, bool bFadeIn, float fFadeTime, MonoObject* pColor );
+		static bool					SetCameraMatrix					( TElement pPlayer, MonoObject* pCameraMatrix );
+		static bool					SetCameraTarget					( TElement pPlayer, TElement pTarget );
+		static bool					SetCameraInterior				( TElement pPlayer, unsigned char ucInterior );
+		static bool					FadeCamera						( TElement pPlayer, bool bFadeIn, float fFadeTime, MonoObject* pColor );
 	};
 
 	class Ped
 	{
 	public:
 		// Ped get functions
-		static DWORD				Create							( int iModelid, MonoObject* pMonoPosition, float fRot, bool bSynced );
-		static float				GetArmor						( DWORD pUserData );    
-		static bool					IsChoking						( DWORD pUserData );
-		static bool					IsDead							( DWORD pUserData );
-		static bool					IsDucked						( DWORD pUserData );    
-		static float				GetStat							( DWORD pUserData, unsigned short usStat );
-		static DWORD				GetTarget						( DWORD pUserData );    
-		static int					GetWeapon						( DWORD pUserData, int iWeaponSlot );
-		static MonoString*			GetClothesTexture				( DWORD pUserData, unsigned char ucType );
-		static MonoString*			GetClothesModel					( DWORD pUserData, unsigned char ucType );
-		static bool					DoesHaveJetPack					( DWORD pUserData );
-		static bool					IsOnGround						( DWORD pUserData );    
-		static unsigned char		GetFightingStyle				( DWORD pUserData );
-		static unsigned int			GetMoveAnim						( DWORD pUserData );
-		static float				GetGravity						( DWORD pUserData );    
-		static DWORD				GetContactElement				( DWORD pUserData );
-		static unsigned char		GetWeaponSlot					( DWORD pUserData );
-		static bool					IsDoingGangDriveby				( DWORD pUserData );
-		static bool					IsOnFire						( DWORD pUserData );
-		static bool					IsHeadless						( DWORD pUserData );
-		static bool					IsFrozen						( DWORD pUserData );
-		static DWORD				GetOccupiedVehicle				( DWORD pUserData );
-		static unsigned int			GetOccupiedVehicleSeat			( DWORD pUserData );
-		static bool					IsInVehicle						( DWORD pUserData );
+		static void					Ctor							( TElement pThis, int iModelid, MonoObject* pMonoPosition, float fRot, bool bSynced );
+		static float				GetArmor						( TElement pThis );    
+		static bool					IsChoking						( TElement pThis );
+		static bool					IsDead							( TElement pThis );
+		static bool					IsDucked						( TElement pThis );    
+		static float				GetStat							( TElement pThis, unsigned short usStat );
+		static TElement				GetTarget						( TElement pThis );    
+		static int					GetWeapon						( TElement pThis, int iWeaponSlot );
+		static MonoString*			GetClothesTexture				( TElement pThis, unsigned char ucType );
+		static MonoString*			GetClothesModel					( TElement pThis, unsigned char ucType );
+		static bool					DoesHaveJetPack					( TElement pThis );
+		static bool					IsOnGround						( TElement pThis );    
+		static unsigned char		GetFightingStyle				( TElement pThis );
+		static unsigned int			GetMoveAnim						( TElement pThis );
+		static float				GetGravity						( TElement pThis );    
+		static TElement				GetContactElement				( TElement pThis );
+		static unsigned char		GetWeaponSlot					( TElement pThis );
+		static bool					IsDoingGangDriveby				( TElement pThis );
+		static bool					IsOnFire						( TElement pThis );
+		static bool					IsHeadless						( TElement pThis );
+		static bool					IsFrozen						( TElement pThis );
+		static TElement				GetOccupiedVehicle				( TElement pThis );
+		static unsigned int			GetOccupiedVehicleSeat			( TElement pThis );
+		static bool					IsInVehicle						( TElement pThis );
 		static short				GetWeaponProperty				( unsigned char ucWeaponID, MonoString *msWeaponSkill, MonoString* msProperty );
 		static short				GetOriginalWeaponProperty		( unsigned char ucWeaponID, MonoString *msWeaponSkill, MonoString* msProperty );
 
 		// Ped set functions
-		static bool                 SetArmor						( DWORD pUserData, float fArmor );
-		static bool                 Kill							( DWORD pUserData, DWORD pKiller, unsigned char ucKillerWeapon, unsigned char ucBodyPart, bool bStealth );
-		static bool                 SetStat							( DWORD pUserData, unsigned short usStat, float fValue );
-		static bool                 AddClothes						( DWORD pUserData, MonoString* msTexture, MonoString* msModel, unsigned char ucType );
-		static bool                 RemoveClothes					( DWORD pUserData, unsigned char ucType, MonoString* msTexture, MonoString* msModel );
-		static bool                 GiveJetPack						( DWORD pUserData );
-		static bool                 RemoveJetPack					( DWORD pUserData );
-		static bool                 SetFightingStyle				( DWORD pUserData, unsigned char ucStyle );
-		static bool                 SetMoveAnim						( DWORD pUserData, unsigned int iMoveAnim );
-		static bool                 SetGravity						( DWORD pUserData, float fGravity );
-		static bool                 SetChoking						( DWORD pUserData, bool bChoking );
-		static bool                 SetWeaponSlot					( DWORD pUserData, unsigned char ucWeaponSlot );
-		static bool                 WarpIntoVehicle					( DWORD pUserData, DWORD pVehicle, unsigned int uiSeat );
-		static bool                 RemoveFromVehicle				( DWORD pUserData );
-		static bool                 SetDoingGangDriveby				( DWORD pUserData, bool bGangDriveby );
-		static bool                 SetAnimation					( DWORD pUserData, MonoString* msBlockName, MonoString* msAnimName, int iTime, bool bLoop, bool bUpdatePosition, bool bInterruptable, bool bFreezeLastFrame );
-		static bool                 SetAnimationProgress			( DWORD pUserData, MonoString* msAnimName, float fProgress );
-		static bool                 SetOnFire						( DWORD pUserData, bool bIsOnFire );
-		static bool                 SetHeadless						( DWORD pUserData, bool bIsHeadless );
-		static bool                 SetFrozen						( DWORD pUserData, bool bIsFrozen );
-		static bool                 ReloadWeapon					( DWORD pUserData );
+		static bool                 SetArmor						( TElement pThis, float fArmor );
+		static bool                 Kill							( TElement pThis, TElement pKiller, unsigned char ucKillerWeapon, unsigned char ucBodyPart, bool bStealth );
+		static bool                 SetStat							( TElement pThis, unsigned short usStat, float fValue );
+		static bool                 AddClothes						( TElement pThis, MonoString* msTexture, MonoString* msModel, unsigned char ucType );
+		static bool                 RemoveClothes					( TElement pThis, unsigned char ucType, MonoString* msTexture, MonoString* msModel );
+		static bool                 GiveJetPack						( TElement pThis );
+		static bool                 RemoveJetPack					( TElement pThis );
+		static bool                 SetFightingStyle				( TElement pThis, unsigned char ucStyle );
+		static bool                 SetMoveAnim						( TElement pThis, unsigned int iMoveAnim );
+		static bool                 SetGravity						( TElement pThis, float fGravity );
+		static bool                 SetChoking						( TElement pThis, bool bChoking );
+		static bool                 SetWeaponSlot					( TElement pThis, unsigned char ucWeaponSlot );
+		static bool                 WarpIntoVehicle					( TElement pThis, TElement pVehicle, unsigned int uiSeat );
+		static bool                 RemoveFromVehicle				( TElement pThis );
+		static bool                 SetDoingGangDriveby				( TElement pThis, bool bGangDriveby );
+		static bool                 SetAnimation					( TElement pThis, MonoString* msBlockName, MonoString* msAnimName, int iTime, bool bLoop, bool bUpdatePosition, bool bInterruptable, bool bFreezeLastFrame );
+		static bool                 SetAnimationProgress			( TElement pThis, MonoString* msAnimName, float fProgress );
+		static bool                 SetOnFire						( TElement pThis, bool bIsOnFire );
+		static bool                 SetHeadless						( TElement pThis, bool bIsHeadless );
+		static bool                 SetFrozen						( TElement pThis, bool bIsFrozen );
+		static bool                 ReloadWeapon					( TElement pThis );
 		static bool					SetWeaponProperty				( unsigned char ucWeaponID, MonoString *msWeaponSkill, MonoString* msProperty, short uData );
 
 		// Ped body?
@@ -316,263 +327,286 @@ public:
 		static MonoString*			GetClothesTypeName				( unsigned char ucType );
 
 		// Weapon give/take functions
-		static bool					GiveWeapon						( DWORD pPed, unsigned char ucWeaponID, unsigned short usAmmo, bool bSetAsCurrent = false );
-		static bool					TakeWeapon						( DWORD pPed, unsigned char ucWeaponID, unsigned short usAmmo = 9999 );
-		static bool					TakeAllWeapons					( DWORD pPed );
-		static bool					SetWeaponAmmo					( DWORD pPed, unsigned char ucWeaponID, unsigned short usAmmo, unsigned short usAmmoInClip );
+		static bool					GiveWeapon						( TElement pPed, unsigned char ucWeaponID, unsigned short usAmmo, bool bSetAsCurrent = false );
+		static bool					TakeWeapon						( TElement pPed, unsigned char ucWeaponID, unsigned short usAmmo = 9999 );
+		static bool					TakeAllWeapons					( TElement pPed );
+		static bool					SetWeaponAmmo					( TElement pPed, unsigned char ucWeaponID, unsigned short usAmmo, unsigned short usAmmoInClip );
 	};
 
 	class Vehicle
 	{
 	public:
 		// Vehicle create/destroy functions
-		static DWORD					Create	( int model, MonoObject* position, MonoObject* rotation, MonoString* numberplate, bool direction = false, int variant1 = 255, int variant2 = 255 );
+		static void						Ctor	( TElement pThis, int model, MonoObject* position, MonoObject* rotation, MonoString* numberplate, bool direction = false, int variant1 = 255, int variant2 = 255 );
 		
 		// Vehicle get functions
-		static MonoString*				GetType							( DWORD pUserData );
-		static MonoArray*				GetVariant						( DWORD pUserData );
-		static MonoObject*				GetColor						( DWORD pUserData );
+		static MonoString*				GetVehicleType					( TElement pThis );
+		static MonoArray*				GetVariant						( TElement pThis );
+		static MonoObject*				GetColor						( TElement pThis );
 		static unsigned short			GetModelFromName				( MonoString* msName );
-		static bool						GetLandingGearDown				( DWORD pUserData );
-		static unsigned char			GetMaxPassengers				( DWORD pUserData );
-		static MonoString*				GetName							( DWORD pUserData );
+		static bool						GetLandingGearDown				( TElement pThis );
+		static unsigned char			GetMaxPassengers				( TElement pThis );
+		static MonoString*				GetName							( TElement pThis );
 		static MonoString*				GetNameFromModel				( unsigned short usModel );
-		static DWORD					GetOccupant						( DWORD pUserData, unsigned int uiSeat );
-		static MonoArray*				GetOccupants					( DWORD pUserData );
-		static DWORD					GetController					( DWORD pUserData );
-		static bool						GetSirensOn						( DWORD pUserData );
-		static MonoObject*				GetTurnVelocity					( DWORD pUserData );
-		static MonoObject*				GetTurretPosition				( DWORD pUserData );
-		static bool						IsLocked						( DWORD pUserData );
+		static TElement					GetOccupant						( TElement pThis, unsigned int uiSeat );
+		static MonoArray*				GetOccupants					( TElement pThis );
+		static TElement					GetController					( TElement pThis );
+		static bool						GetSirensOn						( TElement pThis );
+		static MonoObject*				GetTurnVelocity					( TElement pThis );
+		static MonoObject*				GetTurretPosition				( TElement pThis );
+		static bool						IsLocked						( TElement pThis );
 		static MonoArray*				GetOfType						( unsigned int uiModel );       
-		static unsigned short			GetUpgradeOnSlot				( DWORD pUserData, unsigned char ucSlot );
-		static MonoArray*				GetUpgrades						( DWORD pUserData );
+		static unsigned short			GetUpgradeOnSlot				( TElement pThis, unsigned char ucSlot );
+		static MonoArray*				GetUpgrades						( TElement pThis );
 //		static MonoString*				GetUpgradeSlotName				( unsigned char ucSlot );
 		static MonoString*				GetUpgradeSlotName				( unsigned short usUpgrade );
-		static MonoArray*				GetCompatibleUpgrades			( DWORD pUserData );
-		static unsigned char			GetDoorState					( DWORD pUserData, unsigned char ucDoor );
-		static MonoObject*				GetWheelStates					( DWORD pUserData );
-		static unsigned char			GetLightState					( DWORD pUserData, unsigned char ucLight );
-		static unsigned char			GetPanelState					( DWORD pUserData, unsigned char ucPanel );
-		static unsigned char			GetOverrideLights				( DWORD pUserData );
-		static DWORD					GetTowedByVehicle				( DWORD pUserData );
-		static DWORD					GetTowingVehicle				( DWORD pUserData );
-		static unsigned char			GetPaintjob						( DWORD pUserData );
-		static MonoString*				GetPlateText					( DWORD pUserData );
-		static bool						IsDamageProof					( DWORD pUserData );
-		static bool						IsFuelTankExplodable			( DWORD pUserData );
-		static bool						IsFrozen						( DWORD pUserData );
-		static bool						IsOnGround						( DWORD pUserData );
-		static bool						GetEngineState					( DWORD pUserData );
-		static bool						IsTrainDerailed                 ( DWORD pUserData );
-		static bool						IsTrainDerailable               ( DWORD pUserData );
-		static bool						GetTrainDirection               ( DWORD pUserData );
-		static float					GetTrainSpeed                   ( DWORD pUserData );
-		static bool						IsBlown							( DWORD pUserData );
-		static MonoObject*				GetHeadLightColor				( DWORD pUserData );
-		static float					GetDoorOpenRatio				( DWORD pUserData, unsigned char ucDoor );
-		static bool						IsTaxiLightOn					( DWORD pUserData );
+		static MonoArray*				GetCompatibleUpgrades			( TElement pThis );
+		static unsigned char			GetDoorState					( TElement pThis, unsigned char ucDoor );
+		static MonoObject*				GetWheelStates					( TElement pThis );
+		static unsigned char			GetLightState					( TElement pThis, unsigned char ucLight );
+		static unsigned char			GetPanelState					( TElement pThis, unsigned char ucPanel );
+		static unsigned char			GetOverrideLights				( TElement pThis );
+		static TElement					GetTowedByVehicle				( TElement pThis );
+		static TElement					GetTowingVehicle				( TElement pThis );
+		static unsigned char			GetPaintjob						( TElement pThis );
+		static MonoString*				GetPlateText					( TElement pThis );
+		static bool						IsDamageProof					( TElement pThis );
+		static bool						IsFuelTankExplodable			( TElement pThis );
+		static bool						IsFrozen						( TElement pThis );
+		static bool						IsOnGround						( TElement pThis );
+		static bool						GetEngineState					( TElement pThis );
+		static bool						IsTrainDerailed                 ( TElement pThis );
+		static bool						IsTrainDerailable               ( TElement pThis );
+		static bool						GetTrainDirection               ( TElement pThis );
+		static float					GetTrainSpeed                   ( TElement pThis );
+		static bool						IsBlown							( TElement pThis );
+		static MonoObject*				GetHeadLightColor				( TElement pThis );
+		static float					GetDoorOpenRatio				( TElement pThis, unsigned char ucDoor );
+		static bool						IsTaxiLightOn					( TElement pThis );
 
 		// Vehicle set functions
-		static bool						Fix								( DWORD pUserData );
-		static bool						Blow							( DWORD pUserData, bool bExplode );
-		static bool						SetTurnVelocity					( DWORD pUserData, MonoObject* pVelocity );
-		static bool						SetColor						( DWORD pUserData, MonoObject* pColor1, MonoObject* pColor2, MonoObject* pColor3, MonoObject* pColor4 );
-		static bool						SetLandingGearDown				( DWORD pUserData, bool bLandingGearDown );
-		static bool						SetLocked						( DWORD pUserData, bool bLocked );
-		static bool						SetDoorsUndamageable			( DWORD pUserData, bool bDoorsUndamageable );
-		static bool						SetSirensOn						( DWORD pUserData, bool bSirensOn );
-		static bool						SetTaxiLightOn					( DWORD pUserData, bool bTaxiLightState );
-		static bool						AddUpgrade						( DWORD pUserData, unsigned short usUpgrade );
-		static bool						RemoveUpgrade					( DWORD pUserData, unsigned short usUpgrade );
-		static bool						SetDoorState					( DWORD pUserData, unsigned char ucDoor, unsigned char ucState );
-		static bool						SetWheelStates					( DWORD pUserData, int iFrontLeft, int iRearLeft, int iFrontRight, int iRearRight );
-		static bool						SetLightState					( DWORD pUserData, unsigned char ucLight, unsigned char ucState );
-		static bool						SetPanelState					( DWORD pUserData, unsigned char ucPanel, unsigned char ucState );
-		static bool						SetIdleRespawnDelay				( DWORD pUserData, unsigned long ulTime );
-		static bool						SetRespawnDelay					( DWORD pUserData, unsigned long ulTime );
-		static bool						SetRespawnPosition				( DWORD pUserData, MonoObject* pPosition, MonoObject* pRotation );
-		static bool						ToggleRespawn					( DWORD pUserData, bool bRespawn );
-		static bool						ResetExplosionTime				( DWORD pUserData );
-		static bool						ResetIdleTime					( DWORD pUserData );
-		static bool						Spawn							( DWORD pUserData, MonoObject* pPosition, MonoObject* pRotation );
-		static bool						Respawn							( DWORD pUserData );
-		static bool						SetOverrideLights				( DWORD pUserData, unsigned char ucLights );
-		static bool						AttachTrailer					( DWORD pUserData, DWORD pTrailer );
-		static bool						DetachTrailer					( DWORD pUserData, DWORD pTrailer );
-		static bool						SetEngineState					( DWORD pUserData, bool bState );
-		static bool						SetDirtLevel					( DWORD pUserData, float fDirtLevel );
-		static bool						SetDamageProof					( DWORD pUserData, bool bDamageProof );
-		static bool						SetPaintjob						( DWORD pUserData, unsigned char ucPaintjob );
-		static bool						SetFuelTankExplodable			( DWORD pUserData, bool bExplodable );
-		static bool						SetTrainDerailed                ( DWORD pUserData, bool bDerailed );
-		static bool						SetTrainDerailable              ( DWORD pUserData, bool bDerailable );
-		static bool						SetTrainDirection               ( DWORD pUserData, bool bDireciton );
-		static bool						SetTrainSpeed                   ( DWORD pUserData, float fSpeed );
-		static bool						SetHeadLightColor				( DWORD pUserData, MonoObject* pColor );
-		static bool						SetTurretPosition				( DWORD pUserData, MonoObject* pPosition );
-		static bool						SetDoorOpenRatio				( DWORD pUserData, unsigned char ucDoor, float fRatio, unsigned long ulTime );
-		static bool						SetVariant						( DWORD pUserData, unsigned char ucVariant, unsigned char ucVariant2 );
-		static bool						GiveSirens						( DWORD pUserData, unsigned char ucSirenType, unsigned char ucSirenCount, bool bFlag360 = false, bool bCheckLosFlag = true, bool bUseRandomiserFlag = true, bool bSilentFlag = false );
-		static bool						RemoveSirens					( DWORD pUserData );
-		static bool						SetSirens						( DWORD pUserData, unsigned char ucSirenID, MonoObject* pPosition, MonoObject* pColor, float fMinAlpha );
-		static MonoArray*				GetSirens						( DWORD pUserData );
-		static MonoObject*				GetSirenParams					( DWORD pUserData );
-		static bool						SetPlateText					( DWORD pUserData, MonoString* msName );
+		static bool						Fix								( TElement pThis );
+		static bool						Blow							( TElement pThis, bool bExplode );
+		static bool						SetTurnVelocity					( TElement pThis, MonoObject* pVelocity );
+		static bool						SetColor						( TElement pThis, MonoObject* pColor1, MonoObject* pColor2, MonoObject* pColor3, MonoObject* pColor4 );
+		static bool						SetLandingGearDown				( TElement pThis, bool bLandingGearDown );
+		static bool						SetLocked						( TElement pThis, bool bLocked );
+		static bool						SetDoorsUndamageable			( TElement pThis, bool bDoorsUndamageable );
+		static bool						SetSirensOn						( TElement pThis, bool bSirensOn );
+		static bool						SetTaxiLightOn					( TElement pThis, bool bTaxiLightState );
+		static bool						AddUpgrade						( TElement pThis, unsigned short usUpgrade );
+		static bool						RemoveUpgrade					( TElement pThis, unsigned short usUpgrade );
+		static bool						SetDoorState					( TElement pThis, unsigned char ucDoor, unsigned char ucState );
+		static bool						SetWheelStates					( TElement pThis, int iFrontLeft, int iRearLeft, int iFrontRight, int iRearRight );
+		static bool						SetLightState					( TElement pThis, unsigned char ucLight, unsigned char ucState );
+		static bool						SetPanelState					( TElement pThis, unsigned char ucPanel, unsigned char ucState );
+		static bool						SetIdleRespawnDelay				( TElement pThis, unsigned long ulTime );
+		static bool						SetRespawnDelay					( TElement pThis, unsigned long ulTime );
+		static bool						SetRespawnPosition				( TElement pThis, MonoObject* pPosition, MonoObject* pRotation );
+		static bool						ToggleRespawn					( TElement pThis, bool bRespawn );
+		static bool						ResetExplosionTime				( TElement pThis );
+		static bool						ResetIdleTime					( TElement pThis );
+		static bool						Spawn							( TElement pThis, MonoObject* pPosition, MonoObject* pRotation );
+		static bool						Respawn							( TElement pThis );
+		static bool						SetOverrideLights				( TElement pThis, unsigned char ucLights );
+		static bool						AttachTrailer					( TElement pThis, TElement pTrailer );
+		static bool						DetachTrailer					( TElement pThis, TElement pTrailer );
+		static bool						SetEngineState					( TElement pThis, bool bState );
+		static bool						SetDirtLevel					( TElement pThis, float fDirtLevel );
+		static bool						SetDamageProof					( TElement pThis, bool bDamageProof );
+		static bool						SetPaintjob						( TElement pThis, unsigned char ucPaintjob );
+		static bool						SetFuelTankExplodable			( TElement pThis, bool bExplodable );
+		static bool						SetTrainDerailed                ( TElement pThis, bool bDerailed );
+		static bool						SetTrainDerailable              ( TElement pThis, bool bDerailable );
+		static bool						SetTrainDirection               ( TElement pThis, bool bDireciton );
+		static bool						SetTrainSpeed                   ( TElement pThis, float fSpeed );
+		static bool						SetHeadLightColor				( TElement pThis, MonoObject* pColor );
+		static bool						SetTurretPosition				( TElement pThis, MonoObject* pPosition );
+		static bool						SetDoorOpenRatio				( TElement pThis, unsigned char ucDoor, float fRatio, unsigned long ulTime );
+		static bool						SetVariant						( TElement pThis, unsigned char ucVariant, unsigned char ucVariant2 );
+		static bool						GiveSirens						( TElement pThis, unsigned char ucSirenType, unsigned char ucSirenCount, bool bFlag360 = false, bool bCheckLosFlag = true, bool bUseRandomiserFlag = true, bool bSilentFlag = false );
+		static bool						RemoveSirens					( TElement pThis );
+		static bool						SetSirens						( TElement pThis, unsigned char ucSirenID, MonoObject* pPosition, MonoObject* pColor, float fMinAlpha );
+		static MonoArray*				GetSirens						( TElement pThis );
+		static MonoObject*				GetSirenParams					( TElement pThis );
+		static bool						SetPlateText					( TElement pThis, MonoString* msName );
 	};
 	
 	class Marker
 	{
 	public:
 		// Marker create/destroy functions
-		static DWORD					Create							( MonoObject* pPosition, MonoString* szType, float fSize, MonoObject* color, DWORD pVisibleTo );
+		static void						Ctor							( TElement pThis, MonoObject* pPosition, MonoString* szType, float fSize, MonoObject* color, TElement pVisibleTo );
 
 		// Marker get functions
-		static unsigned int				GetCount						();
-		static MonoString*				GetType							( DWORD pUserData );
-		static float					GetSize							( DWORD pUserData );
-		static MonoObject*				GetColor						( DWORD pUserData );
-		static MonoObject*				GetTarget						( DWORD pUserData );
-		static MonoString*				GetIcon							( DWORD pUserData );
+		static unsigned int				GetCount						( void );
+		static MonoString*				GetMarkerType					( TElement pThis );
+		static float					GetSize							( TElement pThis );
+		static MonoObject*				GetColor						( TElement pThis );
+		static MonoObject*				GetTarget						( TElement pThis );
+		static MonoString*				GetIcon							( TElement pThis );
 
 		// Marker set functions
-		static bool						SetType							( DWORD pUserData, MonoString* szType );
-		static bool						SetSize							( DWORD pUserData, float fSize );
-		static bool						SetColor						( DWORD pUserData, MonoObject* color );
-		static bool						SetTarget						( DWORD pUserData, MonoObject* pTarget );
-		static bool						SetIcon							( DWORD pUserData, MonoString* szIcon );
+		static bool						SetType							( TElement pThis, MonoString* szType );
+		static bool						SetSize							( TElement pThis, float fSize );
+		static bool						SetColor						( TElement pThis, MonoObject* color );
+		static bool						SetTarget						( TElement pThis, MonoObject* pTarget );
+		static bool						SetIcon							( TElement pThis, MonoString* szIcon );
 	};
 
 	class Blip
 	{
 	public:
 		// Blip create/destroy functions
-		static DWORD					Create							( MonoObject* vecPosition, unsigned char ucIcon, unsigned char ucSize, MonoObject* color, short sOrdering, unsigned short usVisibleDistance, DWORD pVisibleTo );
-		static DWORD					CreateAttachedTo				( DWORD pTarget, unsigned char ucIcon, unsigned char ucSize, MonoObject* color, short sOrdering, unsigned short usVisibleDistance, DWORD pVisibleTo );
+		static void						Ctor							( TElement pThis, MonoObject* vecPosition, unsigned char ucIcon, unsigned char ucSize, MonoObject* color, short sOrdering, unsigned short usVisibleDistance, TElement pVisibleTo );
 		
 		// Blip get functions
-		static unsigned char			GetIcon							( DWORD pUserData );
-		static unsigned char			GetSize							( DWORD pUserData );
-		static MonoObject*				GetColor						( DWORD pUserData );
-		static short					GetOrdering						( DWORD pUserData );
-		static unsigned short			GetVisibleDistance				( DWORD pUserData );
+		static unsigned char			GetIcon							( TElement pThis );
+		static unsigned char			GetSize							( TElement pThis );
+		static MonoObject*				GetColor						( TElement pThis );
+		static short					GetOrdering						( TElement pThis );
+		static unsigned short			GetVisibleDistance				( TElement pThis );
 
 		// Blip set functions
-		static bool						SetIcon							( DWORD pUserData, unsigned char ucIcon );
-		static bool						SetSize							( DWORD pUserData, unsigned char ucSize );
-		static bool						SetColor						( DWORD pUserData, MonoObject* color );
-		static bool						SetOrdering						( DWORD pUserData, short sOrdering );
-		static bool						SetVisibleDistance				( DWORD pUserData, unsigned short usVisibleDistance );
+		static bool						SetIcon							( TElement pThis, unsigned char ucIcon );
+		static bool						SetSize							( TElement pThis, unsigned char ucSize );
+		static bool						SetColor						( TElement pThis, MonoObject* color );
+		static bool						SetOrdering						( TElement pThis, short sOrdering );
+		static bool						SetVisibleDistance				( TElement pThis, unsigned short usVisibleDistance );
 	};
 
 	class Object
 	{
 	public:
 		// Object create/destroy functions
-		static DWORD					Create							( unsigned short usModelID, MonoObject* pPosition, MonoObject* pRotation, bool bIsLowLod );
+		static void						Ctor							( TElement pThis, unsigned short usModelID, MonoObject* pPosition, MonoObject* pRotation, bool bIsLowLod );
 
 		// Object get functions
-		static MonoObject*				GetScale						( DWORD pUserData );
+		static MonoObject*				GetScale						( TElement pThis );
 
 		// Object set functions
-		static bool						SetScale						( DWORD pUserData, MonoObject* pScale );
-		static bool						Move							( DWORD pUserData, unsigned long ulTime, MonoObject* pPosition, MonoObject* pRotation, MonoString* msEasingType, float fEasingPeriod, float fEasingAmplitude, float fEasingOvershoot );
-		static bool						Stop							( DWORD pUserData );
+		static bool						SetScale						( TElement pThis, MonoObject* pScale );
+		static bool						Move							( TElement pThis, unsigned long ulTime, MonoObject* pPosition, MonoObject* pRotation, MonoString* msEasingType, float fEasingPeriod, float fEasingAmplitude, float fEasingOvershoot );
+		static bool						Stop							( TElement pThis );
 	};
 
 	class RadarArea
 	{
 	public:
 		// Radar area create/destroy funcs
-		static DWORD					Create							( MonoObject* pPosition, MonoObject* pSize, MonoObject* pColor, DWORD pVisibleTo );
+		static void						Ctor							( TElement pThis, MonoObject* pPosition, MonoObject* pSize, MonoObject* pColor, TElement pVisibleTo );
 
 		// Radar area get funcs
-		static MonoObject*				GetSize							( DWORD pUserData );
-		static MonoObject*				GetColor						( DWORD pUserData );
-		static bool						IsFlashing						( DWORD pUserData );
-		static bool						IsInside						( DWORD pUserData, MonoObject* pPosition );
+		static MonoObject*				GetSize							( TElement pThis );
+		static MonoObject*				GetColor						( TElement pThis );
+		static bool						IsFlashing						( TElement pThis );
+		static bool						IsInside						( TElement pThis, MonoObject* pPosition );
 
 		// Radar area set funcs
-		static bool						SetSize							( DWORD pUserData, MonoObject* pSize );
-		static bool						SetColor						( DWORD pUserData, MonoObject* pColor );
-		static bool						SetFlashing						( DWORD pUserData, bool bFlashing );
+		static bool						SetSize							( TElement pThis, MonoObject* pSize );
+		static bool						SetColor						( TElement pThis, MonoObject* pColor );
+		static bool						SetFlashing						( TElement pThis, bool bFlashing );
 	};
 
 	class Pickup
 	{
 	public:
 		// Pickup create/destroy funcs
-		static DWORD					Create							( MonoObject* pPosition, unsigned char ucType, double dFive, unsigned long ulRespawnInterval, double dSix );
+		static void						Ctor							( TElement pThis, MonoObject* pPosition, unsigned char ucType, double dFive, unsigned long ulRespawnInterval, double dSix );
 
 		// Pickup get funcs
-		static unsigned char			GetType							( DWORD pUserData );
-		static unsigned char			GetWeapon						( DWORD pUserData );
-		static float					GetAmount						( DWORD pUserData );
-		static unsigned short			GetAmmo							( DWORD pUserData );
-		static unsigned long			GetRespawnInterval				( DWORD pUserData );
-		static bool						IsSpawned						( DWORD pUserData );
+		static unsigned char			GetPickupType					( TElement pThis );
+		static unsigned char			GetWeapon						( TElement pThis );
+		static float					GetAmount						( TElement pThis );
+		static unsigned short			GetAmmo							( TElement pThis );
+		static unsigned long			GetRespawnInterval				( TElement pThis );
+		static bool						IsSpawned						( TElement pThis );
 
 		// Pickup set funcs
-		static bool						SetType							( DWORD pUserData, unsigned char ucType, double dThree, double dFour );
-		static bool						SetRespawnInterval				( DWORD pUserData, unsigned long ulInterval );
-		static bool						Use								( DWORD pUserData, DWORD pPlayer );
+		static bool						SetType							( TElement pThis, unsigned char ucType, double dThree, double dFour );
+		static bool						SetRespawnInterval				( TElement pThis, unsigned long ulInterval );
+		static bool						Use								( TElement pThis, TElement pPlayer );
 	};
 
-	class Shape
+	class ColCircle
 	{
 	public:
-		// Shape create funcs
-		static DWORD					CreateCircle					( MonoObject* pPosition, float fRadius );
-		static DWORD					CreateCuboid					( MonoObject* pPosition, MonoObject* vecSize );
-		static DWORD					CreateSphere					( MonoObject* pPosition, float fRadius );
-		static DWORD					CreateRectangle					( MonoObject* pPosition, MonoObject* vecSize );
-		static DWORD					CreatePolygon					( float fX, float fY, float fX1, float fY1, float fX2, float fY2, float fX3, float fY3, MonoArray* vecPointList );
-		static DWORD					CreateTube						( MonoObject* pPosition, float fRadius, float fHeight );
+		static void						Ctor							( TElement pThis, MonoObject* pPosition, float fRadius );
+	};
+
+	class ColCuboid
+	{
+	public:
+		static void						Ctor							( TElement pThis, MonoObject* pPosition, MonoObject* vecSize );
+	};
+
+	class ColSphere
+	{
+	public:
+		static void						Ctor							( TElement pThis, MonoObject* pPosition, float fRadius );
+	};
+
+	class ColRectangle
+	{
+	public:
+		static void						Ctor							( TElement pThis, MonoObject* pPosition, MonoObject* vecSize );
+	};
+
+	class ColPolygon
+	{
+	public:
+		static void						Ctor							( TElement pThis, MonoObject* vec1, MonoObject* vec2, MonoObject* vec3, MonoObject* vec4, MonoArray* vecPointList );
+	};
+
+	class ColTube
+	{
+	public:
+		static void						Ctor							( TElement pThis, MonoObject* pPosition, float fRadius, float fHeight );
 	};
 
 	class Explosion
 	{
 	public:
 		// Explosion funcs
-		static bool						Create							( MonoObject* pPosition, unsigned char ucType, DWORD pCreator );
+		static bool						Create							( MonoObject* pPosition, unsigned char ucType, TElement pCreator );
 	};
 
 	class Audio
 	{
 	public:
 		// Audio funcs
-		static bool						PlayFrontEnd					( DWORD pUserData, unsigned char ucSound );
-		static bool						PlayMission						( DWORD pUserData, MonoObject* vecPosition, unsigned short usSlot );
+		static bool						PlayFrontEnd					( TElement pThis, unsigned char ucSound );
+		static bool						PlayMission						( TElement pThis, MonoObject* vecPosition, unsigned short usSlot );
 	};
 
 	class Team
 	{
 	public:
 		// Team get funcs
-		static DWORD					Create							( MonoString* msTeamName, MonoObject* pColor );
-		static DWORD					GetFromName						( MonoString* msTeamName );
-		static MonoString*				GetName							( DWORD pUserData );
-		static MonoObject*				GetColor						( DWORD pUserData );
-		static unsigned int				CountPlayers					( DWORD pUserData );
-		static bool						GetFriendlyFire					( DWORD pUserData );
+		static void						Ctor							( TElement pThis, MonoString* msTeamName, MonoObject* pColor );
+		static TElement					GetFromName						( MonoString* msTeamName );
+		static MonoString*				GetName							( TElement pThis );
+		static MonoObject*				GetColor						( TElement pThis );
+		static unsigned int				CountPlayers					( TElement pThis );
+		static bool						GetFriendlyFire					( TElement pThis );
 
 		// Team set funcs
-		static bool						SetName							( DWORD pUserData, MonoString* msTeamName );
-		static bool						SetColor						( DWORD pUserData, MonoObject* pColor );
-		static bool						SetFriendlyFire					( DWORD pUserData, bool bFriendlyFire );
+		static bool						SetName							( TElement pThis, MonoString* msTeamName );
+		static bool						SetColor						( TElement pThis, MonoObject* pColor );
+		static bool						SetFriendlyFire					( TElement pThis, bool bFriendlyFire );
 	};
 
 	class Water
 	{
 	public:
 		// Water funcs
-		static DWORD					Create							( MonoObject* pV1, MonoObject* pV2, MonoObject* pV3, MonoObject* pV4, bool bShallow );
-		static bool						SetLevel						( DWORD pUserData, float fLevel );
+		static void						Ctor							( TElement pThis, MonoObject* pV1, MonoObject* pV2, MonoObject* pV3, MonoObject* pV4, bool bShallow );
+		static bool						SetLevel						( TElement pThis, float fLevel );
 		static bool						SetLevelAll						( float fLevel );
 		static bool						SetLevelWorld					( float fLevel, bool bIncludeWorldNonSeaLevel );
 		static bool						ResetLevelWorld					( void );
-		static MonoObject*				GetVertexPosition				( DWORD pUserData, int iVertexIndex );
-		static bool						SetVertexPosition				( DWORD pUserData, int iVertexIndex, MonoObject* vecPosition );
+		static MonoObject*				GetVertexPosition				( TElement pThis, int iVertexIndex );
+		static bool						SetVertexPosition				( TElement pThis, int iVertexIndex, MonoObject* vecPosition );
 		static MonoObject*				GetColor						( void );
 		static bool						SetColor						( MonoObject* pColor );
 		static bool						ResetColor						( void );
@@ -658,85 +692,85 @@ public:
 	{
 	public:
 		// Account get funcs
-		static DWORD					Get								( MonoString* msName, MonoString* msPassword );
+		static TElement					Get								( MonoString* msName, MonoString* msPassword );
 		static MonoArray*				GetAll							( void );
-		static DWORD					GetPlayer						( DWORD pAccount );
-		static bool						IsGuest							( DWORD pAccount );
-	//	static CLuaArgument*			GetData							( DWORD pAccount, MonoString* szKey );
-	//	static MonoArray*				GetAllData						( DWORD pAccount );
-		static MonoString*				GetSerial						( DWORD pAccount );
+		static TElement					GetPlayer						( TElement pAccount );
+		static bool						IsGuest							( TElement pAccount );
+	//	static CLuaArgument*			GetData							( TElement pAccount, MonoString* szKey );
+	//	static MonoArray*				GetAllData						( TElement pAccount );
+		static MonoString*				GetSerial						( TElement pAccount );
 	//	static MonoArray*				GetBySerial						( MonoString* msSerial );
 
 		// Account set funcs
-		static DWORD					Add								( MonoString* msName, MonoString* msPassword );
-		static bool						Remove							( DWORD pAccount );
-		static bool						SetPassword						( DWORD pAccount, MonoString* msPassword );
-	//	static bool						SetData							( DWORD pAccount, MonoString* msKey, CLuaArgument* pArgument );
-		static bool						CopyData						( DWORD pAccount, DWORD pFromAccount );
+		static TElement					Add								( MonoString* msName, MonoString* msPassword );
+		static bool						Remove							( TElement pAccount );
+		static bool						SetPassword						( TElement pAccount, MonoString* msPassword );
+	//	static bool						SetData							( TElement pAccount, MonoString* msKey, CLuaArgument* pArgument );
+		static bool						CopyData						( TElement pAccount, TElement pFromAccount );
 	};
 
 	class Ban
 	{
 	public:
-		static DWORD					Add								( MonoString* msIP, MonoString* msUsername, MonoString* msSerial, DWORD pResponsible, MonoString* msResponsible, MonoString* msReason, int iUnban );
-		static bool						Remove							( DWORD pBan, DWORD pResponsible );
+		static TElement					Add								( MonoString* msIP, MonoString* msUsername, MonoString* msSerial, TElement pResponsible, MonoString* msResponsible, MonoString* msReason, int iUnban );
+		static bool						Remove							( TElement pBan, TElement pResponsible );
 
 	//	static MonoArray*				GetBans							( void );
 		static bool						Reload							( void );
 
-		static MonoString*				GetIP							( DWORD pBan );
-		static MonoString*				GetSerial						( DWORD pBan );
-		static MonoString*				GetUsername						( DWORD pBan );
-		static MonoString*				GetNick							( DWORD pBan );
-		static MonoString*				GetReason						( DWORD pBan );
-		static MonoString*				GetAdmin						( DWORD pBan );
+		static MonoString*				GetIP							( TElement pBan );
+		static MonoString*				GetSerial						( TElement pBan );
+		static MonoString*				GetUsername						( TElement pBan );
+		static MonoString*				GetNick							( TElement pBan );
+		static MonoString*				GetReason						( TElement pBan );
+		static MonoString*				GetAdmin						( TElement pBan );
 
-		static int						GetBanTime						( DWORD pBan );
-		static int						GetUnbanTime					( DWORD pBan );
+		static int						GetBanTime						( TElement pBan );
+		static int						GetUnbanTime					( TElement pBan );
 
-		static bool						SetUnbanTime					( DWORD pBan, int time );
-		static bool						SetReason						( DWORD pBan, MonoString* msReason );
-		static bool						SetAdmin						( DWORD pBan, MonoString* msAdminName );
+		static bool						SetUnbanTime					( TElement pBan, int time );
+		static bool						SetReason						( TElement pBan, MonoString* msReason );
+		static bool						SetAdmin						( TElement pBan, MonoString* msAdminName );
 	};
 
 	class Resource
 	{
 	public:
 		// Resource funcs
-		static DWORD					Create					( MonoString* msResourceName, MonoString* msOrganizationalDir );
-		static DWORD					Copy					( DWORD pResource, MonoString* msNewResourceName, MonoString* msOrganizationalDir );
-		static DWORD					GetRootElement			( DWORD pResource = NULL );
-		static DWORD					GetMapRootElement		( DWORD pResource, MonoString* msMap );
-		static DWORD					GetDynamicElementRoot	( DWORD pResource );
+		static void						Ctor					( TElement pThis, MonoString* msResourceName, MonoString* msOrganizationalDir );
+		static TElement					Copy					( TElement pResource, MonoString* msNewResourceName, MonoString* msOrganizationalDir );
+		static TElement					GetRootElement			( TElement pResource = nullptr );
+		static TElement					GetMapRootElement		( TElement pResource, MonoString* msMap );
+		static TElement					GetDynamicElementRoot	( TElement pResource );
 	//	static CXMLNode*				AddMap					( MonoString* msFilePath, MonoString* msMapName, int iDimension );
 	//	static CXMLNode*				AddConfig				( MonoString* msFilePath, MonoString* msConfigName, int iType );
-		static bool						RemoveFile				( DWORD pResource, MonoString* msFilename );
+		static bool						RemoveFile				( TElement pResource, MonoString* msFilename );
 	//	static CXMLNode					AddConfig				( MonoString* msFilePath, MonoString* msFileType );
 	//	static CXMLNode					AddMap					( MonoString* msFilePath, unsigned int uiDimension = 0 );
 	//	static CXMLNode					GetConfig				( MonoString* msFilePath );
-	//	static CLuaArguments*			GetExportedFunctions	( DWORD pResource );
-		static DWORD					GetFromName				( MonoString* msResourceName );
-		static MonoString*				GetInfo					( DWORD pResource, MonoString* msAttribute );
-		static unsigned int				GetLastStartTime		( DWORD pResource );
-		static MonoString*				GetLoadFailureReason	( DWORD pResource );
-		static unsigned int				GetLoadTime				( DWORD pResource );
-		static MonoString*				GetName					( DWORD pResource );
+	//	static CLuaArguments*			GetExportedFunctions	( TElement pResource );
+		static TElement					GetFromName				( MonoString* msResourceName );
+		static MonoString*				GetInfo					( TElement pResource, MonoString* msAttribute );
+		static unsigned int				GetLastStartTime		( TElement pResource );
+		static MonoString*				GetLoadFailureReason	( TElement pResource );
+		static unsigned int				GetLoadTime				( TElement pResource );
+		static MonoString*				GetName					( TElement pResource );
 		static MonoArray*				GetResources			( void );
-		static MonoString*				GetState				( DWORD pResource );
-		static DWORD					GetCurrent				( void );
+		static MonoString*				GetState				( TElement pResource );
+		static TElement					GetCurrent				( void );
 		static bool						Refresh					( bool refreshAll = false );
-		static bool						RemoveDefaultSetting	( DWORD pResource, MonoString* msSettingName );
-		static bool						Start					( DWORD pResource, bool persistent = false, bool startIncludedResources = true, bool loadServerConfigs = true, bool loadMaps = true, bool loadServerScripts = true, bool loadHTML = true, bool loadClientConfigs = true, bool loadClientScripts = true, bool loadFiles = true );
-		static bool						Restart					( DWORD pResource );
-		static bool						Stop					( DWORD pResource );
-		static bool						SetDefaultSetting		( DWORD pResource, MonoString* msSettingName, MonoString* msSettingValue );
-	//	static bool						SetDefaultSetting		( DWORD pResource, MonoString* msSettingName, int iSettingValue );
-	//	static bool						SetDefaultSetting		( DWORD pResource, MonoString* msSettingName, float fSettingValue );
-		static bool						SetInfo					( DWORD pResource, MonoString* msAttribute, MonoString* msValue );
+		static bool						RemoveDefaultSetting	( TElement pResource, MonoString* msSettingName );
+		static bool						Start					( TElement pResource, bool persistent = false, bool startIncludedResources = true, bool loadServerConfigs = true, bool loadMaps = true, bool loadServerScripts = true, bool loadHTML = true, bool loadClientConfigs = true, bool loadClientScripts = true, bool loadFiles = true );
+		static bool						Restart					( TElement pResource );
+		static bool						Stop					( TElement pResource );
+		static bool						SetDefaultSetting		( TElement pResource, MonoString* msSettingName, MonoString* msSettingValue );
+	//	static bool						SetDefaultSetting		( TElement pResource, MonoString* msSettingName, int iSettingValue );
+	//	static bool						SetDefaultSetting		( TElement pResource, MonoString* msSettingName, float fSettingValue );
+		static bool						SetInfo					( TElement pResource, MonoString* msAttribute, MonoString* msValue );
 		static bool						Rename					( MonoString* msResourceName, MonoString* msNewResourceName, MonoString* msOrganizationalPath );
 		static bool						Delete					( MonoString* msResourceName );
-	//	static CLuaArguments*			GetACLRequests			( DWORD pResource );
-		static bool						UpdateACLRequest		( DWORD pResource, MonoString* msRightName, bool bAccess, MonoString* msByWho );
+	//	static CLuaArguments*			GetACLRequests			( TElement pResource );
+		static bool						UpdateACLRequest		( TElement pResource, MonoString* msRightName, bool bAccess, MonoString* msByWho );
 	};
 };
 

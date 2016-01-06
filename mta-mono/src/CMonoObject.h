@@ -41,19 +41,36 @@ public:
 		return pColor;
 	}
 	
-	template <class T> static T GetPropertyValue( MonoObject* pMonoObject, const char* szPropertyName )
+	template< class T >
+	static T GetPropertyValue( MonoObject* pMonoObject, const char* szPropertyName )
 	{
 		return *( reinterpret_cast<T*>( mono_object_unbox( GetPropertyValue( pMonoObject, szPropertyName ) ) ) );
 	}
 
-	static void* GetValue( MonoObject* pMonoObject )
+	static PVOID GetValue( MonoObject* pMonoObject )
 	{
 		return mono_object_unbox( pMonoObject );
 	}
 
-	template <class T> static T GetValue( MonoObject* pMonoObject )
+	template< class T >
+	static T GetValue( MonoObject* pMonoObject )
 	{
-		return *( reinterpret_cast<T*>( mono_object_unbox( pMonoObject ) ) );
+		return *( reinterpret_cast< T* >( mono_object_unbox( pMonoObject ) ) );
+	}
+
+	inline static char* ToString( MonoObject* pMonoObject )
+	{
+		MonoClass* pClass = mono_object_get_class( pMonoObject );
+
+		ASSERT( pClass );
+
+		MonoMethod* pMethod = mono_class_get_method_from_name( pClass, "ToString", 0 );
+
+		ASSERT( pMethod );
+
+		MonoString* pString = (MonoString*)mono_runtime_invoke( pMethod, pMonoObject, nullptr, nullptr );
+
+		return mono_string_to_utf8( pString );
 	}
 };
 

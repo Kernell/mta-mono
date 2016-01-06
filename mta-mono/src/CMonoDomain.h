@@ -29,6 +29,7 @@ private:
 	MonoDomain*							m_pDomain;
 	CResource*							m_pResource;
 	CMonoInterface*						m_pMono;
+	CModule*							m_pModule;
 
 	MonoAssembly*						m_pMonoAssembly;
 	MonoImage*							m_pMonoImage;
@@ -55,33 +56,35 @@ public:
 	bool			Set					( bool bForce );
 	MonoAssembly*	OpenAssembly		( const char *szName );
 	MonoObject*		CreateObject		( MonoClass* klass );
-	void			SetConfig			( const char *szBaseDir, const char *szConfigFileName );
+	void			SetConfig			( const char* szBaseDir, const char* szConfigFileName );
 
-	MonoString*		NewString			( const char* szText );
-	MonoString*		NewString			( string strText );
+	MonoString*		NewString			( const char* szText ) const;
+	MonoString*		NewString			( const string& strText ) const;
 
-	template <class T, int iLuaType>
-	MonoArray*		NewArray			( MonoClass* pMonoClass, CLuaArgumentsVector* pLuaArguments = nullptr )
+	MonoArray*		NewElementArray		( MonoClass* pMonoClass, CLuaArgumentsVector pLuaArguments );
+
+	template< class T, int iLuaType >
+	MonoArray*		NewArray			( MonoClass* pMonoClass, CLuaArgumentsVector pLuaArguments )
 	{
-		MonoArray* pArray = mono_array_new( this->m_pDomain, pMonoClass, pLuaArguments ? pLuaArguments->size() : 0 );
+		MonoArray* pArray = mono_array_new( this->m_pDomain, pMonoClass, pLuaArguments.size() );
 
-		if( pLuaArguments )
+		if( pLuaArguments.size() > 0 )
 		{
 			int i = 0;
 
-			for( const auto& pArgument : *pLuaArguments )
+			for( const auto& pArgument : pLuaArguments )
 			{
 				switch( iLuaType )
 				{
 					case LUA_TBOOLEAN:
 					{
-						mono_array_set( pArray, T, i++, (T)( pArgument.GetBoolean() ) );
+						mono_array_set( pArray, T, i++, ( T )pArgument.GetBoolean() );
 
 						break;
 					}
 					case LUA_TNUMBER:
 					{
-						mono_array_set( pArray, T, i++, pArgument.GetNumber< T >() );
+						mono_array_set( pArray, T, i++, ( T )pArgument.GetNumber() );
 
 						break;
 					}
@@ -96,7 +99,7 @@ public:
 					case LUA_TLIGHTUSERDATA:
 					case LUA_TUSERDATA:
 					{
-						mono_array_set( pArray, T, i++, reinterpret_cast< T >( pArgument.GetLightUserData() ) );
+						mono_array_set( pArray, T, i++, ( T )pArgument.GetLightUserData() );
 
 						break;
 					}
@@ -107,15 +110,15 @@ public:
 		return pArray;
 	}
 
-	MonoDomain*		GetMonoPtr			( void )	{ return this->m_pDomain; }
+	inline MonoDomain*		GetMonoPtr			( void ) const	{ return this->m_pDomain; }
 
-	CMonoInterface*	GetMono				( void )	{ return this->m_pMono; }
-	CResource*		GetResource			( void )	{ return this->m_pResource; }
+	inline CMonoInterface*	GetMono				( void ) const	{ return this->m_pMono; }
+	inline CResource*		GetResource			( void ) const	{ return this->m_pResource; }
 
-	CMonoCorlib*	GetCorlib			( void )	{ return this->m_pCorlib; }
-	CMonoMTALib*	GetMTALib			( void )	{ return this->m_pMTALib; }
+	inline CMonoCorlib*		GetCorlib			( void ) const	{ return this->m_pCorlib; }
+	inline CMonoMTALib*		GetMTALib			( void ) const	{ return this->m_pMTALib; }
 
-	string			GetName				( void )	{ return this->m_strName; }
+	inline string			GetName				( void ) const	{ return this->m_strName; }
 };
 
 #endif

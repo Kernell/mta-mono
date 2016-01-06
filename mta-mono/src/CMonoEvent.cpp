@@ -17,6 +17,7 @@ CMonoEvent::CMonoEvent( CMonoClass* pClass, MonoEvent* pEvent )
 {
 	this->m_pClass			= pClass;
 	this->m_pEvent			= pEvent;
+	this->m_pResource		= pClass->GetDomain()->GetResource();
 	this->m_pAddMethod		= nullptr;
 	this->m_pRemoveMethod	= nullptr;
 	this->m_pRaiseMethod	= nullptr;
@@ -26,6 +27,7 @@ CMonoEvent::CMonoEvent( CMonoClass* pClass, MonoEvent* pEvent )
 
 CMonoEvent::~CMonoEvent( void )
 {
+	this->m_pResource		= nullptr;
 	this->m_pClass			= nullptr;
 	this->m_pEvent			= nullptr;
 	this->m_pAddMethod		= nullptr;
@@ -42,53 +44,35 @@ bool CMonoEvent::Call( MonoObject* pThis, list< CLuaArgument* > argv )
 		return false;
 	}
 
-	void** pArguments = this->ParseArguments( argv );
-
-	if( !pArguments )
-	{
-		this->GetClass()->GetDomain()->GetResource()->ErrorPrintf( "Raise method for event '%s' not found\n", this->GetName().c_str() );
-
-		return false;
-	}
-
-	MonoObject* pException	= nullptr;
-
-	pMethod->Invoke( pThis, pArguments, pException );
-
-	if( !pException )
-	{
-		auto iter = argv.begin();
-
-		if( (*iter)->GetType() == LUA_TLIGHTUSERDATA )
-		{
-			pMethod->Invoke( pArguments[ 0 ], pArguments, pException );
-		}
-	}
-
-	delete [] pArguments;
+	CMonoArguments pArguments;
 	
-	if( pException )
+	if( !this->ParseArguments( pArguments, argv ) )
 	{
-		this->GetClass()->GetDomain()->GetResource()->ErrorPrintf( "%s\n", mono_string_to_utf8( mono_object_to_string( pException, nullptr ) ) );
+		this->m_pResource->ErrorPrintf( "Raise method for event '%s' not found\n", this->GetName().c_str() );
 
 		return false;
 	}
 
-	return false;
+	pMethod->Invoke( pThis, *pArguments, nullptr );
+
+	const auto& iter = *argv.begin();
+
+	if( iter->GetType() == LUA_TLIGHTUSERDATA )
+	{
+		pMethod->Invoke( pArguments[ 0 ], *pArguments, nullptr );
+	}
+
+	return true;
 }
 
-void** CMonoEvent::ParseArguments( list< CLuaArgument* > argv )
+bool CMonoEvent::ParseArguments( CMonoArguments& pArguments, list< CLuaArgument* > argv )
 {
-	CMonoMTALib* pMTALib = this->GetClass()->GetDomain()->GetMTALib();
-	CMonoCorlib* pCorlib = this->GetClass()->GetDomain()->GetCorlib();
+	CMonoMTALib* pMTALib = this->m_pClass->GetDomain()->GetMTALib();
+	CMonoCorlib* pCorlib = this->m_pClass->GetDomain()->GetCorlib();
 
-	PVOID* pArguments = new PVOID[ argv.size() ];
-	
-	uint argc = 0;
+	const auto& pMethods = this->m_pClass->GetMethods( "raise_" + this->GetName() );
 
-	auto pMethods = this->m_pClass->GetMethods( "raise_" + this->GetName() );
-
-	for( auto pMethod : pMethods )
+	for( const auto& pMethod : pMethods )
 	{
 		vector< SMonoType > pArgList = pMethod->GetArguments();
 
@@ -100,11 +84,11 @@ void** CMonoEvent::ParseArguments( list< CLuaArgument* > argv )
 		auto iter	= argv.begin();
 		auto pType	= pArgList.begin();
 
-		for( ; ; iter++ )
+		for( ; ; iter++, pType++ )
 		{
 			if( iter == argv.end() || pType == pArgList.end() )
 			{
-				return pArguments;
+				return true;
 			}
 
 			int iLuaType = (*iter)->GetType();
@@ -113,189 +97,188 @@ void** CMonoEvent::ParseArguments( list< CLuaArgument* > argv )
 			{
 				case MONO_TYPE_BOOLEAN: // System.Boolean
 				{
+					bool bValue = false;
+
 					if( iLuaType == LUA_TBOOLEAN )
 					{
-						bool bValue = (*iter)->GetBoolean();
-
-						pArguments[ argc++ ] = &bValue;
+						bValue = (*iter)->GetBoolean();
 					}
+				
+					pArguments.Push( bValue );
 
 					break;
 				}
 				case MONO_TYPE_CHAR: // System.Char
 				{
+					wchar_t iValue = 0;
+
 					if( iLuaType == LUA_TNUMBER )
 					{
-						wchar_t iValue = (*iter)->GetNumber< wchar_t >();
-
-						MonoObject* pObj = pCorlib->Class[ "char" ]->Box( &iValue );
-
-						pArguments[ argc++ ] = pObj;
+						iValue = (*iter)->GetNumber< wchar_t >();
 					}
+
+					pArguments.Push( iValue );
 
 					break;
 				}
 				case MONO_TYPE_I1: // System.SByte
 				{
+					int8_t iValue = 0;
+
 					if( iLuaType == LUA_TNUMBER )
 					{
-						int8_t iValue = (*iter)->GetNumber< int8_t >();
-
-						MonoObject* pObj = pCorlib->Class[ "sbyte" ]->Box( &iValue );
-
-						pArguments[ argc++ ] = pObj;
+						iValue = (*iter)->GetNumber< int8_t >();
 					}
+
+					pArguments.Push( iValue );
 
 					break;
 				}
 				case MONO_TYPE_U1: // System.Byte
 				{
+					uint8_t iValue = 0;
+
 					if( iLuaType == LUA_TNUMBER )
 					{
-						uint8_t iValue = (*iter)->GetNumber< uint8_t >();
-
-						MonoObject* pObj = pCorlib->Class[ "byte" ]->Box( &iValue );
-
-						pArguments[ argc++ ] = pObj;
+						iValue = (*iter)->GetNumber< uint8_t >();
 					}
+
+					pArguments.Push( iValue );
 
 					break;
 				}
 				case MONO_TYPE_I2: // System.Int16
 				{
+					int16_t iValue = 0;
+
 					if( iLuaType == LUA_TNUMBER )
 					{
-						int16_t iValue = (*iter)->GetNumber< int16_t >();
-
-						MonoObject* pObj = pCorlib->Class[ "int16" ]->Box( &iValue );
-
-						pArguments[ argc++ ] = pObj;
+						iValue = (*iter)->GetNumber< int16_t >();
 					}
+
+					pArguments.Push( iValue );
 
 					break;
 				}
 				case MONO_TYPE_U2: // System.UInt16
 				{
+					uint16_t iValue = 0;
+
 					if( iLuaType == LUA_TNUMBER )
 					{
-						uint16_t iValue = (*iter)->GetNumber< uint16_t >();
-
-						MonoObject* pObj = pCorlib->Class[ "uint16" ]->Box( &iValue );
-
-						pArguments[ argc++ ] = pObj;
+						iValue = (*iter)->GetNumber< uint16_t >();
 					}
+
+					pArguments.Push( iValue );
 
 					break;
 				}
 				case MONO_TYPE_I4: // System.Int32
 				{
+					int32_t iValue = 0;
+
 					if( iLuaType == LUA_TNUMBER )
 					{
-						int32_t iValue = (*iter)->GetNumber< int32_t >();
-
-						MonoObject* pObj = pCorlib->Class[ "int32" ]->Box( &iValue );
-
-						pArguments[ argc++ ] = pObj;
+						iValue = (*iter)->GetNumber< int32_t >();
 					}
+
+					pArguments.Push( iValue );
 
 					break;
 				}
 				case MONO_TYPE_U4: // System.UInt32
 				{
+					uint32_t iValue = 0;
+
 					if( iLuaType == LUA_TNUMBER )
 					{
-						uint32_t iValue = (*iter)->GetNumber< uint32_t >();
-
-						MonoObject* pObj = pCorlib->Class[ "uint32" ]->Box( &iValue );
-
-						pArguments[ argc++ ] = pObj;
+						iValue = (*iter)->GetNumber< uint32_t >();
 					}
+					
+					pArguments.Push( iValue );
 
 					break;
 				}
 				case MONO_TYPE_I8: // System.Int64
 				{
+					int64_t iValue = 0;
+
 					if( iLuaType == LUA_TNUMBER )
 					{
-						int64_t iValue = (*iter)->GetNumber< int64_t >();
-
-						MonoObject* pObj = pCorlib->Class[ "int64" ]->Box( &iValue );
-
-						pArguments[ argc++ ] = pObj;
+						iValue = (*iter)->GetNumber< int64_t >();
 					}
+
+					pArguments.Push( iValue );
 
 					break;
 				}
 				case MONO_TYPE_U8: // System.UInt64
 				{
+					uint64_t iValue = 0;
+
 					if( iLuaType == LUA_TNUMBER )
 					{
-						uint64_t iValue = (*iter)->GetNumber< uint64_t >();
-
-						MonoObject* pObj = pCorlib->Class[ "uint64" ]->Box( &iValue );
-
-						pArguments[ argc++ ] = pObj;
+						iValue = (*iter)->GetNumber< uint64_t >();
 					}
+
+					pArguments.Push( iValue );
 
 					break;
 				}
 				case MONO_TYPE_R4: // System.Single
 				{
+					float fValue = 0;
+
 					if( iLuaType == LUA_TNUMBER )
 					{
-						float iValue = (*iter)->GetNumber< float >();
-
-						MonoObject* pObj = pCorlib->Class[ "float" ]->Box( &iValue );
-
-						pArguments[ argc++ ] = pObj;
+						fValue = (*iter)->GetNumber< float >();
 					}
+
+					pArguments.Push( fValue );
 
 					break;
 				}
 				case MONO_TYPE_R8: // System.Double
 				{
+					double dValue = 0;
+
 					if( iLuaType == LUA_TNUMBER )
 					{
-						double iValue = (*iter)->GetNumber< double >();
-
-						MonoObject* pObj = pCorlib->Class[ "double" ]->Box( &iValue );
-
-						pArguments[ argc++ ] = pObj;
+						dValue = (*iter)->GetNumber< double >();
 					}
+
+					pArguments.Push( dValue );
 
 					break;
 				}
 				case MONO_TYPE_STRING: // System.String
 				{
+					string strValue = "";
+
 					if( iLuaType == LUA_TSTRING )
 					{
-						const char* szValue = (*iter)->GetString();
-
-						MonoString* pString = this->GetClass()->GetDomain()->NewString( szValue );
-
-						pArguments[ argc++ ] = pString;
+						strValue = (*iter)->GetString();
 					}
+
+					MonoString* pString = this->m_pResource->GetDomain()->NewString( strValue );
+					
+					pArguments.Push( pString );
 
 					break;
 				}
 				case MONO_TYPE_OBJECT: // System.Object
 				case MONO_TYPE_CLASS:
 				{
+					MonoObject* pValue = nullptr;
+
 					if( iLuaType == LUA_TLIGHTUSERDATA )
 					{
-						void* pUserData = (*iter)->GetLightUserData();
+						CElement* pElement = this->m_pResource->GetElementManager()->FindOrCreate( (*iter)->GetLightUserData() );
 
-						MonoObject* pValue = pMTALib->RegisterElement( pUserData );
-
-						if( pValue )
-						{
-							pArguments[ argc++ ] = pValue;
-						}
-						else
-						{
-							pArguments[ argc++ ] = pUserData;
-						}
+						pValue = pElement->ToMonoObject();
 					}
+
+					pArguments.Push( pValue );
 
 					break;
 				}
@@ -303,7 +286,7 @@ void** CMonoEvent::ParseArguments( list< CLuaArgument* > argv )
 				case MONO_TYPE_U:
 				default:
 				{
-					this->GetClass()->GetDomain()->GetResource()->ErrorPrintf( "Unsupported type '%s (0x%i)' for '%s'\n", pType->strName.c_str(), pType->iType, this->GetName().c_str() );
+					this->m_pResource->ErrorPrintf( "Unsupported type '%s (0x%i)' for '%s'\n", pType->strName.c_str(), pType->iType, this->GetName().c_str() );
 
 					break;
 				}
@@ -311,9 +294,7 @@ void** CMonoEvent::ParseArguments( list< CLuaArgument* > argv )
 		}
 	}
 
-	delete [] pArguments;
-
-	return nullptr;
+	return false;
 }
 
 CMonoMethod* CMonoEvent::GetAddMethod( void )

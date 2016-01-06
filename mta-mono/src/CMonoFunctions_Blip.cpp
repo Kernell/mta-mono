@@ -14,41 +14,64 @@
 #include "CMonoFunctions.h"
 
 // Blip create/destroy functions
-DWORD CMonoFunctions::Blip::Create( MonoObject* pPosition, unsigned char ucIcon, unsigned char ucSize, MonoObject* color, short sOrdering, unsigned short usVisibleDistance, DWORD pVisibleTo )
+void CMonoFunctions::Blip::Ctor( TElement pThis, MonoObject* pTarget, unsigned char ucIcon, unsigned char ucSize, MonoObject* pArgColor, short sOrdering, unsigned short usVisibleDistance, TElement pArgVisibleTo )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		Vector3 vecPosition( pPosition );
+		SColor pColor;
+		PVOID pVisibleTo = nullptr;
 
-		SColor pColor = CMonoObject::GetColor( color );
+		if( pArgColor )
+		{
+			pColor = CMonoObject::GetColor( pArgColor );
+		}
 
-		return (DWORD)CLuaFunctionDefinitions::CreateBlip( RESOURCE->GetLua(), vecPosition, ucIcon, ucSize, pColor, sOrdering, usVisibleDistance, (void*)pVisibleTo );
+		if( pArgVisibleTo )
+		{
+			CElement* pVisibleToElement = pResource->GetElementManager()->GetFromList( pArgVisibleTo );
+
+			if( pVisibleToElement )
+			{
+				pVisibleTo = pVisibleToElement->ToLuaUserData();
+			}
+		}
+
+		PVOID pUserData = nullptr;
+
+		string strClassName = mono_class_get_name( mono_object_get_class( pTarget ) );
+
+		if( strClassName == "Vector3" )
+		{
+			pUserData = CLuaFunctionDefinitions::CreateBlip( pResource->GetLua(), Vector3( pTarget ), ucIcon, ucSize, pColor, sOrdering, usVisibleDistance, pVisibleTo );
+		}
+		else
+		{
+			CElement* pTargetElement = pResource->GetElementManager()->GetFromList( pTarget );
+
+			pUserData = CLuaFunctionDefinitions::CreateBlipAttachedTo( pResource->GetLua(), pTargetElement->ToLuaUserData(), ucIcon, ucSize, pColor, sOrdering, usVisibleDistance, pVisibleTo );
+		}
+
+		if( pUserData )
+		{
+			pResource->GetElementManager()->Create( pThis, pUserData );
+		}
 	}
-
-	return NULL;
 }
-
-DWORD CMonoFunctions::Blip::CreateAttachedTo( DWORD pTarget, unsigned char ucIcon, unsigned char ucSize, MonoObject* color, short sOrdering, unsigned short usVisibleDistance, DWORD pVisibleTo )
-{
-	if( RESOURCE )
-	{
-		SColor pColor = CMonoObject::GetColor( color );
-
-		return (DWORD)CLuaFunctionDefinitions::CreateBlipAttachedTo( RESOURCE->GetLua(), (void*)pTarget, ucIcon, ucSize, pColor, sOrdering, usVisibleDistance, (void*)pVisibleTo );
-	}
-
-	return NULL;
-}
-
 
 // Blip get functions
-unsigned char CMonoFunctions::Blip::GetIcon( DWORD pUserData )
+unsigned char CMonoFunctions::Blip::GetIcon( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned char ucIcon;
 		
-		if( CLuaFunctionDefinitions::GetBlipIcon( RESOURCE->GetLua(), (void*)pUserData, ucIcon ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+
+		if( CLuaFunctionDefinitions::GetBlipIcon( pResource->GetLua(), pElement->ToLuaUserData(), ucIcon ) )
 		{
 			return ucIcon;
 		}
@@ -57,13 +80,17 @@ unsigned char CMonoFunctions::Blip::GetIcon( DWORD pUserData )
 	return 0;
 }
 
-unsigned char CMonoFunctions::Blip::GetSize( DWORD pUserData )
+unsigned char CMonoFunctions::Blip::GetSize( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned char ucSize;
 		
-		if( CLuaFunctionDefinitions::GetBlipSize( RESOURCE->GetLua(), (void*)pUserData, ucSize ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetBlipSize( pResource->GetLua(), pElement->ToLuaUserData(), ucSize ) )
 		{
 			return ucSize;
 		}
@@ -72,28 +99,36 @@ unsigned char CMonoFunctions::Blip::GetSize( DWORD pUserData )
 	return 0;
 }
 
-MonoObject* CMonoFunctions::Blip::GetColor( DWORD pUserData )
+MonoObject* CMonoFunctions::Blip::GetColor( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		SColor outColor;
 		
-		if( CLuaFunctionDefinitions::GetBlipColor( RESOURCE->GetLua(), (void*)pUserData, outColor ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetBlipColor( pResource->GetLua(), pElement->ToLuaUserData(), outColor ) )
 		{
-			return RESOURCE->GetDomain()->GetMTALib()->Color->New( outColor );
+			return pResource->GetDomain()->GetMTALib()->Color->New( outColor );
 		}
 	}
 
 	return nullptr;
 }
 
-short CMonoFunctions::Blip::GetOrdering( DWORD pUserData )
+short CMonoFunctions::Blip::GetOrdering( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		short sOrdering;
 		
-		if( CLuaFunctionDefinitions::GetBlipOrdering( RESOURCE->GetLua(), (void*)pUserData, sOrdering ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetBlipOrdering( pResource->GetLua(), pElement->ToLuaUserData(), sOrdering ) )
 		{
 			return sOrdering;
 		}
@@ -102,13 +137,17 @@ short CMonoFunctions::Blip::GetOrdering( DWORD pUserData )
 	return 0;
 }
 
-unsigned short CMonoFunctions::Blip::GetVisibleDistance( DWORD pUserData )
+unsigned short CMonoFunctions::Blip::GetVisibleDistance( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned short usVisibleDistance;
 		
-		if( CLuaFunctionDefinitions::GetBlipVisibleDistance( RESOURCE->GetLua(), (void*)pUserData, usVisibleDistance ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetBlipVisibleDistance( pResource->GetLua(), pElement->ToLuaUserData(), usVisibleDistance ) )
 		{
 			return usVisibleDistance;
 		}
@@ -119,51 +158,71 @@ unsigned short CMonoFunctions::Blip::GetVisibleDistance( DWORD pUserData )
 
 
 // Blip set functions
-bool CMonoFunctions::Blip::SetIcon( DWORD pUserData, unsigned char ucIcon )
+bool CMonoFunctions::Blip::SetIcon( TElement pThis, unsigned char ucIcon )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetBlipIcon( RESOURCE->GetLua(), (void*)pUserData, ucIcon );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+
+		return CLuaFunctionDefinitions::SetBlipIcon( pResource->GetLua(), pElement->ToLuaUserData(), ucIcon );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Blip::SetSize( DWORD pUserData, unsigned char ucSize )
+bool CMonoFunctions::Blip::SetSize( TElement pThis, unsigned char ucSize )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetBlipSize( RESOURCE->GetLua(), (void*)pUserData, ucSize );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+
+		return CLuaFunctionDefinitions::SetBlipSize( pResource->GetLua(), pElement->ToLuaUserData(), ucSize );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Blip::SetColor( DWORD pUserData, MonoObject* color )
+bool CMonoFunctions::Blip::SetColor( TElement pThis, MonoObject* color )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetBlipColor( RESOURCE->GetLua(), (void*)pUserData, CMonoObject::GetColor( color ) );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+
+		return CLuaFunctionDefinitions::SetBlipColor( pResource->GetLua(), pElement->ToLuaUserData(), CMonoObject::GetColor( color ) );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Blip::SetOrdering( DWORD pUserData, short sOrdering )
+bool CMonoFunctions::Blip::SetOrdering( TElement pThis, short sOrdering )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetBlipOrdering( RESOURCE->GetLua(), (void*)pUserData, sOrdering );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+
+		return CLuaFunctionDefinitions::SetBlipOrdering( pResource->GetLua(), pElement->ToLuaUserData(), sOrdering );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Blip::SetVisibleDistance( DWORD pUserData, unsigned short usVisibleDistance )
+bool CMonoFunctions::Blip::SetVisibleDistance( TElement pThis, unsigned short usVisibleDistance )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetBlipVisibleDistance( RESOURCE->GetLua(), (void*)pUserData, usVisibleDistance );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+
+		return CLuaFunctionDefinitions::SetBlipVisibleDistance( pResource->GetLua(), pElement->ToLuaUserData(), usVisibleDistance );
 	}
 
 	return false;

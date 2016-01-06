@@ -14,17 +14,33 @@
 #include "CMonoFunctions.h"
 
 // Vehicle create/destroy functions
-DWORD CMonoFunctions::Vehicle::Create( int model, MonoObject* position, MonoObject* rotation, MonoString* numberplate, bool direction, int variant1, int variant2 )
+void CMonoFunctions::Vehicle::Ctor( TElement pThis, int model, MonoObject* position, MonoObject* rotation, MonoString* numberplate, bool direction, int variant1, int variant2 )
 {
-	if( RESOURCE )
-	{
-		float fX = CMonoObject::GetPropertyValue< float >( position, "X" );
-		float fY = CMonoObject::GetPropertyValue< float >( position, "Y" );
-		float fZ = CMonoObject::GetPropertyValue< float >( position, "Z" );
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
 
-		float fRX = CMonoObject::GetPropertyValue< float >( rotation, "X" );
-		float fRY = CMonoObject::GetPropertyValue< float >( rotation, "Y" );
-		float fRZ = CMonoObject::GetPropertyValue< float >( rotation, "Z" );
+	if( pResource )
+	{
+		float
+			fX = 0.0f,
+			fY = 0.0f,
+			fZ = 0.0f,
+			fRX = 0.0f,
+			fRY = 0.0f,
+			fRZ = 0.0f;
+
+		if( position )
+		{
+			fX = CMonoObject::GetPropertyValue< float >( position, "X" );
+			fY = CMonoObject::GetPropertyValue< float >( position, "Y" );
+			fZ = CMonoObject::GetPropertyValue< float >( position, "Z" );
+		}
+
+		if( rotation )
+		{
+			fRX = CMonoObject::GetPropertyValue< float >( rotation, "X" );
+			fRY = CMonoObject::GetPropertyValue< float >( rotation, "Y" );
+			fRZ = CMonoObject::GetPropertyValue< float >( rotation, "Z" );
+		}
 
 		string sNumberplate = "";
 
@@ -33,38 +49,48 @@ DWORD CMonoFunctions::Vehicle::Create( int model, MonoObject* position, MonoObje
 			sNumberplate = mono_string_to_utf8( numberplate );
 		}
 
-		return (DWORD)CLuaFunctionDefinitions::CreateVehicle( RESOURCE->GetLua(), model, fX, fY, fZ, fRX, fRY, fRZ, sNumberplate, direction, variant1, variant2 );
-	}
+		PVOID pUserData = CLuaFunctionDefinitions::CreateVehicle( pResource->GetLua(), model, fX, fY, fZ, fRX, fRY, fRZ, sNumberplate, direction, variant1, variant2 );
 
-	return NULL;
+		ASSERT( pUserData );
+
+		pResource->GetElementManager()->Create( pThis, pUserData );
+	}
 }
 
 // Vehicle get functions
-MonoString* CMonoFunctions::Vehicle::GetType( DWORD pUserData )
+MonoString* CMonoFunctions::Vehicle::GetVehicleType( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		string strType;
 		
-		if( CLuaFunctionDefinitions::GetVehicleType( RESOURCE->GetLua(), (void*)pUserData, strType ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetVehicleType( pResource->GetLua(), pElement->ToLuaUserData(), strType ) )
 		{
-			return RESOURCE->GetDomain()->NewString( strType );
+			return pResource->GetDomain()->NewString( strType );
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-MonoArray* CMonoFunctions::Vehicle::GetVariant( DWORD pUserData )
+MonoArray* CMonoFunctions::Vehicle::GetVariant( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned char ucVariant;
 		unsigned char ucVariant2;
 		
-		if( CLuaFunctionDefinitions::GetVehicleVariant( RESOURCE->GetLua(), (void*)pUserData, ucVariant, ucVariant2 ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetVehicleVariant( pResource->GetLua(), pElement->ToLuaUserData(), ucVariant, ucVariant2 ) )
 		{
-			MonoArray* pArray = mono_array_new( RESOURCE->GetDomain()->GetMonoPtr(), mono_get_char_class(), 2 );
+			MonoArray* pArray = mono_array_new( pResource->GetDomain()->GetMonoPtr(), mono_get_char_class(), 2 );
 
 			if( pArray )
 			{
@@ -76,18 +102,22 @@ MonoArray* CMonoFunctions::Vehicle::GetVariant( DWORD pUserData )
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-MonoObject* CMonoFunctions::Vehicle::GetColor( DWORD pUserData )
+MonoObject* CMonoFunctions::Vehicle::GetColor( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		CVehicleColor pVehicleColor;
 		
-		if( CLuaFunctionDefinitions::GetVehicleColor( RESOURCE->GetLua(), (PVOID)pUserData, pVehicleColor ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetVehicleColor( pResource->GetLua(), pElement->ToLuaUserData(), pVehicleColor ) )
 		{
-			CMonoMTALib* pMTALib = RESOURCE->GetDomain()->GetMTALib();
+			CMonoMTALib* pMTALib = pResource->GetDomain()->GetMTALib();
 
 			PVOID args[ 4 ];
 
@@ -107,13 +137,15 @@ MonoObject* CMonoFunctions::Vehicle::GetColor( DWORD pUserData )
 
 unsigned short CMonoFunctions::Vehicle::GetModelFromName( MonoString* msName )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szName = mono_string_to_utf8( msName );
 
 		unsigned short usModel;
 		
-		if( CLuaFunctionDefinitions::GetVehicleModelFromName( RESOURCE->GetLua(), szName, usModel ) )
+		if( CLuaFunctionDefinitions::GetVehicleModelFromName( pResource->GetLua(), szName, usModel ) )
 		{
 			return usModel;
 		}
@@ -122,13 +154,17 @@ unsigned short CMonoFunctions::Vehicle::GetModelFromName( MonoString* msName )
 	return 0;
 }
 
-bool CMonoFunctions::Vehicle::GetLandingGearDown( DWORD pUserData )
+bool CMonoFunctions::Vehicle::GetLandingGearDown( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		bool bGearDown;
 		
-		if( CLuaFunctionDefinitions::GetVehicleLandingGearDown( RESOURCE->GetLua(), (void*)pUserData, bGearDown ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetVehicleLandingGearDown( pResource->GetLua(), pElement->ToLuaUserData(), bGearDown ) )
 		{
 			return bGearDown;
 		}
@@ -137,13 +173,17 @@ bool CMonoFunctions::Vehicle::GetLandingGearDown( DWORD pUserData )
 	return false;
 }
 
-unsigned char CMonoFunctions::Vehicle::GetMaxPassengers( DWORD pUserData )
+unsigned char CMonoFunctions::Vehicle::GetMaxPassengers( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned char ucPassengers;
 		
-		if( CLuaFunctionDefinitions::GetVehicleMaxPassengers( RESOURCE->GetLua(), (void*)pUserData, ucPassengers ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetVehicleMaxPassengers( pResource->GetLua(), pElement->ToLuaUserData(), ucPassengers ) )
 		{
 			return ucPassengers;
 		}
@@ -152,78 +192,110 @@ unsigned char CMonoFunctions::Vehicle::GetMaxPassengers( DWORD pUserData )
 	return 0;
 }
 
-MonoString* CMonoFunctions::Vehicle::GetName( DWORD pUserData )
+MonoString* CMonoFunctions::Vehicle::GetName( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		string strOutName;
 		
-		if( CLuaFunctionDefinitions::GetVehicleName( RESOURCE->GetLua(), (void*)pUserData, strOutName ) )
-		{
-			return RESOURCE->GetDomain()->NewString( strOutName );
-		}
-	}
-
-	return NULL;
-}
-
-MonoString* CMonoFunctions::Vehicle::GetNameFromModel( unsigned short usModel )
-{
-	if( RESOURCE )
-	{
-		string strOutName;
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetVehicleNameFromModel( RESOURCE->GetLua(), usModel, strOutName ) )
+		if( CLuaFunctionDefinitions::GetVehicleName( pResource->GetLua(), pElement->ToLuaUserData(), strOutName ) )
 		{
-			return RESOURCE->GetDomain()->NewString( strOutName );
-		}
-	}
-
-	return NULL;
-}
-
-DWORD CMonoFunctions::Vehicle::GetOccupant( DWORD pUserData, unsigned int uiSeat )
-{
-	if( RESOURCE )
-	{
-		return (DWORD)CLuaFunctionDefinitions::GetVehicleOccupant( RESOURCE->GetLua(), (void*)pUserData, uiSeat );
-	}
-
-	return NULL;
-}
-
-MonoArray* CMonoFunctions::Vehicle::GetOccupants( DWORD pUserData )
-{
-	if( RESOURCE )
-	{
-		CLuaArgumentsVector pLuaArguments = CLuaFunctionDefinitions::GetVehicleOccupants( RESOURCE->GetLua(), (PVOID)pUserData );
-
-		if( pLuaArguments.size() > 0 )
-		{
-			return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TLIGHTUSERDATA>( mono_get_uint32_class(), &pLuaArguments );
+			return pResource->GetDomain()->NewString( strOutName );
 		}
 	}
 
 	return nullptr;
 }
 
-DWORD CMonoFunctions::Vehicle::GetController( DWORD pUserData )
+MonoString* CMonoFunctions::Vehicle::GetNameFromModel( unsigned short usModel )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return (DWORD)CLuaFunctionDefinitions::GetVehicleController( RESOURCE->GetLua(), (void*)pUserData );
+		string strOutName;
+		
+		if( CLuaFunctionDefinitions::GetVehicleNameFromModel( pResource->GetLua(), usModel, strOutName ) )
+		{
+			return pResource->GetDomain()->NewString( strOutName );
+		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-bool CMonoFunctions::Vehicle::GetSirensOn( DWORD pUserData )
+TElement CMonoFunctions::Vehicle::GetOccupant( TElement pThis, unsigned int uiSeat )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
+	{
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		PVOID pUserData = CLuaFunctionDefinitions::GetVehicleOccupant( pResource->GetLua(), pElement->ToLuaUserData(), uiSeat );
+
+		if( pUserData )
+		{
+			return pResource->GetElementManager()->FindOrCreate( pUserData )->ToMonoObject();
+		}
+	}
+
+	return nullptr;
+}
+
+MonoArray* CMonoFunctions::Vehicle::GetOccupants( TElement pThis )
+{
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
+	{
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		CLuaArgumentsVector pLuaArguments = CLuaFunctionDefinitions::GetVehicleOccupants( pResource->GetLua(), pElement->ToLuaUserData() );
+
+		if( pLuaArguments.size() > 0 )
+		{
+			return pResource->GetDomain()->NewElementArray( pResource->GetDomain()->GetMTALib()->GetClass( "Ped" )->GetMonoPtr(), pLuaArguments );
+		}
+	}
+
+	return nullptr;
+}
+
+TElement CMonoFunctions::Vehicle::GetController( TElement pThis )
+{
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
+	{
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		PVOID pUserData = CLuaFunctionDefinitions::GetVehicleController( pResource->GetLua(), pElement->ToLuaUserData() );
+
+		if( pUserData )
+		{
+			return pResource->GetElementManager()->FindOrCreate( pUserData )->ToMonoObject();
+		}
+	}
+
+	return nullptr;
+}
+
+bool CMonoFunctions::Vehicle::GetSirensOn( TElement pThis )
+{
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		bool bSirensOn;
-
-		if( CLuaFunctionDefinitions::GetVehicleSirensOn( RESOURCE->GetLua(), (void*)pUserData, bSirensOn ) )
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetVehicleSirensOn( pResource->GetLua(), pElement->ToLuaUserData(), bSirensOn ) )
 		{
 			return bSirensOn;
 		}
@@ -232,43 +304,55 @@ bool CMonoFunctions::Vehicle::GetSirensOn( DWORD pUserData )
 	return false;
 }
 
-MonoObject* CMonoFunctions::Vehicle::GetTurnVelocity( DWORD pUserData )
+MonoObject* CMonoFunctions::Vehicle::GetTurnVelocity( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		Vector3 vecVelocity;
-
-		if( CLuaFunctionDefinitions::GetVehicleTurnVelocity( RESOURCE->GetLua(), (void*)pUserData, vecVelocity ) )
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetVehicleTurnVelocity( pResource->GetLua(), pElement->ToLuaUserData(), vecVelocity ) )
 		{
-			return RESOURCE->GetDomain()->GetMTALib()->Vector3->New( vecVelocity );
+			return pResource->GetDomain()->GetMTALib()->Vector3->New( vecVelocity );
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-MonoObject* CMonoFunctions::Vehicle::GetTurretPosition( DWORD pUserData )
+MonoObject* CMonoFunctions::Vehicle::GetTurretPosition( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		Vector2 vecPosition;
-
-		if( CLuaFunctionDefinitions::GetVehicleTurretPosition( RESOURCE->GetLua(), (void*)pUserData, vecPosition ) )
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetVehicleTurretPosition( pResource->GetLua(), pElement->ToLuaUserData(), vecPosition ) )
 		{
-			return RESOURCE->GetDomain()->GetMTALib()->Vector3->New( vecPosition );
+			return pResource->GetDomain()->GetMTALib()->Vector3->New( vecPosition );
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-bool CMonoFunctions::Vehicle::IsLocked( DWORD pUserData )
+bool CMonoFunctions::Vehicle::IsLocked( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		bool bLocked;
-
-		if( CLuaFunctionDefinitions::IsVehicleLocked( RESOURCE->GetLua(), (void*)pUserData, bLocked ) )
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::IsVehicleLocked( pResource->GetLua(), pElement->ToLuaUserData(), bLocked ) )
 		{
 			return bLocked;
 		}
@@ -279,26 +363,32 @@ bool CMonoFunctions::Vehicle::IsLocked( DWORD pUserData )
 
 MonoArray* CMonoFunctions::Vehicle::GetOfType( unsigned int uiModel )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		CLuaArgumentsVector pLuaArguments = CLuaFunctionDefinitions::GetVehiclesOfType( RESOURCE->GetLua(), uiModel );
+		CLuaArgumentsVector pLuaArguments = CLuaFunctionDefinitions::GetVehiclesOfType( pResource->GetLua(), uiModel );
 
 		if( pLuaArguments.size() > 0 )
 		{
-			return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TLIGHTUSERDATA>( mono_get_uint32_class(), &pLuaArguments );
+			return pResource->GetDomain()->NewElementArray( pResource->GetDomain()->GetMTALib()->GetClass( "Vehicle" )->GetMonoPtr(), pLuaArguments );
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-unsigned short CMonoFunctions::Vehicle::GetUpgradeOnSlot( DWORD pUserData, unsigned char ucSlot )
+unsigned short CMonoFunctions::Vehicle::GetUpgradeOnSlot( TElement pThis, unsigned char ucSlot )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned short ucUpgrade;
-
-		if( CLuaFunctionDefinitions::GetVehicleUpgradeOnSlot( RESOURCE->GetLua(), (void*)pUserData, ucSlot, ucUpgrade ) )
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetVehicleUpgradeOnSlot( pResource->GetLua(), pElement->ToLuaUserData(), ucSlot, ucUpgrade ) )
 		{
 			return ucUpgrade;
 		}
@@ -307,58 +397,72 @@ unsigned short CMonoFunctions::Vehicle::GetUpgradeOnSlot( DWORD pUserData, unsig
 	return 0;
 }
 
-MonoArray* CMonoFunctions::Vehicle::GetUpgrades( DWORD pUserData )
+MonoArray* CMonoFunctions::Vehicle::GetUpgrades( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		CLuaArgumentsVector pLuaArguments = CLuaFunctionDefinitions::GetVehicleUpgrades( RESOURCE->GetLua(), (void*)pUserData );
-
-		if( pLuaArguments.size() > 0 )
-		{
-			return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TNUMBER>( mono_get_uint32_class(), &pLuaArguments );
-		}
-	}
-
-	return NULL;
-}
-
-MonoString* CMonoFunctions::Vehicle::GetUpgradeSlotName( unsigned short usUpgrade )
-{
-	if( RESOURCE )
-	{
-		string strOutName;
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetVehicleUpgradeSlotName( RESOURCE->GetLua(), usUpgrade, strOutName ) )
-		{
-			return RESOURCE->GetDomain()->NewString( strOutName );
-		}
-	}
-
-	return NULL;
-}
-
-MonoArray* CMonoFunctions::Vehicle::GetCompatibleUpgrades( DWORD pUserData )
-{
-	if( RESOURCE )
-	{
-		CLuaArgumentsVector pLuaArguments = CLuaFunctionDefinitions::GetVehicleCompatibleUpgrades( RESOURCE->GetLua(), (void*)pUserData );
+		CLuaArgumentsVector pLuaArguments = CLuaFunctionDefinitions::GetVehicleUpgrades( pResource->GetLua(), pElement->ToLuaUserData() );
 
 		if( pLuaArguments.size() > 0 )
 		{
-			return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TNUMBER>( mono_get_uint32_class(), &pLuaArguments );
+			return pResource->GetDomain()->NewArray<uint32_t, LUA_TNUMBER>( mono_get_uint32_class(), pLuaArguments );
 		}
 	}
 
 	return nullptr;
 }
 
-unsigned char CMonoFunctions::Vehicle::GetDoorState( DWORD pUserData, unsigned char ucDoor )
+MonoString* CMonoFunctions::Vehicle::GetUpgradeSlotName( unsigned short usUpgrade )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
+	{
+		string strOutName;
+		
+		if( CLuaFunctionDefinitions::GetVehicleUpgradeSlotName( pResource->GetLua(), usUpgrade, strOutName ) )
+		{
+			return pResource->GetDomain()->NewString( strOutName );
+		}
+	}
+
+	return nullptr;
+}
+
+MonoArray* CMonoFunctions::Vehicle::GetCompatibleUpgrades( TElement pThis )
+{
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
+	{
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		CLuaArgumentsVector pLuaArguments = CLuaFunctionDefinitions::GetVehicleCompatibleUpgrades( pResource->GetLua(), pElement->ToLuaUserData() );
+
+		if( pLuaArguments.size() > 0 )
+		{
+			return pResource->GetDomain()->NewArray<uint32_t, LUA_TNUMBER>( mono_get_uint32_class(), pLuaArguments );
+		}
+	}
+
+	return nullptr;
+}
+
+unsigned char CMonoFunctions::Vehicle::GetDoorState( TElement pThis, unsigned char ucDoor )
+{
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned char ucState;
-
-		if( CLuaFunctionDefinitions::GetVehicleDoorState( RESOURCE->GetLua(), (void*)pUserData, ucDoor, ucState ) )
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetVehicleDoorState( pResource->GetLua(), pElement->ToLuaUserData(), ucDoor, ucState ) )
 		{
 			return ucState;
 		}
@@ -367,33 +471,41 @@ unsigned char CMonoFunctions::Vehicle::GetDoorState( DWORD pUserData, unsigned c
 	return 0;
 }
 
-MonoObject* CMonoFunctions::Vehicle::GetWheelStates( DWORD pUserData )
+MonoObject* CMonoFunctions::Vehicle::GetWheelStates( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned char ucFrontLeft, ucRearLeft, ucFrontRight, ucRearRight;
-
-		if( CLuaFunctionDefinitions::GetVehicleWheelStates( RESOURCE->GetLua(), (void*)pUserData, ucFrontLeft, ucRearLeft, ucFrontRight, ucRearRight ) )
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetVehicleWheelStates( pResource->GetLua(), pElement->ToLuaUserData(), ucFrontLeft, ucRearLeft, ucFrontRight, ucRearRight ) )
 		{
 			void *args[] =
 			{
 				&ucFrontLeft, &ucRearLeft, &ucFrontRight, &ucRearRight
 			};
 
-			return RESOURCE->GetDomain()->GetMTALib()->GetClass( "Vehicle", "VehicleWheelsState" )->New( args, 4 );
+			return pResource->GetDomain()->GetMTALib()->GetClass( "Vehicle", "VehicleWheelsState" )->New( args, 4 );
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-unsigned char CMonoFunctions::Vehicle::GetLightState( DWORD pUserData, unsigned char ucLight )
+unsigned char CMonoFunctions::Vehicle::GetLightState( TElement pThis, unsigned char ucLight )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned char ucState;
-
-		if( CLuaFunctionDefinitions::GetVehicleLightState( RESOURCE->GetLua(), (void*)pUserData, ucLight, ucState ) )
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetVehicleLightState( pResource->GetLua(), pElement->ToLuaUserData(), ucLight, ucState ) )
 		{
 			return ucState;
 		}
@@ -402,13 +514,17 @@ unsigned char CMonoFunctions::Vehicle::GetLightState( DWORD pUserData, unsigned 
 	return 0;
 }
 
-unsigned char CMonoFunctions::Vehicle::GetPanelState( DWORD pUserData, unsigned char ucPanel )
+unsigned char CMonoFunctions::Vehicle::GetPanelState( TElement pThis, unsigned char ucPanel )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned char ucState;
-
-		if( CLuaFunctionDefinitions::GetVehiclePanelState( RESOURCE->GetLua(), (void*)pUserData, ucPanel, ucState ) )
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetVehiclePanelState( pResource->GetLua(), pElement->ToLuaUserData(), ucPanel, ucState ) )
 		{
 			return ucState;
 		}
@@ -417,13 +533,17 @@ unsigned char CMonoFunctions::Vehicle::GetPanelState( DWORD pUserData, unsigned 
 	return 0;
 }
 
-unsigned char CMonoFunctions::Vehicle::GetOverrideLights( DWORD pUserData )
+unsigned char CMonoFunctions::Vehicle::GetOverrideLights( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned char ucLights;
-
-		if( CLuaFunctionDefinitions::GetVehicleOverrideLights( RESOURCE->GetLua(), (void*)pUserData, ucLights ) )
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetVehicleOverrideLights( pResource->GetLua(), pElement->ToLuaUserData(), ucLights ) )
 		{
 			return ucLights;
 		}
@@ -432,33 +552,55 @@ unsigned char CMonoFunctions::Vehicle::GetOverrideLights( DWORD pUserData )
 	return 0;
 }
 
-DWORD CMonoFunctions::Vehicle::GetTowedByVehicle( DWORD pUserData )
+TElement CMonoFunctions::Vehicle::GetTowedByVehicle( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return (DWORD)CLuaFunctionDefinitions::GetVehicleTowedByVehicle( RESOURCE->GetLua(), (void*)pUserData );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		PVOID pUserData = CLuaFunctionDefinitions::GetVehicleTowedByVehicle( pResource->GetLua(), pElement->ToLuaUserData() );
+
+		if( pUserData )
+		{
+			return pResource->GetElementManager()->FindOrCreate( pUserData )->ToMonoObject();
+		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-DWORD CMonoFunctions::Vehicle::GetTowingVehicle( DWORD pUserData )
+TElement CMonoFunctions::Vehicle::GetTowingVehicle( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return (DWORD)CLuaFunctionDefinitions::GetVehicleTowingVehicle( RESOURCE->GetLua(), (void*)pUserData );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		PVOID pUserData = CLuaFunctionDefinitions::GetVehicleTowingVehicle( pResource->GetLua(), pElement->ToLuaUserData() );
+
+		if( pUserData )
+		{
+			return pResource->GetElementManager()->FindOrCreate( pUserData )->ToMonoObject();
+		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-unsigned char CMonoFunctions::Vehicle::GetPaintjob( DWORD pUserData )
+unsigned char CMonoFunctions::Vehicle::GetPaintjob( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned char ucPaintjob;
-
-		if( CLuaFunctionDefinitions::GetVehiclePaintjob( RESOURCE->GetLua(), (void*)pUserData, ucPaintjob ) )
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetVehiclePaintjob( pResource->GetLua(), pElement->ToLuaUserData(), ucPaintjob ) )
 		{
 			return ucPaintjob;
 		}
@@ -467,28 +609,36 @@ unsigned char CMonoFunctions::Vehicle::GetPaintjob( DWORD pUserData )
 	return 0;
 }
 
-MonoString* CMonoFunctions::Vehicle::GetPlateText( DWORD pUserData )
+MonoString* CMonoFunctions::Vehicle::GetPlateText( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		char* szPlateText = NULL;
+		char* szPlateText = nullptr;
 		
-		if( CLuaFunctionDefinitions::GetVehiclePlateText( RESOURCE->GetLua(), (void*)pUserData, szPlateText ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetVehiclePlateText( pResource->GetLua(), pElement->ToLuaUserData(), szPlateText ) )
 		{
-			return RESOURCE->GetDomain()->NewString( szPlateText );
+			return pResource->GetDomain()->NewString( szPlateText );
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-bool CMonoFunctions::Vehicle::IsDamageProof( DWORD pUserData )
+bool CMonoFunctions::Vehicle::IsDamageProof( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		bool bDamageProof;
 		
-		if( CLuaFunctionDefinitions::IsVehicleDamageProof( RESOURCE->GetLua(), (void*)pUserData, bDamageProof ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::IsVehicleDamageProof( pResource->GetLua(), pElement->ToLuaUserData(), bDamageProof ) )
 		{
 			return bDamageProof;
 		}
@@ -497,13 +647,17 @@ bool CMonoFunctions::Vehicle::IsDamageProof( DWORD pUserData )
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::IsFuelTankExplodable( DWORD pUserData )
+bool CMonoFunctions::Vehicle::IsFuelTankExplodable( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		bool bExplodable;
 		
-		if( CLuaFunctionDefinitions::IsVehicleFuelTankExplodable( RESOURCE->GetLua(), (void*)pUserData, bExplodable ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::IsVehicleFuelTankExplodable( pResource->GetLua(), pElement->ToLuaUserData(), bExplodable ) )
 		{
 			return bExplodable;
 		}
@@ -512,13 +666,17 @@ bool CMonoFunctions::Vehicle::IsFuelTankExplodable( DWORD pUserData )
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::IsFrozen( DWORD pUserData )
+bool CMonoFunctions::Vehicle::IsFrozen( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		bool bFrozen;
 		
-		if( CLuaFunctionDefinitions::IsVehicleFrozen( RESOURCE->GetLua(), (void*)pUserData, bFrozen ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::IsVehicleFrozen( pResource->GetLua(), pElement->ToLuaUserData(), bFrozen ) )
 		{
 			return bFrozen;
 		}
@@ -527,13 +685,17 @@ bool CMonoFunctions::Vehicle::IsFrozen( DWORD pUserData )
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::IsOnGround( DWORD pUserData )
+bool CMonoFunctions::Vehicle::IsOnGround( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		bool bOnGround;
 		
-		if( CLuaFunctionDefinitions::IsVehicleOnGround( RESOURCE->GetLua(), (void*)pUserData, bOnGround ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::IsVehicleOnGround( pResource->GetLua(), pElement->ToLuaUserData(), bOnGround ) )
 		{
 			return bOnGround;
 		}
@@ -542,13 +704,17 @@ bool CMonoFunctions::Vehicle::IsOnGround( DWORD pUserData )
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::GetEngineState( DWORD pUserData )
+bool CMonoFunctions::Vehicle::GetEngineState( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		bool bState;
 		
-		if( CLuaFunctionDefinitions::GetVehicleEngineState( RESOURCE->GetLua(), (void*)pUserData, bState ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetVehicleEngineState( pResource->GetLua(), pElement->ToLuaUserData(), bState ) )
 		{
 			return bState;
 		}
@@ -557,13 +723,17 @@ bool CMonoFunctions::Vehicle::GetEngineState( DWORD pUserData )
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::IsTrainDerailed( DWORD pUserData )
+bool CMonoFunctions::Vehicle::IsTrainDerailed( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		bool bDerailed;
 		
-		if( CLuaFunctionDefinitions::IsTrainDerailed( RESOURCE->GetLua(), (void*)pUserData, bDerailed ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::IsTrainDerailed( pResource->GetLua(), pElement->ToLuaUserData(), bDerailed ) )
 		{
 			return bDerailed;
 		}
@@ -572,13 +742,17 @@ bool CMonoFunctions::Vehicle::IsTrainDerailed( DWORD pUserData )
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::IsTrainDerailable( DWORD pUserData )
+bool CMonoFunctions::Vehicle::IsTrainDerailable( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		bool bDerailed;
 		
-		if( CLuaFunctionDefinitions::IsTrainDerailable( RESOURCE->GetLua(), (void*)pUserData, bDerailed ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::IsTrainDerailable( pResource->GetLua(), pElement->ToLuaUserData(), bDerailed ) )
 		{
 			return bDerailed;
 		}
@@ -587,13 +761,17 @@ bool CMonoFunctions::Vehicle::IsTrainDerailable( DWORD pUserData )
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::GetTrainDirection( DWORD pUserData )
+bool CMonoFunctions::Vehicle::GetTrainDirection( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		bool bDirection;
 		
-		if( CLuaFunctionDefinitions::GetTrainDirection( RESOURCE->GetLua(), (void*)pUserData, bDirection ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetTrainDirection( pResource->GetLua(), pElement->ToLuaUserData(), bDirection ) )
 		{
 			return bDirection;
 		}
@@ -602,13 +780,17 @@ bool CMonoFunctions::Vehicle::GetTrainDirection( DWORD pUserData )
 	return false;
 }
 
-float CMonoFunctions::Vehicle::GetTrainSpeed( DWORD pUserData )
+float CMonoFunctions::Vehicle::GetTrainSpeed( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		float fSpeed;
 		
-		if( CLuaFunctionDefinitions::GetTrainSpeed( RESOURCE->GetLua(), (void*)pUserData, fSpeed ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetTrainSpeed( pResource->GetLua(), pElement->ToLuaUserData(), fSpeed ) )
 		{
 			return fSpeed;
 		}
@@ -617,38 +799,50 @@ float CMonoFunctions::Vehicle::GetTrainSpeed( DWORD pUserData )
 	return 0.0f;
 }
 
-bool CMonoFunctions::Vehicle::IsBlown( DWORD pUserData )
+bool CMonoFunctions::Vehicle::IsBlown( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::IsVehicleBlown( RESOURCE->GetLua(), (void*)pUserData );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::IsVehicleBlown( pResource->GetLua(), pElement->ToLuaUserData() );
 	}
 
 	return false;
 }
 
-MonoObject* CMonoFunctions::Vehicle::GetHeadLightColor( DWORD pUserData )
+MonoObject* CMonoFunctions::Vehicle::GetHeadLightColor( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		SColor outColor;
-
-		if( CLuaFunctionDefinitions::GetVehicleHeadLightColor( RESOURCE->GetLua(), (void*)pUserData, outColor ) )
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetVehicleHeadLightColor( pResource->GetLua(), pElement->ToLuaUserData(), outColor ) )
 		{
-			return RESOURCE->GetDomain()->GetMTALib()->Color->New( outColor );
+			return pResource->GetDomain()->GetMTALib()->Color->New( outColor );
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-float CMonoFunctions::Vehicle::GetDoorOpenRatio( DWORD pUserData, unsigned char ucDoor )
+float CMonoFunctions::Vehicle::GetDoorOpenRatio( TElement pThis, unsigned char ucDoor )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		float fRatio;
 		
-		if( CLuaFunctionDefinitions::GetVehicleDoorOpenRatio( RESOURCE->GetLua(), (void*)pUserData, ucDoor, fRatio ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetVehicleDoorOpenRatio( pResource->GetLua(), pElement->ToLuaUserData(), ucDoor, fRatio ) )
 		{
 			return fRatio;
 		}
@@ -657,13 +851,17 @@ float CMonoFunctions::Vehicle::GetDoorOpenRatio( DWORD pUserData, unsigned char 
 	return 0.0f;
 }
 
-bool CMonoFunctions::Vehicle::IsTaxiLightOn( DWORD pUserData )
+bool CMonoFunctions::Vehicle::IsTaxiLightOn( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		bool bLightOn;
 		
-		if( CLuaFunctionDefinitions::IsVehicleTaxiLightOn( RESOURCE->GetLua(), (void*)pUserData, bLightOn ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::IsVehicleTaxiLightOn( pResource->GetLua(), pElement->ToLuaUserData(), bLightOn ) )
 		{
 			return bLightOn;
 		}
@@ -674,43 +872,57 @@ bool CMonoFunctions::Vehicle::IsTaxiLightOn( DWORD pUserData )
 
 
 // Vehicle set functions
-bool CMonoFunctions::Vehicle::Fix( DWORD pUserData )
+bool CMonoFunctions::Vehicle::Fix( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::FixVehicle( RESOURCE->GetLua(), (void*)pUserData );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::FixVehicle( pResource->GetLua(), pElement->ToLuaUserData() );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::Blow( DWORD pUserData, bool bExplode )
+bool CMonoFunctions::Vehicle::Blow( TElement pThis, bool bExplode )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::BlowVehicle( RESOURCE->GetLua(), (void*)pUserData, bExplode );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::BlowVehicle( pResource->GetLua(), pElement->ToLuaUserData(), bExplode );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::SetTurnVelocity( DWORD pUserData, MonoObject* pVelocity )
+bool CMonoFunctions::Vehicle::SetTurnVelocity( TElement pThis, MonoObject* pVelocity )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		float fX = CMonoObject::GetPropertyValue< float >( pVelocity, "X" );
 		float fY = CMonoObject::GetPropertyValue< float >( pVelocity, "Y" );
 		float fZ = CMonoObject::GetPropertyValue< float >( pVelocity, "Z" );
-
-		return CLuaFunctionDefinitions::SetVehicleTurnVelocity( RESOURCE->GetLua(), (void*)pUserData, fX, fY, fZ );
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetVehicleTurnVelocity( pResource->GetLua(), pElement->ToLuaUserData(), fX, fY, fZ );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::SetColor( DWORD pUserData, MonoObject* pColor1, MonoObject* pColor2, MonoObject* pColor3, MonoObject* pColor4 )
+bool CMonoFunctions::Vehicle::SetColor( TElement pThis, MonoObject* pColor1, MonoObject* pColor2, MonoObject* pColor3, MonoObject* pColor4 )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned char ucR1 = CMonoObject::GetPropertyValue< unsigned char >( pColor1, "R" );
 		unsigned char ucG1 = CMonoObject::GetPropertyValue< unsigned char >( pColor1, "G" );
@@ -727,146 +939,202 @@ bool CMonoFunctions::Vehicle::SetColor( DWORD pUserData, MonoObject* pColor1, Mo
 		unsigned char ucR4 = CMonoObject::GetPropertyValue< unsigned char >( pColor4, "R" );
 		unsigned char ucG4 = CMonoObject::GetPropertyValue< unsigned char >( pColor4, "G" );
 		unsigned char ucB4 = CMonoObject::GetPropertyValue< unsigned char >( pColor4, "B" );
-
-		return CLuaFunctionDefinitions::SetVehicleColor( RESOURCE->GetLua(), (void*)pUserData, ucR1, ucG1, ucB1, ucR2, ucG2, ucB2, ucR3, ucG3, ucB3, ucR4, ucG4, ucB4 );
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetVehicleColor( pResource->GetLua(), pElement->ToLuaUserData(), ucR1, ucG1, ucB1, ucR2, ucG2, ucB2, ucR3, ucG3, ucB3, ucR4, ucG4, ucB4 );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::SetLandingGearDown( DWORD pUserData, bool bLandingGearDown )
+bool CMonoFunctions::Vehicle::SetLandingGearDown( TElement pThis, bool bLandingGearDown )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetVehicleLandingGearDown( RESOURCE->GetLua(), (void*)pUserData, bLandingGearDown );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetVehicleLandingGearDown( pResource->GetLua(), pElement->ToLuaUserData(), bLandingGearDown );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::SetLocked( DWORD pUserData, bool bLocked )
+bool CMonoFunctions::Vehicle::SetLocked( TElement pThis, bool bLocked )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetVehicleLocked( RESOURCE->GetLua(), (void*)pUserData, bLocked );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetVehicleLocked( pResource->GetLua(), pElement->ToLuaUserData(), bLocked );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::SetDoorsUndamageable( DWORD pUserData, bool bDoorsUndamageable )
+bool CMonoFunctions::Vehicle::SetDoorsUndamageable( TElement pThis, bool bDoorsUndamageable )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetVehicleDoorsUndamageable( RESOURCE->GetLua(), (void*)pUserData, bDoorsUndamageable );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetVehicleDoorsUndamageable( pResource->GetLua(), pElement->ToLuaUserData(), bDoorsUndamageable );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::SetSirensOn( DWORD pUserData, bool bSirensOn )
+bool CMonoFunctions::Vehicle::SetSirensOn( TElement pThis, bool bSirensOn )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetVehicleSirensOn( RESOURCE->GetLua(), (void*)pUserData, bSirensOn );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetVehicleSirensOn( pResource->GetLua(), pElement->ToLuaUserData(), bSirensOn );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::SetTaxiLightOn( DWORD pUserData, bool bTaxiLightState )
+bool CMonoFunctions::Vehicle::SetTaxiLightOn( TElement pThis, bool bTaxiLightState )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetVehicleTaxiLightOn( RESOURCE->GetLua(), (void*)pUserData, bTaxiLightState );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetVehicleTaxiLightOn( pResource->GetLua(), pElement->ToLuaUserData(), bTaxiLightState );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::AddUpgrade( DWORD pUserData, unsigned short usUpgrade )
+bool CMonoFunctions::Vehicle::AddUpgrade( TElement pThis, unsigned short usUpgrade )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::AddVehicleUpgrade( RESOURCE->GetLua(), (void*)pUserData, usUpgrade );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::AddVehicleUpgrade( pResource->GetLua(), pElement->ToLuaUserData(), usUpgrade );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::RemoveUpgrade( DWORD pUserData, unsigned short usUpgrade )
+bool CMonoFunctions::Vehicle::RemoveUpgrade( TElement pThis, unsigned short usUpgrade )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::RemoveVehicleUpgrade( RESOURCE->GetLua(), (void*)pUserData, usUpgrade );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::RemoveVehicleUpgrade( pResource->GetLua(), pElement->ToLuaUserData(), usUpgrade );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::SetDoorState( DWORD pUserData, unsigned char ucDoor, unsigned char ucState )
+bool CMonoFunctions::Vehicle::SetDoorState( TElement pThis, unsigned char ucDoor, unsigned char ucState )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetVehicleDoorState( RESOURCE->GetLua(), (void*)pUserData, ucDoor, ucState );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetVehicleDoorState( pResource->GetLua(), pElement->ToLuaUserData(), ucDoor, ucState );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::SetWheelStates( DWORD pUserData, int iFrontLeft, int iRearLeft, int iFrontRight, int iRearRight )
+bool CMonoFunctions::Vehicle::SetWheelStates( TElement pThis, int iFrontLeft, int iRearLeft, int iFrontRight, int iRearRight )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetVehicleWheelStates( RESOURCE->GetLua(), (void*)pUserData, iFrontLeft, iRearLeft, iFrontRight, iRearRight );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetVehicleWheelStates( pResource->GetLua(), pElement->ToLuaUserData(), iFrontLeft, iRearLeft, iFrontRight, iRearRight );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::SetLightState( DWORD pUserData, unsigned char ucLight, unsigned char ucState )
+bool CMonoFunctions::Vehicle::SetLightState( TElement pThis, unsigned char ucLight, unsigned char ucState )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetVehicleLightState( RESOURCE->GetLua(), (void*)pUserData, ucLight, ucState );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetVehicleLightState( pResource->GetLua(), pElement->ToLuaUserData(), ucLight, ucState );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::SetPanelState( DWORD pUserData, unsigned char ucPanel, unsigned char ucState )
+bool CMonoFunctions::Vehicle::SetPanelState( TElement pThis, unsigned char ucPanel, unsigned char ucState )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetVehiclePanelState( RESOURCE->GetLua(), (void*)pUserData, ucPanel, ucState );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetVehiclePanelState( pResource->GetLua(), pElement->ToLuaUserData(), ucPanel, ucState );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::SetIdleRespawnDelay( DWORD pUserData, unsigned long ulTime )
+bool CMonoFunctions::Vehicle::SetIdleRespawnDelay( TElement pThis, unsigned long ulTime )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetVehicleIdleRespawnDelay( RESOURCE->GetLua(), (void*)pUserData, ulTime );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetVehicleIdleRespawnDelay( pResource->GetLua(), pElement->ToLuaUserData(), ulTime );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::SetRespawnDelay( DWORD pUserData, unsigned long ulTime )
+bool CMonoFunctions::Vehicle::SetRespawnDelay( TElement pThis, unsigned long ulTime )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetVehicleRespawnDelay( RESOURCE->GetLua(), (void*)pUserData, ulTime );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetVehicleRespawnDelay( pResource->GetLua(), pElement->ToLuaUserData(), ulTime );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::SetRespawnPosition( DWORD pUserData, MonoObject* pPosition, MonoObject* pRotation )
+bool CMonoFunctions::Vehicle::SetRespawnPosition( TElement pThis, MonoObject* pPosition, MonoObject* pRotation )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		float fX = CMonoObject::GetPropertyValue< float >( pPosition, "X" );
 		float fY = CMonoObject::GetPropertyValue< float >( pPosition, "Y" );
@@ -875,46 +1143,62 @@ bool CMonoFunctions::Vehicle::SetRespawnPosition( DWORD pUserData, MonoObject* p
 		float fRX = CMonoObject::GetPropertyValue< float >( pRotation, "X" );
 		float fRY = CMonoObject::GetPropertyValue< float >( pRotation, "Y" );
 		float fRZ = CMonoObject::GetPropertyValue< float >( pRotation, "Z" );
-
-		return CLuaFunctionDefinitions::SetVehicleRespawnPosition( RESOURCE->GetLua(), (void*)pUserData, fX, fY, fZ, fRX, fRY, fRZ );
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetVehicleRespawnPosition( pResource->GetLua(), pElement->ToLuaUserData(), fX, fY, fZ, fRX, fRY, fRZ );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::ToggleRespawn( DWORD pUserData, bool bRespawn )
+bool CMonoFunctions::Vehicle::ToggleRespawn( TElement pThis, bool bRespawn )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::ToggleVehicleRespawn( RESOURCE->GetLua(), (void*)pUserData, bRespawn );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::ToggleVehicleRespawn( pResource->GetLua(), pElement->ToLuaUserData(), bRespawn );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::ResetExplosionTime( DWORD pUserData )
+bool CMonoFunctions::Vehicle::ResetExplosionTime( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::ResetVehicleExplosionTime( RESOURCE->GetLua(), (void*)pUserData );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::ResetVehicleExplosionTime( pResource->GetLua(), pElement->ToLuaUserData() );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::ResetIdleTime( DWORD pUserData )
+bool CMonoFunctions::Vehicle::ResetIdleTime( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::ResetVehicleIdleTime( RESOURCE->GetLua(), (void*)pUserData );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::ResetVehicleIdleTime( pResource->GetLua(), pElement->ToLuaUserData() );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::Spawn( DWORD pUserData, MonoObject* pPosition, MonoObject* pRotation )
+bool CMonoFunctions::Vehicle::Spawn( TElement pThis, MonoObject* pPosition, MonoObject* pRotation )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		float fX = CMonoObject::GetPropertyValue< float >( pPosition, "X" );
 		float fY = CMonoObject::GetPropertyValue< float >( pPosition, "Y" );
@@ -923,213 +1207,295 @@ bool CMonoFunctions::Vehicle::Spawn( DWORD pUserData, MonoObject* pPosition, Mon
 		float fRX = CMonoObject::GetPropertyValue< float >( pRotation, "X" );
 		float fRY = CMonoObject::GetPropertyValue< float >( pRotation, "Y" );
 		float fRZ = CMonoObject::GetPropertyValue< float >( pRotation, "Z" );
-
-		return CLuaFunctionDefinitions::SpawnVehicle( RESOURCE->GetLua(), (void*)pUserData, fX, fY, fZ, fRX, fRY, fRZ );
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SpawnVehicle( pResource->GetLua(), pElement->ToLuaUserData(), fX, fY, fZ, fRX, fRY, fRZ );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::Respawn( DWORD pUserData )
+bool CMonoFunctions::Vehicle::Respawn( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::RespawnVehicle( RESOURCE->GetLua(), (void*)pUserData );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::RespawnVehicle( pResource->GetLua(), pElement->ToLuaUserData() );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::SetOverrideLights( DWORD pUserData, unsigned char ucLights )
+bool CMonoFunctions::Vehicle::SetOverrideLights( TElement pThis, unsigned char ucLights )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetVehicleOverrideLights( RESOURCE->GetLua(), (void*)pUserData, ucLights );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetVehicleOverrideLights( pResource->GetLua(), pElement->ToLuaUserData(), ucLights );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::AttachTrailer( DWORD pUserData, DWORD pTrailer )
+bool CMonoFunctions::Vehicle::AttachTrailer( TElement pThis, TElement pTrailer )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::AttachTrailerToVehicle( RESOURCE->GetLua(), (void*)pUserData, (void*)pTrailer );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		CElement* pTrailerElement = pResource->GetElementManager()->GetFromList( pTrailer );
+		
+		return CLuaFunctionDefinitions::AttachTrailerToVehicle( pResource->GetLua(), pElement->ToLuaUserData(), pTrailerElement->ToLuaUserData() );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::DetachTrailer( DWORD pUserData, DWORD pTrailer )
+bool CMonoFunctions::Vehicle::DetachTrailer( TElement pThis, TElement pTrailer )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::DetachTrailerFromVehicle( RESOURCE->GetLua(), (void*)pUserData, (void*)pTrailer );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		CElement* pTrailerElement = pResource->GetElementManager()->GetFromList( pTrailer );
+		
+		return CLuaFunctionDefinitions::DetachTrailerFromVehicle( pResource->GetLua(), pElement->ToLuaUserData(), pTrailerElement->ToLuaUserData() );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::SetEngineState( DWORD pUserData, bool bState )
+bool CMonoFunctions::Vehicle::SetEngineState( TElement pThis, bool bState )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetVehicleEngineState( RESOURCE->GetLua(), (void*)pUserData, bState );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetVehicleEngineState( pResource->GetLua(), pElement->ToLuaUserData(), bState );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::SetDirtLevel( DWORD pUserData, float fDirtLevel )
+bool CMonoFunctions::Vehicle::SetDirtLevel( TElement pThis, float fDirtLevel )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetVehicleDirtLevel( RESOURCE->GetLua(), (void*)pUserData, fDirtLevel );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetVehicleDirtLevel( pResource->GetLua(), pElement->ToLuaUserData(), fDirtLevel );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::SetDamageProof( DWORD pUserData, bool bDamageProof )
+bool CMonoFunctions::Vehicle::SetDamageProof( TElement pThis, bool bDamageProof )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetVehicleDamageProof( RESOURCE->GetLua(), (void*)pUserData, bDamageProof );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetVehicleDamageProof( pResource->GetLua(), pElement->ToLuaUserData(), bDamageProof );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::SetPaintjob( DWORD pUserData, unsigned char ucPaintjob )
+bool CMonoFunctions::Vehicle::SetPaintjob( TElement pThis, unsigned char ucPaintjob )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetVehiclePaintjob( RESOURCE->GetLua(), (void*)pUserData, ucPaintjob );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetVehiclePaintjob( pResource->GetLua(), pElement->ToLuaUserData(), ucPaintjob );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::SetFuelTankExplodable( DWORD pUserData, bool bExplodable )
+bool CMonoFunctions::Vehicle::SetFuelTankExplodable( TElement pThis, bool bExplodable )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetVehicleFuelTankExplodable( RESOURCE->GetLua(), (void*)pUserData, bExplodable );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetVehicleFuelTankExplodable( pResource->GetLua(), pElement->ToLuaUserData(), bExplodable );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::SetTrainDerailed( DWORD pUserData, bool bDerailed )
+bool CMonoFunctions::Vehicle::SetTrainDerailed( TElement pThis, bool bDerailed )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetTrainDerailed( RESOURCE->GetLua(), (void*)pUserData, bDerailed );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetTrainDerailed( pResource->GetLua(), pElement->ToLuaUserData(), bDerailed );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::SetTrainDerailable( DWORD pUserData, bool bDerailable )
+bool CMonoFunctions::Vehicle::SetTrainDerailable( TElement pThis, bool bDerailable )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetTrainDerailable( RESOURCE->GetLua(), (void*)pUserData, bDerailable );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetTrainDerailable( pResource->GetLua(), pElement->ToLuaUserData(), bDerailable );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::SetTrainDirection( DWORD pUserData, bool bDireciton )
+bool CMonoFunctions::Vehicle::SetTrainDirection( TElement pThis, bool bDireciton )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetTrainDirection( RESOURCE->GetLua(), (void*)pUserData, bDireciton );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetTrainDirection( pResource->GetLua(), pElement->ToLuaUserData(), bDireciton );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::SetTrainSpeed( DWORD pUserData, float fSpeed )
+bool CMonoFunctions::Vehicle::SetTrainSpeed( TElement pThis, float fSpeed )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetTrainSpeed( RESOURCE->GetLua(), (void*)pUserData, fSpeed );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetTrainSpeed( pResource->GetLua(), pElement->ToLuaUserData(), fSpeed );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::SetHeadLightColor( DWORD pUserData, MonoObject* pColor )
+bool CMonoFunctions::Vehicle::SetHeadLightColor( TElement pThis, MonoObject* pColor )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned char ucR1 = CMonoObject::GetPropertyValue< unsigned char >( pColor, "R" );
 		unsigned char ucG1 = CMonoObject::GetPropertyValue< unsigned char >( pColor, "G" );
 		unsigned char ucB1 = CMonoObject::GetPropertyValue< unsigned char >( pColor, "B" );
-
-		return CLuaFunctionDefinitions::SetVehicleHeadLightColor( RESOURCE->GetLua(), (void*)pUserData, ucR1, ucG1, ucB1 );
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetVehicleHeadLightColor( pResource->GetLua(), pElement->ToLuaUserData(), ucR1, ucG1, ucB1 );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::SetTurretPosition( DWORD pUserData, MonoObject* pPosition )
+bool CMonoFunctions::Vehicle::SetTurretPosition( TElement pThis, MonoObject* pPosition )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		float fX = CMonoObject::GetPropertyValue< float >( pPosition, "X" );
 		float fY = CMonoObject::GetPropertyValue< float >( pPosition, "Y" );
-
-		return CLuaFunctionDefinitions::SetVehicleTurretPosition( RESOURCE->GetLua(), (void*)pUserData, fX, fY );
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetVehicleTurretPosition( pResource->GetLua(), pElement->ToLuaUserData(), fX, fY );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::SetDoorOpenRatio( DWORD pUserData, unsigned char ucDoor, float fRatio, unsigned long ulTime )
+bool CMonoFunctions::Vehicle::SetDoorOpenRatio( TElement pThis, unsigned char ucDoor, float fRatio, unsigned long ulTime )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetVehicleDoorOpenRatio( RESOURCE->GetLua(), (void*)pUserData, ucDoor, fRatio, ulTime );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetVehicleDoorOpenRatio( pResource->GetLua(), pElement->ToLuaUserData(), ucDoor, fRatio, ulTime );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::SetVariant( DWORD pUserData, unsigned char ucVariant, unsigned char ucVariant2 )
+bool CMonoFunctions::Vehicle::SetVariant( TElement pThis, unsigned char ucVariant, unsigned char ucVariant2 )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetVehicleVariant( RESOURCE->GetLua(), (void*)pUserData, ucVariant, ucVariant2 );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetVehicleVariant( pResource->GetLua(), pElement->ToLuaUserData(), ucVariant, ucVariant2 );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::GiveSirens( DWORD pUserData, unsigned char ucSirenType, unsigned char ucSirenCount, bool bFlag360, bool bCheckLosFlag, bool bUseRandomiserFlag, bool bSilentFlag )
+bool CMonoFunctions::Vehicle::GiveSirens( TElement pThis, unsigned char ucSirenType, unsigned char ucSirenCount, bool bFlag360, bool bCheckLosFlag, bool bUseRandomiserFlag, bool bSilentFlag )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::GiveVehicleSirens( RESOURCE->GetLua(), (void*)pUserData, ucSirenType, ucSirenCount, bFlag360, bCheckLosFlag, bUseRandomiserFlag, bSilentFlag );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::GiveVehicleSirens( pResource->GetLua(), pElement->ToLuaUserData(), ucSirenType, ucSirenCount, bFlag360, bCheckLosFlag, bUseRandomiserFlag, bSilentFlag );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::RemoveSirens( DWORD pUserData )
+bool CMonoFunctions::Vehicle::RemoveSirens( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::RemoveVehicleSirens( RESOURCE->GetLua(), (void*)pUserData );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::RemoveVehicleSirens( pResource->GetLua(), pElement->ToLuaUserData() );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Vehicle::SetSirens( DWORD pUserData, unsigned char ucSirenID, MonoObject* pPosition, MonoObject* pColor, float fMinAlpha )
+bool CMonoFunctions::Vehicle::SetSirens( TElement pThis, unsigned char ucSirenID, MonoObject* pPosition, MonoObject* pColor, float fMinAlpha )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		float fX		= CMonoObject::GetPropertyValue< float >( pPosition, "X" );
 		float fY		= CMonoObject::GetPropertyValue< float >( pPosition, "Y" );
@@ -1139,30 +1505,36 @@ bool CMonoFunctions::Vehicle::SetSirens( DWORD pUserData, unsigned char ucSirenI
 		float fGreen	= CMonoObject::GetPropertyValue< float >( pColor, "G" );
 		float fBlue		= CMonoObject::GetPropertyValue< float >( pColor, "B" );
 		float fAlpha	= CMonoObject::GetPropertyValue< float >( pColor, "A" );
-
-		return CLuaFunctionDefinitions::SetVehicleSirens( RESOURCE->GetLua(), (void*)pUserData, ucSirenID, fX, fY, fZ, fRed, fGreen, fBlue, fAlpha, fMinAlpha );
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetVehicleSirens( pResource->GetLua(), pElement->ToLuaUserData(), ucSirenID, fX, fY, fZ, fRed, fGreen, fBlue, fAlpha, fMinAlpha );
 	}
 
 	return false;
 }
 
-MonoArray* CMonoFunctions::Vehicle::GetSirens( DWORD pUserData )
+MonoArray* CMonoFunctions::Vehicle::GetSirens( TElement pThis )
 {
-	return NULL;
+	return nullptr;
 }
 
-MonoObject* CMonoFunctions::Vehicle::GetSirenParams( DWORD pUserData )
+MonoObject* CMonoFunctions::Vehicle::GetSirenParams( TElement pThis )
 {
-	return NULL;
+	return nullptr;
 }
 
-bool CMonoFunctions::Vehicle::SetPlateText( DWORD pUserData, MonoString* msName )
+bool CMonoFunctions::Vehicle::SetPlateText( TElement pThis, MonoString* msName )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szText = mono_string_to_utf8( msName );
-
-		return CLuaFunctionDefinitions::SetVehiclePlateText( RESOURCE->GetLua(), (void*)pUserData, szText );
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetVehiclePlateText( pResource->GetLua(), pElement->ToLuaUserData(), szText );
 	}
 
 	return false;

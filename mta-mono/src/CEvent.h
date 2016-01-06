@@ -18,6 +18,7 @@ class CEvent;
 #include "extra/CLuaArgument.h"
 #include "extra/CLuaArguments.h"
 
+#include "CElement.h"
 #include "CResource.h"
 #include "CEventManager.h"
 
@@ -25,7 +26,7 @@ class CEvent
 {
 private:
 	string						m_strName;
-	DWORD						m_pElement;
+	CElement*					m_pElement;
 	MonoObject*					m_pMonoDelegate;
 	bool						m_bPropagated;
 	string						m_strPriority;
@@ -34,13 +35,13 @@ private:
 	CEventManager*				m_pEventManager;
 
 public:
-								CEvent					( CEventManager* pEventManager, string strName, DWORD pElement, MonoObject* pMonoDelegate, bool bPropagated, string strPriority );
+								CEvent					( CEventManager* pEventManager, string strName, CElement* pElement, MonoObject* pMonoDelegate, bool bPropagated, string strPriority );
 								~CEvent					( void );
 
-	bool						Call					( DWORD pThis, void** params );
+	bool						Call					( CElement* pThis, void** params );
 
 	string						GetName					( void )		{ return this->m_strName; }
-	DWORD						GetElement				( void )		{ return this->m_pElement; }
+	CElement*					GetElement				( void )		{ return this->m_pElement; }
 	MonoObject*					GetDelegate				( void )		{ return this->m_pMonoDelegate; }
 	bool						IsPropagated			( void )		{ return this->m_bPropagated; }
 	string						GetPriority				( void )		{ return this->m_strPriority; }

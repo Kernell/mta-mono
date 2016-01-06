@@ -15,6 +15,7 @@ class CRegisteredCommands;
 #ifndef __CREGISTEREDCOMMANDS_H
 #define __CREGISTEREDCOMMANDS_H
 
+#include "CElement.h"
 #include "CResource.h"
 
 class CRegisteredCommands
@@ -40,13 +41,13 @@ public:
 								~CRegisteredCommands				( void );
 
 	bool						Add									( string strCommandName, MonoObject* pDelegate, bool bRestricted = false, bool bCaseSensitive = true );
-	bool						Execute								( void* pPlayer, string strCommandName, list< string > argv );
+	bool						Execute								( CElement* pPlayer, string strCommandName, list< string > argv );
 	bool						Remove								( string strCommandName, MonoObject* pDelegate = nullptr );
 
 	void						ClearCommands						( void );
 
 private:
-	void						Invoke								( void* pPlayer, MonoObject* pDelegate, string strCommandName, list< string > argv );
+	void						Invoke								( CElement* pPlayer, MonoObject* pDelegate, const string& strCommandName, list< string > argv );
 	SCommand*					GetCommand							( string strName );
 };
 

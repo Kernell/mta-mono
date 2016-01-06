@@ -14,51 +14,65 @@
 #include "CMonoFunctions.h"
 
 // Object create/destroy functions
-DWORD CMonoFunctions::Object::Create( unsigned short usModelID, MonoObject* pPosition, MonoObject* pRotation, bool bIsLowLod )
+void CMonoFunctions::Object::Ctor( TElement pThis, unsigned short usModelID, MonoObject* pPosition, MonoObject* pRotation, bool bIsLowLod )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		Vector3 vecPosition( pPosition );
 		Vector3 vecRotation( pRotation );
 
-		return (DWORD)CLuaFunctionDefinitions::CreateObject( RESOURCE->GetLua(), usModelID, vecPosition, vecRotation, bIsLowLod );
-	}
+		PVOID pUserData = CLuaFunctionDefinitions::CreateObject( pResource->GetLua(), usModelID, vecPosition, vecRotation, bIsLowLod );
 
-	return NULL;
+		ASSERT( pUserData );
+
+		pResource->GetElementManager()->Create( pThis, pUserData );
+	}
 }
 
 
 // Object get functions
-MonoObject* CMonoFunctions::Object::GetScale( DWORD pUserData )
+MonoObject* CMonoFunctions::Object::GetScale( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		Vector3 vecScale;
+
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetObjectScale( RESOURCE->GetLua(), (void*)pUserData, vecScale ) )
+		if( CLuaFunctionDefinitions::GetObjectScale( pResource->GetLua(), pElement->ToLuaUserData(), vecScale ) )
 		{
-			return RESOURCE->GetDomain()->GetMTALib()->Vector3->New( vecScale );
+			return pResource->GetDomain()->GetMTALib()->Vector3->New( vecScale );
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 
 // Object set functions
-bool CMonoFunctions::Object::SetScale( DWORD pUserData, MonoObject* pScale )
+bool CMonoFunctions::Object::SetScale( TElement pThis, MonoObject* pScale )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetObjectScale( RESOURCE->GetLua(), (void*)pUserData, Vector3( pScale ) );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+
+		return CLuaFunctionDefinitions::SetObjectScale( pResource->GetLua(), pElement->ToLuaUserData(), Vector3( pScale ) );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Object::Move( DWORD pUserData, unsigned long ulTime, MonoObject* pPosition, MonoObject* pRotation, MonoString* msEasingType, float fEasingPeriod, float fEasingAmplitude, float fEasingOvershoot )
+bool CMonoFunctions::Object::Move( TElement pThis, unsigned long ulTime, MonoObject* pPosition, MonoObject* pRotation, MonoString* msEasingType, float fEasingPeriod, float fEasingAmplitude, float fEasingOvershoot )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		Vector3
 			vecPosition( pPosition ),
@@ -66,17 +80,23 @@ bool CMonoFunctions::Object::Move( DWORD pUserData, unsigned long ulTime, MonoOb
 
 		const char* szEasingType = mono_string_to_utf8( msEasingType );
 		
-		return CLuaFunctionDefinitions::MoveObject( RESOURCE->GetLua(), (void*)pUserData, ulTime, vecPosition, vecRotation, szEasingType, fEasingPeriod, fEasingAmplitude, fEasingOvershoot );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+
+		return CLuaFunctionDefinitions::MoveObject( pResource->GetLua(), pElement->ToLuaUserData(), ulTime, vecPosition, vecRotation, szEasingType, fEasingPeriod, fEasingAmplitude, fEasingOvershoot );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Object::Stop( DWORD pUserData )
+bool CMonoFunctions::Object::Stop( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::StopObject( RESOURCE->GetLua(), (void*)pUserData );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+
+		return CLuaFunctionDefinitions::StopObject( pResource->GetLua(), pElement->ToLuaUserData() );
 	}
 
 	return false;

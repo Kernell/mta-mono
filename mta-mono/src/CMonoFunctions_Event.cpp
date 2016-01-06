@@ -15,33 +15,37 @@
 
 bool CMonoFunctions::Event::Add( MonoString* msName, bool bAllowRemoteTrigger )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szName = mono_string_to_utf8( msName );
 
-		if( CLuaFunctionDefinitions::AddEvent( RESOURCE->GetLua(), szName, bAllowRemoteTrigger ) )
+		if( CLuaFunctionDefinitions::AddEvent( pResource->GetLua(), szName, bAllowRemoteTrigger ) )
 		{
-			return RESOURCE->AddEvent( szName, "root" );
+			return pResource->AddEvent( szName, "root" );
 		}
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Event::AddHandler( MonoString* msName, DWORD pUserData, MonoObject* pDelegate, bool bPropagated, MonoString* msEventPriority )
+bool CMonoFunctions::Event::AddHandler( MonoString* msName, TElement pAttachedTo, MonoObject* pDelegate, bool bPropagated, MonoString* msEventPriority )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		if( !pUserData )
+		if( !pAttachedTo )
 		{
-			g_pModuleManager->ErrorPrintf( "Invalid argument #2 in method 'Event::AddHandler'\n" );
+			pResource->ErrorPrintf( "Invalid argument #2 in method 'Event::AddHandler'\n" );
 
 			return false;
 		}
 
 		if( !pDelegate )
 		{
-			g_pModuleManager->ErrorPrintf( "Invalid argument #3 in method 'Event::AddHandler'\n" );
+			pResource->ErrorPrintf( "Invalid argument #3 in method 'Event::AddHandler'\n" );
 
 			return false;
 		}
@@ -50,33 +54,37 @@ bool CMonoFunctions::Event::AddHandler( MonoString* msName, DWORD pUserData, Mon
 
 		if( strEventName.length() == 0 )
 		{
-			g_pModuleManager->ErrorPrintf( "Invalid argument #1 in method 'Event::AddHandler'\n" );
+			pResource->ErrorPrintf( "Invalid argument #1 in method 'Event::AddHandler'\n" );
 
 			return false;
 		}
 
 		string strEventPriority = mono_string_to_utf8( msEventPriority );
 
-		return RESOURCE->GetEventManager()->Add( strEventName, pUserData, pDelegate, bPropagated, strEventPriority );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pAttachedTo );
+
+		return pResource->GetEventManager()->Add( strEventName, pElement, pDelegate, bPropagated, strEventPriority );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Event::RemoveHandler( MonoString* msName, DWORD pUserData, MonoObject* pDelegate )
+bool CMonoFunctions::Event::RemoveHandler( MonoString* msName, TElement pAttachedTo, MonoObject* pDelegate )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		if( !pUserData )
+		if( !pAttachedTo )
 		{
-			g_pModuleManager->ErrorPrintf( "Invalid argument #2 in method 'Event::AddHandler'\n" );
+			pResource->ErrorPrintf( "Invalid argument #2 in method 'Event::AddHandler'\n" );
 
 			return false;
 		}
 
 		if( !pDelegate )
 		{
-			g_pModuleManager->ErrorPrintf( "Invalid argument #3 in method 'Event::AddHandler'\n" );
+			pResource->ErrorPrintf( "Invalid argument #3 in method 'Event::AddHandler'\n" );
 
 			return false;
 		}
@@ -85,26 +93,32 @@ bool CMonoFunctions::Event::RemoveHandler( MonoString* msName, DWORD pUserData, 
 
 		if( strEventName.length() == 0 )
 		{
-			g_pModuleManager->ErrorPrintf( "Invalid argument #1 in method 'Event::RemoveEvent'\n" );
+			pResource->ErrorPrintf( "Invalid argument #1 in method 'Event::RemoveEvent'\n" );
 
 			return false;
 		}
 
-		return RESOURCE->GetEventManager()->Delete( strEventName, pUserData, pDelegate );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pAttachedTo );
+
+		return pResource->GetEventManager()->Delete( strEventName, pElement, pDelegate );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Event::Trigger( MonoString* msName, DWORD pUserData, MonoArray* mpArguments )
+bool CMonoFunctions::Event::Trigger( MonoString* msName, TElement pArgElement, MonoArray* mpArguments )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szEventName = mono_string_to_utf8( msName );
 
-		CLuaArguments Arguments = CMonoInterface::MonoArrayToLuaArguments( mpArguments );
+		CLuaArguments Arguments = CMonoInterface::MonoArrayToLuaArguments( mpArguments, pResource );
 
-		return CLuaFunctionDefinitions::TriggerEvent( RESOURCE->GetLua(), szEventName, (void*)pUserData, Arguments );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pArgElement );
+
+		return CLuaFunctionDefinitions::TriggerEvent( pResource->GetLua(), szEventName, pElement->ToLuaUserData(), Arguments );
 	}
 
 	return false;
@@ -112,11 +126,13 @@ bool CMonoFunctions::Event::Trigger( MonoString* msName, DWORD pUserData, MonoAr
 
 bool CMonoFunctions::Event::Cancel( bool bCancel, MonoString* msReason )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szReason = mono_string_to_utf8( msReason );
 
-		return CLuaFunctionDefinitions::CancelEvent( RESOURCE->GetLua(), bCancel, szReason );
+		return CLuaFunctionDefinitions::CancelEvent( pResource->GetLua(), bCancel, szReason );
 	}
 
 	return false;
@@ -124,9 +140,11 @@ bool CMonoFunctions::Event::Cancel( bool bCancel, MonoString* msReason )
 
 bool CMonoFunctions::Event::WasCancelled( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::WasEventCancelled( RESOURCE->GetLua() );
+		return CLuaFunctionDefinitions::WasEventCancelled( pResource->GetLua() );
 	}
 
 	return false;
@@ -134,23 +152,30 @@ bool CMonoFunctions::Event::WasCancelled( void )
 
 string CMonoFunctions::Event::GetCancelReason( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::GetCancelReason( RESOURCE->GetLua() );
+		return CLuaFunctionDefinitions::GetCancelReason( pResource->GetLua() );
 	}
 
 	return string();
 }
 
-bool CMonoFunctions::Event::TriggerClient( DWORD pSendTo, MonoString* msName, DWORD pSource, MonoArray* mpArguments )
+bool CMonoFunctions::Event::TriggerClient( TElement pSendTo, MonoString* msName, TElement pSource, MonoArray* mpArguments )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szEventName = mono_string_to_utf8( msName );
 
-		CLuaArguments Arguments = CMonoInterface::MonoArrayToLuaArguments( mpArguments );
+		CElement* pSendToElement = pResource->GetElementManager()->GetFromList( pSendTo );
+		CElement* pSourceElement = pResource->GetElementManager()->GetFromList( pSource );
 
-		return CLuaFunctionDefinitions::TriggerClientEvent(  RESOURCE->GetLua(), (void*)pSendTo, szEventName, (void*)pSource, Arguments );
+		CLuaArguments Arguments = CMonoInterface::MonoArrayToLuaArguments( mpArguments, pResource );
+
+		return CLuaFunctionDefinitions::TriggerClientEvent( pResource->GetLua(), pSendToElement->ToLuaUserData(), szEventName, pSourceElement->ToLuaUserData(), Arguments );
 	}
 
 	return false;

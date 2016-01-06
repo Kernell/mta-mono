@@ -13,67 +13,84 @@
 #include "StdInc.h"
 #include "CMonoFunctions.h"
 
-// Shape create funcs
-DWORD CMonoFunctions::Shape::CreateCircle( MonoObject* pPosition, float fRadius )
+void CMonoFunctions::ColCircle::Ctor( TElement pThis, MonoObject* pPosition, float fRadius )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		Vector2 vecPosition( pPosition );
 
-		return (DWORD)CLuaFunctionDefinitions::CreateColCircle( RESOURCE->GetLua(), vecPosition, fRadius );
-	}
+		PVOID pUserData = CLuaFunctionDefinitions::CreateColCircle( pResource->GetLua(), vecPosition, fRadius );
 
-	return NULL;
+		ASSERT( pUserData );
+
+		pResource->GetElementManager()->Create( pThis, pUserData );
+	}
 }
 
-DWORD CMonoFunctions::Shape::CreateCuboid( MonoObject* pPosition, MonoObject* pSize )
+void CMonoFunctions::ColCuboid::Ctor( TElement pThis, MonoObject* pPosition, MonoObject* pSize )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		Vector3 vecPosition( pPosition );
 		Vector3 vecSize( pSize );
 
-		return (DWORD)CLuaFunctionDefinitions::CreateColCuboid( RESOURCE->GetLua(), vecPosition, vecSize );
-	}
+		PVOID pUserData = CLuaFunctionDefinitions::CreateColCuboid( pResource->GetLua(), vecPosition, vecSize );
 
-	return NULL;
+		ASSERT( pUserData );
+
+		pResource->GetElementManager()->Create( pThis, pUserData );
+	}
 }
 
-DWORD CMonoFunctions::Shape::CreateSphere( MonoObject* pPosition, float fRadius )
+void CMonoFunctions::ColSphere::Ctor( TElement pThis, MonoObject* pPosition, float fRadius )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		Vector3 vecPosition( pPosition );
 
-		return (DWORD)CLuaFunctionDefinitions::CreateColSphere( RESOURCE->GetLua(), vecPosition, fRadius );
-	}
+		PVOID pUserData = CLuaFunctionDefinitions::CreateColSphere( pResource->GetLua(), vecPosition, fRadius );
 
-	return NULL;
+		ASSERT( pUserData );
+
+		pResource->GetElementManager()->Create( pThis, pUserData );
+	}
 }
 
-DWORD CMonoFunctions::Shape::CreateRectangle( MonoObject* pPosition, MonoObject* pSize )
+void CMonoFunctions::ColRectangle::Ctor( TElement pThis, MonoObject* pPosition, MonoObject* pSize )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		Vector2 vecPosition( pPosition );
 		Vector2 vecSize( pSize );
 
-		return (DWORD)CLuaFunctionDefinitions::CreateColRectangle( RESOURCE->GetLua(), vecPosition, vecSize );
-	}
+		PVOID pUserData = CLuaFunctionDefinitions::CreateColRectangle( pResource->GetLua(), vecPosition, vecSize );
 
-	return NULL;
+		ASSERT( pUserData );
+
+		pResource->GetElementManager()->Create( pThis, pUserData );
+	}
 }
 
-DWORD CMonoFunctions::Shape::CreatePolygon( float fX, float fY, float fX1, float fY1, float fX2, float fY2, float fX3, float fY3, MonoArray* pPointList )
+void CMonoFunctions::ColPolygon::Ctor( TElement pThis, MonoObject* vec1, MonoObject* vec2, MonoObject* vec3, MonoObject* vec4, MonoArray* pPointList )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		vector< Vector2 > vecPointList;
 
-		vecPointList.push_back( Vector2( fX, fY ) );
-		vecPointList.push_back( Vector2( fX1, fY1 ) );
-		vecPointList.push_back( Vector2( fX2, fY2 ) );
-		vecPointList.push_back( Vector2( fX3, fY3 ) );
+		vecPointList.push_back( Vector2( vec1 ) );
+		vecPointList.push_back( Vector2( vec2 ) );
+		vecPointList.push_back( Vector2( vec3 ) );
+		vecPointList.push_back( Vector2( vec4 ) );
 		
 		for( unsigned int i = 0; i < mono_array_length( pPointList ); i++ )
 		{
@@ -85,20 +102,26 @@ DWORD CMonoFunctions::Shape::CreatePolygon( float fX, float fY, float fX1, float
 			}
 		}
 
-		return (DWORD)CLuaFunctionDefinitions::CreateColPolygon( RESOURCE->GetLua(), vecPointList );
-	}
+		PVOID pUserData = CLuaFunctionDefinitions::CreateColPolygon( pResource->GetLua(), vecPointList );
 
-	return NULL;
+		ASSERT( pUserData );
+
+		pResource->GetElementManager()->Create( pThis, pUserData );
+	}
 }
 
-DWORD CMonoFunctions::Shape::CreateTube( MonoObject* pPosition, float fRadius, float fHeight )
+void CMonoFunctions::ColTube::Ctor( TElement pThis, MonoObject* pPosition, float fRadius, float fHeight )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		Vector3 vecPosition( pPosition );
 
-		return (DWORD)CLuaFunctionDefinitions::CreateColTube( RESOURCE->GetLua(), vecPosition, fRadius, fHeight );
-	}
+		PVOID pUserData = CLuaFunctionDefinitions::CreateColTube( pResource->GetLua(), vecPosition, fRadius, fHeight );
 
-	return NULL;
+		ASSERT( pUserData );
+
+		pResource->GetElementManager()->Create( pThis, pUserData );
+	}
 }

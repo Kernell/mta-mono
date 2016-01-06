@@ -14,112 +14,171 @@
 #include "CMonoFunctions.h"
 
 // Resource funcs
-DWORD CMonoFunctions::Resource::Create( MonoString* msResourceName, MonoString* msOrganizationalDir )
+void CMonoFunctions::Resource::Ctor( TElement pThis, MonoString* msResourceName, MonoString* msOrganizationalDir )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szResourceName		= mono_string_to_utf8( msResourceName );
 		const char* szOrganizationalDir	= mono_string_to_utf8( msOrganizationalDir );
 
-		return (DWORD)CLuaFunctionDefinitions::CreateResource( RESOURCE->GetLua(), szResourceName, szOrganizationalDir );
-	}
+		PVOID pUserData = CLuaFunctionDefinitions::CreateResource( pResource->GetLua(), szResourceName, szOrganizationalDir );
 
-	return NULL;
+		ASSERT( pUserData );
+
+		pResource->GetElementManager()->Create( pThis, pUserData );
+	}
 }
 
-DWORD CMonoFunctions::Resource::Copy( DWORD pResource, MonoString* msNewResourceName, MonoString* msOrganizationalDir )
+TElement CMonoFunctions::Resource::Copy( TElement pThis, MonoString* msNewResourceName, MonoString* msOrganizationalDir )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szResourceName		= mono_string_to_utf8( msNewResourceName );
 		const char* szOrganizationalDir	= mono_string_to_utf8( msOrganizationalDir );
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return (DWORD)CLuaFunctionDefinitions::CopyResource( RESOURCE->GetLua(), (void*)pResource, szResourceName, szOrganizationalDir );
+		PVOID pUserData = CLuaFunctionDefinitions::CopyResource( pResource->GetLua(), pElement->ToLuaUserData(), szResourceName, szOrganizationalDir );
+
+		if( pUserData )
+		{
+			return pResource->GetElementManager()->Create( nullptr, pUserData )->ToMonoObject();
+		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-DWORD CMonoFunctions::Resource::GetRootElement( DWORD pResource )
+TElement CMonoFunctions::Resource::GetRootElement( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return (DWORD)CLuaFunctionDefinitions::GetResourceRootElement( RESOURCE->GetLua(), (void*)pResource );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+
+		PVOID pUserData = CLuaFunctionDefinitions::GetResourceRootElement( pResource->GetLua(), pElement->ToLuaUserData() );
+
+		if( pUserData )
+		{
+			return pResource->GetElementManager()->Create( nullptr, pUserData )->ToMonoObject();
+		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-DWORD CMonoFunctions::Resource::GetMapRootElement( DWORD pResource, MonoString* msMap )
+TElement CMonoFunctions::Resource::GetMapRootElement( TElement pThis, MonoString* msMap )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szMap = mono_string_to_utf8( msMap );
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return (DWORD)CLuaFunctionDefinitions::GetResourceMapRootElement( RESOURCE->GetLua(), (void*)pResource, szMap );
+		PVOID pUserData = CLuaFunctionDefinitions::GetResourceMapRootElement( pResource->GetLua(), pElement->ToLuaUserData(), szMap );
+
+		if( pUserData )
+		{
+			return pResource->GetElementManager()->FindOrCreate( pUserData )->ToMonoObject();
+		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-DWORD CMonoFunctions::Resource::GetDynamicElementRoot( DWORD pResource )
+TElement CMonoFunctions::Resource::GetDynamicElementRoot( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return (DWORD)CLuaFunctionDefinitions::GetResourceDynamicElementRoot( RESOURCE->GetLua(), (void*)pResource );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+
+		PVOID pUserData = CLuaFunctionDefinitions::GetResourceDynamicElementRoot( pResource->GetLua(), pElement->ToLuaUserData() );
+
+		if( pUserData )
+		{
+			return pResource->GetElementManager()->FindOrCreate( pUserData )->ToMonoObject();
+		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-bool CMonoFunctions::Resource::RemoveFile( DWORD pResource, MonoString* msFilename )
+bool CMonoFunctions::Resource::RemoveFile( TElement pThis, MonoString* msFilename )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szFileName = mono_string_to_utf8( msFilename );
 
-		return CLuaFunctionDefinitions::RemoveResourceFile( RESOURCE->GetLua(), (void*)pResource, szFileName );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+
+		return CLuaFunctionDefinitions::RemoveResourceFile( pResource->GetLua(), pElement->ToLuaUserData(), szFileName );
 	}
 
 	return false;
 }
 
-DWORD CMonoFunctions::Resource::GetFromName( MonoString* msResourceName )
+TElement CMonoFunctions::Resource::GetFromName( MonoString* msResourceName )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szResourceName = mono_string_to_utf8( msResourceName );
+		
+		PVOID pUserData = CLuaFunctionDefinitions::GetResourceFromName( pResource->GetLua(), szResourceName );
 
-		return (DWORD)CLuaFunctionDefinitions::GetResourceFromName( RESOURCE->GetLua(), szResourceName );
+		if( pUserData )
+		{
+			return pResource->GetElementManager()->FindOrCreate( pUserData )->ToMonoObject();
+		}
 	}
 
 	return false;
 }
 
-MonoString* CMonoFunctions::Resource::GetInfo( DWORD pResource, MonoString* msAttribute )
+MonoString* CMonoFunctions::Resource::GetInfo( TElement pThis, MonoString* msAttribute )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szAttribute = mono_string_to_utf8( msAttribute );
 
 		string strOutInfo;
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		if( CLuaFunctionDefinitions::GetResourceInfo( RESOURCE->GetLua(), (void*)pResource, szAttribute, strOutInfo ) )
+		if( CLuaFunctionDefinitions::GetResourceInfo( pResource->GetLua(), pElement->ToLuaUserData(), szAttribute, strOutInfo ) )
 		{
-			return RESOURCE->GetDomain()->NewString( strOutInfo );
+			return pResource->GetDomain()->NewString( strOutInfo );
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-unsigned int CMonoFunctions::Resource::GetLastStartTime( DWORD pResource )
+unsigned int CMonoFunctions::Resource::GetLastStartTime( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned int uiTime;
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		if( CLuaFunctionDefinitions::GetResourceLastStartTime( RESOURCE->GetLua(), (void*)pResource, uiTime ) )
+		if( CLuaFunctionDefinitions::GetResourceLastStartTime( pResource->GetLua(), pElement->ToLuaUserData(), uiTime ) )
 		{
 			return uiTime;
 		}
@@ -128,28 +187,36 @@ unsigned int CMonoFunctions::Resource::GetLastStartTime( DWORD pResource )
 	return 0;
 }
 
-MonoString* CMonoFunctions::Resource::GetLoadFailureReason( DWORD pResource )
+MonoString* CMonoFunctions::Resource::GetLoadFailureReason( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		string strOutReason;
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		if( CLuaFunctionDefinitions::GetResourceLoadFailureReason( RESOURCE->GetLua(), (void*)pResource, strOutReason ) )
+		if( CLuaFunctionDefinitions::GetResourceLoadFailureReason( pResource->GetLua(), pElement->ToLuaUserData(), strOutReason ) )
 		{
-			return RESOURCE->GetDomain()->NewString( strOutReason );
+			return pResource->GetDomain()->NewString( strOutReason );
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-unsigned int CMonoFunctions::Resource::GetLoadTime( DWORD pResource )
+unsigned int CMonoFunctions::Resource::GetLoadTime( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned int uiTime;
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		if( CLuaFunctionDefinitions::GetResourceLoadTime( RESOURCE->GetLua(), (void*)pResource, uiTime ) )
+		if( CLuaFunctionDefinitions::GetResourceLoadTime( pResource->GetLua(), pElement->ToLuaUserData(), uiTime ) )
 		{
 			return uiTime;
 		}
@@ -158,134 +225,177 @@ unsigned int CMonoFunctions::Resource::GetLoadTime( DWORD pResource )
 	return 0;
 }
 
-MonoString* CMonoFunctions::Resource::GetName( DWORD pResource )
+MonoString* CMonoFunctions::Resource::GetName( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		string strOut;
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		if( CLuaFunctionDefinitions::GetResourceName( RESOURCE->GetLua(), (void*)pResource, strOut ) )
+		if( CLuaFunctionDefinitions::GetResourceName( pResource->GetLua(), pElement->ToLuaUserData(), strOut ) )
 		{
-			return RESOURCE->GetDomain()->NewString( strOut );
+			return pResource->GetDomain()->NewString( strOut );
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 MonoArray* CMonoFunctions::Resource::GetResources( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		CLuaArgumentsVector pLuaTable = CLuaFunctionDefinitions::GetResources( RESOURCE->GetLua() );
+		CLuaArgumentsVector pLuaTable = CLuaFunctionDefinitions::GetResources( pResource->GetLua() );
 
 		if( pLuaTable.size() > 0 )
 		{
-			return RESOURCE->GetDomain()->NewArray<DWORD, LUA_TLIGHTUSERDATA>( mono_get_uint32_class(), &pLuaTable );
+			return pResource->GetDomain()->NewElementArray( pResource->GetDomain()->GetMTALib()->GetClass( "Resource" )->GetMonoPtr(), pLuaTable );
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-MonoString* CMonoFunctions::Resource::GetState( DWORD pResource )
+MonoString* CMonoFunctions::Resource::GetState( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		string strOut;
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		if( CLuaFunctionDefinitions::GetResourceState( RESOURCE->GetLua(), (void*)pResource, strOut ) )
+		if( CLuaFunctionDefinitions::GetResourceState( pResource->GetLua(), pElement->ToLuaUserData(), strOut ) )
 		{
-			return RESOURCE->GetDomain()->NewString( strOut );
+			return pResource->GetDomain()->NewString( strOut );
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-DWORD CMonoFunctions::Resource::GetCurrent( void )
+TElement CMonoFunctions::Resource::GetCurrent( void )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return (DWORD)CLuaFunctionDefinitions::GetThisResource( RESOURCE->GetLua() );
+		PVOID pUserData = CLuaFunctionDefinitions::GetThisResource( pResource->GetLua() );
+
+		if( pUserData )
+		{
+			return pResource->GetElementManager()->FindOrCreate( pUserData )->ToMonoObject();
+		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 bool CMonoFunctions::Resource::Refresh( bool refreshAll )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::RefreshResources( RESOURCE->GetLua(), refreshAll );
+		return CLuaFunctionDefinitions::RefreshResources( pResource->GetLua(), refreshAll );
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-bool CMonoFunctions::Resource::RemoveDefaultSetting( DWORD pResource, MonoString* msSettingName )
+bool CMonoFunctions::Resource::RemoveDefaultSetting( TElement pThis, MonoString* msSettingName )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szSettingName = mono_string_to_utf8( msSettingName );
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::RemoveResourceDefaultSetting( RESOURCE->GetLua(), (void*)pResource, szSettingName );
+		return CLuaFunctionDefinitions::RemoveResourceDefaultSetting( pResource->GetLua(), pElement->ToLuaUserData(), szSettingName );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Resource::Start( DWORD pResource, bool persistent, bool startIncludedResources, bool loadServerConfigs, bool loadMaps, bool loadServerScripts, bool loadHTML, bool loadClientConfigs, bool loadClientScripts, bool loadFiles )
+bool CMonoFunctions::Resource::Start( TElement pThis, bool persistent, bool startIncludedResources, bool loadServerConfigs, bool loadMaps, bool loadServerScripts, bool loadHTML, bool loadClientConfigs, bool loadClientScripts, bool loadFiles )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::StartResource( RESOURCE->GetLua(), (void*)pResource, persistent, startIncludedResources, loadServerConfigs, loadMaps, loadServerScripts, loadHTML, loadClientConfigs, loadClientScripts, loadFiles );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+
+		return CLuaFunctionDefinitions::StartResource( pResource->GetLua(), pElement->ToLuaUserData(), persistent, startIncludedResources, loadServerConfigs, loadMaps, loadServerScripts, loadHTML, loadClientConfigs, loadClientScripts, loadFiles );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Resource::Restart( DWORD pResource )
+bool CMonoFunctions::Resource::Restart( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::RestartResource( RESOURCE->GetLua(), (void*)pResource );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+
+		return CLuaFunctionDefinitions::RestartResource( pResource->GetLua(), pElement->ToLuaUserData() );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Resource::Stop( DWORD pResource )
+bool CMonoFunctions::Resource::Stop( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::StopResource( RESOURCE->GetLua(), (void*)pResource );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+
+		return CLuaFunctionDefinitions::StopResource( pResource->GetLua(), pElement->ToLuaUserData() );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Resource::SetDefaultSetting( DWORD pResource, MonoString* msSettingName, MonoString* msSettingValue )
+bool CMonoFunctions::Resource::SetDefaultSetting( TElement pThis, MonoString* msSettingName, MonoString* msSettingValue )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szSettingName	= mono_string_to_utf8( msSettingName );
 		const char* szSettingValue	= mono_string_to_utf8( msSettingValue );
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::SetResourceDefaultSetting( RESOURCE->GetLua(), (void*)pResource, szSettingName, szSettingValue );
+		return CLuaFunctionDefinitions::SetResourceDefaultSetting( pResource->GetLua(), pElement->ToLuaUserData(), szSettingName, szSettingValue );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Resource::SetInfo( DWORD pResource, MonoString* msAttribute, MonoString* msValue )
+bool CMonoFunctions::Resource::SetInfo( TElement pThis, MonoString* msAttribute, MonoString* msValue )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szAttribute	= mono_string_to_utf8( msAttribute );
 		const char* szValue		= mono_string_to_utf8( msValue );
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::SetResourceInfo( RESOURCE->GetLua(), (void*)pResource, szAttribute, szValue );
+		return CLuaFunctionDefinitions::SetResourceInfo( pResource->GetLua(), pElement->ToLuaUserData(), szAttribute, szValue );
 	}
 
 	return false;
@@ -293,13 +403,15 @@ bool CMonoFunctions::Resource::SetInfo( DWORD pResource, MonoString* msAttribute
 
 bool CMonoFunctions::Resource::Rename( MonoString* msResourceName, MonoString* msNewResourceName, MonoString* msOrganizationalPath )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szResourceName			= mono_string_to_utf8( msResourceName );
 		const char* szNewResourceName		= mono_string_to_utf8( msNewResourceName );
 		const char* szOrganizationalPath	= mono_string_to_utf8( msOrganizationalPath );
 
-		return CLuaFunctionDefinitions::RenameResource( RESOURCE->GetLua(), szResourceName, szNewResourceName, szOrganizationalPath );
+		return CLuaFunctionDefinitions::RenameResource( pResource->GetLua(), szResourceName, szNewResourceName, szOrganizationalPath );
 	}
 
 	return false;
@@ -307,24 +419,30 @@ bool CMonoFunctions::Resource::Rename( MonoString* msResourceName, MonoString* m
 
 bool CMonoFunctions::Resource::Delete( MonoString* msResourceName )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szResourceName = mono_string_to_utf8( msResourceName );
 
-		return CLuaFunctionDefinitions::DeleteResource( RESOURCE->GetLua(), szResourceName );
+		return CLuaFunctionDefinitions::DeleteResource( pResource->GetLua(), szResourceName );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Resource::UpdateACLRequest( DWORD pResource, MonoString* msRightName, bool bAccess, MonoString* msByWho )
+bool CMonoFunctions::Resource::UpdateACLRequest( TElement pThis, MonoString* msRightName, bool bAccess, MonoString* msByWho )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szRightName = mono_string_to_utf8( msRightName );
 		const char* szByWho		= mono_string_to_utf8( msByWho );
+		
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::UpdateResourceACLRequest( RESOURCE->GetLua(), (void*)pResource, szRightName, bAccess, szByWho );
+		return CLuaFunctionDefinitions::UpdateResourceACLRequest( pResource->GetLua(), pElement->ToLuaUserData(), szRightName, bAccess, szByWho );
 	}
 
 	return false;

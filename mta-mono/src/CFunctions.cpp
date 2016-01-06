@@ -18,7 +18,7 @@ int CFunctions::monoInit( lua_State *pLuaVM )
 {
 	if( pLuaVM )
 	{
-		CResource *pResource = g_pResourceManager->GetFromList( pLuaVM );
+		CResource *pResource = g_pModule->GetResourceManager()->GetFromList( pLuaVM );
 
 		if( pResource == nullptr )
 		{
@@ -28,7 +28,7 @@ int CFunctions::monoInit( lua_State *pLuaVM )
 
 			if( !strName.empty() )
 			{
-				pResource = g_pResourceManager->Create( pLuaVM, strName );
+				pResource = g_pModule->GetResourceManager()->Create( pLuaVM, strName );
 			}
 		}
 
@@ -47,7 +47,7 @@ int CFunctions::monoEventHandler( lua_State *pLuaVM )
 {
 	if( pLuaVM )
 	{
-		CResource *pResource = g_pResourceManager->GetFromList( pLuaVM );
+		CResource *pResource = g_pModule->GetResourceManager()->GetFromList( pLuaVM );
 
 		if( pResource )
 		{
@@ -119,7 +119,7 @@ int CFunctions::monoCommandHandler( lua_State* pLuaVM )
 {
 	if( pLuaVM )
 	{
-		CResource *pResource = g_pResourceManager->GetFromList( pLuaVM );
+		CResource *pResource = g_pModule->GetResourceManager()->GetFromList( pLuaVM );
 
 		if( pResource )
 		{

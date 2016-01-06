@@ -13,14 +13,17 @@
 #include "StdInc.h"
 #include "CResource.h"
 
-CResource::CResource( CMonoInterface* pMono, lua_State *pLuaVM, string sName )
+CResource::CResource( CResourceManager* pResourceManager, lua_State* pLuaVM, const string& sName )
 {
-	this->m_pMono				= pMono;
+	this->m_pResourceManager	= pResourceManager;
+	this->m_pModule				= pResourceManager->GetModule();
+	this->m_pMono				= pResourceManager->GetMono();
 	this->m_pLuaVM				= pLuaVM;
 	this->m_sName				= sName;
 
 	this->m_pMonoDomain			= nullptr;
 
+	this->m_pElementManager		= new CElementManager( this );
 	this->m_pEventManager		= new CEventManager( this );
 	this->m_pRegisteredCommands	= new CRegisteredCommands( this );
 }
@@ -31,10 +34,9 @@ CResource::~CResource( void )
 
 	this->GetMono()->GetGC()->Collect( this->GetMono()->GetGC()->GetMaxGeneration() );
 
-	g_pResourceManager->RemoveFromList( this );
-
 	SAFE_DELETE( this->m_pRegisteredCommands );
 	SAFE_DELETE( this->m_pEventManager );
+	SAFE_DELETE( this->m_pElementManager );
 
 	this->GetMono()->SetDomain( nullptr, true );
 
@@ -42,17 +44,39 @@ CResource::~CResource( void )
 
 	this->m_pMono				= nullptr;
 	this->m_pLuaVM				= nullptr;
-
+	this->m_pResourceManager	= nullptr;
+	this->m_pModule				= nullptr;
 }
 
-bool CResource::CallEvent( string strEventName, void* pThis, list< CLuaArgument* > argv )
+bool CResource::CallEvent( const string& strEventName, PVOID pThis, list< CLuaArgument* > argv ) const
 {
 	if( !pThis )
 	{
 		return false;
 	}
 
-	return this->m_pEventManager->Call( strEventName, pThis, argv );
+	CElement* pThisElement = this->m_pElementManager->FindOrCreate( pThis );
+
+	bool bResult = this->m_pEventManager->Call( strEventName, pThisElement, argv );
+
+	if( strEventName == "onElementDestroy" )
+	{
+		CElement* pSource = nullptr;
+
+		auto *iter = *argv.begin();
+
+		if( iter->GetType() == LUA_TLIGHTUSERDATA )
+		{
+			pSource = this->m_pElementManager->GetFromList( iter->GetLightUserData() );
+		}
+
+		if( pSource )
+		{
+			delete pSource;
+		}
+	}
+
+	return bResult;
 }
 
 bool CResource::AddEvent( const char* szName, const char* szHandleElement )
@@ -87,21 +111,23 @@ bool CResource::RemoveEvent( const char* szName, const char* szHandleElement )
 	return false;
 }
 
-bool CResource::ExecuteCommand( void* pPlayer, string strCommandName, list< string > argv )
+bool CResource::ExecuteCommand( PVOID pPlayer, const string& strCommandName, list< string > argv )
 {
 	if( !pPlayer )
 	{
 		return false;
 	}
 
-	return this->m_pRegisteredCommands->Execute( pPlayer, strCommandName, argv );
+	CElement* pPlayerElement = this->m_pElementManager->FindOrCreate( pPlayer );
+
+	return this->m_pRegisteredCommands->Execute( pPlayerElement, strCommandName, argv );
 }
 
 void CResource::RegisterEvents( void )
 {
 	if( this->m_pLuaVM )
 	{
-		if( g_pModuleManager->RegisterFunction( this->m_pLuaVM, "mono_event_handler", CFunctions::monoEventHandler ) )
+		if( this->RegisterFunction( "mono_event_handler", CFunctions::monoEventHandler ) )
 		{
 			luaL_dostring( this->m_pLuaVM, "function _mono_event_handler( ... ) mono_event_handler( eventName, source, this, client, ... ); end" );
 
@@ -109,7 +135,7 @@ void CResource::RegisterEvents( void )
 
 			if( pClass )
 			{
-				for( auto iter : pClass->GetAllEvents() )
+				for( const auto& iter : pClass->GetAllEvents() )
 				{
 					string strEventName = iter.second->GetName();
 
@@ -150,7 +176,7 @@ bool CResource::Init( void )
 
 		if( !this->m_pMonoDomain )
 		{
-			g_pModuleManager->ErrorPrintf( "%s - failed to create appdomain\n", this->m_sName.c_str() );
+			this->ErrorPrintf( "%s - failed to create appdomain\n", this->m_sName.c_str() );
 
 			return false;
 		}
@@ -188,57 +214,12 @@ void CResource::DoPulse( void )
 
 bool CResource::RegisterFunction( const char *szFunctionName, lua_CFunction Func )
 {
-	if( !g_pModuleManager->RegisterFunction( this->m_pLuaVM, szFunctionName, Func ) )
+	if( !this->m_pModule->RegisterFunction( this->m_pLuaVM, szFunctionName, Func ) )
 	{
-		g_pModuleManager->ErrorPrintf( "Failed to register function '%s' for %s", szFunctionName, this->m_sName.c_str() );
+		this->ErrorPrintf( "Failed to register function '%s' for %s", szFunctionName, this->m_sName.c_str() );
 
 		return false;
 	}
 
 	return true;
-}
-
-void CResource::Printf( const char* szFormat, ... )
-{
-	va_list args;
-
-	va_start( args, szFormat );
-
-	char szBuffer[ 255 ];
-
-	vsprintf( szBuffer, szFormat, args );
-
-	va_end( args ); 
-
-	g_pModuleManager->Printf( szBuffer );
-}
-
-void CResource::DebugPrintf( const char* szFormat, ... )
-{
-	va_list args;
-
-	va_start( args, szFormat );
-
-	char szBuffer[ 255 ];
-
-	vsprintf( szBuffer, szFormat, args );
-
-	va_end( args ); 
-
-	g_pModuleManager->DebugPrintf( this->m_pLuaVM, szBuffer );
-}
-
-void CResource::ErrorPrintf( const char* szFormat, ... )
-{
-	va_list args;
-
-	va_start( args, szFormat );
-
-	char szBuffer[ 255 ];
-
-	vsprintf( szBuffer, szFormat, args );
-
-	va_end( args ); 
-
-	g_pModuleManager->ErrorPrintf( szBuffer );
 }

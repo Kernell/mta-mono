@@ -14,27 +14,40 @@
 #include "CMonoFunctions.h"
 
 // Marker create/destroy functions
-DWORD CMonoFunctions::Marker::Create( MonoObject* pPosition, MonoString* msType, float fSize, MonoObject* pColor, DWORD pVisibleTo )
+void CMonoFunctions::Marker::Ctor( TElement pThis, MonoObject* pPosition, MonoString* msType, float fSize, MonoObject* pColor, TElement pArgVisibleTo )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szType = mono_string_to_utf8( msType );
 
-		return (DWORD)CLuaFunctionDefinitions::CreateMarker( RESOURCE->GetLua(), Vector3( pPosition ), szType, fSize, CMonoObject::GetColor( pColor ), (void*)pVisibleTo );
-	}
+		PVOID pVisibleTo = nullptr;
 
-	return NULL;
+		if( pArgVisibleTo )
+		{
+			pVisibleTo = pResource->GetElementManager()->GetFromList( pArgVisibleTo )->ToLuaUserData();
+		}
+
+		PVOID pUserData = CLuaFunctionDefinitions::CreateMarker( pResource->GetLua(), Vector3( pPosition ), szType, fSize, CMonoObject::GetColor( pColor ), pVisibleTo );
+
+		ASSERT( pUserData );
+
+		pResource->GetElementManager()->Create( pThis, pUserData );
+	}
 }
 
 
 // Marker get functions
 unsigned int CMonoFunctions::Marker::GetCount()
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		unsigned int uiCount;
 		
-		if( CLuaFunctionDefinitions::GetMarkerCount( RESOURCE->GetLua(), uiCount ) )
+		if( CLuaFunctionDefinitions::GetMarkerCount( pResource->GetLua(), uiCount ) )
 		{
 			return uiCount;
 		}
@@ -43,28 +56,36 @@ unsigned int CMonoFunctions::Marker::GetCount()
 	return 0;
 }
 
-MonoString* CMonoFunctions::Marker::GetType( DWORD pUserData )
+MonoString* CMonoFunctions::Marker::GetMarkerType( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		char* szType = NULL;
+		char* szType = nullptr;
+
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetMarkerType( RESOURCE->GetLua(), (void*)pUserData, szType ) )
+		if( CLuaFunctionDefinitions::GetMarkerType( pResource->GetLua(), pElement->ToLuaUserData(), szType ) )
 		{
-			return RESOURCE->GetDomain()->NewString( szType );
+			return pResource->GetDomain()->NewString( szType );
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-float CMonoFunctions::Marker::GetSize( DWORD pUserData )
+float CMonoFunctions::Marker::GetSize( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		float fSize;
+
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetMarkerSize( RESOURCE->GetLua(), (void*)pUserData, fSize ) )
+		if( CLuaFunctionDefinitions::GetMarkerSize( pResource->GetLua(), pElement->ToLuaUserData(), fSize ) )
 		{
 			return fSize;
 		}
@@ -73,102 +94,134 @@ float CMonoFunctions::Marker::GetSize( DWORD pUserData )
 	return 0.0f;
 }
 
-MonoObject* CMonoFunctions::Marker::GetColor( DWORD pUserData )
+MonoObject* CMonoFunctions::Marker::GetColor( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		SColor outColor;
 		
-		if( CLuaFunctionDefinitions::GetMarkerColor( RESOURCE->GetLua(), (void*)pUserData, outColor ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+
+		if( CLuaFunctionDefinitions::GetMarkerColor( pResource->GetLua(), pElement->ToLuaUserData(), outColor ) )
 		{
-			return RESOURCE->GetDomain()->GetMTALib()->Color->New( outColor );
+			return pResource->GetDomain()->GetMTALib()->Color->New( outColor );
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-MonoObject* CMonoFunctions::Marker::GetTarget( DWORD pUserData )
+MonoObject* CMonoFunctions::Marker::GetTarget( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		Vector3 vecPosition;
 		
-		if( CLuaFunctionDefinitions::GetMarkerTarget( RESOURCE->GetLua(), (void*)pUserData, vecPosition ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetMarkerTarget( pResource->GetLua(), pElement->ToLuaUserData(), vecPosition ) )
 		{
-			return RESOURCE->GetDomain()->GetMTALib()->Vector3->New( vecPosition );
+			return pResource->GetDomain()->GetMTALib()->Vector3->New( vecPosition );
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
-MonoString* CMonoFunctions::Marker::GetIcon( DWORD pUserData )
+MonoString* CMonoFunctions::Marker::GetIcon( TElement pThis )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		char* szIcon = NULL;
+		char* szIcon = nullptr;
 		
-		if( CLuaFunctionDefinitions::GetMarkerIcon( RESOURCE->GetLua(), (void*)pUserData, szIcon ) )
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		if( CLuaFunctionDefinitions::GetMarkerIcon( pResource->GetLua(), pElement->ToLuaUserData(), szIcon ) )
 		{
-			return RESOURCE->GetDomain()->NewString( szIcon );
+			return pResource->GetDomain()->NewString( szIcon );
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 
 // Marker set functions
-bool CMonoFunctions::Marker::SetType( DWORD pUserData, MonoString* msType )
+bool CMonoFunctions::Marker::SetType( TElement pThis, MonoString* msType )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szType = mono_string_to_utf8( msType );
 		
-		return CLuaFunctionDefinitions::SetMarkerType( RESOURCE->GetLua(), (void*)pUserData, szType );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetMarkerType( pResource->GetLua(), pElement->ToLuaUserData(), szType );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Marker::SetSize( DWORD pUserData, float fSize )
+bool CMonoFunctions::Marker::SetSize( TElement pThis, float fSize )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetMarkerSize( RESOURCE->GetLua(), (void*)pUserData, fSize );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+
+		return CLuaFunctionDefinitions::SetMarkerSize( pResource->GetLua(), pElement->ToLuaUserData(), fSize );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Marker::SetColor( DWORD pUserData, MonoObject* pColor )
+bool CMonoFunctions::Marker::SetColor( TElement pThis, MonoObject* pColor )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetMarkerColor( RESOURCE->GetLua(), (void*)pUserData, CMonoObject::GetColor( pColor ) );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+
+		return CLuaFunctionDefinitions::SetMarkerColor( pResource->GetLua(), pElement->ToLuaUserData(), CMonoObject::GetColor( pColor ) );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Marker::SetTarget( DWORD pUserData, MonoObject* pTarget )
+bool CMonoFunctions::Marker::SetTarget( TElement pThis, MonoObject* pTarget )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
-		return CLuaFunctionDefinitions::SetMarkerTarget( RESOURCE->GetLua(), (void*)pUserData, Vector3( pTarget ) );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+
+		return CLuaFunctionDefinitions::SetMarkerTarget( pResource->GetLua(), pElement->ToLuaUserData(), Vector3( pTarget ) );
 	}
 
 	return false;
 }
 
-bool CMonoFunctions::Marker::SetIcon( DWORD pUserData, MonoString* msIcon )
+bool CMonoFunctions::Marker::SetIcon( TElement pThis, MonoString* msIcon )
 {
-	if( RESOURCE )
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
 	{
 		const char* szIcon = mono_string_to_utf8( msIcon );
 		
-		return CLuaFunctionDefinitions::SetMarkerType( RESOURCE->GetLua(), (void*)pUserData, szIcon );
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
+		
+		return CLuaFunctionDefinitions::SetMarkerType( pResource->GetLua(), pElement->ToLuaUserData(), szIcon );
 	}
 
 	return false;
