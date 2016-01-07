@@ -67,9 +67,9 @@ int CFunctions::monoEventHandler( lua_State *pLuaVM )
 
 			list< CLuaArgument* > argv;
 
-			for( auto iter : pLuaArgs.GetArguments() )
+			for( const auto& iter : pLuaArgs.GetArguments() )
 			{
-				int iLuaType = iter->GetType();
+				eLuaType iLuaType = iter->GetType();
 
 				switch( i )
 				{
@@ -87,7 +87,7 @@ int CFunctions::monoEventHandler( lua_State *pLuaVM )
 					}
 					case 3:
 					{
-						if( iLuaType == LUA_TNIL )
+						if( iLuaType == eLuaType::Nil )
 						{
 							break;
 						}
@@ -139,7 +139,7 @@ int CFunctions::monoCommandHandler( lua_State* pLuaVM )
 
 			list< string > argv;
 
-			for( auto iter : pLuaArgs.GetArguments() )
+			for( const auto& iter : pLuaArgs.GetArguments() )
 			{
 				switch( i )
 				{
@@ -157,7 +157,7 @@ int CFunctions::monoCommandHandler( lua_State* pLuaVM )
 					}
 					default:
 					{
-						if( iter->GetType() == LUA_TSTRING )
+						if( iter->GetType() == eLuaType::String )
 						{
 							argv.push_back( iter->GetString() );
 						}

@@ -57,7 +57,7 @@ bool CMonoEvent::Call( MonoObject* pThis, list< CLuaArgument* > argv )
 
 	const auto& iter = *argv.begin();
 
-	if( iter->GetType() == LUA_TLIGHTUSERDATA )
+	if( iter->GetType() == eLuaType::LightUserdata )
 	{
 		pMethod->Invoke( pArguments[ 0 ], *pArguments, nullptr );
 	}
@@ -91,7 +91,7 @@ bool CMonoEvent::ParseArguments( CMonoArguments& pArguments, list< CLuaArgument*
 				return true;
 			}
 
-			int iLuaType = (*iter)->GetType();
+			eLuaType iLuaType = (*iter)->GetType();
 
 			switch( pType->iType )
 			{
@@ -99,7 +99,7 @@ bool CMonoEvent::ParseArguments( CMonoArguments& pArguments, list< CLuaArgument*
 				{
 					bool bValue = false;
 
-					if( iLuaType == LUA_TBOOLEAN )
+					if( iLuaType == eLuaType::Boolean )
 					{
 						bValue = (*iter)->GetBoolean();
 					}
@@ -112,7 +112,7 @@ bool CMonoEvent::ParseArguments( CMonoArguments& pArguments, list< CLuaArgument*
 				{
 					wchar_t iValue = 0;
 
-					if( iLuaType == LUA_TNUMBER )
+					if( iLuaType == eLuaType::Number )
 					{
 						iValue = (*iter)->GetNumber< wchar_t >();
 					}
@@ -125,7 +125,7 @@ bool CMonoEvent::ParseArguments( CMonoArguments& pArguments, list< CLuaArgument*
 				{
 					int8_t iValue = 0;
 
-					if( iLuaType == LUA_TNUMBER )
+					if( iLuaType == eLuaType::Number )
 					{
 						iValue = (*iter)->GetNumber< int8_t >();
 					}
@@ -138,7 +138,7 @@ bool CMonoEvent::ParseArguments( CMonoArguments& pArguments, list< CLuaArgument*
 				{
 					uint8_t iValue = 0;
 
-					if( iLuaType == LUA_TNUMBER )
+					if( iLuaType == eLuaType::Number )
 					{
 						iValue = (*iter)->GetNumber< uint8_t >();
 					}
@@ -151,7 +151,7 @@ bool CMonoEvent::ParseArguments( CMonoArguments& pArguments, list< CLuaArgument*
 				{
 					int16_t iValue = 0;
 
-					if( iLuaType == LUA_TNUMBER )
+					if( iLuaType == eLuaType::Number )
 					{
 						iValue = (*iter)->GetNumber< int16_t >();
 					}
@@ -164,7 +164,7 @@ bool CMonoEvent::ParseArguments( CMonoArguments& pArguments, list< CLuaArgument*
 				{
 					uint16_t iValue = 0;
 
-					if( iLuaType == LUA_TNUMBER )
+					if( iLuaType == eLuaType::Number )
 					{
 						iValue = (*iter)->GetNumber< uint16_t >();
 					}
@@ -177,7 +177,7 @@ bool CMonoEvent::ParseArguments( CMonoArguments& pArguments, list< CLuaArgument*
 				{
 					int32_t iValue = 0;
 
-					if( iLuaType == LUA_TNUMBER )
+					if( iLuaType == eLuaType::Number )
 					{
 						iValue = (*iter)->GetNumber< int32_t >();
 					}
@@ -190,7 +190,7 @@ bool CMonoEvent::ParseArguments( CMonoArguments& pArguments, list< CLuaArgument*
 				{
 					uint32_t iValue = 0;
 
-					if( iLuaType == LUA_TNUMBER )
+					if( iLuaType == eLuaType::Number )
 					{
 						iValue = (*iter)->GetNumber< uint32_t >();
 					}
@@ -203,7 +203,7 @@ bool CMonoEvent::ParseArguments( CMonoArguments& pArguments, list< CLuaArgument*
 				{
 					int64_t iValue = 0;
 
-					if( iLuaType == LUA_TNUMBER )
+					if( iLuaType == eLuaType::Number )
 					{
 						iValue = (*iter)->GetNumber< int64_t >();
 					}
@@ -216,7 +216,7 @@ bool CMonoEvent::ParseArguments( CMonoArguments& pArguments, list< CLuaArgument*
 				{
 					uint64_t iValue = 0;
 
-					if( iLuaType == LUA_TNUMBER )
+					if( iLuaType == eLuaType::Number )
 					{
 						iValue = (*iter)->GetNumber< uint64_t >();
 					}
@@ -229,7 +229,7 @@ bool CMonoEvent::ParseArguments( CMonoArguments& pArguments, list< CLuaArgument*
 				{
 					float fValue = 0;
 
-					if( iLuaType == LUA_TNUMBER )
+					if( iLuaType == eLuaType::Number )
 					{
 						fValue = (*iter)->GetNumber< float >();
 					}
@@ -242,7 +242,7 @@ bool CMonoEvent::ParseArguments( CMonoArguments& pArguments, list< CLuaArgument*
 				{
 					double dValue = 0;
 
-					if( iLuaType == LUA_TNUMBER )
+					if( iLuaType == eLuaType::Number )
 					{
 						dValue = (*iter)->GetNumber< double >();
 					}
@@ -255,7 +255,7 @@ bool CMonoEvent::ParseArguments( CMonoArguments& pArguments, list< CLuaArgument*
 				{
 					string strValue = "";
 
-					if( iLuaType == LUA_TSTRING )
+					if( iLuaType == eLuaType::String )
 					{
 						strValue = (*iter)->GetString();
 					}
@@ -271,7 +271,7 @@ bool CMonoEvent::ParseArguments( CMonoArguments& pArguments, list< CLuaArgument*
 				{
 					MonoObject* pValue = nullptr;
 
-					if( iLuaType == LUA_TLIGHTUSERDATA )
+					if( iLuaType == eLuaType::LightUserdata )
 					{
 						CElement* pElement = this->m_pResource->GetElementManager()->FindOrCreate( (*iter)->GetLightUserData() );
 

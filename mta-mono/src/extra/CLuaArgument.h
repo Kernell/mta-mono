@@ -31,6 +31,21 @@ extern "C"
 typedef vector< CLuaArgument >					    CLuaArgumentsVector;
 typedef map< string, CLuaArgument >				    CLuaArgumentsMap;
 
+enum class eLuaType
+{
+	None			= LUA_TNONE,
+	
+	Nil				= LUA_TNIL,
+	Boolean			= LUA_TBOOLEAN,
+	LightUserdata	= LUA_TLIGHTUSERDATA,
+	Number			= LUA_TNUMBER,
+	String			= LUA_TSTRING,
+	Table			= LUA_TTABLE,
+	Function		= LUA_TFUNCTION,
+	Userdata		= LUA_TUSERDATA,
+	Thread			= LUA_TTHREAD,
+};
+
 class CLuaArgument
 {
 public:
@@ -51,7 +66,7 @@ public:
     void                        Read                ( lua_State* luaVM, signed int uiArgument );
     void                        Push                ( lua_State* luaVM ) const;
 
-    inline int                  GetType             ( void ) const      { return m_iType; };
+    inline eLuaType             GetType             ( void ) const      { return m_iType; };
 
     inline bool                 GetBoolean          ( void ) const      { return m_bBoolean; };
     inline lua_Number           GetNumber           ( void ) const      { return m_Number; };
@@ -68,7 +83,7 @@ public:
 	}
 
 private:
-    int                         m_iType;
+    eLuaType                    m_iType;
     bool                        m_bBoolean;
     lua_Number                  m_Number;
     char*                       m_szString;

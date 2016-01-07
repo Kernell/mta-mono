@@ -214,7 +214,7 @@ bool CLuaFunctionDefinitions::AddCommandHandler( lua_State* pLuaVM, const char* 
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		if( pLuaArgument.GetType() == eLuaType::Boolean )
 		{
 			return pLuaArgument.GetBoolean();
 		}
@@ -235,7 +235,7 @@ bool CLuaFunctionDefinitions::ExecuteCommandHandler( lua_State* pLuaVM, const ch
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		if( pLuaArgument.GetType() == eLuaType::Boolean )
 		{
 			return pLuaArgument.GetBoolean();
 		}
@@ -255,7 +255,7 @@ bool CLuaFunctionDefinitions::RemoveCommandHandler( lua_State* pLuaVM, const cha
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		if( pLuaArgument.GetType() == eLuaType::Boolean )
 		{
 			return pLuaArgument.GetBoolean();
 		}
@@ -275,7 +275,7 @@ bool CLuaFunctionDefinitions::AddEvent( lua_State* pLuaVM, const char* szName, b
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		if( pLuaArgument.GetType() == eLuaType::Boolean )
 		{
 			return pLuaArgument.GetBoolean();
 		}
@@ -298,7 +298,7 @@ bool CLuaFunctionDefinitions::AddEventHandler( lua_State* pLuaVM, const char* sz
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		if( pLuaArgument.GetType() == eLuaType::Boolean )
 		{
 			return pLuaArgument.GetBoolean();
 		}
@@ -319,7 +319,7 @@ bool CLuaFunctionDefinitions::RemoveEventHandler( lua_State* pLuaVM, const char*
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		if( pLuaArgument.GetType() == eLuaType::Boolean )
 		{
 			return pLuaArgument.GetBoolean();
 		}
@@ -340,7 +340,7 @@ bool CLuaFunctionDefinitions::TriggerEvent( lua_State* pLuaVM, const char* szNam
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		if( pLuaArgument.GetType() == eLuaType::Boolean )
 		{
 			return pLuaArgument.GetBoolean();
 		}
@@ -360,7 +360,7 @@ bool CLuaFunctionDefinitions::CancelEvent( lua_State* pLuaVM, bool bCancel, cons
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		if( pLuaArgument.GetType() == eLuaType::Boolean )
 		{
 			return pLuaArgument.GetBoolean();
 		}
@@ -377,7 +377,7 @@ bool CLuaFunctionDefinitions::WasEventCancelled( lua_State* pLuaVM )
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		if( pLuaArgument.GetType() == eLuaType::Boolean )
 		{
 			return pLuaArgument.GetBoolean();
 		}
@@ -394,7 +394,7 @@ string CLuaFunctionDefinitions::GetCancelReason( lua_State* pLuaVM )
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TSTRING )
+		if( pLuaArgument.GetType() == eLuaType::String )
 		{
 			return pLuaArgument.GetString();
 		}
@@ -420,7 +420,7 @@ bool CLuaFunctionDefinitions::TriggerClientEvent( lua_State* pLuaVM, PVOID pSend
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		if( pLuaArgument.GetType() == eLuaType::Boolean )
 		{
 			return pLuaArgument.GetBoolean();
 		}
@@ -446,7 +446,7 @@ PVOID CLuaFunctionDefinitions::CreateElement( lua_State* pLuaVM, const char* szT
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -485,7 +485,7 @@ PVOID CLuaFunctionDefinitions::CloneElement( lua_State* pLuaVM, PVOID pUserData,
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -544,7 +544,7 @@ string CLuaFunctionDefinitions::GetElementType( lua_State* pLuaVM, PVOID pUserDa
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TSTRING )
+		if( pLuaArgument.GetType() == eLuaType::String )
 		{
 			strResult = pLuaArgument.GetString();
 		}
@@ -568,7 +568,7 @@ PVOID CLuaFunctionDefinitions::GetElementByID( lua_State* pLuaVM, const char* sz
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -587,7 +587,7 @@ PVOID CLuaFunctionDefinitions::GetElementByIndex( lua_State* pLuaVM, int iIndex 
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -607,7 +607,7 @@ PVOID CLuaFunctionDefinitions::GetElementChild( lua_State* pLuaVM, PVOID pUserDa
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -642,7 +642,7 @@ string CLuaFunctionDefinitions::GetElementID( lua_State* pLuaVM, PVOID pUserData
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TSTRING )
+		if( pLuaArgument.GetType() == eLuaType::String )
 		{
 			return pLuaArgument.GetString();
 		}
@@ -696,7 +696,7 @@ PVOID CLuaFunctionDefinitions::GetElementParent( lua_State* pLuaVM, PVOID pUserD
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -844,7 +844,7 @@ bool CLuaFunctionDefinitions::GetElementZoneName( lua_State* pLuaVM, PVOID pUser
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TSTRING )
+		if( pLuaArgument.GetType() == eLuaType::String )
 		{
 			strOutName = pLuaArgument.GetString();
 		
@@ -881,7 +881,7 @@ PVOID CLuaFunctionDefinitions::GetElementAttachedTo( lua_State* pLuaVM, PVOID pU
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -900,7 +900,7 @@ PVOID CLuaFunctionDefinitions::GetElementColShape( lua_State* pLuaVM, PVOID pUse
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -1028,7 +1028,7 @@ PVOID CLuaFunctionDefinitions::GetElementSyncer( lua_State* pLuaVM, PVOID pUserD
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -1533,7 +1533,7 @@ PVOID CLuaFunctionDefinitions::GetPlayerFromName( lua_State* pLuaVM, const char*
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -1582,7 +1582,7 @@ PVOID CLuaFunctionDefinitions::GetRandomPlayer( lua_State* pLuaVM )
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -1617,7 +1617,7 @@ PVOID CLuaFunctionDefinitions::GetPlayerTeam( lua_State* pLuaVM, PVOID pUserData
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -1710,7 +1710,7 @@ bool CLuaFunctionDefinitions::GetPlayerNametagText( lua_State* pLuaVM, PVOID pUs
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TSTRING )
+		if( pLuaArgument.GetType() == eLuaType::String )
 		{
 			strOutText = pLuaArgument.GetString();
 			
@@ -1765,7 +1765,7 @@ string CLuaFunctionDefinitions::GetPlayerSerial( lua_State* pLuaVM, PVOID pUserD
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TSTRING )
+		if( pLuaArgument.GetType() == eLuaType::String )
 		{
 			return pLuaArgument.GetString();
 		}
@@ -1784,7 +1784,7 @@ string CLuaFunctionDefinitions::GetPlayerUserName( lua_State* pLuaVM, PVOID pUse
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TSTRING )
+		if( pLuaArgument.GetType() == eLuaType::String )
 		{
 			return pLuaArgument.GetString();
 		}
@@ -1817,7 +1817,7 @@ bool CLuaFunctionDefinitions::GetPlayerName( lua_State* pLuaVM, PVOID pUserData,
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TSTRING )
+		if( pLuaArgument.GetType() == eLuaType::String )
 		{
 			strOutName = pLuaArgument.GetString();
 		
@@ -1838,7 +1838,7 @@ bool CLuaFunctionDefinitions::GetPlayerIP( lua_State* pLuaVM, PVOID pUserData, s
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TSTRING )
+		if( pLuaArgument.GetType() == eLuaType::String )
 		{
 			strOutIP = pLuaArgument.GetString();
 		
@@ -1859,7 +1859,7 @@ PVOID CLuaFunctionDefinitions::GetPlayerAccount( lua_State* pLuaVM, PVOID pUserD
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -1878,7 +1878,7 @@ string CLuaFunctionDefinitions::GetPlayerVersion( lua_State* pLuaVM, PVOID pUser
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TSTRING )
+		if( pLuaArgument.GetType() == eLuaType::String )
 		{
 			return pLuaArgument.GetString();
 		}
@@ -1897,7 +1897,7 @@ CLuaArgumentsMap* CLuaFunctionDefinitions::GetPlayerACInfo( lua_State* pLuaVM, P
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TTABLE )
+		if( pLuaArgument.GetType() == eLuaType::Table )
 		{
 			return &pLuaArgument.GetTable();
 		}
@@ -2217,7 +2217,7 @@ PVOID CLuaFunctionDefinitions::CreatePed( lua_State* pLuaVM, int iModelid, const
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -2317,7 +2317,7 @@ PVOID CLuaFunctionDefinitions::GetPedTarget( lua_State* pLuaVM, PVOID pUserData 
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -2449,7 +2449,7 @@ PVOID CLuaFunctionDefinitions::GetPedContactElement( lua_State* pLuaVM, PVOID pU
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -2548,7 +2548,7 @@ PVOID CLuaFunctionDefinitions::GetPedOccupiedVehicle( lua_State* pLuaVM, PVOID p
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -3039,7 +3039,7 @@ PVOID CLuaFunctionDefinitions::CreateVehicle( lua_State* pLuaVM, int model, floa
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -3060,7 +3060,7 @@ bool CLuaFunctionDefinitions::GetVehicleType( lua_State* pLuaVM, PVOID pUserData
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TSTRING )
+		if( pLuaArgument.GetType() == eLuaType::String )
 		{
 			strType = pLuaArgument.GetString();
 		}
@@ -3197,7 +3197,7 @@ bool CLuaFunctionDefinitions::GetVehicleName( lua_State* pLuaVM, PVOID pUserData
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TSTRING )
+		if( pLuaArgument.GetType() == eLuaType::String )
 		{
 			strOutName = pLuaArgument.GetString();
 		}
@@ -3218,7 +3218,7 @@ bool CLuaFunctionDefinitions::GetVehicleNameFromModel( lua_State* pLuaVM, unsign
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TSTRING )
+		if( pLuaArgument.GetType() == eLuaType::String )
 		{
 			strOutName = pLuaArgument.GetString();
 		}
@@ -3240,7 +3240,7 @@ PVOID CLuaFunctionDefinitions::GetVehicleOccupant( lua_State* pLuaVM, PVOID pUse
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -3274,7 +3274,7 @@ PVOID CLuaFunctionDefinitions::GetVehicleController( lua_State* pLuaVM, PVOID pU
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -3293,7 +3293,7 @@ bool CLuaFunctionDefinitions::GetVehicleSirensOn( lua_State* pLuaVM, PVOID pUser
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		if( pLuaArgument.GetType() == eLuaType::Boolean )
 		{
 			bSirensOn = pLuaArgument.GetBoolean();
 
@@ -3381,7 +3381,7 @@ bool CLuaFunctionDefinitions::GetVehicleUpgradeOnSlot( lua_State* pLuaVM, PVOID 
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TNUMBER )
+		if( pLuaArgument.GetType() == eLuaType::Number )
 		{
 			usUpgrade = pLuaArgument.GetNumber< unsigned short >();
 
@@ -3550,7 +3550,7 @@ PVOID CLuaFunctionDefinitions::GetVehicleTowedByVehicle( lua_State* pLuaVM, PVOI
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -3569,7 +3569,7 @@ PVOID CLuaFunctionDefinitions::GetVehicleTowingVehicle( lua_State* pLuaVM, PVOID
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -4665,7 +4665,7 @@ PVOID CLuaFunctionDefinitions::CreateMarker( lua_State* pLuaVM, const Vector3& v
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -4902,7 +4902,7 @@ PVOID CLuaFunctionDefinitions::CreateBlip( lua_State* pLuaVM, const Vector3& vec
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -4934,7 +4934,7 @@ PVOID CLuaFunctionDefinitions::CreateBlipAttachedTo( lua_State* pLuaVM, PVOID pT
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -5146,7 +5146,7 @@ PVOID CLuaFunctionDefinitions::CreateObject( lua_State* pLuaVM, unsigned short u
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -5266,7 +5266,7 @@ PVOID CLuaFunctionDefinitions::CreateRadarArea( lua_State* pLuaVM, const Vector2
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -5422,7 +5422,7 @@ PVOID CLuaFunctionDefinitions::CreatePickup( lua_State* pLuaVM, const Vector3& v
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -5610,7 +5610,7 @@ PVOID CLuaFunctionDefinitions::CreateColCircle( lua_State* pLuaVM, const Vector2
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -5635,7 +5635,7 @@ PVOID CLuaFunctionDefinitions::CreateColCuboid( lua_State* pLuaVM, const Vector3
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -5658,7 +5658,7 @@ PVOID CLuaFunctionDefinitions::CreateColSphere( lua_State* pLuaVM, const Vector3
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -5681,7 +5681,7 @@ PVOID CLuaFunctionDefinitions::CreateColRectangle( lua_State* pLuaVM, const Vect
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -5709,7 +5709,7 @@ PVOID CLuaFunctionDefinitions::CreateColPolygon( lua_State* pLuaVM, const vector
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -5733,7 +5733,7 @@ PVOID CLuaFunctionDefinitions::CreateColTube( lua_State* pLuaVM, const Vector3& 
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -6042,7 +6042,7 @@ PVOID CLuaFunctionDefinitions::CreateTeam( lua_State* pLuaVM, const char* szTeam
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -6061,7 +6061,7 @@ PVOID CLuaFunctionDefinitions::GetTeamFromName( lua_State* pLuaVM, const char* s
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -6245,7 +6245,7 @@ PVOID CLuaFunctionDefinitions::CreateWater( lua_State* pLuaVM, Vector3* pV1, Vec
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -6473,7 +6473,11 @@ bool CLuaFunctionDefinitions::OutputConsole( lua_State* pLuaVM, const char* szTe
 	CLuaArguments pLuaArguments;
 
 	pLuaArguments.PushString( szText );
-	pLuaArguments.PushUserData( pElement );
+
+	if( pElement )
+	{
+		pLuaArguments.PushUserData( pElement );
+	}
 
 	if( pLuaArguments.Call( pLuaVM, "outputConsole", 1 ) )
 	{
@@ -7687,7 +7691,7 @@ PVOID CLuaFunctionDefinitions::GetRootElement( lua_State* pLuaVM )
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -7712,7 +7716,7 @@ PVOID CLuaFunctionDefinitions::GetAccount( lua_State* pLuaVM, const char* szName
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -7744,7 +7748,7 @@ PVOID CLuaFunctionDefinitions::GetAccountPlayer( lua_State* pLuaVM, PVOID pAccou
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -7802,7 +7806,7 @@ bool CLuaFunctionDefinitions::GetAccountSerial( lua_State* pLuaVM, PVOID pAccoun
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TSTRING )
+		if( pLuaArgument.GetType() == eLuaType::String )
 		{
 			strSerial = pLuaArgument.GetString();
 			
@@ -7813,9 +7817,19 @@ bool CLuaFunctionDefinitions::GetAccountSerial( lua_State* pLuaVM, PVOID pAccoun
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetAccountsBySerial( lua_State* pLuaVM, const string& strSerial, vector<PVOID>& outAccounts )
+CLuaArgumentsVector CLuaFunctionDefinitions::GetAccountsBySerial( lua_State* pLuaVM, const string& strSerial )
 {
-	return false;
+	CLuaArgument pLuaArgument;
+	CLuaArguments pLuaArguments;
+
+	pLuaArguments.PushString( strSerial.c_str() );
+
+	if( pLuaArguments.Call( pLuaVM, "getAccountsBySerial", 1 ) )
+	{
+		pLuaArgument.Read( pLuaVM, -1 );
+	}
+
+	return pLuaArgument.GetArray();
 }
 
 // Account set funcs
@@ -7831,7 +7845,7 @@ PVOID CLuaFunctionDefinitions::AddAccount( lua_State* pLuaVM, const char* szName
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -7985,7 +7999,7 @@ PVOID CLuaFunctionDefinitions::BanPlayer( lua_State* pLuaVM, PVOID pPlayer, bool
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -7994,7 +8008,7 @@ PVOID CLuaFunctionDefinitions::BanPlayer( lua_State* pLuaVM, PVOID pPlayer, bool
 	return nullptr;
 }
 
-PVOID CLuaFunctionDefinitions::AddBan( lua_State* pLuaVM, string strIP, string strUsername, string strSerial, PVOID pResponsible, string strResponsible, string strReason, time_t tUnban )
+PVOID CLuaFunctionDefinitions::AddBan( lua_State* pLuaVM, string strIP, string strUsername, string strSerial, PVOID pResponsible, string strReason, time_t tUnban )
 {
 	CLuaArguments pLuaArguments;
 
@@ -8005,16 +8019,20 @@ PVOID CLuaFunctionDefinitions::AddBan( lua_State* pLuaVM, string strIP, string s
 	if( pResponsible )
 	{
 		pLuaArguments.PushUserData( pResponsible );
-		pLuaArguments.PushString( strResponsible.c_str() );
-		pLuaArguments.PushString( strReason.c_str() );
-		pLuaArguments.PushNumber( static_cast< double >( tUnban ) );
 	}
+	else
+	{
+		pLuaArguments.PushNil();
+	}
+
+	pLuaArguments.PushString( strReason.c_str() );
+	pLuaArguments.PushNumber( static_cast< double >( tUnban ) );
 
 	if( pLuaArguments.Call( pLuaVM, "addBan", 1 ) )
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -8044,9 +8062,17 @@ bool CLuaFunctionDefinitions::RemoveBan( lua_State* pLuaVM, PVOID pBan, PVOID pR
 	return false;
 }
 
-bool CLuaFunctionDefinitions::GetBans( lua_State* pLuaVM ) // TODO
+CLuaArgumentsVector CLuaFunctionDefinitions::GetBans( lua_State* pLuaVM )
 {
-	return false;
+	CLuaArgument pLuaArgument;
+	CLuaArguments pLuaArguments;
+
+	if( pLuaArguments.Call( pLuaVM, "getBans", 1 ) )
+	{
+		pLuaArgument.Read( pLuaVM, -1 );
+	}
+
+	return pLuaArgument.GetArray();
 }
 
 bool CLuaFunctionDefinitions::ReloadBanList( lua_State* pLuaVM )
@@ -8073,7 +8099,7 @@ bool CLuaFunctionDefinitions::GetBanIP( lua_State* pLuaVM, PVOID pBan, string& s
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TSTRING )
+		if( pLuaArgument.GetType() == eLuaType::String )
 		{
 			strOutIP = pLuaArgument.GetString();
 			
@@ -8094,7 +8120,7 @@ bool CLuaFunctionDefinitions::GetBanSerial( lua_State* pLuaVM, PVOID pBan, strin
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TSTRING )
+		if( pLuaArgument.GetType() == eLuaType::String )
 		{
 			strOutSerial = pLuaArgument.GetString();
 
@@ -8115,7 +8141,7 @@ bool CLuaFunctionDefinitions::GetBanUsername( lua_State* pLuaVM, PVOID pBan, str
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TSTRING )
+		if( pLuaArgument.GetType() == eLuaType::String )
 		{
 			strOutUsername = pLuaArgument.GetString();
 
@@ -8136,7 +8162,7 @@ bool CLuaFunctionDefinitions::GetBanNick( lua_State* pLuaVM, PVOID pBan, string&
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TSTRING )
+		if( pLuaArgument.GetType() == eLuaType::String )
 		{
 			strOutNick = pLuaArgument.GetString();
 
@@ -8157,7 +8183,7 @@ bool CLuaFunctionDefinitions::GetBanReason( lua_State* pLuaVM, PVOID pBan, strin
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TSTRING )
+		if( pLuaArgument.GetType() == eLuaType::String )
 		{
 			strOutReason = pLuaArgument.GetString();
 
@@ -8178,7 +8204,7 @@ bool CLuaFunctionDefinitions::GetBanAdmin( lua_State* pLuaVM, PVOID pBan, string
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TSTRING )
+		if( pLuaArgument.GetType() == eLuaType::String )
 		{
 			strOutAdmin = pLuaArgument.GetString();
 
@@ -8364,7 +8390,7 @@ PVOID CLuaFunctionDefinitions::CreateResource( lua_State* pLuaVM, const char* sz
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -8385,7 +8411,7 @@ PVOID CLuaFunctionDefinitions::CopyResource( lua_State* pLuaVM, PVOID pResource,
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -8407,7 +8433,7 @@ PVOID CLuaFunctionDefinitions::GetResourceRootElement( lua_State* pLuaVM, PVOID 
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -8427,7 +8453,7 @@ PVOID CLuaFunctionDefinitions::GetResourceMapRootElement( lua_State* pLuaVM, PVO
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -8446,7 +8472,7 @@ PVOID CLuaFunctionDefinitions::GetResourceDynamicElementRoot( lua_State* pLuaVM,
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -8497,7 +8523,7 @@ PVOID CLuaFunctionDefinitions::GetResourceFromName( lua_State* pLuaVM, const cha
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -8517,7 +8543,7 @@ bool CLuaFunctionDefinitions::GetResourceInfo( lua_State* pLuaVM, PVOID pResourc
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TSTRING )
+		if( pLuaArgument.GetType() == eLuaType::String )
 		{
 			strInfo = pLuaArgument.GetString();
 		}
@@ -8556,7 +8582,7 @@ bool CLuaFunctionDefinitions::GetResourceLoadFailureReason( lua_State* pLuaVM, P
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TSTRING )
+		if( pLuaArgument.GetType() == eLuaType::String )
 		{
 			strReason = pLuaArgument.GetString();
 		}
@@ -8595,7 +8621,7 @@ bool CLuaFunctionDefinitions::GetResourceName( lua_State* pLuaVM, PVOID pResourc
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TSTRING )
+		if( pLuaArgument.GetType() == eLuaType::String )
 		{
 			strName = pLuaArgument.GetString();
 		}
@@ -8629,7 +8655,7 @@ bool CLuaFunctionDefinitions::GetResourceState( lua_State* pLuaVM, PVOID pResour
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TSTRING )
+		if( pLuaArgument.GetType() == eLuaType::String )
 		{
 			strState = pLuaArgument.GetString();
 
@@ -8648,7 +8674,7 @@ PVOID CLuaFunctionDefinitions::GetThisResource( lua_State* pLuaVM )
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -8899,7 +8925,7 @@ bool CLuaFunctionDefinitions::GetCameraMatrix( lua_State* pLuaVM, PVOID pPlayer,
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		if( pLuaArgument.GetType() == eLuaType::Boolean )
 		{
 			return pLuaArgument.GetBoolean();
 		}
@@ -8910,9 +8936,9 @@ bool CLuaFunctionDefinitions::GetCameraMatrix( lua_State* pLuaVM, PVOID pPlayer,
 
 		uint i = 0;
 
-		for( auto iter : pLuaArgs.GetArguments() )
+		for( const auto& iter : pLuaArgs.GetArguments() )
 		{
-			if( iter->GetType() != LUA_TNUMBER )
+			if( iter->GetType() != eLuaType::Number )
 			{
 				return false;
 			}
@@ -8952,7 +8978,7 @@ PVOID CLuaFunctionDefinitions::GetCameraTarget( lua_State* pLuaVM, PVOID pPlayer
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TLIGHTUSERDATA )
+		if( pLuaArgument.GetType() == eLuaType::LightUserdata )
 		{
 			return pLuaArgument.GetLightUserData();
 		}
@@ -8971,7 +8997,7 @@ bool CLuaFunctionDefinitions::GetCameraInterior( lua_State* pLuaVM, PVOID pPlaye
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TNUMBER )
+		if( pLuaArgument.GetType() == eLuaType::Number )
 		{
 			ucInterior = pLuaArgument.GetNumber< unsigned char >();
 
@@ -9005,7 +9031,7 @@ bool CLuaFunctionDefinitions::SetCameraMatrix( lua_State* pLuaVM, PVOID pElement
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		if( pLuaArgument.GetType() == eLuaType::Boolean )
 		{
 			return pLuaArgument.GetBoolean();
 		}
@@ -9025,7 +9051,7 @@ bool CLuaFunctionDefinitions::SetCameraTarget( lua_State* pLuaVM, PVOID pElement
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		if( pLuaArgument.GetType() == eLuaType::Boolean )
 		{
 			return pLuaArgument.GetBoolean();
 		}
@@ -9045,7 +9071,7 @@ bool CLuaFunctionDefinitions::SetCameraInterior( lua_State* pLuaVM, PVOID pEleme
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		if( pLuaArgument.GetType() == eLuaType::Boolean )
 		{
 			return pLuaArgument.GetBoolean();
 		}
@@ -9069,7 +9095,7 @@ bool CLuaFunctionDefinitions::FadeCamera( lua_State* pLuaVM, PVOID pElement, boo
 	{
 		CLuaArgument pLuaArgument( pLuaVM, -1 );
 
-		if( pLuaArgument.GetType() == LUA_TBOOLEAN )
+		if( pLuaArgument.GetType() == eLuaType::Boolean )
 		{
 			return pLuaArgument.GetBoolean();
 		}

@@ -82,9 +82,9 @@ bool CEventManager::Call( const string& strName, CElement* pThis, list< CLuaArgu
 
 	CElement* pSource = nullptr;
 
-	auto *iter = *Arguments.begin();
+	const auto& iter = *Arguments.begin();
 
-	if( iter->GetType() == LUA_TLIGHTUSERDATA )
+	if( iter->GetType() == eLuaType::LightUserdata )
 	{
 		pSource = pElementManager->FindOrCreate( iter->GetLightUserData() );
 	}
@@ -99,7 +99,7 @@ bool CEventManager::Call( const string& strName, CElement* pThis, list< CLuaArgu
 
 		CElement* pElement = pEvent->GetElement();
 
-		if( pEvent->GetName() == strName && ( pElement == pThis || ( pEvent->IsPropagated() && pElement == pSource ) ) )
+		if( pEvent->GetName() == strName && ( pElement == pThis || pEvent->IsPropagated( pSource ) ) )
 		{
 			pEvent->Call( pThis, *pArguments );
 		}
@@ -134,11 +134,11 @@ void CEventManager::ReadArgumens( list< CLuaArgument* > Arguments, CMonoArgument
 
 	for( const auto& iter : Arguments )
 	{
-		int iLuaType = iter->GetType();
+		eLuaType iLuaType = iter->GetType();
 
 		switch( iLuaType )
 		{
-			case LUA_TBOOLEAN:
+			case eLuaType::Boolean:
 			{
 				bool bValue = iter->GetBoolean();
 
@@ -146,7 +146,7 @@ void CEventManager::ReadArgumens( list< CLuaArgument* > Arguments, CMonoArgument
 
 				break;
 			}
-			case LUA_TNUMBER:
+			case eLuaType::Number:
 			{
 				double dValue = iter->GetNumber< double >();
 
@@ -154,7 +154,7 @@ void CEventManager::ReadArgumens( list< CLuaArgument* > Arguments, CMonoArgument
 
 				break;
 			}
-			case LUA_TSTRING:
+			case eLuaType::String:
 			{
 				const char* szValue = iter->GetString();
 
@@ -164,7 +164,7 @@ void CEventManager::ReadArgumens( list< CLuaArgument* > Arguments, CMonoArgument
 
 				break;
 			}
-			case LUA_TLIGHTUSERDATA:
+			case eLuaType::LightUserdata:
 			{
 				CElement* pElement = pElementManager->FindOrCreate( iter->GetLightUserData() );
 

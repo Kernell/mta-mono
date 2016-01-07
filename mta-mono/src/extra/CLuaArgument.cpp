@@ -25,7 +25,7 @@ using namespace std;
 
 CLuaArgument::CLuaArgument( void )
 {
-	this->m_iType             = LUA_TNIL;
+	this->m_iType             = eLuaType::Nil;
 	this->m_szString          = nullptr;
 	this->m_pLightUserData    = nullptr;
 	this->m_Function          = nullptr;
@@ -35,13 +35,13 @@ CLuaArgument::CLuaArgument( void )
 
 CLuaArgument::CLuaArgument( bool bBool ) : CLuaArgument()
 {
-	this->m_iType = LUA_TBOOLEAN;
+	this->m_iType = eLuaType::Boolean;
 	this->m_bBoolean = bBool;
 }
 
 CLuaArgument::CLuaArgument( double dNumber ) : CLuaArgument()
 {
-	this->m_iType = LUA_TNUMBER;
+	this->m_iType = eLuaType::Number;
 	this->m_Number = dNumber;
 }
 
@@ -49,7 +49,7 @@ CLuaArgument::CLuaArgument( const char* szString ) : CLuaArgument()
 {
 	assert( szString );
 
-	this->m_iType = LUA_TSTRING;
+	this->m_iType = eLuaType::String;
 	this->m_szString = new char[ strlen( szString ) + 1 ];
 
 	strcpy( this->m_szString, szString );
@@ -57,14 +57,14 @@ CLuaArgument::CLuaArgument( const char* szString ) : CLuaArgument()
 
 CLuaArgument::CLuaArgument( void* pUserData ) : CLuaArgument()
 {
-	this->m_iType = LUA_TLIGHTUSERDATA;
+	this->m_iType = eLuaType::LightUserdata;
 	this->m_pLightUserData = pUserData;
 }
 
 CLuaArgument::CLuaArgument( lua_CFunction Function ) : CLuaArgument()
 {
 	this->m_szString = NULL;
-	this->m_iType = LUA_TFUNCTION;
+	this->m_iType = eLuaType::Function;
 	this->m_Function = Function;
 }
 
@@ -104,25 +104,25 @@ const CLuaArgument& CLuaArgument::operator = ( const CLuaArgument& Argument )
 
 	switch( this->m_iType )
 	{
-		case LUA_TBOOLEAN:
+		case eLuaType::Boolean:
 		{
 			this->m_bBoolean = Argument.m_bBoolean;
 
 			break;
 		}
-		case LUA_TLIGHTUSERDATA:
+		case eLuaType::LightUserdata:
 		{
 			this->m_pLightUserData = Argument.m_pLightUserData;
 
 			break;
 		}
-		case LUA_TNUMBER:
+		case eLuaType::Number:
 		{
 			this->m_Number = Argument.m_Number;
 
 			break;
 		}
-		case LUA_TSTRING:
+		case eLuaType::String:
 		{
 			if( Argument.m_szString )
 			{
@@ -133,13 +133,13 @@ const CLuaArgument& CLuaArgument::operator = ( const CLuaArgument& Argument )
 
 			break;
 		}
-		case LUA_TFUNCTION:
+		case eLuaType::Function:
 		{
 			this->m_Function = Argument.m_Function;
 
 			break;
 		}
-		case LUA_TTABLE:
+		case eLuaType::Table:
 		{
 			if( Argument.m_pArray.size() > 0 )
 			{
@@ -177,19 +177,19 @@ bool CLuaArgument::operator == ( const CLuaArgument& Argument )
 
 	switch( this->m_iType )
 	{
-		case LUA_TBOOLEAN:
+		case eLuaType::Boolean:
 		{
 			return this->m_bBoolean == Argument.m_bBoolean;
 		}
-		case LUA_TLIGHTUSERDATA:
+		case eLuaType::LightUserdata:
 		{
 			return this->m_pLightUserData == Argument.m_pLightUserData;
 		}
-		case LUA_TNUMBER:
+		case eLuaType::Number:
 		{
 			return this->m_Number == Argument.m_Number;
 		}
-		case LUA_TSTRING:
+		case eLuaType::String:
 		{
 			if( this->m_szString )
 			{
@@ -207,7 +207,7 @@ bool CLuaArgument::operator == ( const CLuaArgument& Argument )
 				return Argument.m_szString == NULL;
 			}
 		}
-		case LUA_TFUNCTION:
+		case eLuaType::Function:
 		{
 			return this->m_Function == Argument.m_Function;
 		}
@@ -235,35 +235,35 @@ void CLuaArgument::Read( lua_State* luaVM, signed int uiArgument )
 	this->m_pArray.clear();
 	this->m_pTable.clear();
 
-	this->m_iType = lua_type( luaVM, uiArgument );
+	this->m_iType = static_cast< eLuaType >( lua_type( luaVM, uiArgument ) );
 
-	if( this->m_iType != LUA_TNONE )
+	if( this->m_iType != eLuaType::None )
 	{
 		switch( this->m_iType )
 		{
-			case LUA_TNIL:
+			case eLuaType::Nil:
 			{
 				break;
 			}
-			case LUA_TBOOLEAN:
+			case eLuaType::Boolean:
 			{
 				this->m_bBoolean = lua_toboolean( luaVM, uiArgument ) != 0;
 
 				break;
 			}
-			case LUA_TLIGHTUSERDATA:
+			case eLuaType::LightUserdata:
 			{
 				this->m_pLightUserData = lua_touserdata( luaVM, uiArgument );
 
 				break;
 			}
-			case LUA_TNUMBER:
+			case eLuaType::Number:
 			{
 				this->m_Number = lua_tonumber( luaVM, uiArgument );
 
 				break;
 			}
-			case LUA_TSTRING:
+			case eLuaType::String:
 			{
 				const char* szLuaString = lua_tostring( luaVM, uiArgument );
 
@@ -273,13 +273,13 @@ void CLuaArgument::Read( lua_State* luaVM, signed int uiArgument )
 
 				break;
 			}
-			case LUA_TFUNCTION:
+			case eLuaType::Function:
 			{
 				this->m_Function = lua_tocfunction( luaVM, uiArgument );
 
 				break;
 			}
-			case LUA_TTABLE:
+			case eLuaType::Table:
 			{
 				lua_pushnil( luaVM );
 
@@ -290,7 +290,7 @@ void CLuaArgument::Read( lua_State* luaVM, signed int uiArgument )
 					CLuaArgument pKey( luaVM, -2 );
 					CLuaArgument pValue( luaVM, -1 );
 
-					if( pKey.GetType() == LUA_TSTRING )
+					if( pKey.GetType() == eLuaType::String )
 					{
 						this->m_pTable[ pKey.GetString() ] = pValue;
 					}
@@ -304,7 +304,7 @@ void CLuaArgument::Read( lua_State* luaVM, signed int uiArgument )
 			}
 			default:
 			{
-				this->m_iType = LUA_TNONE;
+				this->m_iType = eLuaType::None;
 
 				break;
 			}
@@ -314,40 +314,40 @@ void CLuaArgument::Read( lua_State* luaVM, signed int uiArgument )
 
 void CLuaArgument::Push( lua_State* luaVM ) const
 {
-	if( this->m_iType != LUA_TNONE )
+	if( this->m_iType != eLuaType::None )
 	{
 		switch( this->m_iType )
 		{
-			case LUA_TNIL:
+			case eLuaType::Nil:
 			{
 				lua_pushnil( luaVM );
 
 				break;
 			}
-			case LUA_TBOOLEAN:
+			case eLuaType::Boolean:
 			{
 				lua_pushboolean( luaVM, this->m_bBoolean );
 				break;
 			}
-			case LUA_TLIGHTUSERDATA:
+			case eLuaType::LightUserdata:
 			{
 				lua_pushlightuserdata( luaVM, this->m_pLightUserData );
 
 				break;
 			}
-			case LUA_TNUMBER:
+			case eLuaType::Number:
 			{
 				lua_pushnumber( luaVM, this->m_Number );
 
 				break;
 			}
-			case LUA_TSTRING:
+			case eLuaType::String:
 			{
 				lua_pushstring( luaVM, this->m_szString ? this->m_szString : "" );
 
 				break;
 			}
-			case LUA_TFUNCTION:
+			case eLuaType::Function:
 			{
 				lua_pushcfunction( luaVM, this->m_Function );
 

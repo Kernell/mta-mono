@@ -554,7 +554,7 @@ public:
     static CLuaArgument				GetAccountData					( lua_State* pLuaVM, PVOID pAccount, const char* szKey );
     static bool						GetAllAccountData				( lua_State* pLuaVM, PVOID pAccount );
     static bool						GetAccountSerial				( lua_State* pLuaVM, PVOID pAccount, string& strSerial );
-    static bool						GetAccountsBySerial				( lua_State* pLuaVM, const string& strSerial, std::vector<PVOID>& outAccounts );
+    static CLuaArgumentsVector		GetAccountsBySerial				( lua_State* pLuaVM, const string& strSerial );
 
     // Account set funcs
     static PVOID					AddAccount						( lua_State* pLuaVM, const char* szName, const char* szPassword );
@@ -571,10 +571,10 @@ public:
     static bool						KickPlayer						( lua_State* pLuaVM, PVOID pPlayer, string strResponsible = "Console", string strReason = "" );
     static PVOID					BanPlayer						( lua_State* pLuaVM, PVOID pPlayer, bool bIP, bool bUsername, bool bSerial, PVOID pResponsible = NULL, string strResponsible = "Console", string strReason = "", time_t tUnban = 0 );
 
-    static PVOID					AddBan							( lua_State* pLuaVM, string strIP, string strUsername, string strSerial, PVOID pResponsible = NULL, string strResponsible = "Console", string strReason = "", time_t tUnban = 0 );
+    static PVOID					AddBan							( lua_State* pLuaVM, string strIP, string strUsername, string strSerial, PVOID pResponsible = nullptr, string strReason = "", time_t tUnban = 0 );
     static bool						RemoveBan						( lua_State* pLuaVM, PVOID pBan, PVOID pResponsible = NULL );
 
-    static bool						GetBans							( lua_State* pLuaVM );
+    static CLuaArgumentsVector		GetBans							( lua_State* pLuaVM );
     static bool						ReloadBanList					( lua_State* pLuaVM );
 
     static bool						GetBanIP						( lua_State* pLuaVM, PVOID pBan, string& strOutIP );
