@@ -42,7 +42,7 @@ public:
 
 	void						ReadArgumens			( list< CLuaArgument* > Arguments, CMonoArguments& pArguments );
 
-	CResource*					GetResource( void )		{ return this->m_pResource; }
+	inline CResource*			GetResource				( void ) const		{ return this->m_pResource; }
 };
 
 #endif
