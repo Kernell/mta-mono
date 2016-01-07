@@ -17,7 +17,7 @@ const map<eElementType, pair<string, string>> CElement::_eElementType =
 {
 	{ eElementType::Dummy,					{ "dummy",			"Element" } },
 	{ eElementType::Player,					{ "player",			"Player" } },
-	{ eElementType::Vehicle,				{ "vehicle",		"Vehile" } },
+	{ eElementType::Vehicle,				{ "vehicle",		"Vehicle" } },
 	{ eElementType::Object,					{ "object",			"Object" } },
 	{ eElementType::Marker,					{ "marker",			"Marker" } },
 	{ eElementType::Blip,					{ "blip",			"Blip" } },
