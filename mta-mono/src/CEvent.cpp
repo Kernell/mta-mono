@@ -32,7 +32,29 @@ CEvent::~CEvent( void )
 	this->m_pEventManager	= nullptr;
 }
 
-bool CEvent::Call( CElement* pThis, void** params )
+bool CEvent::IsPropagated( CElement* pSource ) const
+{
+	if( this->m_bPropagated )
+	{
+		CElement* pParent = pSource;
+
+		while( pParent != this->m_pElement )
+		{
+			pParent = pParent->GetParent();
+
+			if( !pParent )
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
+bool CEvent::Call( CElement* pThis, PVOID* params ) const
 {
 	CResource* pResource = this->m_pEventManager->GetResource();
 

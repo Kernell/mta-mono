@@ -38,13 +38,13 @@ public:
 								CEvent					( CEventManager* pEventManager, string strName, CElement* pElement, MonoObject* pMonoDelegate, bool bPropagated, string strPriority );
 								~CEvent					( void );
 
-	bool						Call					( CElement* pThis, void** params );
+	bool						Call					( CElement* pThis, PVOID* params ) const;
+	bool						IsPropagated			( CElement* pSource ) const;
 
-	string						GetName					( void )		{ return this->m_strName; }
-	CElement*					GetElement				( void )		{ return this->m_pElement; }
-	MonoObject*					GetDelegate				( void )		{ return this->m_pMonoDelegate; }
-	bool						IsPropagated			( void )		{ return this->m_bPropagated; }
-	string						GetPriority				( void )		{ return this->m_strPriority; }
+	inline string				GetName					( void ) const		{ return this->m_strName; }
+	inline CElement*			GetElement				( void ) const		{ return this->m_pElement; }
+	inline MonoObject*			GetDelegate				( void ) const		{ return this->m_pMonoDelegate; }
+	inline string				GetPriority				( void ) const		{ return this->m_strPriority; }
 };
 
 #endif
