@@ -17,6 +17,7 @@ class CElement;
 
 #include "CResource.h"
 #include "CElementManager.h"
+#include "CMonoFunctions.h"
 
 enum class eElementType
 {
@@ -110,6 +111,8 @@ private:
 
 	eElementType                                m_iType;
 
+	uint32_t                                    m_uiGCHandle;
+
 public:
 	                                            CElement                    ( CElementManager* pManager, MonoObject* pObject, PVOID pUserdata, const CResource* pParent = nullptr );
     virtual                                     ~CElement                   ( void );
@@ -118,6 +121,8 @@ public:
 	
 	void                                        SetTypeName                 ( const string& strTypeName );
 	const string                                GetTypeName                 ( void );
+
+	CElement*                                   GetParent                   ( void ) const;
 
 	inline MonoObject*                          ToMonoObject                ( void ) const                   { return this->m_pMonoObject; }
 	inline PVOID                                ToLuaUserData               ( void ) const                   { return this->m_pLuaUserdata; }

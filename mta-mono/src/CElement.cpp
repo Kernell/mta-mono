@@ -45,12 +45,21 @@ CElement::CElement( CElementManager* pManager, MonoObject* pObject, PVOID pUserd
 
 	this->m_iType           = eElementType::Unknown;
 
+	this->m_uiGCHandle		= mono_gchandle_new( pObject, true );
+
 	this->m_pElementManager->AddToList( this );
 }
 
 CElement::~CElement( void )
 {
 	this->m_pElementManager->RemoveFromList( this );
+
+	if( this->m_uiGCHandle )
+	{
+		mono_gchandle_free( this->m_uiGCHandle );
+
+		this->m_uiGCHandle = 0;
+	}
 
 	this->m_pMonoObject     = nullptr;
 	this->m_pLuaUserdata    = nullptr;
@@ -66,4 +75,16 @@ void CElement::SetTypeName( const string& strTypeName )
 const string CElement::GetTypeName( void )
 {
 	return CElement::GetTypeName( this->m_iType );
+}
+
+CElement* CElement::GetParent( void ) const
+{
+	MonoObject* pMonoObject = CMonoFunctions::Element::GetParent( this->ToMonoObject() );
+
+	if( pMonoObject )
+	{
+		return this->m_pElementManager->GetFromList( pMonoObject );
+	}
+
+	return nullptr;
 }
