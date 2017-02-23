@@ -46,7 +46,7 @@ CMonoDomain::~CMonoDomain( void )
 	{
 		mono_domain_finalize( this->m_pDomain, 2000 );
 
-		MonoObject *pException = nullptr;
+		MonoObject* pException = nullptr;
 
 		mono_domain_try_unload( this->m_pDomain, &pException );
 
@@ -80,7 +80,7 @@ CMonoClass* CMonoDomain::FindOrAdd( MonoClass* klass )
 	{
 		for( const auto& iter : this->m_ClassPool )
 		{
-			if( iter->GetMonoPtr() == klass )
+			if( **iter == klass )
 			{
 				return iter;
 			}
@@ -147,15 +147,17 @@ bool CMonoDomain::Start( void )
 		return false;
 	}
 
-	MonoString* pString1 = this->NewString( this->m_strName.c_str() );
+	const char* szStrings[] =
+	{
+		this->m_strName.c_str(),
+	};
 
-	MonoArray* pArray = mono_array_new( this->m_pDomain, mono_get_string_class(), 1 );
+	MonoArray* pArray = this->NewArray( sizeof( szStrings ) / sizeof( char* ), szStrings );
 
-	mono_array_set( pArray, MonoString*, 0, pString1 );
-
-	void* params[ 1 ];
-
-	params[ 0 ] = pArray;
+	PVOID params[] =
+	{
+		pArray,
+	};
 
 	MonoObject* pException = nullptr;
 
@@ -176,7 +178,7 @@ void CMonoDomain::Unload( void )
 
 bool CMonoDomain::Set( bool bForce )
 {
-	return mono_domain_set( this->m_pDomain, static_cast<mono_bool>( bForce ) ) == 1;
+	return mono_domain_set( this->m_pDomain, bForce ? 1 : 0 ) == 1;
 }
 
 MonoAssembly* CMonoDomain::OpenAssembly( const char *szName )
@@ -204,7 +206,7 @@ MonoString* CMonoDomain::NewString( const string& strText ) const
 	return mono_string_new( this->m_pDomain, strText.c_str() );
 }
 
-MonoArray* CMonoDomain::NewElementArray( MonoClass* pMonoClass, CLuaArgumentsVector pLuaArguments )
+MonoArray* CMonoDomain::NewArray( MonoClass* pMonoClass, CLuaArgumentsVector pLuaArguments ) const
 {
 	MonoArray* pArray = mono_array_new( this->m_pDomain, pMonoClass, pLuaArguments.size() );
 
@@ -220,9 +222,23 @@ MonoArray* CMonoDomain::NewElementArray( MonoClass* pMonoClass, CLuaArgumentsVec
 			{
 				CElement* pElement = this->m_pResource->GetElementManager()->FindOrCreate( pUserData );
 
-				mono_array_set( pArray, MonoObject*, i++, pElement->ToMonoObject() );
+				mono_array_set( pArray, MonoObject*, i++, pElement->GetMonoObject() );
 			}
 		}
+	}
+
+	return pArray;
+}
+
+MonoArray* CMonoDomain::NewArray( uint uiLength, const char** szStrings ) const
+{
+	MonoArray* pArray = mono_array_new( this->m_pDomain, mono_get_string_class(), uiLength );
+
+	for( uint i = 0; i < uiLength; i++ )
+	{
+		const char* szValue = szStrings[ i ];
+
+		mono_array_set( pArray, MonoString*, i, this->NewString( szValue ) );
 	}
 
 	return pArray;

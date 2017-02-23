@@ -17,9 +17,9 @@ Vector3::Vector3( float fX, float fY, float fZ )
 
 Vector3::Vector3( MonoObject *pObject )
 {
-	this->fX = CMonoObject::GetPropertyValue< float >( pObject, "X" );
-	this->fY = CMonoObject::GetPropertyValue< float >( pObject, "Y" );
-	this->fZ = CMonoObject::GetPropertyValue< float >( pObject, "Z" );
+	this->fX = SharedUtil::MonoObject::GetPropertyValue< float >( pObject, "X" );
+	this->fY = SharedUtil::MonoObject::GetPropertyValue< float >( pObject, "Y" );
+	this->fZ = SharedUtil::MonoObject::GetPropertyValue< float >( pObject, "Z" );
 }
 
 float Vector3::Normalize( void )

@@ -40,29 +40,29 @@ public:
 								CMonoClass						( MonoClass* pMonoClass, CMonoDomain* pDomain );
 								~CMonoClass						( void );
 
-	MonoObject*					New								( void );
-	MonoObject*					New								( SColor& pColor );
-	MonoObject*					New								( Vector2& vecVector );
-	MonoObject*					New								( Vector3& vecVector );
-	MonoObject*					New								( void** args, int argc );
+	MonoObject*					New								( void ) const;
+	MonoObject*					New								( SColor& pColor ) const;
+	MonoObject*					New								( Vector2& vecVector ) const;
+	MonoObject*					New								( Vector3& vecVector ) const;
+	MonoObject*					New								( PVOID* args, int argc ) const;
 
-	MonoObject*					Box								( void* value );
+	MonoObject*					Box								( PVOID value ) const;
 
-	const char*					GetName							( void );
-	const char*					GetNameSpace					( void );
+	const char*					GetName							( void ) const;
+	const char*					GetNameSpace					( void ) const;
 
-	MonoMethod*					GetMethodFromName				( string strMethodName, int iParamCount );
-	MonoMethod*					GetMethod						( string strMethodName );
-	CMonoMethod*				GetMethod						( string strMethodName, uint uiIndex );
-	list< CMonoMethod* >		GetMethods						( string strMethodName );
+	MonoMethod*					GetMethodFromName				( const string& strMethodName, int iParamCount ) const;
+	MonoMethod*					GetMethod						( const string& strMethodName ) const;
+	CMonoMethod*				GetMethod						( const string& strMethodName, uint uiIndex );
+	list< CMonoMethod* >		GetMethods						( const string& strMethodName );
 
-	CMonoEvent*					GetEvent						( string strEventName );
-	MonoClassField*				GetField						( string strFieldName );
+	CMonoEvent*					GetEvent						( const string& strEventName );
+	MonoClassField*				GetField						( const string& strFieldName );
 
-	MonoEventMap				GetAllEvents					( void )	{ return this->m_Events; }
+	inline MonoEventMap			GetAllEvents					( void ) const	{ return this->m_Events; }
+	inline CMonoDomain*			GetDomain						( void ) const	{ return this->m_pDomain; }
 
-	MonoClass*					GetMonoPtr						( void )	{ return this->m_pClass; }
-	CMonoDomain*				GetDomain						( void )	{ return this->m_pDomain; }
+	inline MonoClass*			operator *						( void ) const	{ return this->m_pClass; }
 };
 
 #endif

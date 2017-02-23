@@ -1,69 +1,39 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using MultiTheftAuto;
 using MultiTheftAuto.EventArgs;
+
+using Console = MultiTheftAuto.Console;
 
 namespace Test
 {
 	public class Program
 	{
-		static void MonoCommandHandler( Player player, string command, string[] args )
-		{
-			Debug.Info( player.GetName() + " executed command '" + command + "' with args: " + string.Join( " ", args ) );
-		}
-
 		static void Main( string[] args )
 		{
-			Server.AddCommandHandler( "mono", new CommandHandler( MonoCommandHandler ) );
+			Event.AddHandler( "onElementDestroy", Resource.Root, new Action<Vehicle>( Vehicle_OnElementDestroy ) );
 
-			Element.Root.OnPlayerJoin += Root_OnPlayerJoin;
+			for( int i = 0; i < 8; i++ )
+			{
+				Vehicle vehicle = new Vehicle( VehicleModel.SULTAN + i, Vector3.Zero, Vector3.Zero );
+			}
 
-			//Element.Root.OnElementDestroy += ( Element sender, ElementEventArgs e ) =>
-			//{
-			//	Debug.Info( "lambda " + sender.GetType() + " " + e.This.GetType() );
-			//};
+			Debug.Info( "------------------------------------" );
 
-			Element vehicle = new Vehicle( VehicleModel.ADMIRAL, Vector3.Zero, Vector3.Zero );
+			foreach( Vehicle vehicle in Element.GetByType( "vehicle" ) )
+			{
+				Debug.Info( string.Format( "{0} {1}", vehicle.GetVehicleType(), vehicle.GetName() ) );
 
-			Debug.Info( vehicle.GetType().ToString() );
+				vehicle.Destroy();
+			}
 
-			vehicle.OnElementDestroy += Root_ElementDestroy;
-
-			//Event.Add( "onTest", true );
-
-			//Event.AddHandler( "onTest", vehicle, new Action<Element, string, bool, bool>( testEvent_OnTrigger ) );
-
-			//Event.Trigger( "onTest", vehicle, "test", true, false, 123, 456.7f, 1337.01d, null, vehicle );
-
-			vehicle.Destroy();
-
-			Debug.Info( Color.Aquamarine.ToString() );
+			Debug.Info( "------------------------------------" );
 		}
 
-		static void Root_OnPlayerJoin( Element sender, ElementEventArgs e )
+		static void Vehicle_OnElementDestroy( Vehicle sender )
 		{
-			Player player = sender as Player;
-
-			Debug.Info( "Player '" + player.GetName() + "' joined" );
-
-			player.FadeCamera( true, 1.0f, Color.Black );
-		}
-
-		static void Root_OnPlayerConnect( Element sender, PlayerConnectEventArgs e )
-		{
-			//Player player = sender as Player;
-
-			Debug.Info( "Player '" + sender.GetType() + "' connected" );
-		}
-
-		static void testEvent_OnTrigger( Element sender, string a, bool b, bool c )
-		{
-			Debug.Info( "testEvent_OnTrigger " + sender.GetType() + " " + a + " " + b + " " + c );
-		}
-
-		static void Root_ElementDestroy( Element sender, ElementEventArgs e )
-		{
-			Debug.Info( "Root_ElementDestroy " + sender.GetType() + " " + e.This.GetType() );
+			Console.WriteLine( "onElementDestroy: " + sender.GetName() );
 		}
 	}
 }

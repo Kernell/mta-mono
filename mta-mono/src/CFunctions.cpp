@@ -67,7 +67,9 @@ int CFunctions::monoEventHandler( lua_State *pLuaVM )
 
 			list< CLuaArgument* > argv;
 
-			for( const auto& iter : pLuaArgs.GetArguments() )
+			vector < CLuaArgument* > _args = pLuaArgs.GetArguments();
+
+			for( const auto& iter : _args )
 			{
 				eLuaType iLuaType = iter->GetType();
 

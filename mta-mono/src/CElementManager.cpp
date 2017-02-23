@@ -37,18 +37,19 @@ void CElementManager::DeleteAll( void )
 	}
 }
 
-CElement* CElementManager::Create( MonoObject* pObject, PVOID pUserData )
+CElement* CElementManager::Create( MonoObject* pObject, PVOID pUserdata )
 {
+	string strTypeName;
+	
 	if( pObject == nullptr )
 	{
 		string _tmp;
-		string strTypeName;
 
-		if( CLuaFunctionDefinitions::IsElement( this->m_pResource->GetLua(), pUserData ) )
+		if( CLuaFunctionDefinitions::IsElement( this->m_pResource->GetLua(), pUserdata ) )
 		{
-			strTypeName = CLuaFunctionDefinitions::GetElementType( this->m_pResource->GetLua(), pUserData );
+			strTypeName = CLuaFunctionDefinitions::GetElementType( this->m_pResource->GetLua(), pUserdata );
 		}
-		else if( CLuaFunctionDefinitions::GetResourceName( this->m_pResource->GetLua(), pUserData, _tmp ) )
+		else if( CLuaFunctionDefinitions::GetResourceName( this->m_pResource->GetLua(), pUserdata, _tmp ) )
 		{
 			strTypeName = "resource";
 		}
@@ -69,21 +70,25 @@ CElement* CElementManager::Create( MonoObject* pObject, PVOID pUserData )
 
 	if( pObject )
 	{
-		return new CElement( this, pObject, pUserData, this->m_pResource );
+		CElement* pElement = new CElement( this, pObject, pUserdata, this->m_pResource );
+
+		pElement->SetTypeName( strTypeName );
+
+		return pElement;
 	}
 
 	return nullptr;
 }
 
-CElement* CElementManager::FindOrCreate( PVOID pUserData )
+CElement* CElementManager::FindOrCreate( PVOID pUserdata )
 {
 	CElement* pElement;
 
-	pElement = this->GetFromList( pUserData );
+	pElement = this->GetFromList( pUserdata );
 
 	if( !pElement )
 	{
-		pElement = this->Create( nullptr, pUserData );
+		pElement = this->Create( nullptr, pUserdata );
 	}
 
 	return pElement;
@@ -103,7 +108,7 @@ CElement* CElementManager::GetFromList( PVOID pUserdata )
 {
 	for( const auto& pElement : this->m_List )
 	{
-		if( pElement->ToLuaUserData() == pUserdata )
+		if( pElement->GetLuaUserdata() == pUserdata )
 		{
 			return pElement;
 		}
@@ -116,7 +121,7 @@ CElement* CElementManager::GetFromList( MonoObject* pMonoObject )
 {
 	for( const auto& pElement : this->m_List )
 	{
-		if( pElement->ToMonoObject() == pMonoObject )
+		if( pElement->GetMonoObject() == pMonoObject )
 		{
 			return pElement;
 		}

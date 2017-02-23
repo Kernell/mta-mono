@@ -38,12 +38,12 @@ CMonoMTALib::~CMonoMTALib( void )
 	this->m_pImage		= nullptr;
 }
 
-CMonoClass* CMonoMTALib::GetClass( const char* szName )
+CMonoClass* CMonoMTALib::GetClass( const char* szName ) const
 {
 	return this->GetDomain()->FindOrAdd( mono_class_from_name( this->m_pImage, "MultiTheftAuto", szName ) );
 }
 
-CMonoClass* CMonoMTALib::GetClass( const char* szNameSpace, const char* szName )
+CMonoClass* CMonoMTALib::GetClass( const char* szNameSpace, const char* szName ) const
 {
 	char szBuffer[ 128 ];
 

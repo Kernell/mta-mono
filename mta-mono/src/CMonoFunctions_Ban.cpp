@@ -13,7 +13,7 @@
 #include "StdInc.h"
 #include "CMonoFunctions.h"
 
-TElement CMonoFunctions::Ban::Add( MonoString* msIP, MonoString* msUsername, MonoString* msSerial, TElement pResponsible, MonoString* msResponsible, MonoString* msReason, int iUnban )
+TElement CMonoFunctions::Ban::Add( MonoString* msIP, MonoString* msUsername, MonoString* msSerial, TElement pResponsible, MonoString* msReason, int iUnban )
 {
 	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
 
@@ -23,16 +23,15 @@ TElement CMonoFunctions::Ban::Add( MonoString* msIP, MonoString* msUsername, Mon
 			strIP			( mono_string_to_utf8( msIP ) ),
 			strUsername		( mono_string_to_utf8( msUsername ) ),
 			strSerial		( mono_string_to_utf8( msSerial ) ),
-			strResponsible	( mono_string_to_utf8( msResponsible ) ),
 			strReason		( mono_string_to_utf8( msReason ) );
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pResponsible );
 
-		PVOID pUserData = CLuaFunctionDefinitions::AddBan( pResource->GetLua(), strIP, strUsername, strSerial, pElement->ToLuaUserData(), strResponsible, strReason, iUnban );
+		PVOID pUserData = CLuaFunctionDefinitions::AddBan( pResource->GetLua(), strIP, strUsername, strSerial, pElement->GetLuaUserdata(), strReason, iUnban );
 
 		if( pUserData )
 		{
-			return pResource->GetElementManager()->Create( nullptr, pUserData )->ToMonoObject();
+			return pResource->GetElementManager()->Create( nullptr, pUserData )->GetMonoObject();
 		}
 	}
 
@@ -48,12 +47,28 @@ bool CMonoFunctions::Ban::Remove( TElement pBan, TElement pResponsible )
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pBan );
 		CElement* pResponsibleElement = pResource->GetElementManager()->GetFromList( pResponsible );
 
-		return CLuaFunctionDefinitions::RemoveBan( pResource->GetLua(), pElement->ToLuaUserData(), pResponsibleElement->ToLuaUserData() );
+		return CLuaFunctionDefinitions::RemoveBan( pResource->GetLua(), pElement->GetLuaUserdata(), pResponsibleElement->GetLuaUserdata() );
 	}
 
 	return false;
 }
 
+MonoArray* CMonoFunctions::Ban::GetAll( void )
+{
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
+	{
+		CLuaArgumentsVector pLuaTable = CLuaFunctionDefinitions::GetBans( pResource->GetLua() );
+
+		if( pLuaTable.size() > 0 )
+		{
+			return pResource->GetDomain()->NewArray( **pResource->GetDomain()->GetMTALib()->GetClass( "Ban" ), pLuaTable );
+		}
+	}
+
+	return nullptr;
+}
 
 bool CMonoFunctions::Ban::Reload( void )
 {
@@ -78,7 +93,7 @@ MonoString* CMonoFunctions::Ban::GetIP( TElement pBan )
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pBan );
 
-		if( CLuaFunctionDefinitions::GetBanIP( pResource->GetLua(), pElement->ToLuaUserData(), strIP ) )
+		if( CLuaFunctionDefinitions::GetBanIP( pResource->GetLua(), pElement->GetLuaUserdata(), strIP ) )
 		{
 			return pResource->GetDomain()->NewString( strIP );
 		}
@@ -97,7 +112,7 @@ MonoString* CMonoFunctions::Ban::GetSerial( TElement pBan )
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pBan );
 
-		if( CLuaFunctionDefinitions::GetBanSerial( pResource->GetLua(), pElement->ToLuaUserData(), strSerial ) )
+		if( CLuaFunctionDefinitions::GetBanSerial( pResource->GetLua(), pElement->GetLuaUserdata(), strSerial ) )
 		{
 			return pResource->GetDomain()->NewString( strSerial );
 		}
@@ -116,7 +131,7 @@ MonoString* CMonoFunctions::Ban::GetUsername( TElement pBan )
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pBan );
 
-		if( CLuaFunctionDefinitions::GetBanUsername( pResource->GetLua(), pElement->ToLuaUserData(), strUsername ) )
+		if( CLuaFunctionDefinitions::GetBanUsername( pResource->GetLua(), pElement->GetLuaUserdata(), strUsername ) )
 		{
 			return pResource->GetDomain()->NewString( strUsername );
 		}
@@ -135,7 +150,7 @@ MonoString* CMonoFunctions::Ban::GetNick( TElement pBan )
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pBan );
 
-		if( CLuaFunctionDefinitions::GetBanNick( pResource->GetLua(), pElement->ToLuaUserData(), strNick ) )
+		if( CLuaFunctionDefinitions::GetBanNick( pResource->GetLua(), pElement->GetLuaUserdata(), strNick ) )
 		{
 			return pResource->GetDomain()->NewString( strNick );
 		}
@@ -154,7 +169,7 @@ MonoString* CMonoFunctions::Ban::GetReason( TElement pBan )
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pBan );
 
-		if( CLuaFunctionDefinitions::GetBanReason( pResource->GetLua(), pElement->ToLuaUserData(), strReason ) )
+		if( CLuaFunctionDefinitions::GetBanReason( pResource->GetLua(), pElement->GetLuaUserdata(), strReason ) )
 		{
 			return pResource->GetDomain()->NewString( strReason );
 		}
@@ -173,7 +188,7 @@ MonoString* CMonoFunctions::Ban::GetAdmin( TElement pBan )
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pBan );
 
-		if( CLuaFunctionDefinitions::GetBanAdmin( pResource->GetLua(), pElement->ToLuaUserData(), strAdmin ) )
+		if( CLuaFunctionDefinitions::GetBanAdmin( pResource->GetLua(), pElement->GetLuaUserdata(), strAdmin ) )
 		{
 			return pResource->GetDomain()->NewString( strAdmin );
 		}
@@ -193,7 +208,7 @@ int CMonoFunctions::Ban::GetBanTime( TElement pBan )
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pBan );
 
-		if( CLuaFunctionDefinitions::GetBanTime( pResource->GetLua(), pElement->ToLuaUserData(), tTime ) )
+		if( CLuaFunctionDefinitions::GetBanTime( pResource->GetLua(), pElement->GetLuaUserdata(), tTime ) )
 		{
 			return (int)tTime;
 		}
@@ -212,7 +227,7 @@ int CMonoFunctions::Ban::GetUnbanTime( TElement pBan )
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pBan );
 
-		if( CLuaFunctionDefinitions::GetUnbanTime( pResource->GetLua(), pElement->ToLuaUserData(), tTime ) )
+		if( CLuaFunctionDefinitions::GetUnbanTime( pResource->GetLua(), pElement->GetLuaUserdata(), tTime ) )
 		{
 			return (int)tTime;
 		}
@@ -230,7 +245,7 @@ bool CMonoFunctions::Ban::SetUnbanTime( TElement pBan, int time )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pBan );
 
-		return CLuaFunctionDefinitions::SetUnbanTime( pResource->GetLua(), pElement->ToLuaUserData(), time );
+		return CLuaFunctionDefinitions::SetUnbanTime( pResource->GetLua(), pElement->GetLuaUserdata(), time );
 	}
 
 	return false;
@@ -246,7 +261,7 @@ bool CMonoFunctions::Ban::SetReason( TElement pBan, MonoString* msReason )
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pBan );
 
-		return CLuaFunctionDefinitions::SetBanReason( pResource->GetLua(), pElement->ToLuaUserData(), strReason );
+		return CLuaFunctionDefinitions::SetBanReason( pResource->GetLua(), pElement->GetLuaUserdata(), strReason );
 	}
 
 	return false;
@@ -262,7 +277,7 @@ bool CMonoFunctions::Ban::SetAdmin( TElement pBan, MonoString* msAdminName )
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pBan );
 
-		return CLuaFunctionDefinitions::SetBanAdmin( pResource->GetLua(), pElement->ToLuaUserData(), strAdmin );
+		return CLuaFunctionDefinitions::SetBanAdmin( pResource->GetLua(), pElement->GetLuaUserdata(), strAdmin );
 	}
 
 	return false;

@@ -1887,23 +1887,19 @@ string CLuaFunctionDefinitions::GetPlayerVersion( lua_State* pLuaVM, PVOID pUser
 	return string();
 }
 
-CLuaArgumentsMap* CLuaFunctionDefinitions::GetPlayerACInfo( lua_State* pLuaVM, PVOID pUserData )
+CLuaArgumentsMap CLuaFunctionDefinitions::GetPlayerACInfo( lua_State* pLuaVM, PVOID pUserData )
 {
+	CLuaArgument pLuaArgument;
 	CLuaArguments pLuaArguments;
 	
 	pLuaArguments.PushUserData( pUserData );
 	
 	if( pLuaArguments.Call( pLuaVM, "getPlayerACInfo", 1 ) )
 	{
-		CLuaArgument pLuaArgument( pLuaVM, -1 );
-
-		if( pLuaArgument.GetType() == eLuaType::Table )
-		{
-			return &pLuaArgument.GetTable();
-		}
+		pLuaArgument.Read( pLuaVM, -1 );
 	}
 	
-	return nullptr;
+	return pLuaArgument.GetTable();
 }
 
 // Player set functions

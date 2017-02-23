@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -19,13 +19,13 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
@@ -173,11 +173,11 @@
     <ClCompile Include="src\CMonoInterface.cpp" />
     <ClCompile Include="src\CMonoMethod.cpp" />
     <ClCompile Include="src\CMonoMTALib.cpp" />
-    <ClCompile Include="src\CMonoObject.cpp" />
-    <ClCompile Include="src\Common.cpp" />
     <ClCompile Include="src\CRegisteredCommands.cpp" />
     <ClCompile Include="src\CResource.cpp" />
     <ClCompile Include="src\CResourceManager.cpp" />
+    <ClCompile Include="src\extra\CVehicleColor.cpp" />
+    <ClCompile Include="src\extra\SColor.cpp" />
     <ClCompile Include="src\extra\Vector2.cpp" />
     <ClCompile Include="src\extra\Vector3.cpp" />
     <ClCompile Include="src\mta-mono.cpp" />
@@ -185,6 +185,7 @@
     <ClCompile Include="src\extra\CLuaArgument.cpp" />
     <ClCompile Include="src\extra\CLuaArguments.cpp" />
     <ClCompile Include="src\lua\CLuaFunctionDefinitions.cpp" />
+    <ClCompile Include="src\SharedUtil\SharedUtil.MonoObject.cpp" />
     <ClCompile Include="src\StdInc.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -206,10 +207,11 @@
     <ClInclude Include="src\CMonoInterface.h" />
     <ClInclude Include="src\CMonoMethod.h" />
     <ClInclude Include="src\CMonoMTALib.h" />
-    <ClInclude Include="src\CMonoObject.h" />
     <ClInclude Include="src\CRegisteredCommands.h" />
     <ClInclude Include="src\CResource.h" />
     <ClInclude Include="src\CResourceManager.h" />
+    <ClInclude Include="src\extra\CVehicleColor.h" />
+    <ClInclude Include="src\extra\SColor.h" />
     <ClInclude Include="src\extra\Vector2.h" />
     <ClInclude Include="src\extra\Vector3.h" />
     <ClInclude Include="src\include\mono\jit\jit.h" />
@@ -243,12 +245,15 @@
     <ClInclude Include="src\include\mono\utils\mono-logger.h" />
     <ClInclude Include="src\include\mono\utils\mono-publib.h" />
     <ClInclude Include="src\CFunctions.h" />
-    <ClInclude Include="src\Common.h" />
     <ClInclude Include="src\extra\CLuaArgument.h" />
     <ClInclude Include="src\extra\CLuaArguments.h" />
     <ClInclude Include="src\include\ILuaModuleManager.h" />
     <ClInclude Include="src\lua\CLuaFunctionDefinitions.h" />
+    <ClInclude Include="src\SharedUtil\SharedUtil.h" />
     <ClInclude Include="src\StdInc.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\SharedUtil\SharedUtil.MonoObject.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

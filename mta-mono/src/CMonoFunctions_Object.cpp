@@ -43,7 +43,7 @@ MonoObject* CMonoFunctions::Object::GetScale( TElement pThis )
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetObjectScale( pResource->GetLua(), pElement->ToLuaUserData(), vecScale ) )
+		if( CLuaFunctionDefinitions::GetObjectScale( pResource->GetLua(), pElement->GetLuaUserdata(), vecScale ) )
 		{
 			return pResource->GetDomain()->GetMTALib()->Vector3->New( vecScale );
 		}
@@ -62,7 +62,7 @@ bool CMonoFunctions::Object::SetScale( TElement pThis, MonoObject* pScale )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::SetObjectScale( pResource->GetLua(), pElement->ToLuaUserData(), Vector3( pScale ) );
+		return CLuaFunctionDefinitions::SetObjectScale( pResource->GetLua(), pElement->GetLuaUserdata(), Vector3( pScale ) );
 	}
 
 	return false;
@@ -82,7 +82,7 @@ bool CMonoFunctions::Object::Move( TElement pThis, unsigned long ulTime, MonoObj
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::MoveObject( pResource->GetLua(), pElement->ToLuaUserData(), ulTime, vecPosition, vecRotation, szEasingType, fEasingPeriod, fEasingAmplitude, fEasingOvershoot );
+		return CLuaFunctionDefinitions::MoveObject( pResource->GetLua(), pElement->GetLuaUserdata(), ulTime, vecPosition, vecRotation, szEasingType, fEasingPeriod, fEasingAmplitude, fEasingOvershoot );
 	}
 
 	return false;
@@ -96,7 +96,7 @@ bool CMonoFunctions::Object::Stop( TElement pThis )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::StopObject( pResource->GetLua(), pElement->ToLuaUserData() );
+		return CLuaFunctionDefinitions::StopObject( pResource->GetLua(), pElement->GetLuaUserdata() );
 	}
 
 	return false;

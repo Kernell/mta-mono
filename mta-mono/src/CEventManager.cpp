@@ -105,22 +105,25 @@ bool CEventManager::Call( const string& strName, CElement* pThis, list< CLuaArgu
 		}
 	}
 
-	CMonoClass* pClass = pMTALib->GetClass( "Element" );
+	CMonoClass* pClass = pMTALib->GetClass( pThis->GetTypeClassName() );
 
 	ASSERT( pClass );
 
-	string strEventName = strName;
-
-	strEventName[ 0 ] = toupper( strEventName[ 0 ] );
-
-	CMonoEvent* pEvent = pClass->GetEvent( strEventName );
-
-	if( pEvent )
+	if( pClass )
 	{
-		return pEvent->Call( pThis->ToMonoObject(), Arguments );
+		string strEventName = strName;
+
+		strEventName[ 0 ] = toupper( strEventName[ 0 ] );
+
+		CMonoEvent* pEvent = pClass->GetEvent( strEventName );
+
+		if( pEvent )
+		{
+			return pEvent->Call( pThis, Arguments );
+		}
 	}
 
-	return true;
+	return false;
 }
 
 void CEventManager::ReadArgumens( list< CLuaArgument* > Arguments, CMonoArguments& pArguments )
@@ -168,9 +171,9 @@ void CEventManager::ReadArgumens( list< CLuaArgument* > Arguments, CMonoArgument
 			{
 				CElement* pElement = pElementManager->FindOrCreate( iter->GetLightUserData() );
 
-				MonoObject* pValue = pElement->ToMonoObject();
+				ASSERT( pElement );
 
-				pArguments.Push( pValue );
+				pArguments.Push( pElement->GetMonoObject() );
 
 				break;
 			}

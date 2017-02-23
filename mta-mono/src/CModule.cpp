@@ -15,6 +15,8 @@
 
 CModule::CModule( ILuaModuleManager10* pModule )
 {
+	g_pModule = this;
+
 	this->m_pModuleManager = pModule;
 
 	this->m_pMonoInterface		= new CMonoInterface( this );
@@ -27,6 +29,8 @@ CModule::~CModule( void )
 	SAFE_DELETE( this->m_pMonoInterface );
 
 	this->m_pModuleManager = nullptr;
+
+	g_pModule = nullptr;
 }
 
 void CModule::DoPulse( void )

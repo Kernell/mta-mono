@@ -12,7 +12,7 @@
 
 #include "StdInc.h"
 
-#define MODULE_NAME         "Mono 4.2.1"
+#define MODULE_NAME         "Mono 4.2.2"
 #define MODULE_AUTHOR       "Dmitry Korolev <kernell@mtaroleplay.ru>"
 #define MODULE_VERSION      0.27f
 
@@ -21,9 +21,9 @@
 
 CModule* g_pModule = nullptr;
 
-MTAEXPORT bool InitModule( ILuaModuleManager10* pManager, char* szModuleName, char* szAuthor, float* fVersion )
+DLL_EXPORT bool InitModule( ILuaModuleManager10* pManager, char* szModuleName, char* szAuthor, float* fVersion )
 {
-	g_pModule = new CModule( pManager );
+	new CModule( pManager );
 
     strncpy( szModuleName, MODULE_NAME, MAX_INFO_LENGTH );
     strncpy( szAuthor, MODULE_AUTHOR, MAX_INFO_LENGTH );
@@ -33,7 +33,7 @@ MTAEXPORT bool InitModule( ILuaModuleManager10* pManager, char* szModuleName, ch
     return true;
 }
 
-MTAEXPORT void RegisterFunctions( lua_State *pLuaVM )
+DLL_EXPORT void RegisterFunctions( lua_State *pLuaVM )
 {
     if( g_pModule && pLuaVM )
 	{
@@ -44,7 +44,7 @@ MTAEXPORT void RegisterFunctions( lua_State *pLuaVM )
 	}
 }
 
-MTAEXPORT bool DoPulse( void )
+DLL_EXPORT bool DoPulse( void )
 {
 	if( g_pModule )
 	{
@@ -54,7 +54,7 @@ MTAEXPORT bool DoPulse( void )
     return true;
 }
 
-MTAEXPORT bool ShutdownModule( void )
+DLL_EXPORT bool ShutdownModule( void )
 {
     if( g_pModule )
 	{
@@ -64,7 +64,7 @@ MTAEXPORT bool ShutdownModule( void )
     return true;
 }
 
-MTAEXPORT bool ResourceStopping( lua_State* luaVM )
+DLL_EXPORT bool ResourceStopping( lua_State* luaVM )
 {
 	if( g_pModule )
 	{
@@ -74,7 +74,7 @@ MTAEXPORT bool ResourceStopping( lua_State* luaVM )
     return true;
 }
 
-MTAEXPORT bool ResourceStopped( lua_State* luaVM )
+DLL_EXPORT bool ResourceStopped( lua_State* luaVM )
 {
 	if( g_pModule )
 	{

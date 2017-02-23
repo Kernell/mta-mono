@@ -29,11 +29,6 @@ namespace MultiTheftAuto
 		{
 		}
 
-		~Element()
-		{
-			Debug.Info( "~Element() [0x" + this + "]" );
-		}
-
 		#endregion
 
 		#region Methods

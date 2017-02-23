@@ -14,7 +14,6 @@
 
 #include <cmath>
 #include "Vector3.h"
-#include "../CMonoObject.h"
 
 /**
  * CVector2D Structure used to store a 2D vertex.

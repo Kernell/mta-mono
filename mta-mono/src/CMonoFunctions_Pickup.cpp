@@ -42,7 +42,7 @@ unsigned char CMonoFunctions::Pickup::GetPickupType( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetPickupType( pResource->GetLua(), pElement->ToLuaUserData(), ucType ) )
+		if( CLuaFunctionDefinitions::GetPickupType( pResource->GetLua(), pElement->GetLuaUserdata(), ucType ) )
 		{
 			return ucType;
 		}
@@ -61,7 +61,7 @@ unsigned char CMonoFunctions::Pickup::GetWeapon( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetPickupWeapon( pResource->GetLua(), pElement->ToLuaUserData(), ucWeapon ) )
+		if( CLuaFunctionDefinitions::GetPickupWeapon( pResource->GetLua(), pElement->GetLuaUserdata(), ucWeapon ) )
 		{
 			return ucWeapon;
 		}
@@ -80,7 +80,7 @@ float CMonoFunctions::Pickup::GetAmount( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetPickupAmount( pResource->GetLua(), pElement->ToLuaUserData(), fAmount ) )
+		if( CLuaFunctionDefinitions::GetPickupAmount( pResource->GetLua(), pElement->GetLuaUserdata(), fAmount ) )
 		{
 			return fAmount;
 		}
@@ -99,7 +99,7 @@ unsigned short CMonoFunctions::Pickup::GetAmmo( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetPickupAmmo( pResource->GetLua(), pElement->ToLuaUserData(), usAmmo ) )
+		if( CLuaFunctionDefinitions::GetPickupAmmo( pResource->GetLua(), pElement->GetLuaUserdata(), usAmmo ) )
 		{
 			return usAmmo;
 		}
@@ -118,7 +118,7 @@ unsigned long CMonoFunctions::Pickup::GetRespawnInterval( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetPickupRespawnInterval( pResource->GetLua(), pElement->ToLuaUserData(), ulInterval ) )
+		if( CLuaFunctionDefinitions::GetPickupRespawnInterval( pResource->GetLua(), pElement->GetLuaUserdata(), ulInterval ) )
 		{
 			return ulInterval;
 		}
@@ -137,7 +137,7 @@ bool CMonoFunctions::Pickup::IsSpawned( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::IsPickupSpawned( pResource->GetLua(), pElement->ToLuaUserData(), bSpawned ) )
+		if( CLuaFunctionDefinitions::IsPickupSpawned( pResource->GetLua(), pElement->GetLuaUserdata(), bSpawned ) )
 		{
 			return bSpawned;
 		}
@@ -156,7 +156,7 @@ bool CMonoFunctions::Pickup::SetType( TElement pThis, unsigned char ucType, doub
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::SetPickupType( pResource->GetLua(), pElement->ToLuaUserData(), ucType, dThree, dFour );
+		return CLuaFunctionDefinitions::SetPickupType( pResource->GetLua(), pElement->GetLuaUserdata(), ucType, dThree, dFour );
 	}
 
 	return false;
@@ -170,7 +170,7 @@ bool CMonoFunctions::Pickup::SetRespawnInterval( TElement pThis, unsigned long u
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::SetPickupRespawnInterval( pResource->GetLua(), pElement->ToLuaUserData(), ulInterval );
+		return CLuaFunctionDefinitions::SetPickupRespawnInterval( pResource->GetLua(), pElement->GetLuaUserdata(), ulInterval );
 	}
 
 	return false;
@@ -185,7 +185,7 @@ bool CMonoFunctions::Pickup::Use( TElement pThis, TElement pPlayer )
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		CElement* pPlayerElement = pResource->GetElementManager()->GetFromList( pPlayer );
 		
-		return CLuaFunctionDefinitions::UsePickup( pResource->GetLua(), pElement->ToLuaUserData(), pPlayerElement->ToLuaUserData() );
+		return CLuaFunctionDefinitions::UsePickup( pResource->GetLua(), pElement->GetLuaUserdata(), pPlayerElement->GetLuaUserdata() );
 	}
 
 	return false;

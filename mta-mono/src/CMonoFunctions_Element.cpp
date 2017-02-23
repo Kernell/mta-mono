@@ -41,7 +41,7 @@ bool CMonoFunctions::Element::Destroy( TElement pThis )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::DestroyElement( pResource->GetLua(), pElement->ToLuaUserData() );
+		return CLuaFunctionDefinitions::DestroyElement( pResource->GetLua(), pElement->GetLuaUserdata() );
 	}
 
 	return false;
@@ -55,11 +55,11 @@ TElement CMonoFunctions::Element::Clone( TElement pThis, MonoObject* vecPosition
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		PVOID pUserData = CLuaFunctionDefinitions::CloneElement( pResource->GetLua(), pElement->ToLuaUserData(), Vector3( vecPosition ), bCloneElement );
+		PVOID pUserData = CLuaFunctionDefinitions::CloneElement( pResource->GetLua(), pElement->GetLuaUserdata(), Vector3( vecPosition ), bCloneElement );
 
 		if( pUserData )
 		{
-			return pResource->GetElementManager()->Create( nullptr, pUserData )->ToMonoObject();
+			return pResource->GetElementManager()->Create( nullptr, pUserData )->GetMonoObject();
 		}
 	}
 
@@ -78,7 +78,7 @@ TElement CMonoFunctions::Element::GetRootElement( void )
 
 		if( pUserData )
 		{
-			return pResource->GetElementManager()->FindOrCreate( pUserData )->ToMonoObject();
+			return pResource->GetElementManager()->FindOrCreate( pUserData )->GetMonoObject();
 		}
 	}
 
@@ -97,7 +97,7 @@ MonoArray* CMonoFunctions::Element::GetByType( MonoString* msType, TElement pArg
 
 		if( pArgStartElement )
 		{
-			pStartElement = pResource->GetElementManager()->GetFromList( pArgStartElement )->ToLuaUserData();
+			pStartElement = pResource->GetElementManager()->GetFromList( pArgStartElement )->GetLuaUserdata();
 		}
 
 		CLuaArgumentsVector pLuaArguments = CLuaFunctionDefinitions::GetElementsByType( pResource->GetLua(), szType, pStartElement );
@@ -118,7 +118,7 @@ MonoArray* CMonoFunctions::Element::GetByType( MonoString* msType, TElement pArg
 				pElementClass = pResource->GetDomain()->GetMTALib()->GetClass( "Element" );
 			}
 
-			return pResource->GetDomain()->NewElementArray( pElementClass->GetMonoPtr(), pLuaArguments );
+			return pResource->GetDomain()->NewArray( **pElementClass, pLuaArguments );
 		}
 	}
 
@@ -135,7 +135,7 @@ bool CMonoFunctions::Element::IsElement( TElement pThis )
 
 		ASSERT( pElement );
 
-		return CLuaFunctionDefinitions::IsElement( pResource->GetLua(), pElement->ToLuaUserData() );
+		return CLuaFunctionDefinitions::IsElement( pResource->GetLua(), pElement->GetLuaUserdata() );
 	}
 
 	return false;
@@ -151,7 +151,7 @@ uint32_t CMonoFunctions::Element::GetUserData( TElement pThis )
 
 		if( pElement )
 		{
-			return reinterpret_cast< uint32_t >( pElement->ToLuaUserData() );
+			return reinterpret_cast< uint32_t >( pElement->GetLuaUserdata() );
 		}
 	}
 
@@ -166,7 +166,7 @@ MonoString* CMonoFunctions::Element::GetElementType( TElement pThis )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		const string strType = CLuaFunctionDefinitions::GetElementType( pResource->GetLua(), pElement->ToLuaUserData() );
+		const string strType = CLuaFunctionDefinitions::GetElementType( pResource->GetLua(), pElement->GetLuaUserdata() );
 
 		return pResource->GetDomain()->NewString( strType );
 	}
@@ -186,7 +186,7 @@ TElement CMonoFunctions::Element::GetByID( MonoString* msID, unsigned int uiInde
 
 		if( pUserData )
 		{
-			return pResource->GetElementManager()->FindOrCreate( pUserData )->ToMonoObject();
+			return pResource->GetElementManager()->FindOrCreate( pUserData )->GetMonoObject();
 		}
 	}
 
@@ -203,7 +203,7 @@ TElement CMonoFunctions::Element::GetByIndex( int iIndex )
 
 		if( pUserData )
 		{
-			return pResource->GetElementManager()->FindOrCreate( pUserData )->ToMonoObject();
+			return pResource->GetElementManager()->FindOrCreate( pUserData )->GetMonoObject();
 		}
 	}
 
@@ -218,11 +218,11 @@ TElement CMonoFunctions::Element::GetChild( TElement pThis, int iIndex )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		PVOID pUserData = CLuaFunctionDefinitions::GetElementChild( pResource->GetLua(), pElement->ToLuaUserData(), iIndex );
+		PVOID pUserData = CLuaFunctionDefinitions::GetElementChild( pResource->GetLua(), pElement->GetLuaUserdata(), iIndex );
 
 		if( pUserData )
 		{
-			return pResource->GetElementManager()->FindOrCreate( pUserData )->ToMonoObject();
+			return pResource->GetElementManager()->FindOrCreate( pUserData )->GetMonoObject();
 		}
 	}
 
@@ -237,7 +237,7 @@ int CMonoFunctions::Element::GetChildrenCount( TElement pThis )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::GetElementChildrenCount( pResource->GetLua(), pElement->ToLuaUserData() );
+		return CLuaFunctionDefinitions::GetElementChildrenCount( pResource->GetLua(), pElement->GetLuaUserdata() );
 	}
 
 	return 0;
@@ -251,7 +251,7 @@ MonoString* CMonoFunctions::Element::GetID( TElement pThis )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		const string strID = CLuaFunctionDefinitions::GetElementID( pResource->GetLua(), pElement->ToLuaUserData() );
+		const string strID = CLuaFunctionDefinitions::GetElementID( pResource->GetLua(), pElement->GetLuaUserdata() );
 
 		return mono_string_new( mono_domain_get(), strID.c_str() );
 	}
@@ -267,11 +267,11 @@ TElement CMonoFunctions::Element::GetParent( TElement pThis )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		PVOID pUserData = CLuaFunctionDefinitions::GetElementParent( pResource->GetLua(), pElement->ToLuaUserData() );
+		PVOID pUserData = CLuaFunctionDefinitions::GetElementParent( pResource->GetLua(), pElement->GetLuaUserdata() );
 
 		if( pUserData )
 		{
-			return pResource->GetElementManager()->FindOrCreate( pUserData )->ToMonoObject();
+			return pResource->GetElementManager()->FindOrCreate( pUserData )->GetMonoObject();
 		}
 	}
 
@@ -288,7 +288,7 @@ MonoObject* CMonoFunctions::Element::GetPosition( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		if( CLuaFunctionDefinitions::GetElementPosition( pResource->GetLua(), pElement->ToLuaUserData(), vecPosition ) )
+		if( CLuaFunctionDefinitions::GetElementPosition( pResource->GetLua(), pElement->GetLuaUserdata(), vecPosition ) )
 		{
 			return pResource->GetDomain()->GetMTALib()->Vector3->New( vecPosition );
 		}
@@ -307,7 +307,7 @@ MonoObject* CMonoFunctions::Element::GetRotation( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		if( CLuaFunctionDefinitions::GetElementRotation( pResource->GetLua(), pElement->ToLuaUserData(), vecPosition ) )
+		if( CLuaFunctionDefinitions::GetElementRotation( pResource->GetLua(), pElement->GetLuaUserdata(), vecPosition ) )
 		{
 			return pResource->GetDomain()->GetMTALib()->Vector3->New( vecPosition );
 		}
@@ -326,7 +326,7 @@ MonoObject* CMonoFunctions::Element::GetVelocity( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		if( CLuaFunctionDefinitions::GetElementVelocity( pResource->GetLua(), pElement->ToLuaUserData(), vecPosition ) )
+		if( CLuaFunctionDefinitions::GetElementVelocity( pResource->GetLua(), pElement->GetLuaUserdata(), vecPosition ) )
 		{
 			return pResource->GetDomain()->GetMTALib()->Vector3->New( vecPosition );
 		}
@@ -345,7 +345,7 @@ unsigned char CMonoFunctions::Element::GetInterior( TElement pThis )
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		if( CLuaFunctionDefinitions::GetElementInterior( pResource->GetLua(), pElement->ToLuaUserData(), ucInterior ) )
+		if( CLuaFunctionDefinitions::GetElementInterior( pResource->GetLua(), pElement->GetLuaUserdata(), ucInterior ) )
 		{
 			return ucInterior;
 		}
@@ -364,7 +364,7 @@ bool CMonoFunctions::Element::IsWithinColShape( TElement pThis )
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		if( CLuaFunctionDefinitions::IsElementWithinColShape( pResource->GetLua(), pElement->ToLuaUserData(), bWithin ) )
+		if( CLuaFunctionDefinitions::IsElementWithinColShape( pResource->GetLua(), pElement->GetLuaUserdata(), bWithin ) )
 		{
 			return bWithin;
 		}
@@ -383,7 +383,7 @@ bool CMonoFunctions::Element::IsWithinMarker( TElement pThis )
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		if( CLuaFunctionDefinitions::IsElementWithinMarker( pResource->GetLua(), pElement->ToLuaUserData(), bWithin ) )
+		if( CLuaFunctionDefinitions::IsElementWithinMarker( pResource->GetLua(), pElement->GetLuaUserdata(), bWithin ) )
 		{
 			return bWithin;
 		}
@@ -402,7 +402,7 @@ unsigned short CMonoFunctions::Element::GetDimension( TElement pThis )
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		if( CLuaFunctionDefinitions::GetElementDimension( pResource->GetLua(), pElement->ToLuaUserData(), usDimension ) )
+		if( CLuaFunctionDefinitions::GetElementDimension( pResource->GetLua(), pElement->GetLuaUserdata(), usDimension ) )
 		{
 			return usDimension;
 		}
@@ -421,7 +421,7 @@ MonoString* CMonoFunctions::Element::GetZoneName( TElement pThis, bool bCitiesOn
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		if( CLuaFunctionDefinitions::GetElementZoneName( pResource->GetLua(), pElement->ToLuaUserData(), strOutName, bCitiesOnly ) )
+		if( CLuaFunctionDefinitions::GetElementZoneName( pResource->GetLua(), pElement->GetLuaUserdata(), strOutName, bCitiesOnly ) )
 		{
 			return pResource->GetDomain()->NewString( strOutName );
 		}
@@ -438,7 +438,7 @@ bool CMonoFunctions::Element::IsAttached( TElement pThis )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::IsElementAttached( pResource->GetLua(), pElement->ToLuaUserData() );
+		return CLuaFunctionDefinitions::IsElementAttached( pResource->GetLua(), pElement->GetLuaUserdata() );
 	}
 
 	return false;
@@ -452,11 +452,11 @@ TElement CMonoFunctions::Element::GetAttachedTo( TElement pThis )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		PVOID pUserData = CLuaFunctionDefinitions::GetElementAttachedTo( pResource->GetLua(), pElement->ToLuaUserData() );
+		PVOID pUserData = CLuaFunctionDefinitions::GetElementAttachedTo( pResource->GetLua(), pElement->GetLuaUserdata() );
 
 		if( pUserData )
 		{
-			return pResource->GetElementManager()->FindOrCreate( pUserData )->ToMonoObject();
+			return pResource->GetElementManager()->FindOrCreate( pUserData )->GetMonoObject();
 		}
 	}
 
@@ -471,11 +471,11 @@ TElement CMonoFunctions::Element::GetColShape( TElement pThis )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		PVOID pUserData = CLuaFunctionDefinitions::GetElementColShape( pResource->GetLua(), pElement->ToLuaUserData() );
+		PVOID pUserData = CLuaFunctionDefinitions::GetElementColShape( pResource->GetLua(), pElement->GetLuaUserdata() );
 
 		if( pUserData )
 		{
-			return pResource->GetElementManager()->FindOrCreate( pUserData )->ToMonoObject();
+			return pResource->GetElementManager()->FindOrCreate( pUserData )->GetMonoObject();
 		}
 	}
 
@@ -492,7 +492,7 @@ unsigned char CMonoFunctions::Element::GetAlpha( TElement pThis )
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetElementAlpha( pResource->GetLua(), pElement->ToLuaUserData(), ucAlpha ) )
+		if( CLuaFunctionDefinitions::GetElementAlpha( pResource->GetLua(), pElement->GetLuaUserdata(), ucAlpha ) )
 		{
 			return ucAlpha;
 		}
@@ -511,7 +511,7 @@ bool CMonoFunctions::Element::IsDoubleSided( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		if( CLuaFunctionDefinitions::IsElementDoubleSided( pResource->GetLua(), pElement->ToLuaUserData(), bDoubleSided ) )
+		if( CLuaFunctionDefinitions::IsElementDoubleSided( pResource->GetLua(), pElement->GetLuaUserdata(), bDoubleSided ) )
 		{
 			return bDoubleSided;
 		}
@@ -530,7 +530,7 @@ float CMonoFunctions::Element::GetHealth( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		if( CLuaFunctionDefinitions::GetElementHealth( pResource->GetLua(), pElement->ToLuaUserData(), fHealth ) )
+		if( CLuaFunctionDefinitions::GetElementHealth( pResource->GetLua(), pElement->GetLuaUserdata(), fHealth ) )
 		{
 			return fHealth;
 		}
@@ -549,7 +549,7 @@ unsigned short CMonoFunctions::Element::GetModel( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		if( CLuaFunctionDefinitions::GetElementModel( pResource->GetLua(), pElement->ToLuaUserData(), usModel ) )
+		if( CLuaFunctionDefinitions::GetElementModel( pResource->GetLua(), pElement->GetLuaUserdata(), usModel ) )
 		{
 			return usModel;
 		}
@@ -568,7 +568,7 @@ bool CMonoFunctions::Element::IsInWater( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		if( CLuaFunctionDefinitions::IsElementInWater( pResource->GetLua(), pElement->ToLuaUserData(), bInWater ) )
+		if( CLuaFunctionDefinitions::IsElementInWater( pResource->GetLua(), pElement->GetLuaUserdata(), bInWater ) )
 		{
 			return bInWater;
 		}
@@ -587,7 +587,7 @@ MonoObject* CMonoFunctions::Element::GetAttachedOffsetPosition( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		if( CLuaFunctionDefinitions::GetElementAttachedOffsets( pResource->GetLua(), pElement->ToLuaUserData(), vecPosition, vecRotation ) )
+		if( CLuaFunctionDefinitions::GetElementAttachedOffsets( pResource->GetLua(), pElement->GetLuaUserdata(), vecPosition, vecRotation ) )
 		{
 			return pResource->GetDomain()->GetMTALib()->Vector3->New( vecPosition );
 		}
@@ -606,7 +606,7 @@ MonoObject* CMonoFunctions::Element::GetAttachedOffsetRotation( TElement pThis )
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetElementAttachedOffsets( pResource->GetLua(), pElement->ToLuaUserData(), vecPosition, vecRotation ) )
+		if( CLuaFunctionDefinitions::GetElementAttachedOffsets( pResource->GetLua(), pElement->GetLuaUserdata(), vecPosition, vecRotation ) )
 		{
 			return pResource->GetDomain()->GetMTALib()->Vector3->New( vecRotation );
 		}
@@ -623,11 +623,11 @@ TElement CMonoFunctions::Element::GetSyncer( TElement pThis )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		PVOID pUserData = CLuaFunctionDefinitions::GetElementSyncer( pResource->GetLua(), pElement->ToLuaUserData() );
+		PVOID pUserData = CLuaFunctionDefinitions::GetElementSyncer( pResource->GetLua(), pElement->GetLuaUserdata() );
 
 		if( pUserData )
 		{
-			return pResource->GetElementManager()->FindOrCreate( pUserData )->ToMonoObject();
+			return pResource->GetElementManager()->FindOrCreate( pUserData )->GetMonoObject();
 		}
 	}
 
@@ -642,7 +642,7 @@ bool CMonoFunctions::Element::GetCollisionsEnabled( TElement pThis )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::GetElementCollisionsEnabled( pResource->GetLua(), pElement->ToLuaUserData() );
+		return CLuaFunctionDefinitions::GetElementCollisionsEnabled( pResource->GetLua(), pElement->GetLuaUserdata() );
 	}
 
 	return false;
@@ -658,7 +658,7 @@ bool CMonoFunctions::Element::IsFrozen( TElement pThis )
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::IsElementFrozen( pResource->GetLua(), pElement->ToLuaUserData(), bFrozen ) )
+		if( CLuaFunctionDefinitions::IsElementFrozen( pResource->GetLua(), pElement->GetLuaUserdata(), bFrozen ) )
 		{
 			return bFrozen;
 		}
@@ -677,11 +677,11 @@ TElement CMonoFunctions::Element::GetLowLod( TElement pThis )
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		if( CLuaFunctionDefinitions::GetLowLodElement( pResource->GetLua(), pElement->ToLuaUserData(), pLODUserData ) )
+		if( CLuaFunctionDefinitions::GetLowLodElement( pResource->GetLua(), pElement->GetLuaUserdata(), pLODUserData ) )
 		{
 			if( pLODUserData )
 			{
-				return pResource->GetElementManager()->FindOrCreate( pLODUserData )->ToMonoObject();
+				return pResource->GetElementManager()->FindOrCreate( pLODUserData )->GetMonoObject();
 			}
 		}
 	}
@@ -699,7 +699,7 @@ bool CMonoFunctions::Element::IsLowLod( TElement pThis )
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::IsElementLowLod( pResource->GetLua(), pElement->ToLuaUserData(), bIsLowLod ) )
+		if( CLuaFunctionDefinitions::IsElementLowLod( pResource->GetLua(), pElement->GetLuaUserdata(), bIsLowLod ) )
 		{
 			return bIsLowLod;
 		}
@@ -718,7 +718,7 @@ bool CMonoFunctions::Element::ClearVisibleTo( TElement pThis )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::ClearElementVisibleTo( pResource->GetLua(), pElement->ToLuaUserData() );
+		return CLuaFunctionDefinitions::ClearElementVisibleTo( pResource->GetLua(), pElement->GetLuaUserdata() );
 	}
 	
 	return false;
@@ -732,7 +732,7 @@ bool CMonoFunctions::Element::SetID( TElement pThis, MonoString* msID )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::SetElementID( pResource->GetLua(), pElement->ToLuaUserData(), mono_string_to_utf8( msID ) );
+		return CLuaFunctionDefinitions::SetElementID( pResource->GetLua(), pElement->GetLuaUserdata(), mono_string_to_utf8( msID ) );
 	}
 	
 	return false;
@@ -748,7 +748,7 @@ bool CMonoFunctions::Element::SetData( TElement pThis, MonoString* msKey, CLuaAr
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::SetElementData( pResource->GetLua(), pElement->ToLuaUserData(), strKey, Variable );
+		return CLuaFunctionDefinitions::SetElementData( pResource->GetLua(), pElement->GetLuaUserdata(), strKey, Variable );
 	}
 	
 	return false;
@@ -764,7 +764,7 @@ bool CMonoFunctions::Element::RemoveData( TElement pThis, MonoString* msKey )
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::RemoveElementData( pResource->GetLua(), pElement->ToLuaUserData(), strKey );
+		return CLuaFunctionDefinitions::RemoveElementData( pResource->GetLua(), pElement->GetLuaUserdata(), strKey );
 	}
 	
 	return false;
@@ -779,7 +779,7 @@ bool CMonoFunctions::Element::SetParent( TElement pThis, TElement pTarget )
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		CElement* pElementTarget = pResource->GetElementManager()->GetFromList( pTarget );
 
-		return CLuaFunctionDefinitions::SetElementParent( pResource->GetLua(), pElement->ToLuaUserData(), pElementTarget->ToLuaUserData() );
+		return CLuaFunctionDefinitions::SetElementParent( pResource->GetLua(), pElement->GetLuaUserdata(), pElementTarget->GetLuaUserdata() );
 	}
 	
 	return false;
@@ -793,7 +793,7 @@ bool CMonoFunctions::Element::SetPosition( TElement pThis, MonoObject* pPosition
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::SetElementPosition( pResource->GetLua(), pElement->ToLuaUserData(), Vector3( pPosition ), bWarp );
+		return CLuaFunctionDefinitions::SetElementPosition( pResource->GetLua(), pElement->GetLuaUserdata(), Vector3( pPosition ), bWarp );
 	}
 	
 	return false;
@@ -809,7 +809,7 @@ bool CMonoFunctions::Element::SetRotation( TElement pThis, MonoObject* pRotation
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::SetElementRotation( pResource->GetLua(), pElement->ToLuaUserData(), Vector3( pRotation ), szRotationOrder, bNewWay );
+		return CLuaFunctionDefinitions::SetElementRotation( pResource->GetLua(), pElement->GetLuaUserdata(), Vector3( pRotation ), szRotationOrder, bNewWay );
 	}
 	
 	return false;
@@ -823,7 +823,7 @@ bool CMonoFunctions::Element::SetVelocity( TElement pThis, MonoObject* pVelocity
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::SetElementVelocity( pResource->GetLua(), pElement->ToLuaUserData(), Vector3( pVelocity ) );
+		return CLuaFunctionDefinitions::SetElementVelocity( pResource->GetLua(), pElement->GetLuaUserdata(), Vector3( pVelocity ) );
 	}
 	
 	return false;
@@ -838,7 +838,7 @@ bool CMonoFunctions::Element::SetVisibleTo( TElement pThis, TElement pTarget, bo
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		CElement* pElementTarget = pResource->GetElementManager()->GetFromList( pTarget );
 
-		return CLuaFunctionDefinitions::SetElementVisibleTo( pResource->GetLua(), pElement->ToLuaUserData(), pElementTarget->ToLuaUserData(), bVisible );
+		return CLuaFunctionDefinitions::SetElementVisibleTo( pResource->GetLua(), pElement->GetLuaUserdata(), pElementTarget->GetLuaUserdata(), bVisible );
 	}
 	
 	return false;
@@ -852,7 +852,7 @@ bool CMonoFunctions::Element::SetInterior( TElement pThis, int iInterior )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::SetElementInterior( pResource->GetLua(), pElement->ToLuaUserData(), iInterior );
+		return CLuaFunctionDefinitions::SetElementInterior( pResource->GetLua(), pElement->GetLuaUserdata(), iInterior );
 	}
 	
 	return false;
@@ -866,7 +866,7 @@ bool CMonoFunctions::Element::SetDimension( TElement pThis, int iDimension )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::SetElementDimension( pResource->GetLua(), pElement->ToLuaUserData(), iDimension );
+		return CLuaFunctionDefinitions::SetElementDimension( pResource->GetLua(), pElement->GetLuaUserdata(), iDimension );
 	}
 	
 	return false;
@@ -885,7 +885,7 @@ bool CMonoFunctions::Element::Attach( TElement pThis, TElement pTarget, MonoObje
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		CElement* pElementTarget = pResource->GetElementManager()->GetFromList( pTarget );
 
-		return CLuaFunctionDefinitions::AttachElements( pResource->GetLua(), pElement->ToLuaUserData(), pElementTarget->ToLuaUserData(), vecPosition, vecRotation );
+		return CLuaFunctionDefinitions::AttachElements( pResource->GetLua(), pElement->GetLuaUserdata(), pElementTarget->GetLuaUserdata(), vecPosition, vecRotation );
 	}
 	
 	return false;
@@ -900,7 +900,7 @@ bool CMonoFunctions::Element::Detach( TElement pThis, TElement pTarget )
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		CElement* pElementTarget = pResource->GetElementManager()->GetFromList( pTarget );
 
-		return CLuaFunctionDefinitions::DetachElements( pResource->GetLua(), pElement->ToLuaUserData(), pElementTarget->ToLuaUserData() );
+		return CLuaFunctionDefinitions::DetachElements( pResource->GetLua(), pElement->GetLuaUserdata(), pElementTarget->GetLuaUserdata() );
 	}
 	
 	return false;
@@ -914,7 +914,7 @@ bool CMonoFunctions::Element::SetAlpha( TElement pThis, int iAlpha )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::SetElementAlpha( pResource->GetLua(), pElement->ToLuaUserData(), iAlpha );
+		return CLuaFunctionDefinitions::SetElementAlpha( pResource->GetLua(), pElement->GetLuaUserdata(), iAlpha );
 	}
 	
 	return false;
@@ -928,7 +928,7 @@ bool CMonoFunctions::Element::SetDoubleSided( TElement pThis, bool bDoubleSided 
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::SetElementDoubleSided( pResource->GetLua(), pElement->ToLuaUserData(), bDoubleSided );
+		return CLuaFunctionDefinitions::SetElementDoubleSided( pResource->GetLua(), pElement->GetLuaUserdata(), bDoubleSided );
 	}
 	
 	return false;
@@ -942,7 +942,7 @@ bool CMonoFunctions::Element::SetHealth( TElement pThis, float fHealth )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::SetElementHealth( pResource->GetLua(), pElement->ToLuaUserData(), fHealth );
+		return CLuaFunctionDefinitions::SetElementHealth( pResource->GetLua(), pElement->GetLuaUserdata(), fHealth );
 	}
 	
 	return false;
@@ -956,7 +956,7 @@ bool CMonoFunctions::Element::SetModel( TElement pThis, int iModel )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::SetElementModel( pResource->GetLua(), pElement->ToLuaUserData(), iModel );
+		return CLuaFunctionDefinitions::SetElementModel( pResource->GetLua(), pElement->GetLuaUserdata(), iModel );
 	}
 	
 	return false;
@@ -974,7 +974,7 @@ bool CMonoFunctions::Element::SetAttachedOffsets( TElement pThis, MonoObject* pM
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::SetElementAttachedOffsets( pResource->GetLua(), pElement->ToLuaUserData(), vecPosition, vecRotation );
+		return CLuaFunctionDefinitions::SetElementAttachedOffsets( pResource->GetLua(), pElement->GetLuaUserdata(), vecPosition, vecRotation );
 	}
 	
 	return false;
@@ -989,7 +989,7 @@ bool CMonoFunctions::Element::SetSyncer( TElement pThis, TElement pPlayer )
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		CElement* pElementPlayer = pResource->GetElementManager()->GetFromList( pPlayer );
 
-		return CLuaFunctionDefinitions::SetElementSyncer( pResource->GetLua(), pElement->ToLuaUserData(), pElementPlayer->ToLuaUserData() );
+		return CLuaFunctionDefinitions::SetElementSyncer( pResource->GetLua(), pElement->GetLuaUserdata(), pElementPlayer->GetLuaUserdata() );
 	}
 	
 	return false;
@@ -1003,7 +1003,7 @@ bool CMonoFunctions::Element::SetCollisionsEnabled( TElement pThis, bool bEnable
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::SetElementCollisionsEnabled( pResource->GetLua(), pElement->ToLuaUserData(), bEnabled );
+		return CLuaFunctionDefinitions::SetElementCollisionsEnabled( pResource->GetLua(), pElement->GetLuaUserdata(), bEnabled );
 	}
 	
 	return false;
@@ -1017,7 +1017,7 @@ bool CMonoFunctions::Element::SetFrozen( TElement pThis, bool bFrozen )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::SetElementFrozen( pResource->GetLua(), pElement->ToLuaUserData(), bFrozen );
+		return CLuaFunctionDefinitions::SetElementFrozen( pResource->GetLua(), pElement->GetLuaUserdata(), bFrozen );
 	}
 	
 	return false;
@@ -1031,7 +1031,7 @@ bool CMonoFunctions::Element::SetLowLod( TElement pThis, bool bEnabled )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::SetLowLodElement( pResource->GetLua(), pElement->ToLuaUserData(), bEnabled );
+		return CLuaFunctionDefinitions::SetLowLodElement( pResource->GetLua(), pElement->GetLuaUserdata(), bEnabled );
 	}
 	
 	return false;

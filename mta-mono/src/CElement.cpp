@@ -13,7 +13,7 @@
 #include "StdInc.h"
 #include "CElement.h"
 
-const map<eElementType, pair<string, string>> CElement::_eElementType =
+const map< eElementType, pair< string, string > > CElement::_eElementType =
 {
 	{ eElementType::Dummy,					{ "dummy",			"Element" } },
 	{ eElementType::Player,					{ "player",			"Player" } },
@@ -31,16 +31,16 @@ const map<eElementType, pair<string, string>> CElement::_eElementType =
 	{ eElementType::Water,					{ "water",			"Water" } },
 	{ eElementType::Weapon,					{ "weapon",			"Weapon" } },
 	{ eElementType::DatabaseConnection,		{ "db-connection",	"DbConnection" } },
-	{ eElementType::Resource,				{ "resource",		"Resource" } },
+	{ eElementType::Resource,				{ "resource",		"Element" } },
 	{ eElementType::Root,					{ "root",			"Element" } },
 	{ eElementType::Unknown,				{ "unknown",		"Element" } },
 };
 
-CElement::CElement( CElementManager* pManager, MonoObject* pObject, PVOID pUserdata, const CResource* pParent )
+CElement::CElement( CElementManager* pManager, MonoObject* pObject, PVOID pLuaUserdata, const CResource* pParent )
 {
+	this->m_pLuaUserdata    = pLuaUserdata;
 	this->m_pElementManager = pManager;
 	this->m_pMonoObject     = pObject;
-	this->m_pLuaUserdata    = pUserdata;
 	this->m_pParent         = pParent;
 
 	this->m_iType           = eElementType::Unknown;
@@ -77,9 +77,14 @@ const string CElement::GetTypeName( void )
 	return CElement::GetTypeName( this->m_iType );
 }
 
+const char* CElement::GetTypeClassName( void )
+{
+	return CElement::GetTypeClassName( this->m_iType );
+}
+
 CElement* CElement::GetParent( void ) const
 {
-	MonoObject* pMonoObject = CMonoFunctions::Element::GetParent( this->ToMonoObject() );
+	MonoObject* pMonoObject = CMonoFunctions::Element::GetParent( this->m_pMonoObject );
 
 	if( pMonoObject )
 	{

@@ -24,6 +24,17 @@ CMonoInterface::CMonoInterface( CModule* pModule )
 
 	mono_set_signal_chaining( false );
 
+	char* szOptions[] =
+	{
+	//	"--llvm",
+		"--soft-breakpoints",
+		"--stats",
+	//	"--breakonex",
+	//	"--debugger-agent=transport=dt_socket,address=127.0.0.1:10000,server=y,embedding=1",
+	};
+
+	mono_jit_parse_options( sizeof( szOptions ) / sizeof( char* ), szOptions );
+
 	mono_debug_init( MONO_DEBUG_FORMAT_MONO );
 
 #if _DEBUG
@@ -32,12 +43,12 @@ CMonoInterface::CMonoInterface( CModule* pModule )
 	mono_trace_set_level_string( "critical" );
 #endif
 
-	mono_trace_set_print_handler( CMonoInterface::MonoPrintCallbackHandler );
-	mono_trace_set_printerr_handler( CMonoInterface::MonoPrintErrorCallbackHandler );
+	mono_trace_set_print_handler( MonoPrintCallbackHandler );
+	mono_trace_set_printerr_handler( MonoPrintErrorCallbackHandler );
 
 	this->m_pMonoDomain = mono_jit_init_version( "mono_root_domain", "v4.0.30319" );
 
-	CMonoInterface::m_pMTALib	= mono_assembly_open_full( "mods/deathmatch/mono/lib/MultiTheftAuto.dll", nullptr, false );
+	m_pMTALib = mono_assembly_open_full( "mods/deathmatch/mono/lib/MultiTheftAuto.dll", nullptr, false );
 
 	CMonoFunctions::AddInternals();
 
@@ -215,7 +226,7 @@ CLuaArguments CMonoInterface::MonoArrayToLuaArguments( MonoArray* pArray, CResou
 			{
 				CElement* pElement = pResource->GetElementManager()->GetFromList( pObj );
 
-				PVOID pValue = pElement->ToLuaUserData();
+				PVOID pValue = pElement->GetLuaUserdata();
 
 				if( pValue )
 				{
@@ -247,7 +258,7 @@ CLuaArguments CMonoInterface::MonoArrayToLuaArguments( MonoArray* pArray, CResou
 
 MonoAssembly* CMonoInterface::GetMTALib( void )
 {
-	return CMonoInterface::m_pMTALib;
+	return m_pMTALib;
 }
 
 void CMonoInterface::MonoPrintCallbackHandler( const char *string, mono_bool is_stdout )

@@ -1,90 +1,96 @@
-#include "StdInc.h"
-#include "Common.h"
+#include "../StdInc.h"
+#include "CVehicleColor.h"
 
 CVehicleColor::CVehicleColor( void )
 {
 	// Init
-	m_ucPaletteColors[ 0 ] = 0; // Palette color 0 is black
-	m_ucPaletteColors[ 1 ] = 0;
-	m_ucPaletteColors[ 2 ] = 0;
-	m_ucPaletteColors[ 3 ] = 0;
-	m_RGBColors[ 0 ] = 0;
-	m_RGBColors[ 1 ] = 0;
-	m_RGBColors[ 2 ] = 0;
-	m_RGBColors[ 3 ] = 0;
-	m_bPaletteColorsWrong = false;
-	m_bRGBColorsWrong = false;
+	this->m_ucPaletteColors[ 0 ] = 0; // Palette color 0 is black
+	this->m_ucPaletteColors[ 1 ] = 0;
+	this->m_ucPaletteColors[ 2 ] = 0;
+	this->m_ucPaletteColors[ 3 ] = 0;
+
+	this->m_RGBColors[ 0 ] = 0;
+	this->m_RGBColors[ 1 ] = 0;
+	this->m_RGBColors[ 2 ] = 0;
+	this->m_RGBColors[ 3 ] = 0;
+
+	this->m_bPaletteColorsWrong = false;
+	this->m_bRGBColorsWrong = false;
 }
 
 // Use black for colours that are not used (bandwidth saving)
 void CVehicleColor::SetRGBColors( SColor color1, SColor color2, SColor color3, SColor color4 )
 {
-	if(
-		m_RGBColors[ 0 ] != color1 ||
-		m_RGBColors[ 1 ] != color2 ||
-		m_RGBColors[ 2 ] != color3 ||
-		m_RGBColors[ 3 ] != color4
-		)
+	if( this->m_RGBColors[ 0 ] != color1 || this->m_RGBColors[ 1 ] != color2 || this->m_RGBColors[ 2 ] != color3 || this->m_RGBColors[ 3 ] != color4 )
 	{
-		m_RGBColors[ 0 ] = color1;
-		m_RGBColors[ 1 ] = color2;
-		m_RGBColors[ 2 ] = color3;
-		m_RGBColors[ 3 ] = color4;
-		InvalidatePaletteColors();
+		this->m_RGBColors[ 0 ] = color1;
+		this->m_RGBColors[ 1 ] = color2;
+		this->m_RGBColors[ 2 ] = color3;
+		this->m_RGBColors[ 3 ] = color4;
+
+		this->InvalidatePaletteColors();
 	}
 }
 
 void CVehicleColor::SetPaletteColors( unsigned char ucColor1, unsigned char ucColor2, unsigned char ucColor3, unsigned char ucColor4 )
 {
-	if( m_ucPaletteColors[ 0 ] != ucColor1 ||
-		m_ucPaletteColors[ 1 ] != ucColor2 ||
-		m_ucPaletteColors[ 2 ] != ucColor3 ||
-		m_ucPaletteColors[ 3 ] != ucColor4 )
+	if( this->m_ucPaletteColors[ 0 ] != ucColor1 || this->m_ucPaletteColors[ 1 ] != ucColor2 || this->m_ucPaletteColors[ 2 ] != ucColor3 || this->m_ucPaletteColors[ 3 ] != ucColor4 )
 	{
-		m_ucPaletteColors[ 0 ] = ucColor1;
-		m_ucPaletteColors[ 1 ] = ucColor2;
-		m_ucPaletteColors[ 2 ] = ucColor3;
-		m_ucPaletteColors[ 3 ] = ucColor4;
-		InvalidateRGBColors();
+		this->m_ucPaletteColors[ 0 ] = ucColor1;
+		this->m_ucPaletteColors[ 1 ] = ucColor2;
+		this->m_ucPaletteColors[ 2 ] = ucColor3;
+		this->m_ucPaletteColors[ 3 ] = ucColor4;
+
+		this->InvalidateRGBColors();
 	}
 }
 
 void CVehicleColor::SetRGBColor( uint uiSlot, SColor color )
 {
-	ValidateRGBColors();
-	uiSlot = Min( uiSlot, static_cast <uint> ( NUMELMS( m_RGBColors ) ) );
-	if( m_RGBColors[ uiSlot ] != color )
+	this->ValidateRGBColors();
+
+	uiSlot = Min( uiSlot, static_cast< uint >( NUMELMS( this->m_RGBColors ) ) );
+
+	if( this->m_RGBColors[ uiSlot ] != color )
 	{
-		m_RGBColors[ uiSlot ] = color;
-		InvalidatePaletteColors();
+		this->m_RGBColors[ uiSlot ] = color;
+
+		this->InvalidatePaletteColors();
 	}
 }
 
 void CVehicleColor::SetPaletteColor( uint uiSlot, uchar ucColor )
 {
-	ValidatePaletteColors();
-	uiSlot = Min( uiSlot, static_cast <uint> ( NUMELMS( m_ucPaletteColors ) ) );
-	if( m_ucPaletteColors[ uiSlot ] != ucColor )
+	this->ValidatePaletteColors();
+
+	uiSlot = Min( uiSlot, static_cast< uint >( NUMELMS( this->m_ucPaletteColors ) ) );
+
+	if( this->m_ucPaletteColors[ uiSlot ] != ucColor )
 	{
-		m_ucPaletteColors[ uiSlot ] = ucColor;
-		InvalidateRGBColors();
+		this->m_ucPaletteColors[ uiSlot ] = ucColor;
+
+		this->InvalidateRGBColors();
 	}
 }
 
 // Get a slot colour as a palette index
 uchar CVehicleColor::GetPaletteColor( uint uiSlot )
 {
-	ValidatePaletteColors();
-	uiSlot = Min( uiSlot, static_cast <uint> ( NUMELMS( m_ucPaletteColors ) ) );
-	return m_ucPaletteColors[ uiSlot ];
+	this->ValidatePaletteColors();
+
+	uiSlot = Min( uiSlot, static_cast< uint >( NUMELMS( this->m_ucPaletteColors ) ) );
+
+	return this->m_ucPaletteColors[ uiSlot ];
 }
 
 // Get a slot colour as an RGB colour
 SColor CVehicleColor::GetRGBColor( uint uiSlot )
 {
-	ValidateRGBColors();
-	uiSlot = Min( uiSlot, static_cast <uint> ( NUMELMS( m_RGBColors ) ) );
-	return m_RGBColors[ uiSlot ];
+	this->ValidateRGBColors();
+
+	uiSlot = Min( uiSlot, static_cast< uint >( NUMELMS( this->m_RGBColors ) ) );
+
+	return this->m_RGBColors[ uiSlot ];
 }
 
 //  Can return: 1,2,3, or 4
@@ -92,12 +98,17 @@ int CVehicleColor::GetNumColorsUsed( void )
 {
 	// Find last unblack
 	int i;
-	for( i = NUMELMS( m_RGBColors ); i > 1; i-- )
+
+	for( i = NUMELMS( this->m_RGBColors ); i > 1; i-- )
 	{
-		if( GetRGBColor( i - 1 ) )
+		if( this->GetRGBColor( i - 1 ) )
+		{
 			break;
+		}
 	}
-	assert( i >= 1 && i <= 4 );
+
+	ASSERT( i >= 1 && i <= 4 );
+
 	return i;
 }
 
@@ -105,40 +116,47 @@ int CVehicleColor::GetNumColorsUsed( void )
 // Switching to RGB mode
 void CVehicleColor::InvalidatePaletteColors( void )
 {
-	m_bRGBColorsWrong = false;
-	m_bPaletteColorsWrong = true;
+	this->m_bRGBColorsWrong = false;
+	this->m_bPaletteColorsWrong = true;
 }
 
 // Switching to palette mode
 void CVehicleColor::InvalidateRGBColors( void )
 {
-	m_bPaletteColorsWrong = false;
-	m_bRGBColorsWrong = true;
+	this->m_bPaletteColorsWrong = false;
+	this->m_bRGBColorsWrong = true;
 }
 
 // Ensure switched
 void CVehicleColor::ValidateRGBColors( void )
 {
-	if( m_bRGBColorsWrong )
+	if( this->m_bRGBColorsWrong )
 	{
-		m_bRGBColorsWrong = false;
-		for( uint i = 0; i < NUMELMS( m_RGBColors ); i++ )
-			m_RGBColors[ i ] = GetRGBFromPaletteIndex( m_ucPaletteColors[ i ] );
+		this->m_bRGBColorsWrong = false;
+
+		for( uint i = 0; i < NUMELMS( this->m_RGBColors ); i++ )
+		{
+			this->m_RGBColors[ i ] = GetRGBFromPaletteIndex( this->m_ucPaletteColors[ i ] );
+		}
 	}
 }
 
 // Ensure switched
 void CVehicleColor::ValidatePaletteColors( void )
 {
-	if( m_bPaletteColorsWrong )
+	if( this->m_bPaletteColorsWrong )
 	{
-		m_bPaletteColorsWrong = false;
-		for( uint i = 0; i < NUMELMS( m_ucPaletteColors ); i++ )
-			m_ucPaletteColors[ i ] = GetPaletteIndexFromRGB( m_RGBColors[ i ] );
+		this->m_bPaletteColorsWrong = false;
+
+		for( uint i = 0; i < NUMELMS( this->m_ucPaletteColors ); i++ )
+		{
+			this->m_ucPaletteColors[ i ] = GetPaletteIndexFromRGB( this->m_RGBColors[ i ] );
+		}
 	}
 }
 
-static const uchar paletteColorTable8[] = {
+static const uchar paletteColorTable8[] =
+{
 	0x00, 0x00, 0x00, 0xff, 0xf5, 0xf5, 0xf5, 0xff, 0x2a, 0x77, 0xa1, 0xff, 0x84, 0x04, 0x10, 0xff,
 	0x26, 0x37, 0x39, 0xff, 0x86, 0x44, 0x6e, 0xff, 0xd7, 0x8e, 0x10, 0xff, 0x4c, 0x75, 0xb7, 0xff,
 	0xbd, 0xbe, 0xc6, 0xff, 0x5e, 0x70, 0x72, 0xff, 0x46, 0x59, 0x7a, 0xff, 0x65, 0x6a, 0x79, 0xff,
@@ -178,26 +196,32 @@ uchar CVehicleColor::GetPaletteIndexFromRGB( SColor color )
 {
 	ulong ulBestDist = 0xFFFFFFFF;
 	uchar ucBestMatch = 0;
+
 	for( uint i = 0; i < NUMELMS( paletteColorTable8 ) / 4; i++ )
 	{
 		int r = paletteColorTable8[ i * 4 + 0 ] - color.R;
 		int g = paletteColorTable8[ i * 4 + 1 ] - color.G;
 		int b = paletteColorTable8[ i * 4 + 2 ] - color.B;
+
 		ulong ulDist = r * r + g * g + b * b;
+
 		if( ulDist < ulBestDist )
 		{
 			ulBestDist = ulDist;
 			ucBestMatch = i;
 		}
 	}
+
 	return ucBestMatch;
 }
 
 SColor CVehicleColor::GetRGBFromPaletteIndex( uchar ucColor )
 {
-	ucColor = Min < uchar >( ucColor, static_cast <uint> ( NUMELMS( paletteColorTable8 ) / 4 ) );
+	ucColor = Min< uchar >( ucColor, static_cast< uint >( NUMELMS( paletteColorTable8 ) / 4 ) );
+
 	uchar r = paletteColorTable8[ ucColor * 4 ];
 	uchar g = paletteColorTable8[ ucColor * 4 + 1 ];
 	uchar b = paletteColorTable8[ ucColor * 4 + 2 ];
+
 	return SColorRGBA( r, g, b, 0 );
 }

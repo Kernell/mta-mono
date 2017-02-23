@@ -73,9 +73,6 @@
     <ClCompile Include="src\CMonoFunctions_Event.cpp">
       <Filter>MonoInternals</Filter>
     </ClCompile>
-    <ClCompile Include="src\CMonoObject.cpp">
-      <Filter>MonoInterface</Filter>
-    </ClCompile>
     <ClCompile Include="src\CMonoClass.cpp">
       <Filter>MonoInterface</Filter>
     </ClCompile>
@@ -103,7 +100,6 @@
     <ClCompile Include="src\CMonoFunctions.cpp">
       <Filter>MonoInternals</Filter>
     </ClCompile>
-    <ClCompile Include="src\Common.cpp" />
     <ClCompile Include="src\mta-mono.cpp" />
     <ClCompile Include="src\StdInc.cpp" />
     <ClCompile Include="src\CResource.cpp">
@@ -133,6 +129,15 @@
     <ClCompile Include="src\CModule.cpp" />
     <ClCompile Include="src\CMonoArguments.cpp">
       <Filter>MonoInterface</Filter>
+    </ClCompile>
+    <ClCompile Include="src\extra\SColor.cpp">
+      <Filter>extra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\extra\CVehicleColor.cpp">
+      <Filter>extra</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SharedUtil\SharedUtil.MonoObject.cpp">
+      <Filter>SharedUtil</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -253,9 +258,6 @@
     <ClInclude Include="src\CMonoMTALib.h">
       <Filter>MonoInterface</Filter>
     </ClInclude>
-    <ClInclude Include="src\CMonoObject.h">
-      <Filter>MonoInterface</Filter>
-    </ClInclude>
     <ClInclude Include="src\CMonoFunctions.h">
       <Filter>MonoInternals</Filter>
     </ClInclude>
@@ -274,7 +276,6 @@
     <ClInclude Include="src\extra\Vector3.h">
       <Filter>extra</Filter>
     </ClInclude>
-    <ClInclude Include="src\Common.h" />
     <ClInclude Include="src\StdInc.h" />
     <ClInclude Include="src\CResourceManager.h">
       <Filter>ResourceInterface</Filter>
@@ -303,6 +304,15 @@
     <ClInclude Include="src\CModule.h" />
     <ClInclude Include="src\CMonoArguments.h">
       <Filter>MonoInterface</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SharedUtil\SharedUtil.h">
+      <Filter>SharedUtil</Filter>
+    </ClInclude>
+    <ClInclude Include="src\extra\SColor.h">
+      <Filter>extra</Filter>
+    </ClInclude>
+    <ClInclude Include="src\extra\CVehicleColor.h">
+      <Filter>extra</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -336,5 +346,13 @@
     <Filter Include="MonoInternals">
       <UniqueIdentifier>{bf9a17ba-d06a-45ef-a342-7297bfd9a22e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SharedUtil">
+      <UniqueIdentifier>{10d1db59-4ba0-4c7c-81d2-7fa9b9283bc2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\SharedUtil\SharedUtil.MonoObject.h">
+      <Filter>SharedUtil</Filter>
+    </None>
   </ItemGroup>
 </Project>

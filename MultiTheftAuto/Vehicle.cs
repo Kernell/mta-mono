@@ -247,11 +247,6 @@ namespace MultiTheftAuto
 
 		}
 
-		~Vehicle()
-		{
-			Debug.Info( "~Vehicle() [" + this.GetName() + "]" );
-		}
-
 		#endregion
 
 		#region Static Methods

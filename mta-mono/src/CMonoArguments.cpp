@@ -20,6 +20,11 @@ CMonoArguments::CMonoArguments( void )
 
 CMonoArguments::~CMonoArguments( void )
 {
+	this->Clear();
+}
+
+void CMonoArguments::Clear( void )
+{
 	for( auto iter : this->m_pArgs )
 	{
 		if( iter.second )
@@ -52,16 +57,18 @@ bool CMonoArguments::Push( MonoObject* pObject )
 
 PVOID* CMonoArguments::GetArgs( void )
 {
-	if( this->m_pTmpArgs == nullptr )
+	if( this->m_pTmpArgs )
 	{
-		this->m_pTmpArgs = new PVOID[ this->Length() ];
+		delete [] this->m_pTmpArgs;
+	}
 
-		uint i = 0;
+	this->m_pTmpArgs = new PVOID[ this->Length() ];
 
-		for( const auto& iter : this->m_pArgs )
-		{
-			this->m_pTmpArgs[ i++ ] = iter.first;
-		}
+	uint i = 0;
+
+	for( const auto& iter : this->m_pArgs )
+	{
+		this->m_pTmpArgs[ i++ ] = iter.first;
 	}
 
 	return this->m_pTmpArgs;
@@ -72,14 +79,14 @@ const size_t CMonoArguments::Length( void ) const
 	return this->m_pArgs.size();
 }
 
-PVOID CMonoArguments::operator[]( int index )
+PVOID CMonoArguments::operator [] ( int index )
 {
 	ASSERT( index < this->Length() );
 
-	return this->GetArgs()[ index ];
+	return this->m_pArgs[ index ].first;
 }
 
-PVOID* CMonoArguments::operator*( void )
+PVOID* CMonoArguments::operator * ( void )
 {
 	return this->GetArgs();
 }

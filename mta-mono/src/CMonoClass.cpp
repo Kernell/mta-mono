@@ -98,7 +98,7 @@ CMonoClass::~CMonoClass( void )
 	this->m_Methods.clear();
 }
 
-MonoObject* CMonoClass::New( void )
+MonoObject* CMonoClass::New( void ) const
 {
 	MonoObject* pObject = this->m_pDomain->CreateObject( this->m_pClass );
 
@@ -112,28 +112,28 @@ MonoObject* CMonoClass::New( void )
 	return pObject;
 }
 
-MonoObject* CMonoClass::New( SColor& pColor )
+MonoObject* CMonoClass::New( SColor& pColor ) const
 {
-	void *args[] = { &pColor.R, &pColor.G, &pColor.B, &pColor.A };
+	PVOID args[] = { &pColor.R, &pColor.G, &pColor.B, &pColor.A };
 
 	return this->New( args, 4 );
 }
 
-MonoObject* CMonoClass::New( Vector2& vecVector )
+MonoObject* CMonoClass::New( Vector2& vecVector ) const
 {
-	void *args[] = { &vecVector.fX, &vecVector.fY };
+	PVOID args[] = { &vecVector.fX, &vecVector.fY };
 
 	return this->New( args, 2 );
 }
 
-MonoObject* CMonoClass::New( Vector3& vecVector )
+MonoObject* CMonoClass::New( Vector3& vecVector ) const
 {
-	void *args[] = { &vecVector.fX, &vecVector.fY, &vecVector.fZ };
+	PVOID args[] = { &vecVector.fX, &vecVector.fY, &vecVector.fZ };
 
 	return this->New( args, 3 );
 }
 
-MonoObject* CMonoClass::New( void** args, int argc )
+MonoObject* CMonoClass::New( void** args, int argc ) const
 {
 	MonoObject* pObject = this->m_pDomain->CreateObject( this->m_pClass );
 
@@ -161,27 +161,27 @@ MonoObject* CMonoClass::New( void** args, int argc )
 	return pObject;
 }
 
-MonoObject* CMonoClass::Box( void* value )
+MonoObject* CMonoClass::Box( void* value ) const
 {
-	return mono_value_box( this->m_pDomain->GetMonoPtr(), this->m_pClass, value );
+	return mono_value_box( **this->m_pDomain, this->m_pClass, value );
 }
 
-const char* CMonoClass::GetName( void )
+const char* CMonoClass::GetName( void ) const
 {
 	return mono_class_get_name( this->m_pClass );
 }
 
-const char* CMonoClass::GetNameSpace( void )
+const char* CMonoClass::GetNameSpace( void ) const
 {
 	return mono_class_get_namespace( this->m_pClass );
 }
 
-MonoMethod* CMonoClass::GetMethodFromName( string strMethodName, int iParamCount )
+MonoMethod* CMonoClass::GetMethodFromName( const string& strMethodName, int iParamCount ) const
 {
 	return mono_class_get_method_from_name( this->m_pClass, strMethodName.c_str(), iParamCount );
 }
 
-MonoMethod* CMonoClass::GetMethod( string strMethodName )
+MonoMethod* CMonoClass::GetMethod( const string& strMethodName ) const
 {
 	MonoMethodDesc* pMonoMethodDesc = mono_method_desc_new( strMethodName.c_str(), false );
 
@@ -197,13 +197,13 @@ MonoMethod* CMonoClass::GetMethod( string strMethodName )
 	return nullptr;
 }
 
-CMonoMethod* CMonoClass::GetMethod( string strMethodName, uint uiIndex )
+CMonoMethod* CMonoClass::GetMethod( const string& strMethodName, uint uiIndex )
 {
 	if( this->m_Methods[ strMethodName ].size() > 0 )
 	{
 		uint i = 0;
 
-		for( auto ptr : this->m_Methods[ strMethodName ] )
+		for( const auto& ptr : this->m_Methods[ strMethodName ] )
 		{
 			if( i++ == uiIndex )
 			{
@@ -215,17 +215,17 @@ CMonoMethod* CMonoClass::GetMethod( string strMethodName, uint uiIndex )
 	return nullptr;
 }
 
-list< CMonoMethod* > CMonoClass::GetMethods( string strMethodName )
+list< CMonoMethod* > CMonoClass::GetMethods( const string& strMethodName )
 {
 	return this->m_Methods[ strMethodName ];
 }
 
-CMonoEvent* CMonoClass::GetEvent( string strEventName )
+CMonoEvent* CMonoClass::GetEvent( const string& strEventName )
 {
 	return this->m_Events.count( strEventName ) ? this->m_Events[ strEventName ] : nullptr;
 }
 
-MonoClassField* CMonoClass::GetField( string strFieldName )
+MonoClassField* CMonoClass::GetField( const string& strFieldName )
 {
 	return this->m_Fields.count( strFieldName ) ? this->m_Fields[ strFieldName ] : nullptr;
 }

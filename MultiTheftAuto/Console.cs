@@ -14,7 +14,7 @@ namespace MultiTheftAuto
 		}
 
 		[MethodImpl( MethodImplOptions.InternalCall )]
-		public static extern bool Output( string text, Element element = null );
+		public static extern bool Output( string text, Element player = null );
 
 		public static int Read()
 		{

@@ -1,6 +1,6 @@
-AM_CPPFLAGS=-I. -I./include -I../vendor/lua51/src -I../vendor/eglib/src -I/usr/include/mono-2.0
+AM_CPPFLAGS=-I. -I./include -I../vendor/lua51/src -I/usr/include/mono-2.0
 
-SUBDIRS = extra lua
+SUBDIRS = extra lua SharedUtil
 
 lib_LTLIBRARIES=libmta_mono.la
 
@@ -8,6 +8,7 @@ libmta_mono_la_SOURCES = \
 	CEvent.cpp \
 	CEventManager.cpp \
 	CFunctions.cpp \
+	CMonoArguments \
 	CMonoClass.cpp \
 	CMonoCorlib.cpp \
 	CMonoDomain.cpp \
@@ -37,7 +38,6 @@ libmta_mono_la_SOURCES = \
 	CMonoMethod.cpp \
 	CMonoMTALib.cpp \
 	CMonoObject.cpp \
-	Common.cpp \
 	CRegisteredCommands.cpp \
 	CResource.cpp \
 	CResourceManager.cpp \

@@ -24,7 +24,7 @@ MonoArray* CMonoFunctions::World::GetTime( void )
 
 		if( CLuaFunctionDefinitions::GetTime( pResource->GetLua(), ucHour, ucMinute ) )
 		{
-			MonoArray* pArray = mono_array_new( pResource->GetDomain()->GetMonoPtr(), mono_get_char_class(), 2 );
+			MonoArray* pArray = mono_array_new( **pResource->GetDomain(), mono_get_char_class(), 2 );
 
 			mono_array_set( pArray, unsigned char, 0, ucHour );
 			mono_array_set( pArray, unsigned char, 1, ucMinute );
@@ -46,7 +46,7 @@ MonoArray* CMonoFunctions::World::GetWeather( void )
 
 		if( CLuaFunctionDefinitions::GetWeather( pResource->GetLua(), ucWeather, ucWeatherBlending ) )
 		{
-			MonoArray* pArray = mono_array_new( pResource->GetDomain()->GetMonoPtr(), mono_get_char_class(), 2 );
+			MonoArray* pArray = mono_array_new( **pResource->GetDomain(), mono_get_char_class(), 2 );
 
 			mono_array_set( pArray, unsigned char, 0, ucWeather );
 			mono_array_set( pArray, unsigned char, 1, ucWeatherBlending );
@@ -315,7 +315,7 @@ MonoArray* CMonoFunctions::World::GetSunColor( void )
 
 			if( pCoreObject && pCoronaObject )
 			{
-				MonoArray* pMonoArray = mono_array_new( pResource->GetDomain()->GetMonoPtr(), CMonoObject::GetClass( pCoreObject ), 2 );
+				MonoArray* pMonoArray = mono_array_new( **pResource->GetDomain(), SharedUtil::MonoObject::GetClass( pCoreObject ), 2 );
 
 				mono_array_set( pMonoArray, MonoObject*, 0, pCoreObject );
 				mono_array_set( pMonoArray, MonoObject*, 1, pCoronaObject );
@@ -442,12 +442,14 @@ MonoArray* CMonoFunctions::World::GetSkyGradient( void )
 		{
 			pCore.A	= pCorona.A = 255;
 
-			MonoObject* pCoreObject		= pResource->GetDomain()->GetMTALib()->Color->New( pCore );
-			MonoObject* pCoronaObject	= pResource->GetDomain()->GetMTALib()->Color->New( pCorona );
+			CMonoClass* pColorClass = pResource->GetDomain()->GetMTALib()->Color;
+
+			MonoObject* pCoreObject		= pColorClass->New( pCore );
+			MonoObject* pCoronaObject	= pColorClass->New( pCorona );
 
 			if( pCoreObject && pCoronaObject )
 			{
-				MonoArray* pMonoArray = mono_array_new( pResource->GetDomain()->GetMonoPtr(), CMonoObject::GetClass( pCoreObject ), 2 );
+				MonoArray* pMonoArray = mono_array_new( **pResource->GetDomain(), **pColorClass, 2 );
 
 				mono_array_set( pMonoArray, MonoObject*, 0, pCoreObject );
 				mono_array_set( pMonoArray, MonoObject*, 1, pCoronaObject );
@@ -586,8 +588,8 @@ bool CMonoFunctions::World::SetSkyGradient( MonoObject* pTopColor, MonoObject* p
 
 	if( pResource )
 	{
-		SColor pTop		= CMonoObject::GetColor( pTopColor );
-		SColor pBottom	= CMonoObject::GetColor( pBottomColor );
+		SColor pTop		= SharedUtil::MonoObject::GetColor( pTopColor );
+		SColor pBottom	= SharedUtil::MonoObject::GetColor( pBottomColor );
 
 		return CLuaFunctionDefinitions::SetSkyGradient( pResource->GetLua(), pTop.R, pTop.G, pTop.B, pBottom.R, pBottom.G, pBottom.B );
 	}
@@ -615,15 +617,15 @@ bool CMonoFunctions::World::SetHeatHaze( MonoObject* heatHazeSettings )
 	{
 		SHeatHazeSettings pHeatHazeSettings;
 
-		pHeatHazeSettings.ucIntensity		= CMonoObject::GetPropertyValue< unsigned char >( heatHazeSettings, "ucIntensity" );
-		pHeatHazeSettings.ucRandomShift		= CMonoObject::GetPropertyValue< unsigned char >( heatHazeSettings, "ucRandomShift" );
-		pHeatHazeSettings.usSpeedMin		= CMonoObject::GetPropertyValue< unsigned short >( heatHazeSettings, "usSpeedMin" );
-		pHeatHazeSettings.usSpeedMax		= CMonoObject::GetPropertyValue< unsigned short >( heatHazeSettings, "usSpeedMax" );
-		pHeatHazeSettings.sScanSizeX		= CMonoObject::GetPropertyValue< short >( heatHazeSettings, "sScanSizeX" );
-		pHeatHazeSettings.sScanSizeY		= CMonoObject::GetPropertyValue< short >( heatHazeSettings, "sScanSizeY" );
-		pHeatHazeSettings.usRenderSizeX		= CMonoObject::GetPropertyValue< unsigned short >( heatHazeSettings, "usRenderSizeX" );
-		pHeatHazeSettings.usRenderSizeY		= CMonoObject::GetPropertyValue< unsigned short >( heatHazeSettings, "usRenderSizeY" );
-		pHeatHazeSettings.bInsideBuilding	= CMonoObject::GetPropertyValue< bool >( heatHazeSettings, "bInsideBuilding" );
+		pHeatHazeSettings.ucIntensity		= SharedUtil::MonoObject::GetPropertyValue< unsigned char >( heatHazeSettings, "ucIntensity" );
+		pHeatHazeSettings.ucRandomShift		= SharedUtil::MonoObject::GetPropertyValue< unsigned char >( heatHazeSettings, "ucRandomShift" );
+		pHeatHazeSettings.usSpeedMin		= SharedUtil::MonoObject::GetPropertyValue< unsigned short >( heatHazeSettings, "usSpeedMin" );
+		pHeatHazeSettings.usSpeedMax		= SharedUtil::MonoObject::GetPropertyValue< unsigned short >( heatHazeSettings, "usSpeedMax" );
+		pHeatHazeSettings.sScanSizeX		= SharedUtil::MonoObject::GetPropertyValue< short >( heatHazeSettings, "sScanSizeX" );
+		pHeatHazeSettings.sScanSizeY		= SharedUtil::MonoObject::GetPropertyValue< short >( heatHazeSettings, "sScanSizeY" );
+		pHeatHazeSettings.usRenderSizeX		= SharedUtil::MonoObject::GetPropertyValue< unsigned short >( heatHazeSettings, "usRenderSizeX" );
+		pHeatHazeSettings.usRenderSizeY		= SharedUtil::MonoObject::GetPropertyValue< unsigned short >( heatHazeSettings, "usRenderSizeY" );
+		pHeatHazeSettings.bInsideBuilding	= SharedUtil::MonoObject::GetPropertyValue< bool >( heatHazeSettings, "bInsideBuilding" );
 
 		return CLuaFunctionDefinitions::SetHeatHaze( pResource->GetLua(), pHeatHazeSettings );
 	}
@@ -809,8 +811,8 @@ bool CMonoFunctions::World::SetSunColor( MonoObject* pCoreColor, MonoObject* pCo
 
 	if( pResource )
 	{
-		SColor pTop		= CMonoObject::GetColor( pCoreColor );
-		SColor pBottom	= CMonoObject::GetColor( pCoronaColor );
+		SColor pTop		= SharedUtil::MonoObject::GetColor( pCoreColor );
+		SColor pBottom	= SharedUtil::MonoObject::GetColor( pCoronaColor );
 
 		return CLuaFunctionDefinitions::SetSunColor( pResource->GetLua(), pTop.R, pTop.G, pTop.B, pBottom.R, pBottom.G, pBottom.B );
 	}

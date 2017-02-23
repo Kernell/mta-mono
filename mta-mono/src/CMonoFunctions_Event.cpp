@@ -118,7 +118,7 @@ bool CMonoFunctions::Event::Trigger( MonoString* msName, TElement pArgElement, M
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pArgElement );
 
-		return CLuaFunctionDefinitions::TriggerEvent( pResource->GetLua(), szEventName, pElement->ToLuaUserData(), Arguments );
+		return CLuaFunctionDefinitions::TriggerEvent( pResource->GetLua(), szEventName, pElement->GetLuaUserdata(), Arguments );
 	}
 
 	return false;
@@ -175,7 +175,7 @@ bool CMonoFunctions::Event::TriggerClient( TElement pSendTo, MonoString* msName,
 
 		CLuaArguments Arguments = CMonoInterface::MonoArrayToLuaArguments( mpArguments, pResource );
 
-		return CLuaFunctionDefinitions::TriggerClientEvent( pResource->GetLua(), pSendToElement->ToLuaUserData(), szEventName, pSourceElement->ToLuaUserData(), Arguments );
+		return CLuaFunctionDefinitions::TriggerClientEvent( pResource->GetLua(), pSendToElement->GetLuaUserdata(), szEventName, pSourceElement->GetLuaUserdata(), Arguments );
 	}
 
 	return false;

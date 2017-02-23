@@ -25,6 +25,8 @@ public:
 									CMonoArguments			( void );
 									~CMonoArguments			( void );
 
+	void							Clear					( void );
+
 	template< typename Type >
 	bool							Push					( Type Value )
 	{
@@ -43,8 +45,8 @@ public:
 	PVOID*							GetArgs					( void );
 	const size_t					Length					( void ) const;
 
-	PVOID							operator[]				( int index );
-	PVOID*							operator*				( void );
+	PVOID							operator []				( int index );
+	PVOID*							operator *				( void );
 };
 
 #endif

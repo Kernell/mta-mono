@@ -21,6 +21,7 @@ void CMonoFunctions::AddInternals( void )
 
 	MONO_DECLARE( Console, Write );
 	MONO_DECLARE( Console, WriteLine );
+	MONO_DECLARE( Console, Output );
 
 	MONO_DECLARE( Config, Get );
 	MONO_DECLARE( Config, Set );
@@ -28,7 +29,7 @@ void CMonoFunctions::AddInternals( void )
 	MONO_DECLARE( Server, GetMaxPlayers );
 	MONO_DECLARE( Server, SetMaxPlayers );
 	MONO_DECLARE( Server, OutputChatBox );
-	MONO_DECLARE( Server, OutputConsole );
+//	MONO_DECLARE( Server, OutputLog );
 	MONO_DECLARE( Server, SetPassword );
 	MONO_DECLARE( Server, GetVersion );
 
@@ -556,22 +557,22 @@ void CMonoFunctions::AddInternals( void )
 	MONO_DECLARE( Account, GetAll );
 	MONO_DECLARE( Account, GetPlayer );
 	MONO_DECLARE( Account, IsGuest );
-//	MONO_DECLARE( Account, GetData );
+	MONO_DECLARE( Account, GetData );
 //	MONO_DECLARE( Account, GetAllData );
 	MONO_DECLARE( Account, GetSerial );
-//	MONO_DECLARE( Account, GetBySerial );
+	MONO_DECLARE( Account, GetBySerial );
 
 	// Account set funcs
 	MONO_DECLARE( Account, Add );
 	MONO_DECLARE( Account, Remove );
 	MONO_DECLARE( Account, SetPassword );
-//	MONO_DECLARE( Account, SetData );
+	MONO_DECLARE( Account, SetData );
 	MONO_DECLARE( Account, CopyData );
 
 	MONO_DECLARE( Ban, Add );
 	MONO_DECLARE( Ban, Remove );
 
-//	MONO_DECLARE( Ban, GetBans );
+	MONO_DECLARE( Ban, GetAll );
 	MONO_DECLARE( Ban, Reload );
 
 	MONO_DECLARE( Ban, GetIP );
@@ -686,15 +687,38 @@ void CMonoFunctions::Console::WriteLine( MonoString* pString )
 	}
 }
 
-MonoString* CMonoFunctions::Config::Get( MonoString *msKey )
+bool CMonoFunctions::Console::Output( MonoString* msText, MonoObject* pElementObj )
 {
 	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
 
 	if( pResource )
 	{
-		string sValue = CLuaFunctionDefinitions::Get( pResource->GetLua(), mono_string_to_utf8( msKey ) );
+		const char* szText		= mono_string_to_utf8( msText );
 
-		return mono_string_new( mono_domain_get(), sValue.c_str() );
+		PVOID pUserData = nullptr;
+
+		if( pElementObj )
+		{
+			pUserData = pResource->GetElementManager()->GetFromList( pElementObj )->GetMonoObject();
+		}
+
+		return CLuaFunctionDefinitions::OutputConsole( pResource->GetLua(), szText, pUserData );
+	}
+	
+	return false;
+}
+
+MonoString* CMonoFunctions::Config::Get( MonoString* msKey )
+{
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
+	{
+		const char* szKey = mono_string_to_utf8( msKey );
+
+		string strValue = CLuaFunctionDefinitions::Get( pResource->GetLua(), szKey );
+
+		return pResource->GetDomain()->NewString( strValue );
 	}
 
 	return nullptr;
@@ -756,34 +780,11 @@ bool CMonoFunctions::Server::OutputChatBox( MonoString* msText, MonoObject* pEle
 			return false;
 		}
 
-		unsigned char ucRed		= CMonoObject::GetPropertyValue< unsigned char >( mpColor, "R" );
-		unsigned char ucGreen	= CMonoObject::GetPropertyValue< unsigned char >( mpColor, "G" );
-		unsigned char ucBlue	= CMonoObject::GetPropertyValue< unsigned char >( mpColor, "B" );
+		unsigned char ucRed		= SharedUtil::MonoObject::GetPropertyValue< unsigned char >( mpColor, "R" );
+		unsigned char ucGreen	= SharedUtil::MonoObject::GetPropertyValue< unsigned char >( mpColor, "G" );
+		unsigned char ucBlue	= SharedUtil::MonoObject::GetPropertyValue< unsigned char >( mpColor, "B" );
 
-		return CLuaFunctionDefinitions::OutputChatBox( pResource->GetLua(), szText, pElement->ToLuaUserData(), ucRed, ucGreen, ucBlue, bColorCoded );
-	}
-	
-	return false;
-}
-
-bool CMonoFunctions::Server::OutputConsole( MonoString* msText, MonoObject* pElementObj )
-{
-	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
-
-	if( pResource )
-	{
-		const char* szText		= mono_string_to_utf8( msText );
-
-		CElement* pElement		= pResource->GetElementManager()->GetFromList( pElementObj );
-
-		if( !pElement )
-		{
-			pResource->ErrorPrintf( "Invalid argument #2 in method 'Server::OutputChatBox'\n" );
-
-			return false;
-		}
-
-		return CLuaFunctionDefinitions::OutputConsole( pResource->GetLua(), szText, pElement->ToLuaUserData() );
+		return CLuaFunctionDefinitions::OutputChatBox( pResource->GetLua(), szText, pElement->GetLuaUserdata(), ucRed, ucGreen, ucBlue, bColorCoded );
 	}
 	
 	return false;
@@ -869,7 +870,7 @@ bool CMonoFunctions::Server::ExecuteCommandHandler( MonoString* msCommand, MonoO
 
 		string strArguments = mono_string_to_utf8( msArgs );
 
-		return CLuaFunctionDefinitions::ExecuteCommandHandler( pResource->GetLua(), strCommandName.c_str(), pPlayer->ToLuaUserData(), strArguments.c_str() );
+		return CLuaFunctionDefinitions::ExecuteCommandHandler( pResource->GetLua(), strCommandName.c_str(), pPlayer->GetLuaUserdata(), strArguments.c_str() );
 	}
 
 	return false;

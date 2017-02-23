@@ -43,28 +43,29 @@ private:
 	string								m_strName;
 
 public:
-					CMonoDomain			( CMonoInterface* pMono, MonoDomain* pDomain, CResource* pResource, const char* szName );
-					~CMonoDomain		( void );
+							CMonoDomain			( CMonoInterface* pMono, MonoDomain* pDomain, CResource* pResource, const char* szName );
+							~CMonoDomain		( void );
 
-	void			HandleException		( MonoObject* pException );
+	void					HandleException		( MonoObject* pException );
 
-	CMonoClass*		FindOrAdd			( MonoClass* klass );
+	CMonoClass*				FindOrAdd			( MonoClass* klass );
 
-	bool			Init				( void );
-	bool			Start				( void );
-	void			Unload				( void );
-	bool			Set					( bool bForce );
-	MonoAssembly*	OpenAssembly		( const char *szName );
-	MonoObject*		CreateObject		( MonoClass* klass );
-	void			SetConfig			( const char* szBaseDir, const char* szConfigFileName );
+	bool					Init				( void );
+	bool					Start				( void );
+	void					Unload				( void );
+	bool					Set					( bool bForce );
+	MonoAssembly*			OpenAssembly		( const char *szName );
+	MonoObject*				CreateObject		( MonoClass* klass );
+	void					SetConfig			( const char* szBaseDir, const char* szConfigFileName );
 
-	MonoString*		NewString			( const char* szText ) const;
-	MonoString*		NewString			( const string& strText ) const;
+	MonoString*				NewString			( const char* szText ) const;
+	MonoString*				NewString			( const string& strText ) const;
 
-	MonoArray*		NewElementArray		( MonoClass* pMonoClass, CLuaArgumentsVector pLuaArguments );
+	MonoArray*				NewArray			( MonoClass* pMonoClass, CLuaArgumentsVector pLuaArguments ) const;
+	MonoArray*				NewArray			( uint uiLength, const char** szStrings ) const;
 
 	template< class T, int iLuaType >
-	MonoArray*		NewArray			( MonoClass* pMonoClass, CLuaArgumentsVector pLuaArguments )
+	MonoArray*				NewArray			( MonoClass* pMonoClass, CLuaArgumentsVector pLuaArguments )
 	{
 		MonoArray* pArray = mono_array_new( this->m_pDomain, pMonoClass, pLuaArguments.size() );
 
@@ -110,8 +111,6 @@ public:
 		return pArray;
 	}
 
-	inline MonoDomain*		GetMonoPtr			( void ) const	{ return this->m_pDomain; }
-
 	inline CMonoInterface*	GetMono				( void ) const	{ return this->m_pMono; }
 	inline CResource*		GetResource			( void ) const	{ return this->m_pResource; }
 
@@ -119,6 +118,8 @@ public:
 	inline CMonoMTALib*		GetMTALib			( void ) const	{ return this->m_pMTALib; }
 
 	inline string			GetName				( void ) const	{ return this->m_strName; }
+
+	inline MonoDomain*		operator *			( void ) const	{ return this->m_pDomain; }
 };
 
 #endif

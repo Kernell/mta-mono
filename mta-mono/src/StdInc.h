@@ -18,10 +18,12 @@ extern "C"
 }
 
 #ifdef WIN32
-    #define MTAEXPORT extern "C" __declspec(dllexport)
+#define DLL_EXPORT extern "C" __declspec(dllexport)
 #else
-    #define MTAEXPORT extern "C"
+#define DLL_EXPORT extern "C"
 #endif
+
+using namespace std;
 
 #include <list>
 #include <vector>
@@ -38,8 +40,6 @@ extern "C"
 #include <mono/metadata/threads.h>
 #include <mono/metadata/mono-gc.h>
 #include <mono/utils/mono-logger.h>
-
-#include "Common.h"
 
 #ifndef stricmp
 #ifdef _MSC_VER
@@ -60,5 +60,41 @@ extern "C"
 #define ASSERT_MSG(_Expression, _Message) ((void)0)
 #endif
 
+#ifndef NUMELMS
+#define NUMELMS(aa) (sizeof(aa)/sizeof((aa)[0]))
+#endif
+
+#define MAX_ARGUMENTS 10
+
+//                                                  VS      GCC
+//                      Actual sizes:      32bit   64bit   64bit
+typedef	unsigned long	    ulong;      //  32      32      64
+typedef unsigned int	    uint;       //  32
+typedef unsigned short	    ushort;     //  16  
+typedef unsigned char	    uchar;      //  8
+
+typedef unsigned long long  uint64;     //  64
+typedef unsigned int        uint32;     //  32
+typedef unsigned short      uint16;     //  16
+typedef unsigned char       uint8;      //  8
+
+// signed types
+typedef signed long long    int64;      //  64
+typedef signed int          int32;      //  32
+typedef signed short        int16;      //  16
+typedef signed char         int8;       //  8
+
+// Windowsesq types
+typedef unsigned char       BYTE;       //  8
+typedef unsigned short      WORD;       //  16
+typedef unsigned long       DWORD;      //  32      32      64
+typedef float               FLOAT;      //  32
+
+typedef void*               PVOID;
+
 #include "extra/Vector2.h"
 #include "extra/Vector3.h"
+#include "extra/SColor.h"
+#include "extra/CVehicleColor.h"
+
+#include "SharedUtil/SharedUtil.h"

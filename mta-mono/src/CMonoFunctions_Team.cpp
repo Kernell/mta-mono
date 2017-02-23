@@ -21,7 +21,7 @@ void CMonoFunctions::Team::Ctor( TElement pThis, MonoString* msTeamName, MonoObj
 	if( pResource )
 	{
 		const char*	szTeamName	= mono_string_to_utf8( msTeamName );
-		SColor pColor			= CMonoObject::GetColor( mColor );
+		SColor pColor			= SharedUtil::MonoObject::GetColor( mColor );
 
 		PVOID pUserData = CLuaFunctionDefinitions::CreateTeam( pResource->GetLua(), szTeamName, pColor.R, pColor.G, pColor.B );
 
@@ -43,7 +43,7 @@ TElement CMonoFunctions::Team::GetFromName( MonoString* msTeamName )
 
 		if( pUserData )
 		{
-			return pResource->GetElementManager()->FindOrCreate( pUserData )->ToMonoObject();
+			return pResource->GetElementManager()->FindOrCreate( pUserData )->GetMonoObject();
 		}
 	}
 
@@ -60,7 +60,7 @@ MonoString* CMonoFunctions::Team::GetName( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetTeamName( pResource->GetLua(), pElement->ToLuaUserData(), strOutName ) )
+		if( CLuaFunctionDefinitions::GetTeamName( pResource->GetLua(), pElement->GetLuaUserdata(), strOutName ) )
 		{
 			return pResource->GetDomain()->NewString( strOutName );
 		}
@@ -79,7 +79,7 @@ MonoObject* CMonoFunctions::Team::GetColor( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetTeamColor( pResource->GetLua(), pElement->ToLuaUserData(), pColor.R, pColor.G, pColor.B ) )
+		if( CLuaFunctionDefinitions::GetTeamColor( pResource->GetLua(), pElement->GetLuaUserdata(), pColor.R, pColor.G, pColor.B ) )
 		{
 			return pResource->GetDomain()->GetMTALib()->Color->New( pColor );
 		}
@@ -98,7 +98,7 @@ unsigned int CMonoFunctions::Team::CountPlayers( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::CountPlayersInTeam( pResource->GetLua(), pElement->ToLuaUserData(), uiCount ) )
+		if( CLuaFunctionDefinitions::CountPlayersInTeam( pResource->GetLua(), pElement->GetLuaUserdata(), uiCount ) )
 		{
 			return uiCount;
 		}
@@ -117,7 +117,7 @@ bool CMonoFunctions::Team::GetFriendlyFire( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetTeamFriendlyFire( pResource->GetLua(), pElement->ToLuaUserData(), bFriendlyFire ) )
+		if( CLuaFunctionDefinitions::GetTeamFriendlyFire( pResource->GetLua(), pElement->GetLuaUserdata(), bFriendlyFire ) )
 		{
 			return bFriendlyFire;
 		}
@@ -138,7 +138,7 @@ bool CMonoFunctions::Team::SetName( TElement pThis, MonoString* msTeamName )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::SetTeamName( pResource->GetLua(), pElement->ToLuaUserData(), szTeamName );
+		return CLuaFunctionDefinitions::SetTeamName( pResource->GetLua(), pElement->GetLuaUserdata(), szTeamName );
 	}
 
 	return false;
@@ -150,11 +150,11 @@ bool CMonoFunctions::Team::SetColor( TElement pThis, MonoObject* mColor )
 
 	if( pResource )
 	{
-		SColor pColor = CMonoObject::GetColor( mColor );
+		SColor pColor = SharedUtil::MonoObject::GetColor( mColor );
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::SetTeamColor( pResource->GetLua(), pElement->ToLuaUserData(), pColor.R, pColor.G, pColor.B );
+		return CLuaFunctionDefinitions::SetTeamColor( pResource->GetLua(), pElement->GetLuaUserdata(), pColor.R, pColor.G, pColor.B );
 	}
 
 	return false;
@@ -168,7 +168,7 @@ bool CMonoFunctions::Team::SetFriendlyFire( TElement pThis, bool bFriendlyFire )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::SetTeamFriendlyFire( pResource->GetLua(), pElement->ToLuaUserData(), bFriendlyFire );
+		return CLuaFunctionDefinitions::SetTeamFriendlyFire( pResource->GetLua(), pElement->GetLuaUserdata(), bFriendlyFire );
 	}
 
 	return false;

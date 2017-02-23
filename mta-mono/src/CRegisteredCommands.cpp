@@ -160,7 +160,7 @@ void CRegisteredCommands::Invoke( CElement* pPlayer, MonoObject* pDelegate, cons
 	assert( pCorlib );
 
 	MonoString* pCommandName	= this->m_pResource->GetDomain()->NewString( strCommandName );
-	MonoArray* pArguments		= mono_array_new( this->m_pResource->GetDomain()->GetMonoPtr(), pCorlib->Class[ "string" ]->GetMonoPtr(), argv.size() );
+	MonoArray* pArguments		= mono_array_new( **this->m_pResource->GetDomain(), **pCorlib->Class[ "string" ], argv.size() );
 
 	uint index = 0;
 
@@ -171,9 +171,11 @@ void CRegisteredCommands::Invoke( CElement* pPlayer, MonoObject* pDelegate, cons
 
 	PVOID* params = new PVOID[ 3 ];
 
-	params[ 0 ] = pPlayer->ToMonoObject();
+	params[ 0 ] = pPlayer->GetMonoObject();
 	params[ 1 ] = pCommandName;
 	params[ 2 ] = pArguments;
+
+	this->m_pResource->GetDomain()->Set( false );
 
 	MonoObject* pException = nullptr;
 

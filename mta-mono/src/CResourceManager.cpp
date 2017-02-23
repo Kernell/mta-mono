@@ -96,7 +96,7 @@ CResource* CResourceManager::GetFromList( MonoDomain* pDomain )
 {
 	for( const auto& iter : this->m_List )
 	{
-		if( iter->GetDomain()->GetMonoPtr() == pDomain )
+		if( **iter->GetDomain() == pDomain )
 		{
 			return iter;
 		}

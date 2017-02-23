@@ -41,7 +41,7 @@ bool CMonoFunctions::Water::SetLevel( TElement pThis, float fLevel )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::SetElementWaterLevel( pResource->GetLua(), pElement->ToLuaUserData(), fLevel );
+		return CLuaFunctionDefinitions::SetElementWaterLevel( pResource->GetLua(), pElement->GetLuaUserdata(), fLevel );
 	}
 
 	return false;
@@ -93,7 +93,7 @@ MonoObject* CMonoFunctions::Water::GetVertexPosition( TElement pThis, int iVerte
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		if( CLuaFunctionDefinitions::GetWaterVertexPosition( pResource->GetLua(), pElement->ToLuaUserData(), iVertexIndex, vecPosition ) )
+		if( CLuaFunctionDefinitions::GetWaterVertexPosition( pResource->GetLua(), pElement->GetLuaUserdata(), iVertexIndex, vecPosition ) )
 		{
 			return pResource->GetDomain()->GetMTALib()->Vector3->New( vecPosition );
 		}
@@ -112,7 +112,7 @@ bool CMonoFunctions::Water::SetVertexPosition( TElement pThis, int iVertexIndex,
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::SetWaterVertexPosition( pResource->GetLua(), pElement->ToLuaUserData(), iVertexIndex, vecPosition );
+		return CLuaFunctionDefinitions::SetWaterVertexPosition( pResource->GetLua(), pElement->GetLuaUserdata(), iVertexIndex, vecPosition );
 	}
 
 	return false;
@@ -141,7 +141,7 @@ bool CMonoFunctions::Water::SetColor( MonoObject* mColor )
 
 	if( pResource )
 	{
-		SColor pColor = CMonoObject::GetColor( mColor );
+		SColor pColor = SharedUtil::MonoObject::GetColor( mColor );
 
 		return CLuaFunctionDefinitions::SetWaterColor( pResource->GetLua(), pColor.R, pColor.G, pColor.B, pColor.A );
 	}

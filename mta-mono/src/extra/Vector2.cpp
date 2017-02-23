@@ -15,13 +15,13 @@ Vector2::Vector2( float _fX, float _fY )
 
 Vector2::Vector2( MonoObject* pObject )
 {
-	this->fX = CMonoObject::GetPropertyValue< float >( pObject, "X" );
-	this->fY = CMonoObject::GetPropertyValue< float >( pObject, "Y" );
+	this->fX = SharedUtil::MonoObject::GetPropertyValue< float >( pObject, "X" );
+	this->fY = SharedUtil::MonoObject::GetPropertyValue< float >( pObject, "Y" );
 }
 
 float Vector2::DotProduct( Vector2& other ) const
 {
-	return fX*other.fX + fY*other.fY;
+	return fX * other.fX + fY * other.fY;
 }
 
 float Vector2::Length() const
@@ -37,6 +37,7 @@ float Vector2::LengthSquared( void ) const
 void Vector2::Normalize( void )
 {
 	float fLength = Length();
+
 	if( fLength > 0.0f )
 	{
 		fX /= fLength;

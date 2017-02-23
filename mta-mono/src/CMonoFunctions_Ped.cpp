@@ -40,7 +40,7 @@ float CMonoFunctions::Ped::GetArmor( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetPedArmor( pResource->GetLua(), pElement->ToLuaUserData(), fArmor ) )
+		if( CLuaFunctionDefinitions::GetPedArmor( pResource->GetLua(), pElement->GetLuaUserdata(), fArmor ) )
 		{
 			return fArmor;
 		}
@@ -59,7 +59,7 @@ bool CMonoFunctions::Ped::IsChoking( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::IsPedChoking( pResource->GetLua(), pElement->ToLuaUserData(), bChoking ) )
+		if( CLuaFunctionDefinitions::IsPedChoking( pResource->GetLua(), pElement->GetLuaUserdata(), bChoking ) )
 		{
 			return bChoking;
 		}
@@ -78,7 +78,7 @@ bool CMonoFunctions::Ped::IsDead( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::IsPedDead( pResource->GetLua(), pElement->ToLuaUserData(), bDead ) )
+		if( CLuaFunctionDefinitions::IsPedDead( pResource->GetLua(), pElement->GetLuaUserdata(), bDead ) )
 		{
 			return bDead;
 		}
@@ -97,7 +97,7 @@ bool CMonoFunctions::Ped::IsDucked( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::IsPedDucked( pResource->GetLua(), pElement->ToLuaUserData(), bDucked ) )
+		if( CLuaFunctionDefinitions::IsPedDucked( pResource->GetLua(), pElement->GetLuaUserdata(), bDucked ) )
 		{
 			return bDucked;
 		}
@@ -116,7 +116,7 @@ float CMonoFunctions::Ped::GetStat( TElement pThis, unsigned short usStat )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetPedStat( pResource->GetLua(), pElement->ToLuaUserData(), usStat, fStat ) )
+		if( CLuaFunctionDefinitions::GetPedStat( pResource->GetLua(), pElement->GetLuaUserdata(), usStat, fStat ) )
 		{
 			return fStat;
 		}
@@ -133,11 +133,11 @@ TElement CMonoFunctions::Ped::GetTarget( TElement pThis )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		PVOID pUserData = CLuaFunctionDefinitions::GetPedTarget( pResource->GetLua(), pElement->ToLuaUserData() );
+		PVOID pUserData = CLuaFunctionDefinitions::GetPedTarget( pResource->GetLua(), pElement->GetLuaUserdata() );
 
 		if( pUserData )
 		{
-			return pResource->GetElementManager()->FindOrCreate( pUserData )->ToMonoObject();
+			return pResource->GetElementManager()->FindOrCreate( pUserData )->GetMonoObject();
 		}
 	}
 
@@ -152,7 +152,7 @@ int CMonoFunctions::Ped::GetWeapon( TElement pThis, int iWeaponSlot )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::GetPedWeapon( pResource->GetLua(), pElement->ToLuaUserData(), iWeaponSlot );
+		return CLuaFunctionDefinitions::GetPedWeapon( pResource->GetLua(), pElement->GetLuaUserdata(), iWeaponSlot );
 	}
 
 	return 0;
@@ -168,7 +168,7 @@ MonoString* CMonoFunctions::Ped::GetClothesTexture( TElement pThis, unsigned cha
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetPedClothes( pResource->GetLua(), pElement->ToLuaUserData(), ucType, strOutTexture, strOutModel ) )
+		if( CLuaFunctionDefinitions::GetPedClothes( pResource->GetLua(), pElement->GetLuaUserdata(), ucType, strOutTexture, strOutModel ) )
 		{
 			return pResource->GetDomain()->NewString( strOutTexture );
 		}
@@ -187,7 +187,7 @@ MonoString* CMonoFunctions::Ped::GetClothesModel( TElement pThis, unsigned char 
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetPedClothes( pResource->GetLua(), pElement->ToLuaUserData(), ucType, strOutTexture, strOutModel ) )
+		if( CLuaFunctionDefinitions::GetPedClothes( pResource->GetLua(), pElement->GetLuaUserdata(), ucType, strOutTexture, strOutModel ) )
 		{
 			return pResource->GetDomain()->NewString( strOutModel );
 		}
@@ -206,7 +206,7 @@ bool CMonoFunctions::Ped::DoesHaveJetPack( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::DoesPedHaveJetPack( pResource->GetLua(), pElement->ToLuaUserData(), bHasJetPack ) )
+		if( CLuaFunctionDefinitions::DoesPedHaveJetPack( pResource->GetLua(), pElement->GetLuaUserdata(), bHasJetPack ) )
 		{
 			return bHasJetPack;
 		}
@@ -225,7 +225,7 @@ bool CMonoFunctions::Ped::IsOnGround( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::IsPedOnGround( pResource->GetLua(), pElement->ToLuaUserData(), bOnGround ) )
+		if( CLuaFunctionDefinitions::IsPedOnGround( pResource->GetLua(), pElement->GetLuaUserdata(), bOnGround ) )
 		{
 			return bOnGround;
 		}
@@ -244,7 +244,7 @@ unsigned char CMonoFunctions::Ped::GetFightingStyle( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetPedFightingStyle( pResource->GetLua(), pElement->ToLuaUserData(), ucStyle ) )
+		if( CLuaFunctionDefinitions::GetPedFightingStyle( pResource->GetLua(), pElement->GetLuaUserdata(), ucStyle ) )
 		{
 			return ucStyle;
 		}
@@ -263,7 +263,7 @@ unsigned int CMonoFunctions::Ped::GetMoveAnim( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetPedMoveAnim( pResource->GetLua(), pElement->ToLuaUserData(), uiMoveAnim ) )
+		if( CLuaFunctionDefinitions::GetPedMoveAnim( pResource->GetLua(), pElement->GetLuaUserdata(), uiMoveAnim ) )
 		{
 			return uiMoveAnim;
 		}
@@ -282,7 +282,7 @@ float CMonoFunctions::Ped::GetGravity( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetPedGravity( pResource->GetLua(), pElement->ToLuaUserData(), fGravity ) )
+		if( CLuaFunctionDefinitions::GetPedGravity( pResource->GetLua(), pElement->GetLuaUserdata(), fGravity ) )
 		{
 			return fGravity;
 		}
@@ -299,11 +299,11 @@ TElement CMonoFunctions::Ped::GetContactElement( TElement pThis )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		PVOID pUserData = CLuaFunctionDefinitions::GetPedContactElement( pResource->GetLua(), pElement->ToLuaUserData() );
+		PVOID pUserData = CLuaFunctionDefinitions::GetPedContactElement( pResource->GetLua(), pElement->GetLuaUserdata() );
 
 		if( pUserData )
 		{
-			return pResource->GetElementManager()->FindOrCreate( pUserData )->ToMonoObject();
+			return pResource->GetElementManager()->FindOrCreate( pUserData )->GetMonoObject();
 		}
 	}
 
@@ -320,7 +320,7 @@ unsigned char CMonoFunctions::Ped::GetWeaponSlot( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetPedWeaponSlot( pResource->GetLua(), pElement->ToLuaUserData(), ucWeaponSlot ) )
+		if( CLuaFunctionDefinitions::GetPedWeaponSlot( pResource->GetLua(), pElement->GetLuaUserdata(), ucWeaponSlot ) )
 		{
 			return ucWeaponSlot;
 		}
@@ -339,7 +339,7 @@ bool CMonoFunctions::Ped::IsDoingGangDriveby( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::IsPedDoingGangDriveby( pResource->GetLua(), pElement->ToLuaUserData(), bDoingGangDriveby ) )
+		if( CLuaFunctionDefinitions::IsPedDoingGangDriveby( pResource->GetLua(), pElement->GetLuaUserdata(), bDoingGangDriveby ) )
 		{
 			return bDoingGangDriveby;
 		}
@@ -358,7 +358,7 @@ bool CMonoFunctions::Ped::IsOnFire( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::IsPedOnFire( pResource->GetLua(), pElement->ToLuaUserData(), bOnFire ) )
+		if( CLuaFunctionDefinitions::IsPedOnFire( pResource->GetLua(), pElement->GetLuaUserdata(), bOnFire ) )
 		{
 			return bOnFire;
 		}
@@ -377,7 +377,7 @@ bool CMonoFunctions::Ped::IsHeadless( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::IsPedHeadless( pResource->GetLua(), pElement->ToLuaUserData(), bHeadless ) )
+		if( CLuaFunctionDefinitions::IsPedHeadless( pResource->GetLua(), pElement->GetLuaUserdata(), bHeadless ) )
 		{
 			return bHeadless;
 		}
@@ -396,7 +396,7 @@ bool CMonoFunctions::Ped::IsFrozen( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::IsPedFrozen( pResource->GetLua(), pElement->ToLuaUserData(), bFrozen ) )
+		if( CLuaFunctionDefinitions::IsPedFrozen( pResource->GetLua(), pElement->GetLuaUserdata(), bFrozen ) )
 		{
 			return bFrozen;
 		}
@@ -413,11 +413,11 @@ TElement CMonoFunctions::Ped::GetOccupiedVehicle( TElement pThis )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		PVOID pUserData = CLuaFunctionDefinitions::GetPedOccupiedVehicle( pResource->GetLua(), pElement->ToLuaUserData() );
+		PVOID pUserData = CLuaFunctionDefinitions::GetPedOccupiedVehicle( pResource->GetLua(), pElement->GetLuaUserdata() );
 
 		if( pUserData )
 		{
-			return pResource->GetElementManager()->FindOrCreate( pUserData )->ToMonoObject();
+			return pResource->GetElementManager()->FindOrCreate( pUserData )->GetMonoObject();
 		}
 	}
 
@@ -434,7 +434,7 @@ unsigned int CMonoFunctions::Ped::GetOccupiedVehicleSeat( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetPedOccupiedVehicleSeat( pResource->GetLua(), pElement->ToLuaUserData(), uiSeat ) )
+		if( CLuaFunctionDefinitions::GetPedOccupiedVehicleSeat( pResource->GetLua(), pElement->GetLuaUserdata(), uiSeat ) )
 		{
 			return uiSeat;
 		}
@@ -453,7 +453,7 @@ bool CMonoFunctions::Ped::IsInVehicle( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::IsPedInVehicle( pResource->GetLua(), pElement->ToLuaUserData(), bInVehicle ) )
+		if( CLuaFunctionDefinitions::IsPedInVehicle( pResource->GetLua(), pElement->GetLuaUserdata(), bInVehicle ) )
 		{
 			return bInVehicle;
 		}
@@ -512,7 +512,7 @@ bool CMonoFunctions::Ped::SetArmor( TElement pThis, float fArmor )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::SetPedArmor( pResource->GetLua(), pElement->ToLuaUserData(), fArmor );
+		return CLuaFunctionDefinitions::SetPedArmor( pResource->GetLua(), pElement->GetLuaUserdata(), fArmor );
 	}
 	
 	return false;
@@ -527,7 +527,7 @@ bool CMonoFunctions::Ped::Kill( TElement pThis, TElement pKiller, unsigned char 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		CElement* pKillerElement = pResource->GetElementManager()->GetFromList( pKiller );
 		
-		return CLuaFunctionDefinitions::KillPed( pResource->GetLua(), pElement->ToLuaUserData(), pKillerElement->ToLuaUserData(), ucKillerWeapon, ucBodyPart, bStealth );
+		return CLuaFunctionDefinitions::KillPed( pResource->GetLua(), pElement->GetLuaUserdata(), pKillerElement->GetLuaUserdata(), ucKillerWeapon, ucBodyPart, bStealth );
 	}
 	
 	return false;
@@ -541,7 +541,7 @@ bool CMonoFunctions::Ped::SetStat( TElement pThis, unsigned short usStat, float 
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::SetPedStat( pResource->GetLua(), pElement->ToLuaUserData(), usStat, fValue );
+		return CLuaFunctionDefinitions::SetPedStat( pResource->GetLua(), pElement->GetLuaUserdata(), usStat, fValue );
 	}
 	
 	return false;
@@ -558,7 +558,7 @@ bool CMonoFunctions::Ped::AddClothes( TElement pThis, MonoString* msTexture, Mon
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::AddPedClothes( pResource->GetLua(), pElement->ToLuaUserData(), szTexture, szModel, ucType );
+		return CLuaFunctionDefinitions::AddPedClothes( pResource->GetLua(), pElement->GetLuaUserdata(), szTexture, szModel, ucType );
 	}
 	
 	return false;
@@ -575,7 +575,7 @@ bool CMonoFunctions::Ped::RemoveClothes( TElement pThis, unsigned char ucType, M
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::RemovePedClothes( pResource->GetLua(), pElement->ToLuaUserData(), ucType, szTexture, szModel );
+		return CLuaFunctionDefinitions::RemovePedClothes( pResource->GetLua(), pElement->GetLuaUserdata(), ucType, szTexture, szModel );
 	}
 	
 	return false;
@@ -589,7 +589,7 @@ bool CMonoFunctions::Ped::GiveJetPack( TElement pThis )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::GivePedJetPack( pResource->GetLua(), pElement->ToLuaUserData() );
+		return CLuaFunctionDefinitions::GivePedJetPack( pResource->GetLua(), pElement->GetLuaUserdata() );
 	}
 	
 	return false;
@@ -603,7 +603,7 @@ bool CMonoFunctions::Ped::RemoveJetPack( TElement pThis )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::RemovePedJetPack( pResource->GetLua(), pElement->ToLuaUserData() );
+		return CLuaFunctionDefinitions::RemovePedJetPack( pResource->GetLua(), pElement->GetLuaUserdata() );
 	}
 	
 	return false;
@@ -617,7 +617,7 @@ bool CMonoFunctions::Ped::SetFightingStyle( TElement pThis, unsigned char ucStyl
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::SetPedFightingStyle( pResource->GetLua(), pElement->ToLuaUserData(), ucStyle );
+		return CLuaFunctionDefinitions::SetPedFightingStyle( pResource->GetLua(), pElement->GetLuaUserdata(), ucStyle );
 	}
 	
 	return false;
@@ -631,7 +631,7 @@ bool CMonoFunctions::Ped::SetMoveAnim( TElement pThis, unsigned int iMoveAnim )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::SetPedMoveAnim( pResource->GetLua(), pElement->ToLuaUserData(), iMoveAnim );
+		return CLuaFunctionDefinitions::SetPedMoveAnim( pResource->GetLua(), pElement->GetLuaUserdata(), iMoveAnim );
 	}
 	
 	return false;
@@ -645,7 +645,7 @@ bool CMonoFunctions::Ped::SetGravity( TElement pThis, float fGravity )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::SetPedGravity( pResource->GetLua(), pElement->ToLuaUserData(), fGravity );
+		return CLuaFunctionDefinitions::SetPedGravity( pResource->GetLua(), pElement->GetLuaUserdata(), fGravity );
 	}
 	
 	return false;
@@ -659,7 +659,7 @@ bool CMonoFunctions::Ped::SetChoking( TElement pThis, bool bChoking )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::SetPedChoking( pResource->GetLua(), pElement->ToLuaUserData(), bChoking );
+		return CLuaFunctionDefinitions::SetPedChoking( pResource->GetLua(), pElement->GetLuaUserdata(), bChoking );
 	}
 	
 	return false;
@@ -673,7 +673,7 @@ bool CMonoFunctions::Ped::SetWeaponSlot( TElement pThis, unsigned char ucWeaponS
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::SetPedWeaponSlot( pResource->GetLua(), pElement->ToLuaUserData(), ucWeaponSlot );
+		return CLuaFunctionDefinitions::SetPedWeaponSlot( pResource->GetLua(), pElement->GetLuaUserdata(), ucWeaponSlot );
 	}
 	
 	return false;
@@ -688,7 +688,7 @@ bool CMonoFunctions::Ped::WarpIntoVehicle( TElement pThis, TElement pVehicle, un
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		CElement* pVehicleElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::WarpPedIntoVehicle( pResource->GetLua(), pElement->ToLuaUserData(), pVehicleElement->ToLuaUserData(), uiSeat );
+		return CLuaFunctionDefinitions::WarpPedIntoVehicle( pResource->GetLua(), pElement->GetLuaUserdata(), pVehicleElement->GetLuaUserdata(), uiSeat );
 	}
 	
 	return false;
@@ -702,7 +702,7 @@ bool CMonoFunctions::Ped::RemoveFromVehicle( TElement pThis )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::RemovePedFromVehicle( pResource->GetLua(), pElement->ToLuaUserData() );
+		return CLuaFunctionDefinitions::RemovePedFromVehicle( pResource->GetLua(), pElement->GetLuaUserdata() );
 	}
 	
 	return false;
@@ -716,7 +716,7 @@ bool CMonoFunctions::Ped::SetDoingGangDriveby( TElement pThis, bool bGangDriveby
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::SetPedDoingGangDriveby( pResource->GetLua(), pElement->ToLuaUserData(), bGangDriveby );
+		return CLuaFunctionDefinitions::SetPedDoingGangDriveby( pResource->GetLua(), pElement->GetLuaUserdata(), bGangDriveby );
 	}
 	
 	return false;
@@ -733,7 +733,7 @@ bool CMonoFunctions::Ped::SetAnimation( TElement pThis, MonoString* msBlockName,
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::SetPedAnimation( pResource->GetLua(), pElement->ToLuaUserData(), szBlockName, szAnimName, iTime, bLoop, bUpdatePosition, bInterruptable, bFreezeLastFrame );
+		return CLuaFunctionDefinitions::SetPedAnimation( pResource->GetLua(), pElement->GetLuaUserdata(), szBlockName, szAnimName, iTime, bLoop, bUpdatePosition, bInterruptable, bFreezeLastFrame );
 	}
 	
 	return false;
@@ -749,7 +749,7 @@ bool CMonoFunctions::Ped::SetAnimationProgress( TElement pThis, MonoString* msAn
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::SetPedAnimationProgress( pResource->GetLua(), pElement->ToLuaUserData(), szAnimName, fProgress );
+		return CLuaFunctionDefinitions::SetPedAnimationProgress( pResource->GetLua(), pElement->GetLuaUserdata(), szAnimName, fProgress );
 	}
 	
 	return false;
@@ -763,7 +763,7 @@ bool CMonoFunctions::Ped::SetOnFire( TElement pThis, bool bIsOnFire )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::SetPedOnFire( pResource->GetLua(), pElement->ToLuaUserData(), bIsOnFire );
+		return CLuaFunctionDefinitions::SetPedOnFire( pResource->GetLua(), pElement->GetLuaUserdata(), bIsOnFire );
 	}
 	
 	return false;
@@ -777,7 +777,7 @@ bool CMonoFunctions::Ped::SetHeadless( TElement pThis, bool bIsHeadless )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::SetPedHeadless( pResource->GetLua(), pElement->ToLuaUserData(), bIsHeadless );
+		return CLuaFunctionDefinitions::SetPedHeadless( pResource->GetLua(), pElement->GetLuaUserdata(), bIsHeadless );
 	}
 	
 	return false;
@@ -791,7 +791,7 @@ bool CMonoFunctions::Ped::SetFrozen( TElement pThis, bool bIsFrozen )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::SetPedFrozen( pResource->GetLua(), pElement->ToLuaUserData(), bIsFrozen );
+		return CLuaFunctionDefinitions::SetPedFrozen( pResource->GetLua(), pElement->GetLuaUserdata(), bIsFrozen );
 	}
 	
 	return false;
@@ -805,7 +805,7 @@ bool CMonoFunctions::Ped::ReloadWeapon( TElement pThis )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::ReloadPedWeapon( pResource->GetLua(), pElement->ToLuaUserData() );
+		return CLuaFunctionDefinitions::ReloadPedWeapon( pResource->GetLua(), pElement->GetLuaUserdata() );
 	}
 	
 	return false;
@@ -856,7 +856,7 @@ MonoArray* CMonoFunctions::Ped::GetClothesByTypeIndex( unsigned char ucType, uns
 		
 		if( CLuaFunctionDefinitions::GetClothesByTypeIndex( pResource->GetLua(), ucType, ucIndex, szTexture, szModel ) )
 		{
-			MonoArray* pArray = mono_array_new( pResource->GetDomain()->GetMonoPtr(), mono_get_string_class(), 2 );
+			MonoArray* pArray = mono_array_new( **pResource->GetDomain(), mono_get_string_class(), 2 );
 
 			if( pArray )
 			{
@@ -884,7 +884,7 @@ MonoArray* CMonoFunctions::Ped::GetTypeIndexFromClothes( MonoString* msTexture, 
 		
 		if( CLuaFunctionDefinitions::GetTypeIndexFromClothes( pResource->GetLua(), szTexture, szModel, ucType, ucIndex ) )
 		{
-			MonoArray* pArray = mono_array_new( pResource->GetDomain()->GetMonoPtr(), mono_get_char_class(), 2 );
+			MonoArray* pArray = mono_array_new( **pResource->GetDomain(), mono_get_char_class(), 2 );
 
 			if( pArray )
 			{
@@ -926,7 +926,7 @@ bool CMonoFunctions::Ped::GiveWeapon( TElement pThis, unsigned char ucWeaponID, 
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::GiveWeapon( pResource->GetLua(), pElement->ToLuaUserData(), ucWeaponID, usAmmo, bSetAsCurrent );
+		return CLuaFunctionDefinitions::GiveWeapon( pResource->GetLua(), pElement->GetLuaUserdata(), ucWeaponID, usAmmo, bSetAsCurrent );
 	}
 	
 	return false;
@@ -940,7 +940,7 @@ bool CMonoFunctions::Ped::TakeWeapon( TElement pThis, unsigned char ucWeaponID, 
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::TakeWeapon( pResource->GetLua(), pElement->ToLuaUserData(), ucWeaponID, usAmmo );
+		return CLuaFunctionDefinitions::TakeWeapon( pResource->GetLua(), pElement->GetLuaUserdata(), ucWeaponID, usAmmo );
 	}
 	
 	return false;
@@ -954,7 +954,7 @@ bool CMonoFunctions::Ped::TakeAllWeapons( TElement pThis )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::TakeAllWeapons( pResource->GetLua(), pElement->ToLuaUserData() );
+		return CLuaFunctionDefinitions::TakeAllWeapons( pResource->GetLua(), pElement->GetLuaUserdata() );
 	}
 	
 	return false;
@@ -968,7 +968,7 @@ bool CMonoFunctions::Ped::SetWeaponAmmo( TElement pThis, unsigned char ucWeaponI
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::SetWeaponAmmo( pResource->GetLua(), pElement->ToLuaUserData(), ucWeaponID, usAmmo, usAmmoInClip );
+		return CLuaFunctionDefinitions::SetWeaponAmmo( pResource->GetLua(), pElement->GetLuaUserdata(), ucWeaponID, usAmmo, usAmmoInClip );
 	}
 	
 	return false;

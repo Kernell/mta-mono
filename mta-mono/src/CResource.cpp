@@ -32,8 +32,6 @@ CResource::~CResource( void )
 {
 	this->RemoveEvents();
 
-	this->GetMono()->GetGC()->Collect( this->GetMono()->GetGC()->GetMaxGeneration() );
-
 	SAFE_DELETE( this->m_pRegisteredCommands );
 	SAFE_DELETE( this->m_pEventManager );
 	SAFE_DELETE( this->m_pElementManager );
@@ -63,9 +61,9 @@ bool CResource::CallEvent( const string& strEventName, PVOID pThis, list< CLuaAr
 	{
 		CElement* pSource = nullptr;
 
-		auto *iter = *argv.begin();
+		const auto& iter = *argv.begin();
 
-		if( iter->GetType() == LUA_TLIGHTUSERDATA )
+		if( iter->GetType() == eLuaType::LightUserdata )
 		{
 			pSource = this->m_pElementManager->GetFromList( iter->GetLightUserData() );
 		}
@@ -156,7 +154,7 @@ void CResource::RemoveEvents( void )
 
 		if( pClass )
 		{
-			for( auto iter : pClass->GetAllEvents() )
+			for( const auto& iter : pClass->GetAllEvents() )
 			{
 				string strEventName = iter.second->GetName();
 

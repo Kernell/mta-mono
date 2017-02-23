@@ -26,10 +26,10 @@ void CMonoFunctions::Marker::Ctor( TElement pThis, MonoObject* pPosition, MonoSt
 
 		if( pArgVisibleTo )
 		{
-			pVisibleTo = pResource->GetElementManager()->GetFromList( pArgVisibleTo )->ToLuaUserData();
+			pVisibleTo = pResource->GetElementManager()->GetFromList( pArgVisibleTo )->GetLuaUserdata();
 		}
 
-		PVOID pUserData = CLuaFunctionDefinitions::CreateMarker( pResource->GetLua(), Vector3( pPosition ), szType, fSize, CMonoObject::GetColor( pColor ), pVisibleTo );
+		PVOID pUserData = CLuaFunctionDefinitions::CreateMarker( pResource->GetLua(), Vector3( pPosition ), szType, fSize, SharedUtil::MonoObject::GetColor( pColor ), pVisibleTo );
 
 		ASSERT( pUserData );
 
@@ -66,7 +66,7 @@ MonoString* CMonoFunctions::Marker::GetMarkerType( TElement pThis )
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetMarkerType( pResource->GetLua(), pElement->ToLuaUserData(), szType ) )
+		if( CLuaFunctionDefinitions::GetMarkerType( pResource->GetLua(), pElement->GetLuaUserdata(), szType ) )
 		{
 			return pResource->GetDomain()->NewString( szType );
 		}
@@ -85,7 +85,7 @@ float CMonoFunctions::Marker::GetSize( TElement pThis )
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetMarkerSize( pResource->GetLua(), pElement->ToLuaUserData(), fSize ) )
+		if( CLuaFunctionDefinitions::GetMarkerSize( pResource->GetLua(), pElement->GetLuaUserdata(), fSize ) )
 		{
 			return fSize;
 		}
@@ -104,7 +104,7 @@ MonoObject* CMonoFunctions::Marker::GetColor( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		if( CLuaFunctionDefinitions::GetMarkerColor( pResource->GetLua(), pElement->ToLuaUserData(), outColor ) )
+		if( CLuaFunctionDefinitions::GetMarkerColor( pResource->GetLua(), pElement->GetLuaUserdata(), outColor ) )
 		{
 			return pResource->GetDomain()->GetMTALib()->Color->New( outColor );
 		}
@@ -123,7 +123,7 @@ MonoObject* CMonoFunctions::Marker::GetTarget( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetMarkerTarget( pResource->GetLua(), pElement->ToLuaUserData(), vecPosition ) )
+		if( CLuaFunctionDefinitions::GetMarkerTarget( pResource->GetLua(), pElement->GetLuaUserdata(), vecPosition ) )
 		{
 			return pResource->GetDomain()->GetMTALib()->Vector3->New( vecPosition );
 		}
@@ -142,7 +142,7 @@ MonoString* CMonoFunctions::Marker::GetIcon( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetMarkerIcon( pResource->GetLua(), pElement->ToLuaUserData(), szIcon ) )
+		if( CLuaFunctionDefinitions::GetMarkerIcon( pResource->GetLua(), pElement->GetLuaUserdata(), szIcon ) )
 		{
 			return pResource->GetDomain()->NewString( szIcon );
 		}
@@ -163,7 +163,7 @@ bool CMonoFunctions::Marker::SetType( TElement pThis, MonoString* msType )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::SetMarkerType( pResource->GetLua(), pElement->ToLuaUserData(), szType );
+		return CLuaFunctionDefinitions::SetMarkerType( pResource->GetLua(), pElement->GetLuaUserdata(), szType );
 	}
 
 	return false;
@@ -177,7 +177,7 @@ bool CMonoFunctions::Marker::SetSize( TElement pThis, float fSize )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::SetMarkerSize( pResource->GetLua(), pElement->ToLuaUserData(), fSize );
+		return CLuaFunctionDefinitions::SetMarkerSize( pResource->GetLua(), pElement->GetLuaUserdata(), fSize );
 	}
 
 	return false;
@@ -191,7 +191,7 @@ bool CMonoFunctions::Marker::SetColor( TElement pThis, MonoObject* pColor )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::SetMarkerColor( pResource->GetLua(), pElement->ToLuaUserData(), CMonoObject::GetColor( pColor ) );
+		return CLuaFunctionDefinitions::SetMarkerColor( pResource->GetLua(), pElement->GetLuaUserdata(), SharedUtil::MonoObject::GetColor( pColor ) );
 	}
 
 	return false;
@@ -205,7 +205,7 @@ bool CMonoFunctions::Marker::SetTarget( TElement pThis, MonoObject* pTarget )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::SetMarkerTarget( pResource->GetLua(), pElement->ToLuaUserData(), Vector3( pTarget ) );
+		return CLuaFunctionDefinitions::SetMarkerTarget( pResource->GetLua(), pElement->GetLuaUserdata(), Vector3( pTarget ) );
 	}
 
 	return false;
@@ -221,7 +221,7 @@ bool CMonoFunctions::Marker::SetIcon( TElement pThis, MonoString* msIcon )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		return CLuaFunctionDefinitions::SetMarkerType( pResource->GetLua(), pElement->ToLuaUserData(), szIcon );
+		return CLuaFunctionDefinitions::SetMarkerType( pResource->GetLua(), pElement->GetLuaUserdata(), szIcon );
 	}
 
 	return false;

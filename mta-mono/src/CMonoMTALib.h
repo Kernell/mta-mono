@@ -33,10 +33,10 @@ public:
 						CMonoMTALib			( CMonoDomain* pDomain );
 						~CMonoMTALib		( void );
 
-	CMonoClass*			GetClass			( const char* szName );
-	CMonoClass*			GetClass			( const char* szNameSpace, const char* szName );
+	CMonoClass*			GetClass			( const char* szName ) const;
+	CMonoClass*			GetClass			( const char* szNameSpace, const char* szName ) const;
 
-	CMonoDomain*		GetDomain			( void )	{ return this->m_pDomain; }
+	inline CMonoDomain*	GetDomain			( void ) const	{ return this->m_pDomain; }
 };
 
 #endif

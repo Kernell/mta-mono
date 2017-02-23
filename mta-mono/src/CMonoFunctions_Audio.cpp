@@ -22,7 +22,7 @@ bool CMonoFunctions::Audio::PlayFrontEnd( TElement pThis, unsigned char ucSound 
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::PlaySoundFrontEnd( pResource->GetLua(), pElement->ToLuaUserData(), ucSound );
+		return CLuaFunctionDefinitions::PlaySoundFrontEnd( pResource->GetLua(), pElement->GetLuaUserdata(), ucSound );
 	}
 
 	return false;
@@ -38,7 +38,7 @@ bool CMonoFunctions::Audio::PlayMission( TElement pThis, MonoObject* pPosition, 
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::PlayMissionAudio( pResource->GetLua(), pElement->ToLuaUserData(), vecPosition, usSlot );
+		return CLuaFunctionDefinitions::PlayMissionAudio( pResource->GetLua(), pElement->GetLuaUserdata(), vecPosition, usSlot );
 	}
 
 	return false;

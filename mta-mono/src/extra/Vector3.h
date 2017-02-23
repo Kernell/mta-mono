@@ -17,7 +17,6 @@
 #endif
 
 #include <math.h>
-#include "../CMonoObject.h"
 
 #define FLOAT_EPSILON 0.0001f
 #define PI 3.14159265358979323846f

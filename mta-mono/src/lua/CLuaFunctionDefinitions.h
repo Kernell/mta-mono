@@ -15,7 +15,6 @@ class CLuaFunctionDefinitions;
 #ifndef __CLUAFUNCTIONDEFINITIONS_H
 #define __CLUAFUNCTIONDEFINITIONS_H
 
-#include "../Common.h"
 #include "../extra/CLuaArguments.h"
 
 class CLuaFunctionDefinitions
@@ -145,7 +144,7 @@ public:
     static bool					GetPlayerIP                         ( lua_State* pLuaVM, PVOID pUserData, string& strOutIP );
     static PVOID                GetPlayerAccount                    ( lua_State* pLuaVM, PVOID pUserData );
     static string               GetPlayerVersion                    ( lua_State* pLuaVM, PVOID pUserData );
-    static CLuaArgumentsMap*	GetPlayerACInfo						( lua_State* pLuaVM, PVOID pUserData );
+    static CLuaArgumentsMap		GetPlayerACInfo						( lua_State* pLuaVM, PVOID pUserData );
 
     // Player set functions
     static bool					SetPlayerMoney                      ( lua_State* pLuaVM, PVOID pUserData, int iAmount, bool bInstant = false );

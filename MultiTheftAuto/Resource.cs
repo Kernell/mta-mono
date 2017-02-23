@@ -15,7 +15,7 @@ namespace MultiTheftAuto
 		{
 			get
 			{
-				return Resource.GetCurrent().GetRoot();
+				return Resource.GetCurrent().GetRootElement();
 			}
 		}
 
@@ -38,7 +38,7 @@ namespace MultiTheftAuto
 		public extern Resource Copy( string newResourceName, string organizationalDir );
 
 		[MethodImpl( MethodImplOptions.InternalCall )]
-		public extern Element GetRoot();
+		public extern Element GetRootElement();
 
 		[MethodImpl( MethodImplOptions.InternalCall )]
 		public extern Element GetMapRootElement( UInt32 resource, string map );

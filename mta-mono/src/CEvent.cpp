@@ -64,6 +64,8 @@ bool CEvent::Call( CElement* pThis, PVOID* params ) const
 
 	ASSERT( pMTALib );
 
+	pResource->GetDomain()->Set( false );
+
 	MonoObject* pException = nullptr;
 
 	mono_runtime_delegate_invoke( this->m_pMonoDelegate, params, &pException );

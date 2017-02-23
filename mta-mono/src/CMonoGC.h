@@ -20,17 +20,17 @@ class CMonoGC
 public:
 					CMonoGC				( void );
 
-	void			Collect				( int generation = -1 );
+	void			Collect				( int iGeneration = -1 );
 
-	unsigned int	Hold				( MonoObject* obj );
-	unsigned int	HoldWithHope		( MonoObject* obj );
-	unsigned int	Keep				( MonoObject* obj );
-	unsigned int	Pin					( MonoObject* obj );
+	unsigned int	Hold				( MonoObject* pObject );
+	unsigned int	HoldWithHope		( MonoObject* pObject );
+	unsigned int	Keep				( MonoObject* pObject );
+	unsigned int	Pin					( MonoObject* pObject );
 
 	int				GetMaxGeneration	( void );
 	int64			GetHeapSize			( void );
-	void			ReleaseGCHandle		( unsigned int handle );
-	MonoObject*		GetGCHandleTarget	( unsigned int handle );
+	void			ReleaseGCHandle		( unsigned int uiHandle );
+	MonoObject*		GetGCHandleTarget	( unsigned int uiHandle );
 };
 
 #endif

@@ -19,6 +19,7 @@ class CMonoEvent;
 #include "CMonoClass.h"
 #include "CMonoMethod.h"
 #include "CMonoArguments.h"
+#include "CElement.h"
 
 #include "extra/CLuaArgument.h"
 
@@ -39,17 +40,17 @@ public:
 								CMonoEvent					( CMonoClass* pClass, MonoEvent* pEvent );
 								~CMonoEvent					( void );
 
-	bool						Call						( MonoObject* pThis, list< CLuaArgument* > argv );
-	bool						ParseArguments				( CMonoArguments& pArguments, list< CLuaArgument* > argv );
+	bool						Call						( CElement* pThis, list< CLuaArgument* > argv );
+	bool						ParseArguments				( const CMonoMethod* pMethod, CMonoArguments& pArguments, list< CLuaArgument* > argv );
 
-	CMonoMethod*				GetAddMethod				( void );
-	CMonoMethod*				GetRemoveMethod				( void );
-	CMonoMethod*				GetRaiseMethod				( void );
+	CMonoMethod*				GetAddMethod				( void ) const;
+	CMonoMethod*				GetRemoveMethod				( void ) const;
+	CMonoMethod*				GetRaiseMethod				( void ) const;
 
-	CMonoClass*					GetClass					( void )	{ return this->m_pClass; }
-	MonoEvent*					GetMonoPtr					( void )	{ return this->m_pEvent; }
+	inline CMonoClass*			GetClass					( void ) const	{ return this->m_pClass; }
+	inline MonoEvent*			GetMonoPtr					( void ) const	{ return this->m_pEvent; }
 
-	string						GetName						( void )	{ return this->m_strName; }
+	inline const string			GetName						( void ) const	{ return this->m_strName; }
 };
 
 #endif

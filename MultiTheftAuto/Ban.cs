@@ -10,7 +10,7 @@ namespace MultiTheftAuto
 		}
 
 		[MethodImpl( MethodImplOptions.InternalCall )]
-		static extern public Ban Add( string ip, string username, string serial, Element responsible, string responsibleName, string reason, int unban );
+		static extern public Ban Add( string ip, string username, string serial, Element responsible, string reason, int unban );
 
 		[MethodImpl( MethodImplOptions.InternalCall )]
 		extern public bool Remove( Ban ban, Element responsible );

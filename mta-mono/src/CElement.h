@@ -49,7 +49,7 @@ enum class eElementType
 class CElement
 {
 public:
-	static const map<eElementType, pair<string, string>> _eElementType;
+	static const map< eElementType, pair< string, string > > _eElementType;
 
 	inline static const string GetTypeName( eElementType iType )
 	{
@@ -114,18 +114,21 @@ private:
 	uint32_t                                    m_uiGCHandle;
 
 public:
-	                                            CElement                    ( CElementManager* pManager, MonoObject* pObject, PVOID pUserdata, const CResource* pParent = nullptr );
+	                                            CElement                    ( CElementManager* pManager, MonoObject* pObject, PVOID pLuaUserdata, const CResource* pParent = nullptr );
     virtual                                     ~CElement                   ( void );
+
 	inline eElementType                         GetType                     ( void ) const                  { return this->m_iType; }
 	inline void                                 SetType                     ( eElementType iType )          { this->m_iType = iType; }
 	
 	void                                        SetTypeName                 ( const string& strTypeName );
 	const string                                GetTypeName                 ( void );
 
+	const char*                                 GetTypeClassName            ( void );
+
 	CElement*                                   GetParent                   ( void ) const;
 
-	inline MonoObject*                          ToMonoObject                ( void ) const                   { return this->m_pMonoObject; }
-	inline PVOID                                ToLuaUserData               ( void ) const                   { return this->m_pLuaUserdata; }
+	inline PVOID                                GetLuaUserdata              ( void ) const                   { return this->m_pLuaUserdata; }
+	inline MonoObject*                          GetMonoObject               ( void ) const                   { return this->m_pMonoObject; }
 };
 
 #endif

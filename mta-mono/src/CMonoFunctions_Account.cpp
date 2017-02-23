@@ -27,7 +27,7 @@ TElement CMonoFunctions::Account::Get( MonoString* msName, MonoString* msPasswor
 
 		if( pUserData )
 		{
-			return pResource->GetElementManager()->Create( nullptr, pUserData )->ToMonoObject();
+			return pResource->GetElementManager()->Create( nullptr, pUserData )->GetMonoObject();
 		}
 	}
 
@@ -44,7 +44,7 @@ MonoArray* CMonoFunctions::Account::GetAll( void )
 
 		if( pLuaTable.size() > 0 )
 		{
-			return pResource->GetDomain()->NewElementArray( pResource->GetDomain()->GetMTALib()->GetClass( "Account" )->GetMonoPtr(), pLuaTable );
+			return pResource->GetDomain()->NewArray( **pResource->GetDomain()->GetMTALib()->GetClass( "Account" ), pLuaTable );
 		}
 	}
 
@@ -59,11 +59,11 @@ TElement CMonoFunctions::Account::GetPlayer( TElement pAccount )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pAccount );
 
-		PVOID pUserData = CLuaFunctionDefinitions::GetAccountPlayer( pResource->GetLua(), pElement->ToLuaUserData() );
+		PVOID pUserData = CLuaFunctionDefinitions::GetAccountPlayer( pResource->GetLua(), pElement->GetLuaUserdata() );
 
 		if( pUserData )
 		{
-			return pResource->GetElementManager()->Create( nullptr, pUserData )->ToMonoObject();
+			return pResource->GetElementManager()->Create( nullptr, pUserData )->GetMonoObject();
 		}
 	}
 
@@ -80,13 +80,62 @@ bool CMonoFunctions::Account::IsGuest( TElement pAccount )
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pAccount );
 
-		if( CLuaFunctionDefinitions::IsGuestAccount( pResource->GetLua(), pElement->ToLuaUserData(), bIsGuest ) )
+		if( CLuaFunctionDefinitions::IsGuestAccount( pResource->GetLua(), pElement->GetLuaUserdata(), bIsGuest ) )
 		{
 			return bIsGuest;
 		}
 	}
 
 	return false;
+}
+
+MonoObject* CMonoFunctions::Account::GetData( TElement pAccount, MonoString* msKey )
+{
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
+	{
+		const char* szKey = mono_string_to_utf8( msKey );
+
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pAccount );
+
+		CLuaArgument pLuaArgument = CLuaFunctionDefinitions::GetAccountData( pResource->GetLua(), pElement->GetLuaUserdata(), szKey );
+
+		CMonoCorlib* pCorlib = pResource->GetDomain()->GetCorlib();
+
+		eLuaType iLuaType = pLuaArgument.GetType();
+
+		switch( iLuaType )
+		{
+			case eLuaType::Boolean:
+			{
+				bool bValue = pLuaArgument.GetBoolean();
+
+				return pCorlib->Class[ "boolean" ]->Box( &bValue );
+			}
+			case eLuaType::Number:
+			{
+				double dValue = pLuaArgument.GetNumber();
+
+				return pCorlib->Class[ "double" ]->Box( &dValue );
+			}
+			case eLuaType::String:
+			{
+				const char* szString = pLuaArgument.GetString();
+
+				return reinterpret_cast< MonoObject* >( pResource->GetDomain()->NewString( szString ) );
+			}
+			case eLuaType::Userdata:
+			case eLuaType::LightUserdata:
+			{
+				DWORD pUserData = reinterpret_cast< DWORD >( pLuaArgument.GetLightUserData() );
+
+				return pCorlib->Class[ "uint32" ]->Box( &pUserData );
+			}
+		}
+	}
+
+	return nullptr;
 }
 
 MonoString* CMonoFunctions::Account::GetSerial( TElement pAccount )
@@ -99,9 +148,28 @@ MonoString* CMonoFunctions::Account::GetSerial( TElement pAccount )
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pAccount );
 
-		if( CLuaFunctionDefinitions::GetAccountSerial( pResource->GetLua(), pElement->ToLuaUserData(), strSerial ) )
+		if( CLuaFunctionDefinitions::GetAccountSerial( pResource->GetLua(), pElement->GetLuaUserdata(), strSerial ) )
 		{
 			return pResource->GetDomain()->NewString( strSerial );
+		}
+	}
+
+	return nullptr;
+}
+
+MonoArray* CMonoFunctions::Account::GetBySerial( MonoString* msSerial )
+{
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
+	{
+		const string strSerial = mono_string_to_utf8( msSerial );
+
+		CLuaArgumentsVector pLuaTable = CLuaFunctionDefinitions::GetAccountsBySerial( pResource->GetLua(), strSerial );
+
+		if( pLuaTable.size() > 0 )
+		{
+			return pResource->GetDomain()->NewArray( **pResource->GetDomain()->GetMTALib()->GetClass( "Account" ), pLuaTable );
 		}
 	}
 
@@ -122,7 +190,7 @@ TElement CMonoFunctions::Account::Add( MonoString* msName, MonoString* msPasswor
 
 		if( pUserData )
 		{
-			return pResource->GetElementManager()->Create( nullptr, pUserData )->ToMonoObject();
+			return pResource->GetElementManager()->Create( nullptr, pUserData )->GetMonoObject();
 		}
 	}
 
@@ -137,7 +205,7 @@ bool CMonoFunctions::Account::Remove( TElement pAccount )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pAccount );
 
-		return CLuaFunctionDefinitions::RemoveAccount( pResource->GetLua(), pElement->ToLuaUserData() );
+		return CLuaFunctionDefinitions::RemoveAccount( pResource->GetLua(), pElement->GetLuaUserdata() );
 	}
 
 	return false;
@@ -153,7 +221,37 @@ bool CMonoFunctions::Account::SetPassword( TElement pAccount, MonoString* msPass
 
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pAccount );
 
-		return CLuaFunctionDefinitions::SetAccountPassword( pResource->GetLua(), pElement->ToLuaUserData(), szPassword );
+		return CLuaFunctionDefinitions::SetAccountPassword( pResource->GetLua(), pElement->GetLuaUserdata(), szPassword );
+	}
+
+	return false;
+}
+
+bool CMonoFunctions::Account::SetData( TElement pAccount, MonoString* msKey, MonoObject* pObject )
+{
+	CResource* pResource = g_pModule->GetResourceManager()->GetFromList( mono_domain_get() );
+
+	if( pResource )
+	{
+		CElement* pElement = pResource->GetElementManager()->GetFromList( pAccount );
+
+		const char* szKey	= mono_string_to_utf8( msKey );
+
+		CLuaArgument pArgument;
+
+		MonoClass* pClass = mono_object_get_class( pObject );
+
+		ASSERT( pClass );
+
+		MonoType* pType = mono_class_get_type( pClass );
+
+		ASSERT( pType );
+
+		int iType = mono_type_get_type( pType );
+
+		//CMonoObject::GetValue( pObject );
+
+		return CLuaFunctionDefinitions::SetAccountData( pResource->GetLua(), pElement->GetLuaUserdata(), szKey, &pArgument );
 	}
 
 	return false;
@@ -168,7 +266,7 @@ bool CMonoFunctions::Account::CopyData( TElement pAccount, TElement pFromAccount
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pAccount );
 		CElement* pFromElement = pResource->GetElementManager()->GetFromList( pFromAccount );
 
-		return CLuaFunctionDefinitions::CopyAccountData( pResource->GetLua(), pElement->ToLuaUserData(), pFromElement->ToLuaUserData() );
+		return CLuaFunctionDefinitions::CopyAccountData( pResource->GetLua(), pElement->GetLuaUserdata(), pFromElement->GetLuaUserdata() );
 	}
 
 	return false;

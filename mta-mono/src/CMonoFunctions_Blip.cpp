@@ -25,7 +25,7 @@ void CMonoFunctions::Blip::Ctor( TElement pThis, MonoObject* pTarget, unsigned c
 
 		if( pArgColor )
 		{
-			pColor = CMonoObject::GetColor( pArgColor );
+			pColor = SharedUtil::MonoObject::GetColor( pArgColor );
 		}
 
 		if( pArgVisibleTo )
@@ -34,7 +34,7 @@ void CMonoFunctions::Blip::Ctor( TElement pThis, MonoObject* pTarget, unsigned c
 
 			if( pVisibleToElement )
 			{
-				pVisibleTo = pVisibleToElement->ToLuaUserData();
+				pVisibleTo = pVisibleToElement->GetLuaUserdata();
 			}
 		}
 
@@ -50,7 +50,7 @@ void CMonoFunctions::Blip::Ctor( TElement pThis, MonoObject* pTarget, unsigned c
 		{
 			CElement* pTargetElement = pResource->GetElementManager()->GetFromList( pTarget );
 
-			pUserData = CLuaFunctionDefinitions::CreateBlipAttachedTo( pResource->GetLua(), pTargetElement->ToLuaUserData(), ucIcon, ucSize, pColor, sOrdering, usVisibleDistance, pVisibleTo );
+			pUserData = CLuaFunctionDefinitions::CreateBlipAttachedTo( pResource->GetLua(), pTargetElement->GetLuaUserdata(), ucIcon, ucSize, pColor, sOrdering, usVisibleDistance, pVisibleTo );
 		}
 
 		if( pUserData )
@@ -71,7 +71,7 @@ unsigned char CMonoFunctions::Blip::GetIcon( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		if( CLuaFunctionDefinitions::GetBlipIcon( pResource->GetLua(), pElement->ToLuaUserData(), ucIcon ) )
+		if( CLuaFunctionDefinitions::GetBlipIcon( pResource->GetLua(), pElement->GetLuaUserdata(), ucIcon ) )
 		{
 			return ucIcon;
 		}
@@ -90,7 +90,7 @@ unsigned char CMonoFunctions::Blip::GetSize( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetBlipSize( pResource->GetLua(), pElement->ToLuaUserData(), ucSize ) )
+		if( CLuaFunctionDefinitions::GetBlipSize( pResource->GetLua(), pElement->GetLuaUserdata(), ucSize ) )
 		{
 			return ucSize;
 		}
@@ -109,7 +109,7 @@ MonoObject* CMonoFunctions::Blip::GetColor( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetBlipColor( pResource->GetLua(), pElement->ToLuaUserData(), outColor ) )
+		if( CLuaFunctionDefinitions::GetBlipColor( pResource->GetLua(), pElement->GetLuaUserdata(), outColor ) )
 		{
 			return pResource->GetDomain()->GetMTALib()->Color->New( outColor );
 		}
@@ -128,7 +128,7 @@ short CMonoFunctions::Blip::GetOrdering( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetBlipOrdering( pResource->GetLua(), pElement->ToLuaUserData(), sOrdering ) )
+		if( CLuaFunctionDefinitions::GetBlipOrdering( pResource->GetLua(), pElement->GetLuaUserdata(), sOrdering ) )
 		{
 			return sOrdering;
 		}
@@ -147,7 +147,7 @@ unsigned short CMonoFunctions::Blip::GetVisibleDistance( TElement pThis )
 		
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 		
-		if( CLuaFunctionDefinitions::GetBlipVisibleDistance( pResource->GetLua(), pElement->ToLuaUserData(), usVisibleDistance ) )
+		if( CLuaFunctionDefinitions::GetBlipVisibleDistance( pResource->GetLua(), pElement->GetLuaUserdata(), usVisibleDistance ) )
 		{
 			return usVisibleDistance;
 		}
@@ -166,7 +166,7 @@ bool CMonoFunctions::Blip::SetIcon( TElement pThis, unsigned char ucIcon )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::SetBlipIcon( pResource->GetLua(), pElement->ToLuaUserData(), ucIcon );
+		return CLuaFunctionDefinitions::SetBlipIcon( pResource->GetLua(), pElement->GetLuaUserdata(), ucIcon );
 	}
 
 	return false;
@@ -180,7 +180,7 @@ bool CMonoFunctions::Blip::SetSize( TElement pThis, unsigned char ucSize )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::SetBlipSize( pResource->GetLua(), pElement->ToLuaUserData(), ucSize );
+		return CLuaFunctionDefinitions::SetBlipSize( pResource->GetLua(), pElement->GetLuaUserdata(), ucSize );
 	}
 
 	return false;
@@ -194,7 +194,7 @@ bool CMonoFunctions::Blip::SetColor( TElement pThis, MonoObject* color )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::SetBlipColor( pResource->GetLua(), pElement->ToLuaUserData(), CMonoObject::GetColor( color ) );
+		return CLuaFunctionDefinitions::SetBlipColor( pResource->GetLua(), pElement->GetLuaUserdata(), SharedUtil::MonoObject::GetColor( color ) );
 	}
 
 	return false;
@@ -208,7 +208,7 @@ bool CMonoFunctions::Blip::SetOrdering( TElement pThis, short sOrdering )
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::SetBlipOrdering( pResource->GetLua(), pElement->ToLuaUserData(), sOrdering );
+		return CLuaFunctionDefinitions::SetBlipOrdering( pResource->GetLua(), pElement->GetLuaUserdata(), sOrdering );
 	}
 
 	return false;
@@ -222,7 +222,7 @@ bool CMonoFunctions::Blip::SetVisibleDistance( TElement pThis, unsigned short us
 	{
 		CElement* pElement = pResource->GetElementManager()->GetFromList( pThis );
 
-		return CLuaFunctionDefinitions::SetBlipVisibleDistance( pResource->GetLua(), pElement->ToLuaUserData(), usVisibleDistance );
+		return CLuaFunctionDefinitions::SetBlipVisibleDistance( pResource->GetLua(), pElement->GetLuaUserdata(), usVisibleDistance );
 	}
 
 	return false;

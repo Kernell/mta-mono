@@ -35,9 +35,9 @@ CMonoEvent::~CMonoEvent( void )
 	this->m_pRaiseMethod	= nullptr;
 }
 
-bool CMonoEvent::Call( MonoObject* pThis, list< CLuaArgument* > argv )
+bool CMonoEvent::Call( CElement* pThis, list< CLuaArgument* > argv )
 {
-	CMonoMethod* pMethod = this->GetRaiseMethod();
+	const CMonoMethod* pMethod = this->GetRaiseMethod();
 
 	if( !pMethod )
 	{
@@ -46,18 +46,18 @@ bool CMonoEvent::Call( MonoObject* pThis, list< CLuaArgument* > argv )
 
 	CMonoArguments pArguments;
 	
-	if( !this->ParseArguments( pArguments, argv ) )
+	if( !this->ParseArguments( pMethod, pArguments, argv ) )
 	{
-		this->m_pResource->ErrorPrintf( "Raise method for event '%s' not found\n", this->GetName().c_str() );
+		this->m_pResource->ErrorPrintf( "Raise method for event '%s' not found\n", this->m_strName.c_str() );
 
 		return false;
 	}
 
-	pMethod->Invoke( pThis, *pArguments, nullptr );
+	pMethod->Invoke( pThis->GetMonoObject(), *pArguments, nullptr );
 
 	const auto& iter = *argv.begin();
 
-	if( iter->GetType() == eLuaType::LightUserdata )
+	if( iter->GetType() == eLuaType::LightUserdata && iter->GetLightUserData() != pThis->GetLuaUserdata() )
 	{
 		pMethod->Invoke( pArguments[ 0 ], *pArguments, nullptr );
 	}
@@ -65,231 +65,229 @@ bool CMonoEvent::Call( MonoObject* pThis, list< CLuaArgument* > argv )
 	return true;
 }
 
-bool CMonoEvent::ParseArguments( CMonoArguments& pArguments, list< CLuaArgument* > argv )
+bool CMonoEvent::ParseArguments( const CMonoMethod* pMethod, CMonoArguments& pArguments, list< CLuaArgument* > argv )
 {
-	CMonoMTALib* pMTALib = this->m_pClass->GetDomain()->GetMTALib();
-	CMonoCorlib* pCorlib = this->m_pClass->GetDomain()->GetCorlib();
+	vector< SMonoType > pArgList = pMethod->GetArguments();
 
-	const auto& pMethods = this->m_pClass->GetMethods( "raise_" + this->GetName() );
-
-	for( const auto& pMethod : pMethods )
+	if( pArgList.size() != argv.size() )
 	{
-		vector< SMonoType > pArgList = pMethod->GetArguments();
+		return false;
+	}
 
-		if( pArgList.size() != argv.size() )
+	auto iter	= argv.begin();
+	auto pType	= pArgList.begin();
+
+	for( ; ; iter++, pType++ )
+	{
+		if( iter == argv.end() || pType == pArgList.end() )
 		{
-			continue;
+			return true;
 		}
 
-		auto iter	= argv.begin();
-		auto pType	= pArgList.begin();
+		eLuaType iLuaType = (*iter)->GetType();
 
-		for( ; ; iter++, pType++ )
+		switch( pType->iType )
 		{
-			if( iter == argv.end() || pType == pArgList.end() )
+			case MONO_TYPE_BOOLEAN: // System.Boolean
 			{
-				return true;
-			}
+				bool bValue = false;
 
-			eLuaType iLuaType = (*iter)->GetType();
-
-			switch( pType->iType )
-			{
-				case MONO_TYPE_BOOLEAN: // System.Boolean
+				if( iLuaType == eLuaType::Boolean )
 				{
-					bool bValue = false;
-
-					if( iLuaType == eLuaType::Boolean )
-					{
-						bValue = (*iter)->GetBoolean();
-					}
+					bValue = (*iter)->GetBoolean();
+				}
 				
-					pArguments.Push( bValue );
+				pArguments.Push( bValue );
 
-					break;
-				}
-				case MONO_TYPE_CHAR: // System.Char
+				break;
+			}
+			case MONO_TYPE_CHAR: // System.Char
+			{
+				wchar_t iValue = 0;
+
+				if( iLuaType == eLuaType::Number )
 				{
-					wchar_t iValue = 0;
-
-					if( iLuaType == eLuaType::Number )
-					{
-						iValue = (*iter)->GetNumber< wchar_t >();
-					}
-
-					pArguments.Push( iValue );
-
-					break;
+					iValue = (*iter)->GetNumber< wchar_t >();
 				}
-				case MONO_TYPE_I1: // System.SByte
+
+				pArguments.Push( iValue );
+
+				break;
+			}
+			case MONO_TYPE_I1: // System.SByte
+			{
+				int8_t iValue = 0;
+
+				if( iLuaType == eLuaType::Number )
 				{
-					int8_t iValue = 0;
-
-					if( iLuaType == eLuaType::Number )
-					{
-						iValue = (*iter)->GetNumber< int8_t >();
-					}
-
-					pArguments.Push( iValue );
-
-					break;
+					iValue = (*iter)->GetNumber< int8_t >();
 				}
-				case MONO_TYPE_U1: // System.Byte
+
+				pArguments.Push( iValue );
+
+				break;
+			}
+			case MONO_TYPE_U1: // System.Byte
+			{
+				uint8_t iValue = 0;
+
+				if( iLuaType == eLuaType::Number )
 				{
-					uint8_t iValue = 0;
-
-					if( iLuaType == eLuaType::Number )
-					{
-						iValue = (*iter)->GetNumber< uint8_t >();
-					}
-
-					pArguments.Push( iValue );
-
-					break;
+					iValue = (*iter)->GetNumber< uint8_t >();
 				}
-				case MONO_TYPE_I2: // System.Int16
+
+				pArguments.Push( iValue );
+
+				break;
+			}
+			case MONO_TYPE_I2: // System.Int16
+			{
+				int16_t iValue = 0;
+
+				if( iLuaType == eLuaType::Number )
 				{
-					int16_t iValue = 0;
-
-					if( iLuaType == eLuaType::Number )
-					{
-						iValue = (*iter)->GetNumber< int16_t >();
-					}
-
-					pArguments.Push( iValue );
-
-					break;
+					iValue = (*iter)->GetNumber< int16_t >();
 				}
-				case MONO_TYPE_U2: // System.UInt16
+
+				pArguments.Push( iValue );
+
+				break;
+			}
+			case MONO_TYPE_U2: // System.UInt16
+			{
+				uint16_t iValue = 0;
+
+				if( iLuaType == eLuaType::Number )
 				{
-					uint16_t iValue = 0;
-
-					if( iLuaType == eLuaType::Number )
-					{
-						iValue = (*iter)->GetNumber< uint16_t >();
-					}
-
-					pArguments.Push( iValue );
-
-					break;
+					iValue = (*iter)->GetNumber< uint16_t >();
 				}
-				case MONO_TYPE_I4: // System.Int32
+
+				pArguments.Push( iValue );
+
+				break;
+			}
+			case MONO_TYPE_I4: // System.Int32
+			{
+				int32_t iValue = 0;
+
+				if( iLuaType == eLuaType::Number )
 				{
-					int32_t iValue = 0;
-
-					if( iLuaType == eLuaType::Number )
-					{
-						iValue = (*iter)->GetNumber< int32_t >();
-					}
-
-					pArguments.Push( iValue );
-
-					break;
+					iValue = (*iter)->GetNumber< int32_t >();
 				}
-				case MONO_TYPE_U4: // System.UInt32
-				{
-					uint32_t iValue = 0;
 
-					if( iLuaType == eLuaType::Number )
-					{
-						iValue = (*iter)->GetNumber< uint32_t >();
-					}
+				pArguments.Push( iValue );
+
+				break;
+			}
+			case MONO_TYPE_U4: // System.UInt32
+			{
+				uint32_t iValue = 0;
+
+				if( iLuaType == eLuaType::Number )
+				{
+					iValue = (*iter)->GetNumber< uint32_t >();
+				}
 					
-					pArguments.Push( iValue );
+				pArguments.Push( iValue );
 
-					break;
-				}
-				case MONO_TYPE_I8: // System.Int64
+				break;
+			}
+			case MONO_TYPE_I8: // System.Int64
+			{
+				int64_t iValue = 0;
+
+				if( iLuaType == eLuaType::Number )
 				{
-					int64_t iValue = 0;
-
-					if( iLuaType == eLuaType::Number )
-					{
-						iValue = (*iter)->GetNumber< int64_t >();
-					}
-
-					pArguments.Push( iValue );
-
-					break;
+					iValue = (*iter)->GetNumber< int64_t >();
 				}
-				case MONO_TYPE_U8: // System.UInt64
+
+				pArguments.Push( iValue );
+
+				break;
+			}
+			case MONO_TYPE_U8: // System.UInt64
+			{
+				uint64_t iValue = 0;
+
+				if( iLuaType == eLuaType::Number )
 				{
-					uint64_t iValue = 0;
-
-					if( iLuaType == eLuaType::Number )
-					{
-						iValue = (*iter)->GetNumber< uint64_t >();
-					}
-
-					pArguments.Push( iValue );
-
-					break;
+					iValue = (*iter)->GetNumber< uint64_t >();
 				}
-				case MONO_TYPE_R4: // System.Single
+
+				pArguments.Push( iValue );
+
+				break;
+			}
+			case MONO_TYPE_R4: // System.Single
+			{
+				float fValue = 0;
+
+				if( iLuaType == eLuaType::Number )
 				{
-					float fValue = 0;
-
-					if( iLuaType == eLuaType::Number )
-					{
-						fValue = (*iter)->GetNumber< float >();
-					}
-
-					pArguments.Push( fValue );
-
-					break;
+					fValue = (*iter)->GetNumber< float >();
 				}
-				case MONO_TYPE_R8: // System.Double
+
+				pArguments.Push( fValue );
+
+				break;
+			}
+			case MONO_TYPE_R8: // System.Double
+			{
+				double dValue = 0;
+
+				if( iLuaType == eLuaType::Number )
 				{
-					double dValue = 0;
-
-					if( iLuaType == eLuaType::Number )
-					{
-						dValue = (*iter)->GetNumber< double >();
-					}
-
-					pArguments.Push( dValue );
-
-					break;
+					dValue = (*iter)->GetNumber< double >();
 				}
-				case MONO_TYPE_STRING: // System.String
+
+				pArguments.Push( dValue );
+
+				break;
+			}
+			case MONO_TYPE_STRING: // System.String
+			{
+				string strValue = "";
+
+				if( iLuaType == eLuaType::String )
 				{
-					string strValue = "";
+					strValue = (*iter)->GetString();
+				}
 
-					if( iLuaType == eLuaType::String )
-					{
-						strValue = (*iter)->GetString();
-					}
-
-					MonoString* pString = this->m_pResource->GetDomain()->NewString( strValue );
+				MonoString* pString = this->m_pResource->GetDomain()->NewString( strValue );
 					
-					pArguments.Push( pString );
+				pArguments.Push( pString );
 
-					break;
-				}
-				case MONO_TYPE_OBJECT: // System.Object
-				case MONO_TYPE_CLASS:
+				break;
+			}
+			case MONO_TYPE_OBJECT: // System.Object
+			case MONO_TYPE_CLASS:
+			{
+				MonoObject* pValue = nullptr;
+
+				if( iLuaType == eLuaType::LightUserdata )
 				{
-					MonoObject* pValue = nullptr;
+					CElement* pElement = this->m_pResource->GetElementManager()->FindOrCreate( (*iter)->GetLightUserData() );
 
-					if( iLuaType == eLuaType::LightUserdata )
-					{
-						CElement* pElement = this->m_pResource->GetElementManager()->FindOrCreate( (*iter)->GetLightUserData() );
+					ASSERT( pElement );
 
-						pValue = pElement->ToMonoObject();
-					}
+					auto typeName = pElement->GetTypeName();
 
-					pArguments.Push( pValue );
+					auto className = pElement->GetTypeClassName();
 
-					break;
+					pValue = pElement->GetMonoObject();
 				}
-				case MONO_TYPE_I:
-				case MONO_TYPE_U:
-				default:
-				{
-					this->m_pResource->ErrorPrintf( "Unsupported type '%s (0x%i)' for '%s'\n", pType->strName.c_str(), pType->iType, this->GetName().c_str() );
 
-					break;
-				}
+				pArguments.Push( pValue );
+
+				break;
+			}
+			case MONO_TYPE_I:
+			case MONO_TYPE_U:
+			default:
+			{
+				this->m_pResource->ErrorPrintf( "Unsupported type '%s (0x%X)' for '%s'\n", pType->strName.c_str(), pType->iType, this->m_strName.c_str() );
+
+				break;
 			}
 		}
 	}
@@ -297,17 +295,17 @@ bool CMonoEvent::ParseArguments( CMonoArguments& pArguments, list< CLuaArgument*
 	return false;
 }
 
-CMonoMethod* CMonoEvent::GetAddMethod( void )
+CMonoMethod* CMonoEvent::GetAddMethod( void ) const
 {
-	return this->m_pClass->GetMethod( "add_" + this->GetName(), 0 );
+	return this->m_pClass->GetMethod( "add_" + this->m_strName, 0 );
 }
 
-CMonoMethod* CMonoEvent::GetRemoveMethod( void )
+CMonoMethod* CMonoEvent::GetRemoveMethod( void ) const
 {
-	return this->m_pClass->GetMethod( "remove_" + this->GetName(), 0 );
+	return this->m_pClass->GetMethod( "remove_" + this->m_strName, 0 );
 }
 
-CMonoMethod* CMonoEvent::GetRaiseMethod( void )
+CMonoMethod* CMonoEvent::GetRaiseMethod( void ) const
 {
-	return this->m_pClass->GetMethod( "raise_" + this->GetName(), 0 );
+	return this->m_pClass->GetMethod( "raise_" + this->m_strName, 0 );
 }

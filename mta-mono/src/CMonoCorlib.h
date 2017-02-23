@@ -34,7 +34,7 @@ public:
 
 	CMonoClass*			GetClass						( const char *szNameSpace, const char *szClassName );
 
-	CMonoDomain*		GetDomain						( void )	{ return this->m_pDomain; }
+	inline CMonoDomain*	GetDomain						( void ) const	{ return this->m_pDomain; }
 };
 
 #endif

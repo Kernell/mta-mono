@@ -28,31 +28,32 @@ struct SMonoType
 class CMonoMethod
 {
 private:
-	MonoMethod*				m_pMethod;
+	MonoMethod*						m_pMethod;
 
-	CMonoClass*				m_pClass;
+	CMonoClass*						m_pClass;
 
-	vector< SMonoType >		m_ArgList;
+	vector< SMonoType >				m_ArgList;
 
-	string					m_strName;
-	string					m_strSignature;
+	string							m_strName;
+	string							m_strSignature;
 	
 private:
-	void					ParseSignature			( void );
+	void							ParseSignature			( void );
 
 public:
-							CMonoMethod				( CMonoClass* pClass, MonoMethod* pMethod );
-							~CMonoMethod			( void );
+									CMonoMethod				( CMonoClass* pClass, MonoMethod* pMethod );
+									~CMonoMethod			( void );
 
-	MonoObject*				Invoke					( PVOID pObject, PVOID* params, MonoObject** pException );
+	MonoObject*						Invoke					( PVOID pObject, PVOID* params, MonoObject** pException ) const;
 	
-	string					GetSignature			( void )	{ return this->m_strSignature; }
-	vector< SMonoType >		GetArguments			( void )	{ return this->m_ArgList; }
+	inline string					GetSignature			( void ) const	{ return this->m_strSignature; }
+	inline vector< SMonoType >		GetArguments			( void ) const	{ return this->m_ArgList; }
 
-	MonoMethod*				GetMonoPtr				( void )	{ return this->m_pMethod; }
-	CMonoClass*				GetMonoClass			( void )	{ return this->m_pClass; }
+	inline CMonoClass*				GetMonoClass			( void ) const	{ return this->m_pClass; }
 
-	string					GetName					( void )	{ return this->m_strName; }
+	inline string					GetName					( void ) const	{ return this->m_strName; }
+
+	inline MonoMethod*				operator *				( void ) const	{ return this->m_pMethod; }
 };
 
 #endif

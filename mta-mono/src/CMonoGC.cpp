@@ -17,46 +17,46 @@ CMonoGC::CMonoGC( void )
 {
 }
 
-void CMonoGC::Collect( int generation )
+void CMonoGC::Collect( int iGeneration )
 {
-	mono_gc_collect( generation );
+	mono_gc_collect( iGeneration );
 }
 
-unsigned int CMonoGC::Hold( MonoObject* obj )
+unsigned int CMonoGC::Hold( MonoObject* pObject )
 {
-	if( obj )
+	if( pObject )
 	{
-		mono_gchandle_new_weakref( reinterpret_cast< MonoObject* >( obj ), false );
+		return mono_gchandle_new_weakref( pObject, false );
 	}
 
 	return -1;
 }
 
-unsigned int CMonoGC::HoldWithHope( MonoObject* obj )
+unsigned int CMonoGC::HoldWithHope( MonoObject* pObject )
 {
-	if( obj )
+	if( pObject )
 	{
-		return mono_gchandle_new_weakref( reinterpret_cast< MonoObject* >( obj ), true );
+		return mono_gchandle_new_weakref( pObject, true );
 	}
 
 	return -1;
 }
 
-unsigned int CMonoGC::Keep( MonoObject* obj )
+unsigned int CMonoGC::Keep( MonoObject* pObject )
 {
-	if( obj )
+	if( pObject )
 	{
-		return mono_gchandle_new( reinterpret_cast< MonoObject* >( obj ), false );
+		return mono_gchandle_new( pObject, false );
 	}
 
 	return -1;
 }
 
-unsigned int CMonoGC::Pin( MonoObject* obj )
+unsigned int CMonoGC::Pin( MonoObject* pObject )
 {
-	if( obj )
+	if( pObject )
 	{
-		return mono_gchandle_new( reinterpret_cast< MonoObject* >( obj ), true );
+		return mono_gchandle_new( pObject, true );
 	}
 
 	return -1;
@@ -72,12 +72,12 @@ int64 CMonoGC::GetHeapSize()
 	return mono_gc_get_heap_size();
 }
 
-void CMonoGC::ReleaseGCHandle( unsigned int handle )
+void CMonoGC::ReleaseGCHandle( unsigned int uiHandle )
 {
-	mono_gchandle_free( handle );
+	mono_gchandle_free( uiHandle );
 }
 
-MonoObject* CMonoGC::GetGCHandleTarget( unsigned int handle )
+MonoObject* CMonoGC::GetGCHandleTarget( unsigned int uiHandle )
 {
-	return mono_gchandle_get_target( handle );
+	return mono_gchandle_get_target( uiHandle );
 }

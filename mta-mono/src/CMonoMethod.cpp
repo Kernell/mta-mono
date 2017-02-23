@@ -62,7 +62,9 @@ void CMonoMethod::ParseSignature( void )
 	}
 }
 
-MonoObject* CMonoMethod::Invoke( PVOID pObject, PVOID* params, MonoObject** pException )
+MonoObject* CMonoMethod::Invoke( PVOID pObject, PVOID* params, MonoObject** pException ) const
 {
+	this->m_pClass->GetDomain()->Set( false );
+
 	return mono_runtime_invoke( this->m_pMethod, pObject, params, pException );
 }
